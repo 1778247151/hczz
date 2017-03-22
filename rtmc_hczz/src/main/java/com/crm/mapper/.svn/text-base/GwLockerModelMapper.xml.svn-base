@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.locker" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwLockerModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="createUserName" property="createUserName" jdbcType="VARCHAR" />
+    <result column="updateUserName" property="updateUserName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, code, note, status, create_user_id, create_time, update_user_id, update_time
+  </sql>
+  
+  <select id="gw.locker.selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_locker
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="gw.locker.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+	    d.id, 
+	    d.code, 
+	    d.note, 
+	    d.status, 
+	    d.create_user_id, 
+	    d.create_time, 
+	    d.update_user_id, 
+	    d.update_time,
+	    (select u.name from gw_admin_users u where u.id = d.create_user_id) as createUserName,
+	    (select u.name from gw_admin_users u where u.id = d.update_user_id) as updateUserName
+    from gw_locker d
+    <where> 
+		<if test="code!=null and code!=''">
+    		and d.code like '%${code}%'
+    	</if>
+		<if test="status!=null and status!=''">
+    		and d.status like '%${status}%'
+    	</if>
+    </where>
+    limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  
+  <select id="gw.locker.selectCount" resultType="java.lang.Integer">
+    select 
+    	count(d.id)
+    from gw_locker d
+    <where> 
+		<if test="code!=null and code!=''">
+    		and d.code like '%${code}%'
+    	</if>
+		<if test="status!=null and status!=''">
+    		and d.status like '%${status}%'
+    	</if>
+    </where>
+  </select>
+  
+  <delete id="gw.locker.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_locker
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+
+  <insert id="gw.locker.insert" parameterType="com.crm.pojo.GwLockerModel" >
+    insert into gw_locker
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="note != null" >
+        note,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="gw.locker.update" parameterType="com.crm.pojo.GwLockerModel" >
+    update gw_locker
+    <set >
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="gw.locker.updateByCode"  parameterType="java.lang.String">
+    update gw_locker
+    <set> 
+    	status = 1
+    </set>
+    where code = #{lockerCode}
+ </update>
+ 
+  <update id="gw.locker.updateReturnByCode"  parameterType="java.lang.String">
+    update gw_locker
+    <set> 
+    	status = 0
+    </set>
+    where code = #{lockerCode}
+ </update>
+
+ <select id="gw.locker.selectByLastOne" resultMap="BaseResultMap" >
+		SELECT
+			*
+		FROM
+			gw_locker a
+		WHERE
+			a.code LIKE CONCAT(CONCAT('%', #{time,jdbcType=VARCHAR}), '%') 
+		ORDER BY
+			a.id DESC
+		LIMIT 1
+	</select>
+  
+  	<!-- 获取所有list集合 -->
+  <select id="gw.locker.selectAllList" resultMap="BaseResultMap" >
+     select 
+	    d.id, 
+	    d.code, 
+	    d.note, 
+	    d.status, 
+	    d.create_user_id,
+	    d.create_time, 
+	    d.update_user_id, 
+	    d.update_time,
+	    (select u.name from gw_admin_users u where u.id = d.create_user_id) as createUserName,
+	    (select u.name from gw_admin_users u where u.id = d.update_user_id) as updateUserName
+    from gw_locker d
+	where d.status = 0
+  </select>
+</mapper>

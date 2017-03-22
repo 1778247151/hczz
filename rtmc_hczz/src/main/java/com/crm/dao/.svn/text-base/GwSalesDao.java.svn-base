@@ -1,0 +1,30 @@
+package com.crm.dao;
+
+import java.util.List;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwSalesModel;
+
+public interface GwSalesDao extends DaoManager<GwSalesModel> {
+	/**
+	 * 
+	 * getListByMemberCode:通过会员编号获取集合-接口(积分明细查询)
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月19日
+	 * @param memberCode
+	 * @return
+	 */
+	public List<GwSalesModel> getListByMemberCode(String memberCode);
+	
+	/**
+	 * 
+	 * selectSalesByTxserial:通过流水单号查询销售数据是否存在
+	 *
+	 * @author hemingjun
+	 * @date 2016年11月4日
+	 * @param txserial
+	 * @return
+	 */
+	public List<GwSalesModel> selectSalesByTxserial(String txserial);
+}

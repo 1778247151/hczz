@@ -1,0 +1,136 @@
+package com.crm.controller;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import javax.annotation.Resource;
+import org.apache.http.client.ClientProtocolException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import com.crm.common.BaseResultVo;
+import com.crm.interceptor.exception.BaseException;
+import com.crm.misBaseData.CommonUrl;
+import com.crm.service.impl.SynchronizeMisServiceImpl;
+import com.crm.util.HttpClientUtil;
+
+/**
+ * 
+ * GwSynchronizeMisDataController:同步MIS数据访问控制层
+ *
+ * @author hemingjun
+ * @date 2016年9月9日
+ * @version jdk1.8
+ *
+ */
+@Controller
+@RequestMapping("/syschronizeMis")
+public class GwSynchronizeMisDataController extends BaseException {
+	// 日志
+	private Logger logger = LoggerFactory.getLogger(GwSynchronizeMisDataController.class);
+	/**
+	 * MIS数据接口api地址
+	 */
+	@Value("${mis.api.url}")
+	private String url;
+
+	/**
+	 * 同步mis数据业务逻辑层的实现
+	 */
+	@Resource(name = "synchronizeMisServiceImpl")
+	private SynchronizeMisServiceImpl synchronizeMisServiceImpl;
+
+	/**
+	 * 
+	 * synchronizeMisData:同步MIS数据
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月9日
+	 * @return
+	 */
+	@RequestMapping("/synchronizeMisData.do")
+	@ResponseBody
+	public BaseResultVo synchronizeMisData() {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("YHBS", CommonUrl.YHBS);
+		map.put("XTLB", CommonUrl.XTLB);
+		logger.info("***************************开始MIS数据同步***********************");
+	
+		map.put("DYLX", CommonUrl.WEB_SHOPSLEASE_LIST);
+		// 从MIS端获取数据
+		String body = null;
+		try {
+			body = HttpClientUtil.httpPost(url, map);
+			logger.info("连接MIS成功！");
+		} catch (ClientProtocolException e) {
+			logger.error("获取MIS店铺数据失败！");
+			e.printStackTrace();
+			return BaseResultVo.responseFail("网络异常，连接超时！");
+		} catch (IOException e) {
+			logger.error("获取MIS店铺数据失败！");
+			e.printStackTrace();
+			return BaseResultVo.responseFail("网络异常，连接超时！");
+		}
+		
+		if(!synchronizeMisServiceImpl.sysShopLease(url, map)){
+			return BaseResultVo.responseFail("同步MIS店铺数据失败！");
+		}
+		if(!synchronizeMisServiceImpl.sysFormatstree(url, map)){
+			return BaseResultVo.responseFail("同步MIS业态数据失败！");
+		}
+		if(!synchronizeMisServiceImpl.sysBrandtree(url, map)){
+			return BaseResultVo.responseFail("同步MIS品牌数据失败！");
+		}
+		if(!synchronizeMisServiceImpl.sysPaymenttender(url, map)){
+			return BaseResultVo.responseFail("同步MIS支付方式数据失败！");
+		}
+		if(!synchronizeMisServiceImpl.sysGoodsTree(url, map)){
+			return BaseResultVo.responseFail("同步MIS货品组别数据失败！");
+		}
+		if(!synchronizeMisServiceImpl.sysMallInfo(url, map)){
+			return BaseResultVo.responseFail("同步MIS购物中心数据失败！");
+		}
+		if(!synchronizeMisServiceImpl.sysGoodsInfo(url, map)){
+			return BaseResultVo.responseFail("同步MIS货品数据失败！");
+		}
+		if(!synchronizeMisServiceImpl.sysAdminUsers(url, map)){
+			return BaseResultVo.responseFail("同步MIS管理员用户数据失败！");
+		}
+		if(!synchronizeMisServiceImpl.sysRole(url, map)){
+			return BaseResultVo.responseFail("同步MIS角色数据失败！");
+		}
+		if(!synchronizeMisServiceImpl.sysDepartment(url, map)){
+			return BaseResultVo.responseFail("同步MIS部门数据失败！");
+		}
+		if(!synchronizeMisServiceImpl.sysDepartmentPostion(url, map)){
+			return BaseResultVo.responseFail("同步MIS职位数据失败！");
+		}
+		if(!synchronizeMisServiceImpl.syspropertyAttribute(url, map)){
+			return BaseResultVo.responseFail("同步MIS物业性质数据失败！");
+		}
+		if(!synchronizeMisServiceImpl.sysAres(url, map)){
+			return BaseResultVo.responseFail("同步MIS区域数据失败！");
+		}
+		if(!synchronizeMisServiceImpl.sysBuildingTree(url, map)){
+			return BaseResultVo.responseFail("同步MIS楼宇数据失败！");
+		}
+		if(!synchronizeMisServiceImpl.sysGroupInfo(url, map)){
+			return BaseResultVo.responseFail("同步MIS集团数据失败！");
+		}
+		if(!synchronizeMisServiceImpl.sysShopsInfo(url, map)){
+			return BaseResultVo.responseFail("同步MIS单元数据失败！");
+		}
+		if(!synchronizeMisServiceImpl.sysMerchantsInfo(url, map)){
+			return BaseResultVo.responseFail("同步MIS商户数据失败！");
+		}
+		logger.info("***************************结束MIS数据同步***********************");
+		
+		return BaseResultVo.responseSuccess("同步MIS数据成功！");
+
+	}
+}

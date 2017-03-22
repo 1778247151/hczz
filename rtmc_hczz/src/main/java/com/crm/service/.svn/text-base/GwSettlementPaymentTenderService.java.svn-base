@@ -1,0 +1,29 @@
+package com.crm.service;
+import java.util.List;
+import java.util.Map;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwSettlementPaymentTenderModel;
+
+/**
+ * 
+ * GwSettlementPaymentTenderService:结算付款方式业务逻辑层接口
+ *
+ * @author chengpengfei
+ * @date  2016年4月13日
+ * @version  jdk1.8
+ *
+ */
+public interface GwSettlementPaymentTenderService extends Services<GwSettlementPaymentTenderModel> {
+	//假删除结算收款方式信息
+	int deleSettlementPaymentByFake(Map<String, Object> params);
+	//根据购物中心ID获取结算付款方式集合
+	List<GwSettlementPaymentTenderModel> getSettlementPaymentTenderByMallInfoId(Map<String,Object> params);
+	
+	 /**
+	  * 根据购物中心ID获取付款方式集合接口
+	  * @param params
+	  * @return
+	  */
+	 List<GwSettlementPaymentTenderModel> getSettlementPaymentTenderByMallInfoIdApi(Map<String,Object> params);
+}

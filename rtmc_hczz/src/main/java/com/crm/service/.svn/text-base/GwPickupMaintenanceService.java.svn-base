@@ -1,0 +1,33 @@
+package com.crm.service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwPickupMaintenanceModel;
+
+/**
+ * 
+ * GwPickupMaintenanceService:拾物维护业务逻辑层接口
+ *
+ * @author chengpengfei
+ * @date  2016年6月23日
+ * @version  jdk1.8
+ *
+ */
+public interface GwPickupMaintenanceService extends Services<GwPickupMaintenanceModel>{
+	/**
+	 * 通过编号批量修改拾物维护状态
+	 * @param list
+	 * @return
+	 */
+	public int updatePickupMaintenanceStatusByCode(List<Map<String,Object>> list);
+	
+	/**
+	 * 根据编号模糊查询当天最后一条数据
+	 * @param code
+	 * @return
+	 */
+	public GwPickupMaintenanceModel getPickupMaintenanceByLaseOne(String time);
+	
+}

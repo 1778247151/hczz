@@ -1,0 +1,800 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.shopsInfo" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwShopsInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="gw_building_tree_id" property="gwBuildingTreeId" jdbcType="INTEGER" />
+    <result column="gw_mall_info_id" property="gwMallInfoId" jdbcType="INTEGER" />
+    <result column="unit_number" property="unitNumber" jdbcType="VARCHAR" />
+    <result column="unit_info" property="unitInfo" jdbcType="VARCHAR" />
+    <result column="gw_property_attribute_id" property="gwPropertyAttributeId" jdbcType="INTEGER" />
+    <result column="area" property="area" jdbcType="VARCHAR" />
+    <result column="real_area" property="realArea" jdbcType="VARCHAR" />
+    <result column="build_area" property="buildArea" jdbcType="VARCHAR" />
+    <result column="gw_formats_tree_id" property="gwFormatsTreeId" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="createUserName" property="createUserName" jdbcType="VARCHAR" />
+    <result column="updateUserName" property="updateUserName" jdbcType="VARCHAR" />
+    <result column="contractCode" property="contractCode" jdbcType="VARCHAR" />
+    <result column="buildingTreeName" property="buildingTreeName" jdbcType="VARCHAR" />
+    <result column="mallInfoName" property="mallInfoName" jdbcType="VARCHAR" />
+    <result column="propertyAttributeName" property="propertyAttributeName" jdbcType="VARCHAR" />
+    <result column="formatsTreeName" property="formatsTreeName" jdbcType="VARCHAR" />
+    <result column="gwShopsInfoId" property="gwShopsInfoId" jdbcType="INTEGER" />
+    <result column="confirm_user_id" property="confirmUserId" jdbcType="INTEGER" />
+    <result column="unconfirm_user_id" property="unconfirmUserId" jdbcType="INTEGER" />
+    <result column="confirm_time" property="confirmTime" jdbcType="VARCHAR" />
+    <result column="unconfirm_time" property="unconfirmTime" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="unit_split" property="unitSplit" jdbcType="VARCHAR" />
+    <result column="benchmark_day_rent" property="benchmarkDayRent" jdbcType="DECIMAL" />
+    <result column="benckmark_month_rent" property="benckmarkMonthRent" jdbcType="DECIMAL" />
+    <result column="reserve_day_rent" property="reserveDayRent" jdbcType="DECIMAL" />
+    <result column="reserve_month_rent" property="reserveMonthRent" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, gw_building_tree_id, gw_mall_info_id, unit_number, unit_info, gw_property_attribute_id, 
+    area, gw_formats_tree_id, state,create_time,create_user,update_time,update_user,confirm_user_id
+    ,unconfirm_user_id,confirm_time,unconfirm_time,type,unit_split,real_area,build_area,
+    benchmark_day_rent,benckmark_month_rent,reserve_day_rent,reserve_month_rent
+  </sql>
+  
+
+  <!-- 删除所有数据 -->
+  <delete id="gw.shopsInfo.deleteAll" parameterType="java.lang.Integer" >
+    delete from gw_shops_info
+  </delete>
+  <!-- 批量插入 -->
+	<insert id="gw.shopsInfo.batchInsert" parameterType="com.crm.pojo.GwShopsInfoModel">
+		insert into gw_shops_info (
+		id,
+		gw_building_tree_id,
+		gw_mall_info_id,
+		unit_number,
+		unit_info,
+		gw_property_attribute_id,
+		area,
+		real_area,
+		build_area,
+		benchmark_day_rent,
+		benckmark_month_rent,
+		reserve_day_rent,
+		reserve_month_rent,
+		gw_formats_tree_id,
+		unit_split,
+		type,
+		state,
+		confirm_user_id,
+		confirm_time,
+		unconfirm_user_id,
+		unconfirm_time,
+		create_time,
+		create_user,
+		update_time,
+		update_user
+		)
+		values
+		<foreach collection="list" item="shopsInfoList" index="index"
+			separator=",">
+			(
+			#{shopsInfoList.id,jdbcType=INTEGER},
+			#{shopsInfoList.gwBuildingTreeId,jdbcType=INTEGER},
+			#{shopsInfoList.gwMallInfoId,jdbcType=INTEGER},
+			#{shopsInfoList.unitNumber,jdbcType=VARCHAR},
+			#{shopsInfoList.unitInfo,jdbcType=VARCHAR},
+			#{shopsInfoList.gwPropertyAttributeId,jdbcType=INTEGER},
+			#{shopsInfoList.area,jdbcType=VARCHAR},
+			#{shopsInfoList.realArea,jdbcType=VARCHAR},
+			#{shopsInfoList.buildArea,jdbcType=VARCHAR},
+			#{shopsInfoList.benchmarkDayRent,jdbcType=DECIMAL},
+			#{shopsInfoList.benckmarkMonthRent,jdbcType=DECIMAL},
+			#{shopsInfoList.reserveDayRent,jdbcType=DECIMAL},
+			#{shopsInfoList.reserveMonthRent,jdbcType=DECIMAL},
+			#{shopsInfoList.gwFormatsTreeId,jdbcType=INTEGER},
+			#{shopsInfoList.unitSplit,jdbcType=VARCHAR},
+			#{shopsInfoList.type,jdbcType=INTEGER},
+			#{shopsInfoList.state,jdbcType=INTEGER},
+			#{shopsInfoList.confirmUserId,jdbcType=INTEGER},
+			#{shopsInfoList.confirmTime,jdbcType=VARCHAR},
+			#{shopsInfoList.unconfirmUserId,jdbcType=INTEGER},
+			#{shopsInfoList.unconfirmTime,jdbcType=VARCHAR},
+			#{shopsInfoList.createTime,jdbcType=VARCHAR},
+			#{shopsInfoList.createUser,jdbcType=INTEGER},
+			#{shopsInfoList.updateTime,jdbcType=VARCHAR},
+			#{shopsInfoList.updateUser,jdbcType=INTEGER}
+			)
+		</foreach>
+	</insert>
+	<!-- 批量更新数据 -->
+	<update id="gw.shopsInfo.batchUpdate" parameterType="java.util.List">
+		<foreach collection="list" item="shopsInfoList" index="index"
+			separator=";">
+			update gw_shops_info
+			<set>
+				id=#{shopsInfoList.id,jdbcType=INTEGER},
+				gw_building_tree_id=#{shopsInfoList.gwBuildingTreeId,jdbcType=INTEGER},
+				gw_mall_info_id=#{shopsInfoList.gwMallInfoId,jdbcType=INTEGER},
+				unit_number=#{shopsInfoList.unitNumber,jdbcType=VARCHAR},
+				unit_info=#{shopsInfoList.unitInfo,jdbcType=VARCHAR},
+				gw_property_attribute_id=#{shopsInfoList.gwPropertyAttributeId,jdbcType=INTEGER},
+				area=#{shopsInfoList.area,jdbcType=VARCHAR},
+				real_area=#{shopsInfoList.realArea,jdbcType=VARCHAR},
+				build_area=#{shopsInfoList.buildArea,jdbcType=VARCHAR},
+				benchmark_day_rent=#{shopsInfoList.benchmarkDayRent,jdbcType=DECIMAL},
+				benckmark_month_rent=#{shopsInfoList.benckmarkMonthRent,jdbcType=DECIMAL},
+				reserve_day_rent=#{shopsInfoList.reserveDayRent,jdbcType=DECIMAL},
+				reserve_month_rent=#{shopsInfoList.reserveMonthRent,jdbcType=DECIMAL},
+				gw_formats_tree_id=#{shopsInfoList.gwFormatsTreeId,jdbcType=INTEGER},
+				unit_split=#{shopsInfoList.unitSplit,jdbcType=VARCHAR},
+				type=#{shopsInfoList.type,jdbcType=INTEGER},
+				state=#{shopsInfoList.state,jdbcType=INTEGER},
+				confirm_user_id=#{shopsInfoList.confirmUserId,jdbcType=INTEGER},
+				confirm_time=#{shopsInfoList.confirmTime,jdbcType=VARCHAR},
+				unconfirm_user_id=#{shopsInfoList.unconfirmUserId,jdbcType=INTEGER},
+				unconfirm_time=#{shopsInfoList.unconfirmTime,jdbcType=VARCHAR},
+				create_time=#{shopsInfoList.createTime,jdbcType=VARCHAR},
+				create_user=#{shopsInfoList.createUser,jdbcType=INTEGER},
+				update_time=#{shopsInfoList.updateTime,jdbcType=VARCHAR},
+				update_user=#{shopsInfoList.updateUser,jdbcType=INTEGER}
+			</set>
+				where id = #{shopsInfoList.id,jdbcType=INTEGER}
+		</foreach>
+	</update>
+
+	<!-- 批量删除 -->
+	<delete id="gw.shopsInfo.batchDelete" parameterType="java.util.List">
+		delete from gw_shops_info where id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item.id}
+		</foreach>
+	</delete>
+  
+  <!-- 根据商铺id，获取商铺信息 -->
+  <select id="gw.shopsInfo.selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  select
+   a.area,
+	a.create_time,
+	a.create_user,
+	a.unit_split,
+	a.gw_building_tree_id,
+	a.real_area,
+	a.build_area,
+	(select b.`name` from gw_building_tree b where b.id = a.gw_building_tree_id)as buildingTreeName,
+	a.gw_formats_tree_id,
+	(select c.`name` from gw_formats_tree c where c.id = a.gw_formats_tree_id)as formatsTreeName,
+	a.gw_mall_info_id,
+	(select d.`name` from gw_mall_info d where d.id = a.gw_mall_info_id)as mallInfoName,
+	a.gw_property_attribute_id,
+	(select e.`name` from gw_property_attribute e where e.id = a.gw_property_attribute_id)as propertyAttributeName,
+	a.id,
+	a.state,
+	a.unit_info,
+	a.unit_number,	
+	a.update_time,
+	a.update_user,
+	(select f.`name` from gw_admin_users f where f.id = a.create_user)as createUserName,
+	(select f.`name` from gw_admin_users f where f.id = a.update_user)as updateUserName,
+	(select u.`name` from gw_admin_users u where u.id = a.confirm_user_id)as confirmUserName,
+	(select u.`name` from gw_admin_users u where u.id = a.unconfirm_user_id)as unconfirmUserName,
+	a.confirm_time,
+	a.unconfirm_time,
+	a.confirm_user_id,
+	a.unconfirm_user_id,
+	a.benchmark_day_rent,
+	a.benckmark_month_rent,
+	a.reserve_day_rent,
+	a.reserve_month_rent,
+	a.type
+FROM
+	gw_shops_info a
+    where a.id = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 根据商铺id，删除商铺信息 -->
+  <delete id="gw.shopsInfo.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_shops_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  
+  <!-- 插入商铺信息 -->
+  <insert id="gw.shopsInfo.insert" parameterType="com.crm.pojo.GwShopsInfoModel" >
+    insert into gw_shops_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="unitSplit != null" >
+        unit_split,
+      </if>
+      <if test="gwBuildingTreeId != null" >
+        gw_building_tree_id,
+      </if>
+      <if test="gwMallInfoId != null" >
+        gw_mall_info_id,
+      </if>
+      <if test="unitNumber != null" >
+        unit_number,
+      </if>
+      <if test="unitInfo != null" >
+        unit_info,
+      </if>
+      <if test="gwPropertyAttributeId != null" >
+        gw_property_attribute_id,
+      </if>
+      <if test="area != null" >
+        area,
+      </if>
+      <if test="realArea != null" >
+        real_area,
+      </if>
+      <if test="buildArea != null" >
+        build_area,
+      </if>
+      <if test="gwFormatsTreeId != null" >
+        gw_formats_tree_id,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>  
+      <if test="confirmUserId != null" >
+        confirm_user_id,
+      </if>
+      <if test="unconfirmUserId != null" >
+        unconfirm_user_id,
+      </if>
+      <if test="confirmTime != null" >
+        confirm_time,
+      </if>
+      <if test="unconfirmTime != null" >
+        unconfirm_time,
+      </if> 
+      <if test="state != null" >
+        state,
+      </if>   
+      <if test="type != null" >
+        type,
+      </if> 
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="unitSplit != null" >
+         #{unitSplit,jdbcType=VARCHAR},
+      </if>
+      <if test="gwBuildingTreeId != null" >
+        #{gwBuildingTreeId,jdbcType=INTEGER},
+      </if>
+      <if test="gwMallInfoId != null" >
+        #{gwMallInfoId,jdbcType=INTEGER},
+      </if>
+      <if test="unitNumber != null" >
+        #{unitNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="unitInfo != null" >
+        #{unitInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="gwPropertyAttributeId != null" >
+        #{gwPropertyAttributeId,jdbcType=INTEGER},
+      </if>
+      <if test="area != null" >
+        #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="realArea != null" >
+        #{realArea,jdbcType=VARCHAR},
+      </if>
+      <if test="buildArea != null" >
+        #{buildArea,jdbcType=VARCHAR},
+      </if>
+      <if test="gwFormatsTreeId != null" >
+        #{gwFormatsTreeId,jdbcType=INTEGER},
+      </if>
+     
+      <if test="createUser != null" >
+        #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="confirmUserId != null" >
+        #{confirmUserId,jdbcType=INTEGER},
+      </if>
+      <if test="unconfirmUserId != null" >
+        #{unconfirmUserId,jdbcType=INTEGER},
+      </if>
+      <if test="confirmTime != null" >
+        #{confirmTime,jdbcType=VARCHAR},
+      </if>
+      <if test="unconfirmTime != null" >
+        #{unconfirmTime,jdbcType=VARCHAR},
+      </if>
+       <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="type!= null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <!-- 更新商铺信息 -->
+  <update id="gw.shopsInfo.update" parameterType="com.crm.pojo.GwShopsInfoModel" >
+    update gw_shops_info
+    <set >
+      <if test="unitSplit != null" >
+        unit_split = #{unitSplit,jdbcType=VARCHAR},
+      </if>
+      <if test="gwBuildingTreeId != null" >
+        gw_building_tree_id = #{gwBuildingTreeId,jdbcType=INTEGER},
+      </if>
+      <if test="gwMallInfoId != null" >
+        gw_mall_info_id = #{gwMallInfoId,jdbcType=INTEGER},
+      </if>
+      <if test="unitNumber != null" >
+        unit_number = #{unitNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="unitInfo != null" >
+        unit_info = #{unitInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="gwPropertyAttributeId != null" >
+        gw_property_attribute_id = #{gwPropertyAttributeId,jdbcType=INTEGER},
+      </if>
+      <if test="area != null" >
+        area = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="realArea != null" >
+        real_area = #{realArea,jdbcType=VARCHAR},
+      </if>
+      <if test="buildArea != null" >
+        build_area = #{buildArea,jdbcType=VARCHAR},
+      </if>
+      <if test="gwFormatsTreeId != null" >
+        gw_formats_tree_id = #{gwFormatsTreeId,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="confirmUserId != null" >
+        confirm_user_id = #{confirmUserId,jdbcType=INTEGER},
+      </if>
+      <if test="unconfirmUserId != null" >
+        unconfirm_user_id = #{unconfirmUserId,jdbcType=INTEGER},
+      </if>
+      <if test="confirmTime != null" >
+        confirm_time = #{confirmTime,jdbcType=VARCHAR},
+      </if>
+      <if test="unconfirmTime != null" >
+        unconfirm_time = #{unconfirmTime,jdbcType=VARCHAR},
+      </if>
+      <if test="benchmarkDayRent != null and benchmarkDayRent!=''" >
+        benchmark_day_rent = #{benchmarkDayRent,jdbcType=VARCHAR},
+      </if>
+      <if test="benckmarkMonthRent != null and benckmarkMonthRent!=''" >
+        benckmark_month_rent = #{benckmarkMonthRent,jdbcType=VARCHAR},
+      </if>
+      <if test="reserveDayRent != null and reserveDayRent!=''" >
+        reserve_day_rent = #{reserveDayRent,jdbcType=VARCHAR},
+      </if>
+      <if test="reserveMonthRent != null and reserveMonthRent!=''" >
+        reserve_month_rent = #{reserveMonthRent,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 根据条件，获取分页数据list集合 -->
+  <select id="gw.shopsInfo.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    SELECT
+	a.area,
+	a.create_time,
+	a.create_user,
+	a.unit_split,
+	a.gw_building_tree_id,
+	(select b.`name` from gw_building_tree b where b.id = a.gw_building_tree_id)as buildingTreeName,
+	a.gw_formats_tree_id,
+	(select c.`name` from gw_formats_tree c where c.id = a.gw_formats_tree_id)as formatsTreeName,
+	a.gw_mall_info_id,
+	(select d.`name` from gw_mall_info d where d.id = a.gw_mall_info_id)as mallInfoName,
+	a.gw_property_attribute_id,
+	(select e.`name` from gw_property_attribute e where e.id = a.gw_property_attribute_id)as propertyAttributeName,
+	a.id,
+	a.state,
+	a.unit_info,
+	a.unit_number,	
+	a.update_time,
+	a.update_user,
+	a.real_area,
+	a.build_area,
+	(select f.`name` from gw_admin_users f where f.id = a.create_user)as createUserName,
+	(select f.`name` from gw_admin_users f where f.id = a.update_user)as updateUserName,
+	(select u.`name` from gw_admin_users u where u.id = a.confirm_user_id)as confirmUserName,
+	(select u.`name` from gw_admin_users u where u.id = a.unconfirm_user_id)as unconfirmUserName, 
+	a.confirm_time,
+	a.unconfirm_time,
+	a.confirm_user_id,
+	a.unconfirm_user_id,
+	a.benchmark_day_rent,
+	a.benckmark_month_rent,
+	a.reserve_day_rent,
+	a.reserve_month_rent,
+	a.type
+FROM
+	gw_shops_info a
+    <where> 
+    <if test="unitNumber != null and '' != unitNumber">  
+          a.unit_number LIKE CONCAT(CONCAT('%', #{unitNumber,jdbcType=VARCHAR}), '%')         
+    </if>
+    <if test="state != null and '' != state">  
+          and a.state = #{state,jdbcType=INTEGER}
+    </if>
+     <if test="gwFormatsTreeId != null and '' != gwFormatsTreeId">  
+          and a.gw_formats_tree_id = #{gwFormatsTreeId,jdbcType=INTEGER}
+    </if>
+    <if test="state2 != null and '' != state2 and state3 != null and '' != state3">  
+          and a.state in(#{state2,jdbcType=INTEGER},#{state3,jdbcType=INTEGER})
+    </if>
+    <if test="state4 != null and '' != state4 and state5 != null and '' != state5">  
+          and a.state !=#{state4,jdbcType=INTEGER} and a.state!=#{state5,jdbcType=INTEGER}
+    </if>
+    <if test="type!=null and ''!=type">  
+          and a.type = #{type}
+    </if>
+    <if test="unitSplit!=null and ''!=unitSplit">  
+          and a.unit_split = #{unitSplit}
+    </if>
+    <if test="gwMallInfoId!=null and ''!=gwMallInfoId">  
+          and a.gw_mall_info_id = #{gwMallInfoId}
+    </if>
+    <if test="buildingTreeId!=null and ''!=buildingTreeId">  
+          and a.gw_building_tree_id = #{buildingTreeId}
+    </if>
+    <if test="notids!=null and ''!=notids">
+    		and a.id not in
+	    <foreach item="ids" collection="notids" open="(" separator="," close=")"> 
+	          #{ids,jdbcType=VARCHAR}
+	    </foreach> 
+    </if>
+    and a.state !=0
+	</where> 
+	order by a.create_time desc
+    limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  <!-- 根据条件，总记录数 -->
+  <select id="gw.shopsInfo.selectCount" resultType="java.lang.Integer"  parameterType="java.util.Map">
+    select 
+      count(a.id)
+    from gw_shops_info a
+     <where> 
+    <if test="unitNumber != null and '' != unitNumber">  
+          and a.unit_number LIKE CONCAT(CONCAT('%', #{unitNumber,jdbcType=VARCHAR}), '%')         
+    </if>
+    <if test="state != null and '' != state">  
+          and a.state = #{state,jdbcType=INTEGER}
+    </if>
+    <if test="state2 != null and '' != state2 and state3 != null and '' != state3">  
+          and a.state in(#{state2,jdbcType=INTEGER},#{state3,jdbcType=INTEGER})
+    </if>
+    <if test="state4 != null and '' != state4 and state5 != null and '' != state5">  
+          and a.state !=#{state4,jdbcType=INTEGER} and a.state!=#{state5,jdbcType=INTEGER}
+    </if>
+    <if test="notids!=null and ''!=notids">
+    		and a.id not in
+	    <foreach item="ids" collection="notids" open="(" separator="," close=")"> 
+	          #{ids,jdbcType=VARCHAR}
+	    </foreach> 
+    </if>
+     <if test="gwFormatsTreeId!=null and ''!=gwFormatsTreeId">  
+          and a.gw_formats_tree_id = #{gwFormatsTreeId}
+    </if>
+    <if test="buildingTreeId!=null and ''!=buildingTreeId">  
+          and a.gw_building_tree_id = #{buildingTreeId}
+    </if>
+    <if test="unitSplit!=null and ''!=unitSplit">  
+          and a.unit_split = #{unitSplit}
+    </if>
+    <if test="type!=null and ''!=type">  
+          and a.type = #{type}
+    </if>
+    and a.state !=0
+	</where>
+  </select>
+  
+  <!-- 根据单元ID，获取商铺信息 -->
+  <select id="gw.shopsInfo.selectByUnitId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT
+	a.area,
+	a.create_time,
+	a.create_user,
+	a.gw_building_tree_id,
+	a.unit_split,
+	(select b.`name` from gw_building_tree b where b.id = a.gw_building_tree_id)as buildingTreeName,
+	a.gw_formats_tree_id,
+	(select c.`name` from gw_formats_tree c where c.id = a.gw_formats_tree_id)as formatsTreeName,
+	a.gw_mall_info_id,
+	(select d.`name` from gw_mall_info d where d.id = a.gw_mall_info_id)as mallInfoName,
+	a.gw_property_attribute_id,
+	(select e.`name` from gw_property_attribute e where e.id = a.gw_property_attribute_id)as propertyAttributeName,
+	a.id as gwShopsInfoId,
+	a.state,
+	a.unit_info,
+	a.unit_number,	
+	a.update_time,
+	a.update_user,
+	a.real_area,
+	a.build_area,
+	(select u.`name` from gw_admin_users u where u.id = a.confirm_user_id)as confirmUserName,
+	(select u.`name` from gw_admin_users u where u.id = a.unconfirm_user_id)as unconfirmUserName,
+	a.confirm_time,
+	a.unconfirm_time,
+	a.confirm_user_id,
+	a.unconfirm_user_id,
+	a.benchmark_day_rent,
+	a.benckmark_month_rent,
+	a.reserve_day_rent,
+	a.reserve_month_rent,
+	a.type
+FROM
+	gw_shops_info a
+where a.unit_number = #{unId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="gw.shopsInfo.selectListByBuild" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" />
+    from gw_shops_info
+    where gw_building_tree_id = #{build,jdbcType=INTEGER}
+    <if test="unitNumber != null and '' != unitNumber">  
+         and unit_number  LIKE CONCAT(CONCAT('%', #{unitNumber,jdbcType=VARCHAR}), '%')
+    </if>
+    <if test="state != null and '' != state">  
+         and state = #{state,jdbcType=INTEGER}
+    </if>
+    limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+  
+  <select id="gw.shopsInfo.selectListByBuildCount" resultType="java.lang.Integer">
+    select 
+    count(id)
+    from gw_shops_info
+    where gw_building_tree_id = #{build,jdbcType=INTEGER}
+    <if test="unitNumber != null and '' != unitNumber">  
+         and unit_number  LIKE CONCAT(CONCAT('%', #{unitNumber,jdbcType=VARCHAR}), '%')
+    </if>
+     <if test="state != null and '' != state">  
+         and state = #{state,jdbcType=INTEGER}
+    </if>
+  </select>
+  
+  <!-- 根据编号获取商铺信息 -->
+  <select id="gw.shopsInfo.selectByCode" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_shops_info
+    where unit_number = #{code,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 批量修改单元状态 -->
+   <update id="gw.shopsInfo.updateList" parameterType="com.crm.pojo.GwShopsInfoModel" >
+    	update gw_shops_info set state = #{shopsInfoList.status} where id in 
+    	<foreach item="shopsInfoList" index="index" collection="list" open="(" separator="," close=")">  
+  			#{shopsInfoList.id}  
+ 	</foreach> 
+  </update>
+  
+  <!-- 根据编号获取单元信息 -->
+  <select id="gw.shopsInfo.selectByIds" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_shops_info
+    where id in 
+    <foreach item="shopsInfoList" index="index" collection="list" open="(" separator="," close=")">  
+  		#{shopsInfoList.id}  
+ 	</foreach> 
+  </select>
+  
+  <!-- 获取所有未出租的单元数据集合分页（用于单元管理） -->
+  <select id="gw.shopsInfo.selectNotLeaseShopsList" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+     s.id,
+     s.gw_building_tree_id,
+     (select d.name from gw_building_tree d where d.id=s.gw_building_tree_id) as buildingTreeName,
+     s.gw_mall_info_id, 
+     (select a.name from gw_mall_info a where a.id=s.gw_mall_info_id) as mallInfoName,
+     s.unit_number, s.unit_info, 
+     s.gw_property_attribute_id, 
+     (select b.name from gw_property_attribute b where b.id=s.gw_property_attribute_id) as propertyAttributeName,
+     s.area, 
+     s.gw_formats_tree_id, 
+     (select c.name from gw_formats_tree c where c.id=s.gw_formats_tree_id) as formatsTreeName,
+     s.state, 
+     s.time,
+     s.name,
+     s.code,
+     s.lease_status
+    from gw_shops_info s
+    where s.lease_status = 0
+    limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  
+   <!-- 获取所有未出租的单元数据集合总数（用于单元管理） -->
+  <select id="gw.shopsInfo.selectNotLeaseShopsCount" resultType="java.lang.Integer"  parameterType="java.util.Map">
+    select 
+      count(id)
+    from gw_shops_info
+    where  lease_status=0
+  </select>
+  
+  <select id="gw.shopsInfo.selectShopsInfoByMerchatnsId" resultMap="BaseResultMap">
+SELECT
+	d.unit_info,
+	d.area,
+	(select e.`name` from gw_building_tree e where e.id = d.gw_building_tree_id)as buildingTreeName,
+	(select f.`name` from gw_formats_tree f where f.id = d.gw_formats_tree_id)as formatsTreeName,
+	(select g.`name` from gw_mall_info g where g.id = d.gw_mall_info_id)as mallInfoName,
+	(select h.`name` from gw_property_attribute h where h.id = d.gw_property_attribute_id)as propertyAttributeName,
+	d.unit_number
+FROM
+	gw_shops_lease a,
+	gw_shops_info d 
+where 
+ c.gw_shops_info_id = d.id
+and a.id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="gw.shopsInfo.selectByIDs" resultMap="BaseResultMap" parameterType="java.util.Map">
+SELECT
+	a.area,
+	a.create_time,
+	a.create_user,
+	a.unit_split,
+	a.gw_building_tree_id,
+	(select b.`name` from gw_building_tree b where b.id = a.gw_building_tree_id)as buildingTreeName,
+	a.gw_formats_tree_id,
+	(select c.`name` from gw_formats_tree c where c.id = a.gw_formats_tree_id)as formatsTreeName,
+	a.gw_mall_info_id,
+	(select d.`name` from gw_mall_info d where d.id = a.gw_mall_info_id)as mallInfoName,
+	a.gw_property_attribute_id,
+	(select e.`name` from gw_property_attribute e where e.id = a.gw_property_attribute_id)as propertyAttributeName,
+	a.id,
+	a.state,
+	a.unit_info,
+	a.unit_number,	
+	a.update_time,
+	a.update_user,
+	a.real_area,
+	a.build_area,
+	(select f.`name` from gw_admin_users f where f.id = a.create_user)as createUserName,
+	(select f.`name` from gw_admin_users f where f.id = a.update_user)as updateUserName,
+	(select u.`name` from gw_admin_users u where u.id = a.confirm_user_id)as confirmUserName,
+	(select u.`name` from gw_admin_users u where u.id = a.unconfirm_user_id)as unconfirmUserName,
+	a.confirm_time,
+	a.unconfirm_time,
+	a.confirm_user_id,
+	a.unconfirm_user_id,
+	a.benchmark_day_rent,
+	a.benckmark_month_rent,
+	a.reserve_day_rent,
+	a.reserve_month_rent,
+	a.type
+FROM
+	gw_shops_info a
+    <where>
+    	<if test="ids!=null and ''!=null">
+    	 and a.id in
+	    <foreach item="ids" collection="ids" open="(" separator="," close=")"> 
+	          #{ids}
+	    </foreach> 	
+    	</if>
+    	<if test="unitNumbers!=null and ''!=unitNumbers">
+    	 and a.unit_number in
+	    <foreach item="unitNumbers" collection="unitNumbers" open="(" separator="," close=")"> 
+	          #{unitNumbers}
+	    </foreach> 	
+    	</if>
+       
+    and a.state !=0
+	</where> 
+	order by a.create_time desc
+    limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  
+  <select id="gw.shopsInfo.selectCountByIds" resultType="java.lang.Integer"  parameterType="java.util.Map" >
+SELECT
+	count(a.id)
+FROM
+	gw_shops_info a
+    <where>
+       <if test="ids!=null and ''!=null">
+    	 and a.id in
+	    <foreach item="ids" collection="ids" open="(" separator="," close=")"> 
+	          #{ids}
+	    </foreach> 	
+    	</if>
+    	<if test="unitNumbers!=null and ''!=unitNumbers">
+    	 and a.unit_number in
+	    <foreach item="unitNumbers" collection="unitNumbers" open="(" separator="," close=")"> 
+	          #{unitNumbers}
+	    </foreach> 	
+    	</if>
+    and a.state !=0
+	</where> 
+  </select>
+  
+  <!-- 根据单元号数组批量修改单元的状态 -->
+  <update id="gw.shopsInfo.updateByUnitNumbers" parameterType="java.util.Map" >
+    update gw_shops_info
+    <set>
+    	 state = #{state},type = #{type}
+    </set>
+    where unit_number in
+    <foreach item="numbers" collection="unitNumbers" open="(" separator="," close=")"> 
+          #{numbers,jdbcType=VARCHAR}
+    </foreach> 
+  </update>
+  
+  <!-- 根据单元号修改单元的状态 -->
+  <update id="gw.shopsInfo.updateByUnitNumber" parameterType="java.util.Map" >
+    update gw_shops_info
+    <set>
+    	 state = #{state},type = #{type}
+    </set>
+    where unit_number = #{unitNumber}
+  </update>
+  
+  <!-- 根据楼宇Id获取单元信息 -->
+  <select id="gw.shopsInfo.selectListByCondition" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" />
+    from gw_shops_info
+    where state!=0
+    <if test="buildingTreeId!=null">
+    	and gw_building_tree_id = #{buildingTreeId}
+    </if>
+    <if test="mallInfoId!=null">
+    	and gw_mall_info_id = #{buildingTreeId}
+    </if>
+    <if test="propertyAttributeId!=null">
+    	and gw_property_attribute_id = #{propertyAttributeId}
+    </if>
+  </select>
+  <!-- 获取所有list集合 -->
+  <select id="gw.shopsInfo.selectList" resultMap="BaseResultMap">
+	select 
+    <include refid="Base_Column_List" />
+    from gw_shops_info
+  </select>
+  
+</mapper>

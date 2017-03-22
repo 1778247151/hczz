@@ -1,0 +1,299 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/gw_crm/!svn/ver/511/gdws_crm/src/main/java/com/crm/enums
+END
+CardStateEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/gw_crm/!svn/ver/375/gdws_crm/src/main/java/com/crm/enums/CardStateEnum.java
+END
+HandleStausEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/gw_crm/!svn/ver/103/gdws_crm/src/main/java/com/crm/enums/HandleStausEnum.java
+END
+gwGoodsTypeEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/54/gdws_crm/src/main/java/com/crm/enums/gwGoodsTypeEnum.java
+END
+NameValueEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/gw_crm/!svn/ver/2/gdws_crm/src/main/java/com/crm/enums/NameValueEnum.java
+END
+ConmainshopEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/39/gdws_crm/src/main/java/com/crm/enums/ConmainshopEnum.java
+END
+MailTypeEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/gw_crm/!svn/ver/533/gdws_crm/src/main/java/com/crm/enums/MailTypeEnum.java
+END
+LockerRentalPaymentMethodEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/gw_crm/!svn/ver/430/gdws_crm/src/main/java/com/crm/enums/LockerRentalPaymentMethodEnum.java
+END
+gwGoodsIsBorrowed.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/gw_crm/!svn/ver/54/gdws_crm/src/main/java/com/crm/enums/gwGoodsIsBorrowed.java
+END
+transsalestotalStateEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/gw_crm/!svn/ver/123/gdws_crm/src/main/java/com/crm/enums/transsalestotalStateEnum.java
+END
+StockCheckStatusEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/gw_crm/!svn/ver/448/gdws_crm/src/main/java/com/crm/enums/StockCheckStatusEnum.java
+END
+MembersCardTypeEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/gw_crm/!svn/ver/132/gdws_crm/src/main/java/com/crm/enums/MembersCardTypeEnum.java
+END
+MailStatusEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/511/gdws_crm/src/main/java/com/crm/enums/MailStatusEnum.java
+END
+AdminUserStatusEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/gw_crm/!svn/ver/194/gdws_crm/src/main/java/com/crm/enums/AdminUserStatusEnum.java
+END
+ShopsTypeEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/gw_crm/!svn/ver/205/gdws_crm/src/main/java/com/crm/enums/ShopsTypeEnum.java
+END
+ConstoretypeEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/gw_crm/!svn/ver/39/gdws_crm/src/main/java/com/crm/enums/ConstoretypeEnum.java
+END
+SendStatusNameEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/gw_crm/!svn/ver/85/gdws_crm/src/main/java/com/crm/enums/SendStatusNameEnum.java
+END
+SexEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/gw_crm/!svn/ver/194/gdws_crm/src/main/java/com/crm/enums/SexEnum.java
+END
+gwTypeTreeEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/272/gdws_crm/src/main/java/com/crm/enums/gwTypeTreeEnum.java
+END
+SexNameEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/gw_crm/!svn/ver/39/gdws_crm/src/main/java/com/crm/enums/SexNameEnum.java
+END
+MerchantsInfoStateEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/gw_crm/!svn/ver/201/gdws_crm/src/main/java/com/crm/enums/MerchantsInfoStateEnum.java
+END
+PickupMaintenanceStatusEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/gw_crm/!svn/ver/39/gdws_crm/src/main/java/com/crm/enums/PickupMaintenanceStatusEnum.java
+END
+MembersResourceTypeEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/gw_crm/!svn/ver/239/gdws_crm/src/main/java/com/crm/enums/MembersResourceTypeEnum.java
+END
+SmsTypeEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/gw_crm/!svn/ver/387/gdws_crm/src/main/java/com/crm/enums/SmsTypeEnum.java
+END
+SmsStatusEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/gw_crm/!svn/ver/387/gdws_crm/src/main/java/com/crm/enums/SmsStatusEnum.java
+END
+ShopsInfoStateEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/gw_crm/!svn/ver/205/gdws_crm/src/main/java/com/crm/enums/ShopsInfoStateEnum.java
+END
+LockerEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/gw_crm/!svn/ver/401/gdws_crm/src/main/java/com/crm/enums/LockerEnum.java
+END
+MemberIntegralDetailEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/gw_crm/!svn/ver/350/gdws_crm/src/main/java/com/crm/enums/MemberIntegralDetailEnum.java
+END
+DepositInfoEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/gw_crm/!svn/ver/201/gdws_crm/src/main/java/com/crm/enums/DepositInfoEnum.java
+END
+StatusEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/gw_crm/!svn/ver/300/gdws_crm/src/main/java/com/crm/enums/StatusEnum.java
+END
+LockerRentalEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/gw_crm/!svn/ver/430/gdws_crm/src/main/java/com/crm/enums/LockerRentalEnum.java
+END
+RegisterTypeEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/gw_crm/!svn/ver/291/gdws_crm/src/main/java/com/crm/enums/RegisterTypeEnum.java
+END
+LockerRentalMethodEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/gw_crm/!svn/ver/430/gdws_crm/src/main/java/com/crm/enums/LockerRentalMethodEnum.java
+END
+IntergralTypeEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/gw_crm/!svn/ver/416/gdws_crm/src/main/java/com/crm/enums/IntergralTypeEnum.java
+END
+ActivityCheckEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/gw_crm/!svn/ver/150/gdws_crm/src/main/java/com/crm/enums/ActivityCheckEnum.java
+END
+ActivitySignedStatusNameEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/gw_crm/!svn/ver/150/gdws_crm/src/main/java/com/crm/enums/ActivitySignedStatusNameEnum.java
+END
+MerchantsInfoZTypeEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/gw_crm/!svn/ver/108/gdws_crm/src/main/java/com/crm/enums/MerchantsInfoZTypeEnum.java
+END
+LeaseMaintenanceEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/gw_crm/!svn/ver/71/gdws_crm/src/main/java/com/crm/enums/LeaseMaintenanceEnum.java
+END
+ConfirmEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/gw_crm/!svn/ver/256/gdws_crm/src/main/java/com/crm/enums/ConfirmEnum.java
+END
+ShopsStateEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/108/gdws_crm/src/main/java/com/crm/enums/ShopsStateEnum.java
+END
+ActivityStatusEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/gw_crm/!svn/ver/2/gdws_crm/src/main/java/com/crm/enums/ActivityStatusEnum.java
+END
+MerchantsInfoTypeEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/gw_crm/!svn/ver/108/gdws_crm/src/main/java/com/crm/enums/MerchantsInfoTypeEnum.java
+END
+gwTypeTreeStatusEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/gw_crm/!svn/ver/178/gdws_crm/src/main/java/com/crm/enums/gwTypeTreeStatusEnum.java
+END
+CouFirmEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/gw_crm/!svn/ver/89/gdws_crm/src/main/java/com/crm/enums/CouFirmEnum.java
+END
+IsFoverRuleEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/86/gdws_crm/src/main/java/com/crm/enums/IsFoverRuleEnum.java
+END
+BrandTreeStateEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/gw_crm/!svn/ver/201/gdws_crm/src/main/java/com/crm/enums/BrandTreeStateEnum.java
+END
+IntegralTypeEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/gw_crm/!svn/ver/239/gdws_crm/src/main/java/com/crm/enums/IntegralTypeEnum.java
+END
+ShopsLeaseStateEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/gw_crm/!svn/ver/39/gdws_crm/src/main/java/com/crm/enums/ShopsLeaseStateEnum.java
+END
+IntegralExchangeGoodsStatusEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/gw_crm/!svn/ver/89/gdws_crm/src/main/java/com/crm/enums/IntegralExchangeGoodsStatusEnum.java
+END
+PaymenttenderIntegralStatusEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/gw_crm/!svn/ver/174/gdws_crm/src/main/java/com/crm/enums/PaymenttenderIntegralStatusEnum.java
+END

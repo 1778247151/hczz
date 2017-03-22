@@ -1,0 +1,166 @@
+package com.crm.pojo;
+
+import com.crm.enums.ActivityStatusEnum;
+
+public class GwMallInfoModel {
+	private Integer id;
+
+	private String bm;
+	/**
+	 * 购物中心名称
+	 */
+	private String name;
+	/**
+	 * 状态
+	 */
+	private Integer state;
+	/**
+	 * 状态名称
+	 */
+	private String stateName;
+
+	private Integer gwAresId;
+	/**
+	 * 区域名称
+	 */
+	private String aresName;
+	/**
+	 * 集团名称
+	 */
+	private String groupInfoName;
+
+	private Integer gwGroupInfoId;
+
+	private String address;
+
+	private String area;
+
+	private String phone;
+	private String fax;
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getFax() {
+		return fax;
+	}
+
+	public void setFax(String fax) {
+		this.fax = fax;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getBm() {
+		return bm;
+	}
+
+	public void setBm(String bm) {
+		this.bm = bm == null ? null : bm.trim();
+	}
+
+	public Integer getGwAresId() {
+		return gwAresId;
+	}
+
+	public void setGwAresId(Integer gwAresId) {
+		this.gwAresId = gwAresId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getState() {
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
+	}
+
+	public Integer getGwGroupInfoId() {
+		return gwGroupInfoId;
+	}
+
+	public void setGwGroupInfoId(Integer gwGroupInfoId) {
+		this.gwGroupInfoId = gwGroupInfoId;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address == null ? null : address.trim();
+	}
+
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area == null ? null : area.trim();
+	}
+
+	public String getAresName() {
+		return aresName;
+	}
+
+	public void setAresName(String aresName) {
+		this.aresName = aresName;
+	}
+
+	public String getGroupInfoName() {
+		return groupInfoName;
+	}
+
+	public void setGroupInfoName(String groupInfoName) {
+		this.groupInfoName = groupInfoName;
+	}
+
+	public String getStateName() {
+		return ActivityStatusEnum.getDisplayName(getState());
+	}
+
+	public void setStateName(String stateName) {
+		this.stateName = stateName;
+	}
+
+	/**
+	 * 对比2个对象是否相等
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof GwMallInfoModel)) {
+			return false;
+		}
+		GwMallInfoModel mallInfo = (GwMallInfoModel) obj;
+		if (mallInfo.getId().equals(this.getId()) && mallInfo.getBm().equals(this.getBm())
+				&& mallInfo.getGwAresId().equals(this.getGwAresId())
+				&& mallInfo.getGwGroupInfoId().equals(this.getGwGroupInfoId())
+				&& mallInfo.getAddress().equals(this.getAddress()) && mallInfo.getArea().equals(this.getArea())
+				&& mallInfo.getName().equals(this.getName()) && mallInfo.getState().equals(this.getState())
+				&& mallInfo.getPhone().equals(this.getPhone()) && mallInfo.getFax().equals(this.getFax())) {
+			return true;
+
+		} else {
+			return false;
+		}
+	}
+}

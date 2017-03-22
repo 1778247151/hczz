@@ -1,0 +1,83 @@
+package com.crm.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwLockerRentalDao;
+import com.crm.pojo.GwLockerModel;
+import com.crm.pojo.GwLockerRentalModel;
+import com.crm.service.GwLockerRentalService;
+
+/**
+ * 
+ * GwLockerRentalServiceImpl:业务逻辑层实现
+ *
+ * @author hanzhiqiang
+ * @date  2016年11月10日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwLockerRentalServiceManage")
+public class GwLockerRentalServiceImpl extends ServersManager<GwLockerRentalModel, GwLockerRentalDao> implements GwLockerRentalService{
+
+	@Resource(name = "gwLockerRentalDaoManage")
+	@Override
+	public void setDao(GwLockerRentalDao gwLockerRentalDao) {
+		// TODO Auto-generated method stub
+		this.dao = gwLockerRentalDao;
+	}
+
+	@Override
+	public GwLockerRentalModel getLockerRentalById(Integer id) {
+		// TODO Auto-generated method stub
+		return dao.getLockerRentalById(id);
+	}
+
+	@Override
+	public List<GwLockerRentalModel> getListsApi() {
+		// TODO Auto-generated method stub
+		return dao.getListsApi();
+	}
+
+	@Override
+	public List<GwLockerRentalModel> getLockerRentalListByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getLockerRentalListByCondition(params);
+	}
+
+	@Override
+	public int addLockerRental(GwLockerRentalModel gwLockerRentalModel) {
+		// TODO Auto-generated method stub
+		return dao.insert(gwLockerRentalModel);
+	}
+
+	@Override
+	public int updateLockerRental(GwLockerRentalModel gwLockerRentalModel) {
+		// TODO Auto-generated method stub
+		return dao.update(gwLockerRentalModel);
+	}
+
+	@Override
+	public int deleteLockerRentalById(int id) {
+		// TODO Auto-generated method stub
+		return dao.deleteLockerRentalById(id);
+	}
+
+	@Override
+	public GwLockerRentalModel getLockerRentalByLastOne(String time) {
+		// TODO Auto-generated method stub
+		return dao.getLockerRentalByLastOne(time);
+	}
+
+	@Override
+	public List<GwLockerModel> getExportList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getExportList(params);
+	}
+
+}

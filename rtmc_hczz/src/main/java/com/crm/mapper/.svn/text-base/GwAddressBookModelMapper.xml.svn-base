@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.addressBook" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwAddressBookModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="INTEGER" />
+    <result column="fixed_phone" property="fixedPhone" jdbcType="VARCHAR" />
+    <result column="suffix_phone" property="suffixPhone" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="department_code" property="departmentCode" jdbcType="VARCHAR" />
+    <result column="departmentName" property="departmentName" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="qq" property="qq" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+   	<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="createUserName" property="createUserName" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="updateUserName" property="updateUserName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id,
+    name, 
+    phone, 
+    fixed_phone, 
+    suffix_phone,
+    sex,
+    department_code,
+    email,
+    qq,
+    create_user_id,
+    create_time,
+    update_user_id,
+    update_time
+  </sql>
+  <select id="gw.addressBook.selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+     select 
+	    d.id,
+	    d.name, 
+	    d.phone, 
+	    d.fixed_phone, 
+	    d.suffix_phone,
+	    d.sex,
+	    d.department_code,
+	    (select u.cn_name from gw_department u where u.code = d.department_code) as departmentName,
+	    d.email,
+	    d.qq,
+	    d.create_user_id, 
+		(select u.name from gw_admin_users u where u.id = d.create_user_id) as createUserName,
+	    create_time,
+	    d.update_user_id, 
+		(select u.name from gw_admin_users u where u.id = d.update_user_id) as updateUserName,
+	    update_time
+	from 
+		gw_address_book d
+	where  d.id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="gw.addressBook.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_address_book
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 根据条件，获取分页数据list集合 -->
+  <select id="gw.addressBook.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+	    d.id,
+	    d.name, 
+	    d.phone, 
+	    d.fixed_phone, 
+	    d.suffix_phone,
+	    d.sex,
+	    d.department_code,
+	    	(select u.cn_name from gw_department u where u.code = d.department_code) as departmentName,
+	    d.email,
+	    d.qq,
+	    d.create_user_id, 
+		    (select u.name from gw_admin_users u where u.id = d.create_user_id) as createUserName,
+	    create_time,
+	    d.update_user_id, 
+		    (select u.name from gw_admin_users u where u.id = d.update_user_id) as updateUserName,
+	    update_time
+	from 
+		gw_address_book d
+		<where> 
+			<if test="name!=null and name!=''">
+	    		and d.name like '%${name}%'
+	    	</if>
+			<if test="phone!=null and phone!=''">
+	    		and d.phone like '%${phone}%'
+	    	</if>
+			<if test="departmentCode!=null and departmentCode!=''">
+	    		and d.department_code = #{departmentCode}
+	    	</if>
+    	</where>
+    order by d.name 
+    limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 查询总记录数 -->
+  <select id="gw.addressBook.selectCount" resultType="java.lang.Integer">
+   	select 
+      count(d.id)
+    from gw_address_book d
+    	<where>
+			<if test="name!=null and name!=''">
+	    		and d.name like '%${name}%'
+	    	</if>
+			<if test="phone!=null and phone!=''">
+	    		and d.phone like '%${phone}%'
+	    	</if>
+			<if test="departmentCode!=null and departmentCode!=''">
+	    		and d.department_code = #{departmentCode}
+	    	</if>
+    	</where>
+  </select>
+  
+  <!-- 获取所有list集合接口 -->
+  <select id="gw.addressBook.selectListsApi" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gw_address_book
+  </select>
+  
+  <insert id="gw.addressBook.insert" parameterType="com.crm.pojo.GwAddressBookModel" 
+  	useGeneratedKeys="true" keyProperty="id">
+  	 insert into gw_address_book
+  	 <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="fixedPhone != null" >
+        fixed_phone,
+      </if>
+      <if test="suffixPhone != null" >
+        suffix_phone,
+      </if>
+       <if test="sex != null" >
+        sex,
+      </if>
+      <if test="departmentCode != null" >
+        department_code,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="qq != null" >
+        qq,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=INTEGER},
+      </if>
+      <if test="fixedPhone != null" >
+        #{fixedPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="suffixPhone != null" >
+        #{suffixPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="departmentCode != null" >
+        #{departmentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+       <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 更新业主信息 -->
+  <update id="gw.addressBook.update" parameterType="com.crm.pojo.GwAddressBookModel" >
+    update gw_address_book
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=INTEGER},
+      </if>
+      <if test="fixedPhone != null" >
+        fixed_phone = #{fixedPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="suffixPhone != null" >
+        suffix_phone = #{suffixPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="departmentCode != null" >
+        department_code = #{departmentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        qq = #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

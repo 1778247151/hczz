@@ -1,0 +1,83 @@
+package com.crm.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.api.HandlETC;
+import com.crm.bean.ShopFormatsInfo;
+import com.crm.common.BasePageResultVo;
+import com.crm.common.ResponseCode;
+import com.crm.common.StructureUtil;
+import com.crm.core.ServersManager;
+import com.crm.dao.GwTranssalestotalDao;
+import com.crm.pojo.GwTranssalestotalModel;
+import com.crm.service.GwTranssalestotalService;
+
+@Service("transsalestotalServiceManage")
+public class GwTranssalestotalServiceImpl extends ServersManager<GwTranssalestotalModel, GwTranssalestotalDao> implements GwTranssalestotalService{
+
+	@Resource(name="transsalestotalDaoManage")
+	
+	@Override
+	public void setDao(GwTranssalestotalDao dao) {
+		// TODO Auto-generated method stub
+		this.dao = dao;
+	}
+	
+	@Override
+	public List<GwTranssalestotalModel> getTranssalestotalList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getTranssalestotalList(params);
+	}
+	@Override
+	public List<GwTranssalestotalModel> getTranssalestotalListByDay(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getTranssalestotalListByDay(params);
+	}
+	@Override
+	public List<GwTranssalestotalModel> getTranssalestotalListByMonth(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getTranssalestotalListByMonth(params);
+	}
+	
+	
+	@Override
+	public List<GwTranssalestotalModel> getTranssalestotalListByWeek(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getTranssalestotalListByWeek(params);
+	}
+	@Override
+	public List<GwTranssalestotalModel> getTranssalestotalByCount(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getTranssalestotalByCount(params);
+	}
+	@Override
+	public List<GwTranssalestotalModel> getTranssalestotalByTenDay() {
+		// TODO Auto-generated method stub
+		return dao.getTranssalestotalByTenDay();				
+	}
+	@Override
+	public int batchInsertTranssaletotalList(List<GwTranssalestotalModel> list) {
+		// TODO Auto-generated method stub
+		return dao.batchInsertTranssaletotalList(list);
+	}
+	@Override
+	public List<GwTranssalestotalModel> getListGroupByGoodsId() {
+		// TODO Auto-generated method stub
+		return dao.getListGroupByGoodsId();
+	}
+	@Override
+	public List<GwTranssalestotalModel> getTransalesListByConditionExport(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getTransalesListByConditionExport(params);
+	}
+	@Override
+	public ShopFormatsInfo getShopformatsInfoByShopCode(Map<String, Object> paramMap) {
+        return dao.getShopformatsInfoByShopCode(paramMap);
+    }
+}

@@ -1,0 +1,89 @@
+package com.crm.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwLockerDao;
+import com.crm.pojo.GwGroupInfoModel;
+import com.crm.pojo.GwLockerModel;
+import com.crm.service.GwLockerService;
+
+/**
+ * 
+ * GwLockerServiceImpl:业务逻辑层实现
+ *
+ * @author hanzhiqiang
+ * @date  2016年11月10日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwLockerServiceManage")
+public class GwLockerServiceImpl extends ServersManager<GwLockerModel, GwLockerDao> implements GwLockerService{
+
+	@Resource(name = "gwLockerDaoManage")
+	@Override
+	public void setDao(GwLockerDao gwLockerDao) {
+		// TODO Auto-generated method stub
+		this.dao = gwLockerDao;
+	}
+
+	@Override
+	public GwLockerModel getLockerById(Integer id) {
+		// TODO Auto-generated method stub
+		return dao.getLockerById(id);
+	}
+
+	@Override
+	public List<GwLockerModel> getListsApi() {
+		// TODO Auto-generated method stub
+		return dao.getListsApi();
+	}
+
+	@Override
+	public List<GwLockerModel> getLockerListByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getLockerListByCondition(params);
+	}
+
+	@Override
+	public int addLocker(GwLockerModel gwLockerModel) {
+		// TODO Auto-generated method stub
+		return dao.insert(gwLockerModel);
+	}
+
+	@Override
+	public int updateLocker(GwLockerModel gwLockerModel) {
+		// TODO Auto-generated method stub
+		return dao.update(gwLockerModel);
+	}
+
+	@Override
+	public int deleteLockerById(int id) {
+		// TODO Auto-generated method stub
+		return dao.deleteLockerById(id);
+	}
+
+	@Override
+	public GwLockerModel getLockerByLastOne(String time) {
+		// TODO Auto-generated method stub
+		return dao.getLockerByLastOne(time);
+	}
+	
+	@Override
+	public int updateByCode(String lockerCode) {
+		// TODO Auto-generated method stub
+		return dao.updateByCode(lockerCode);
+	}
+	
+	@Override
+	public int updateReturnByCode(String lockerCode) {
+		// TODO Auto-generated method stub
+		return dao.updateReturnByCode(lockerCode);
+	}
+
+}

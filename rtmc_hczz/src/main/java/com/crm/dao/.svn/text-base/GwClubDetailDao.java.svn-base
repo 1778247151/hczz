@@ -1,0 +1,33 @@
+package com.crm.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwClubDetailModel;
+import com.crm.pojo.GwAdminUsersModel;
+
+/**
+ * 
+ * GwClubDetailDao:数据访问层接口
+ *
+ * @author hanzhiqiang
+ * @date  2016年11月8日
+ * @version  jdk1.8
+ *
+ */
+public interface GwClubDetailDao extends DaoManager<GwClubDetailModel>{
+
+	public GwClubDetailModel getClubDetailById(Integer id);
+
+	public List<GwClubDetailModel> getListsApi();
+
+	public List<GwClubDetailModel> getClubDetailListByCondition(Map<String, Object> params);
+
+	public int deleteClubDetailById(int id);
+
+	public GwClubDetailModel getClubDetailByLastOne(String time);
+
+	public int batchInsertClubDetail(List<GwClubDetailModel> clubDetailList);
+
+}

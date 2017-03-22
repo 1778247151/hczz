@@ -1,0 +1,58 @@
+package com.crm.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwMemberGradeDetailDao;
+import com.crm.pojo.GwMemberGradeDetailModel;
+import com.crm.service.GwMemberGradeDetailService;
+
+/**
+ * 
+ * GwMemberGradeDetailServiceImpl:会员等级设置适用范围业务逻辑层实现
+ *
+ * @author chengpengfei
+ * @date  2016年6月23日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwMemberGradeDetailServiceManage")
+public class GwMemberGradeDetailServiceImpl extends ServersManager<GwMemberGradeDetailModel, GwMemberGradeDetailDao> implements GwMemberGradeDetailService{
+
+	@Resource(name="gwMemberGradeDetailDaoManage")
+	@Override
+	public void setDao(GwMemberGradeDetailDao dao) {
+		// TODO Auto-generated method stub
+		this.dao = dao;
+	}
+
+	@Override
+	public int batchInsertMemberGradeDetail(List<GwMemberGradeDetailModel> gradeDetailList) {
+		// TODO Auto-generated method stub
+		return dao.batchInsertMemberGradeDetail(gradeDetailList);
+	}
+
+	@Override
+	public List<GwMemberGradeDetailModel> getMemberGradeDetailListByCodeAndType(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getMemberGradeDetailListByCodeAndType(params);
+	}
+
+	@Override
+	public List<GwMemberGradeDetailModel> getMemberIntegralDetatilByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getMemberIntegralDetatilByCondition(params);
+	}
+
+	@Override
+	public int updateByCode(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.updateByCode(params);
+	}
+
+}

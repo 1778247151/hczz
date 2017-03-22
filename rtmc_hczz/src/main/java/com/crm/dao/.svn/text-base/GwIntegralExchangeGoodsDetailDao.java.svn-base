@@ -1,0 +1,38 @@
+package com.crm.dao;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwIntegralExchangeGoodsDetailModel;
+/**
+ * 
+ * GwIntegralExchangeGoodsDetailDao:礼品兑换详细访问层接口
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+public interface GwIntegralExchangeGoodsDetailDao extends DaoManager<GwIntegralExchangeGoodsDetailModel>{
+    
+	 /**
+     * 
+     * getIntegralExchangeGoodsDetailByCode:根据礼物兑换详细编号，获取礼物兑换详细是否积分信息
+     *
+     * @author xiangtao
+     * @date 2016年7月20日
+     * @param code                  礼物兑换详细编号
+     * @return   返回：礼物兑换详细信息
+     */
+    public GwIntegralExchangeGoodsDetailModel getIntegralExchangeGoodsDetailByCode(String code);
+
+    /**
+     * 
+     * getIntegralExchangeGoodsDetailByCode:根据会员编号，获取礼物兑换详细信息
+     *
+     * @author xiangtao
+     * @date 2016年7月20日
+     * @param memberCode                  会员编号
+     * @param giftCode                    礼品编号
+     * @return   返回：礼物兑换详细信息
+     */
+    public GwIntegralExchangeGoodsDetailModel getIntegralExchangeGoodsDetailByMemberCode(String memberCode, String giftCode);
+}

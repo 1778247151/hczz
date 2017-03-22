@@ -1,0 +1,27 @@
+package com.crm.api;
+
+/**
+@project: GDWS
+@author:文豪 E-mail:wenhaoboy@gmail.com
+@version QQ:403665586   2016-04-16
+API接口调用类型
+*/
+public class CallParameters {
+
+	/**
+	 * 获取所有会员基本信息
+	 */
+	public static final String WEB_MEMBER_LIST ="WEB_MEMBER_LIST" ;
+	
+	/**
+	 * 获取所有支付方式是否积分基本信息
+	 */
+	public static final String WEB_PAYMENTTENDER_LIST ="WEB_PAYMENTTENDER_LIST" ;
+	
+	/**
+	 * 通过销售数据获取积分数量
+	 */
+	public static final String WEB_TRANSSALE_INTEGRATION ="WEB_TRANSSALE_INTEGRATION" ;
+
+
+}

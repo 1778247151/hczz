@@ -1,0 +1,66 @@
+package com.crm.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwMallInfoModel;
+import com.crm.pojo.GwgoodstreeModel;
+/**
+ * 
+ * GwMallInfoDao:购物中心数据访问层接口
+ *
+ * @author yumaochun
+ * @date  2016年3月10日
+ * @version  jdk1.8
+ *
+ */
+public interface GwMallInfoDao extends DaoManager<GwMallInfoModel>{
+    
+	/**
+	 * 根据编号获取购物中心信息
+	 * @param code
+	 * @return
+	 */
+	public GwMallInfoModel getGwMallInfoByCode(String code);
+	
+	
+	/**
+	 * 获取购物中心信息接口
+	 * @return
+	 */
+	public GwMallInfoModel getMallInfoListApi();
+	
+	/**
+	 * 清空购物中心信息
+	 * @return
+	 */
+	public int deleteAllForMallInfo();
+	
+	/**
+	 * 批量插入货品组别信息
+	 * @param list
+	 * @return
+	 */
+	public int batchInsert(List<GwMallInfoModel> list);
+	/**
+	 * 
+	 * batchUpdate:批量更新
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param list
+	 * @return
+	 */
+	public int batchUpdate(List<GwMallInfoModel> list);
+	/**
+	 * 
+	 * batchDelete:批量删除
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param list
+	 * @return
+	 */
+	public int batchDelete(List<GwMallInfoModel> list);
+}

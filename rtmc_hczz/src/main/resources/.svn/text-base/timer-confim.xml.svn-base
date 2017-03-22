@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+ 	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+                        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd  
+                        http://www.springframework.org/schema/context  
+                        http://www.springframework.org/schema/context/spring-context-4.0.xsd  
+                        http://www.springframework.org/schema/tx 
+	                    http://www.springframework.org/schema/tx/spring-tx-4.0.xsd 
+	                    http://www.springframework.org/schema/aop 
+	                    http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+                        http://www.springframework.org/schema/mvc  
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+    <!-- Scheduler的配置 -->
+    <bean id="myScheduler"
+        class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <!-- 同步sso用户 -->
+                <ref bean="synchronizePortalTriggers"></ref>
+            </list>
+        </property>
+        <property name="autoStartup" value="true"></property>
+    </bean>
+    
+    <!-- ***************************组织架构同步配置开始*********************************** -->
+    <!-- 定时同步portal组织架构的timer配置 -->
+    <bean id="synchronizePortalTriggers" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="synchronizePortal"></property>
+        <property name="cronExpression">
+            <!-- 每一分钟同步sso用户 -->
+            <value>0 */5 * * * ?</value>
+        </property>
+    </bean>
+    <!-- 同步portal用户 -->
+    <bean id="synchronizePortal" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="portalTimer"> </property>
+        <!-- 调用同步的方法 -->
+        <property name="targetMethod" value="synchronizePortal"></property>
+        <property name="concurrent" value="false" />
+        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
+    </bean>
+    <!-- portal定时器类 -->
+    <bean id="portalTimer" class="com.crm.scheduler.PortalTimer"></bean>
+    <!-- ***************************portal组织架构同步配置结束*********************************** -->
+    
+</beans>

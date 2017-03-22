@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
+  <display-name>Archetype Created Web Application</display-name>
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:application.xml</param-value>
+  </context-param>
+  <context-param>
+    <param-name>logbackConfigLocation</param-name>
+    <param-value>classpath:logback.xml</param-value>
+  </context-param>
+  <!-- 本地系统过滤器的配置 -->
+  <filter>
+    <filter-name>encodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <async-supported>true</async-supported>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>encodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  <!-- ************* 用户认证服务器配置 *********************** -->
+   <!-- <filter>
+    <filter-name>ssoClientFilter</filter-name>
+    <filter-class>com.wenhao.sso.client.filter.SSOClientFilter</filter-class>
+    <init-param>
+	    <param-name>SSOServerUrl</param-name>
+	    <param-value>http://192.168.1.59:8086</param-value>
+	</init-param>
+	
+	<init-param>
+	    <param-name>excludedUrls</param-name>
+	    <param-value>/crmApi/*</param-value>
+	</init-param>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>ssoClientFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <servlet>
+    <servlet-name>ssoLoginOut</servlet-name>
+    <servlet-class>com.wenhao.sso.client.filter.SsoLoginOut</servlet-class>
+    <init-param>
+	  <param-name>SSOLoginOutUrl</param-name>
+	  <param-value>http://localhost:8082/system/loginOut.do</param-value>
+	</init-param>
+	<init-param>
+	  <param-name>SSOServerUrl</param-name>
+	  <param-value>http://192.168.1.59:8086</param-value>
+	</init-param>
+  </servlet>
+  <servlet-mapping>
+      <servlet-name>ssoLoginOut</servlet-name>
+      <url-pattern>/ssologinout</url-pattern>
+  </servlet-mapping>
+   <servlet>
+    <servlet-name>ssomessage</servlet-name>
+    <servlet-class>com.wenhao.sso.client.filter.Ssomessage</servlet-class>
+  </servlet>
+  <servlet-mapping>
+      <servlet-name>ssomessage</servlet-name>
+      <url-pattern>/ssomessage</url-pattern>
+  </servlet-mapping>  -->
+    <!-- ***************** END *************************** -->
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <listener>
+    <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+  </listener>
+  <listener>
+	 <listener-class>com.crm.thread.NFDFlightDataTaskListener</listener-class>
+ </listener>
+  <servlet>
+    <servlet-name>SpringMVC</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:spring-mvc.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+    <async-supported>true</async-supported>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SpringMVC</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>uploadFile</servlet-name>
+    <servlet-class>com.crm.interceptor.UploadFileServletUtil</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>uploadFile</servlet-name>
+    <url-pattern>/upload/uploadFile.do</url-pattern>
+  </servlet-mapping>
+ 
+  <!-- crm系统管理过滤起配置 -->
+  <filter>
+    <filter-name>userFilter</filter-name>
+    <filter-class>com.crm.interceptor.SessionFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>userFilter</filter-name>
+    <url-pattern>*.do</url-pattern>
+  </filter-mapping>
+  
+  <!-- 配置不需要过滤的其它静态资源文件 -->
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.css</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.properties</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.gif</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.jpg</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.png</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.bmp</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.js</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.ico</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.swf</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.txt</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.html</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.rar</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.zip</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.mp4</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.apk</url-pattern>
+  </servlet-mapping>
+  <error-page>
+    <error-code>404</error-code>
+    <location>/WEB-INF/pages/404.jsp</location>
+  </error-page>
+  <session-config>
+    <session-timeout>0</session-timeout>
+  </session-config>
+<!--   <listener>  
+    <listener-class>com.lisenner.StartTimerListener</listener-class>  
+</listener> -->
+<listener>  
+    <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>  
+</listener> 
+  <welcome-file-list>
+     <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+</web-app>

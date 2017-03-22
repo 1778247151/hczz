@@ -1,0 +1,129 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwLockerDao;
+import com.crm.pojo.GwGoodsInStoreModel;
+import com.crm.pojo.GwLockerModel;
+import com.crm.pojo.GwLockerRentalModel;
+
+/**
+ * 
+ * GwLockerDaoImpl:数据访问层的实现
+ *
+ * @author hanzhiqiang
+ * @date 2016年11月8日
+ */
+@Repository("gwLockerDaoManage")
+public class GwLockerDaoImpl implements GwLockerDao{
+	
+	@Resource
+	private BaseDao dao;
+	
+	@Override
+	public int insert(GwLockerModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.locker.insert",e);
+	}
+
+	@Override
+	public int delete(GwLockerModel e) {
+		// TODO Auto-generated method stub
+		return dao.delete("",e);
+	}
+
+	@Override
+	public int update(GwLockerModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.locker.update",e);
+	}
+
+	@Override
+	public GwLockerModel selectOne(GwLockerModel e) {
+		// TODO Auto-generated method stub
+		return (GwLockerModel) dao.selectOne("gw.locker.selectById", e);
+	}
+
+	@Override
+	public List<GwLockerModel> selectList(GwLockerModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.locker.deleteById", id);
+	}
+
+	@Override
+	public GwLockerModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwLockerModel) dao.selectOne("gw.locker.selectById", id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.locker.selectPageList", "gw.locker.selectCount", params);
+	}
+
+	@Override
+	public List<GwLockerModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.locker.selectAllList");
+	}
+	
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public GwLockerModel getLockerById(Integer id) {
+		// TODO Auto-generated method stub
+		return (GwLockerModel)dao.selectOne("gw.locker.deleteById", id);
+	}
+
+	@Override
+	public List<GwLockerModel> getListsApi() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.locker.selectAllList");
+	}
+
+	@Override
+	public List<GwLockerModel> getLockerListByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.locker.selectListByCondition",params);
+	}
+
+	@Override
+	public int deleteLockerById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.locker.deleteById", id);
+	}
+
+	@Override
+	public GwLockerModel getLockerByLastOne(String time) {
+		// TODO Auto-generated method stub
+		return (GwLockerModel) dao.selectOne("gw.locker.selectByLastOne",time);
+	}
+
+	@Override
+	public int updateByCode(String lockerCode) {
+		return dao.update("gw.locker.updateByCode",lockerCode);
+	}
+
+	@Override
+	public int updateReturnByCode(String lockerCode) {
+		return dao.update("gw.locker.updateReturnByCode",lockerCode);
+	}
+}

@@ -1,0 +1,109 @@
+package com.crm.pojo;
+
+import java.math.BigDecimal;
+
+public class GwPromotionIntegralScopeModel implements Cloneable{
+    private Integer id;
+
+    private String promotionIntegralCode;
+
+    private String typeCode;
+
+    private Integer type;
+
+    private Integer number;
+
+    private Integer integralNumber;
+
+    private BigDecimal exchangeMoney;
+    
+    private String typeCodeName;
+    
+    private String proportion;
+    private Integer positive;
+    
+    
+    public Integer getPositive() {
+		return positive;
+	}
+
+	public void setPositive(Integer positive) {
+		this.positive = positive;
+	}
+    public String getProportion() {
+		return proportion;
+	}
+
+	public void setProportion(String proportion) {
+		this.proportion = proportion;
+	}
+
+	public String getTypeCodeName() {
+		return typeCodeName;
+	}
+
+	public void setTypeCodeName(String typeCodeName) {
+		this.typeCodeName = typeCodeName;
+	}
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getPromotionIntegralCode() {
+        return promotionIntegralCode;
+    }
+
+    public void setPromotionIntegralCode(String promotionIntegralCode) {
+        this.promotionIntegralCode = promotionIntegralCode == null ? null : promotionIntegralCode.trim();
+    }
+
+    public String getTypeCode() {
+        return typeCode;
+    }
+
+    public void setTypeCode(String typeCode) {
+        this.typeCode = typeCode == null ? null : typeCode.trim();
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
+    }
+
+    public Integer getIntegralNumber() {
+        return integralNumber;
+    }
+
+    public void setIntegralNumber(Integer integralNumber) {
+        this.integralNumber = integralNumber;
+    }
+
+    public BigDecimal getExchangeMoney() {
+        return exchangeMoney;
+    }
+
+    public void setExchangeMoney(BigDecimal exchangeMoney) {
+        this.exchangeMoney = exchangeMoney;
+    }
+
+	@Override
+	public GwPromotionIntegralScopeModel clone() throws CloneNotSupportedException {
+		return (GwPromotionIntegralScopeModel) super.clone();
+	}
+}

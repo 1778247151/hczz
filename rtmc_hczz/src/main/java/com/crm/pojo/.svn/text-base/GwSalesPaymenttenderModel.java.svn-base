@@ -1,0 +1,83 @@
+package com.crm.pojo;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+
+public class GwSalesPaymenttenderModel implements Serializable{
+	
+	
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7617011695083390547L;
+
+	private Integer id;
+
+    private String gwTxserial;
+
+    private String gwCode;
+
+    private BigDecimal gwPaymoney;
+
+    private Integer gwState;
+
+    private Integer integralNumber;
+
+    private String createTime;
+    
+    public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getGwTxserial() {
+        return gwTxserial;
+    }
+
+    public void setGwTxserial(String gwTxserial) {
+        this.gwTxserial = gwTxserial == null ? null : gwTxserial.trim();
+    }
+
+    public String getGwCode() {
+        return gwCode;
+    }
+
+    public void setGwCode(String gwCode) {
+        this.gwCode = gwCode == null ? null : gwCode.trim();
+    }
+
+    public BigDecimal getGwPaymoney() {
+        return gwPaymoney;
+    }
+
+    public void setGwPaymoney(BigDecimal gwPaymoney) {
+        this.gwPaymoney = gwPaymoney;
+    }
+
+    public Integer getGwState() {
+        return gwState;
+    }
+
+    public void setGwState(Integer gwState) {
+        this.gwState = gwState;
+    }
+
+    public Integer getIntegralNumber() {
+        return integralNumber;
+    }
+
+    public void setIntegralNumber(Integer integralNumber) {
+        this.integralNumber = integralNumber;
+    }
+}

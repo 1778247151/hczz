@@ -1,0 +1,144 @@
+package com.crm.pojo;
+
+import com.crm.enums.ConstoretypeEnum;
+
+public class GwShopsLeaseModel {
+    private Integer id;
+
+    private String name;
+
+    private String code;
+
+    private Integer gwMerchantsInfoId;
+
+    private Integer state;
+
+    private String createTime;
+
+    private Integer createUser;
+
+    private String updateTime;
+
+    private Integer updateUser;
+
+    private Integer storetype;
+    
+    private Integer mainshop;
+    
+    private Integer posnum;
+    
+    private String storetypeName;
+    
+    
+
+	public String getStoretypeName() {
+		return storetypeName;
+	}
+
+	public void setStoretypeName(String storetypeName) {
+		this.storetypeName = ConstoretypeEnum.getDisplayName(getStoretype());
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public Integer getGwMerchantsInfoId() {
+		return gwMerchantsInfoId;
+	}
+
+	public void setGwMerchantsInfoId(Integer gwMerchantsInfoId) {
+		this.gwMerchantsInfoId = gwMerchantsInfoId;
+	}
+
+	public Integer getState() {
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public Integer getCreateUser() {
+		return createUser;
+	}
+
+	public void setCreateUser(Integer createUser) {
+		this.createUser = createUser;
+	}
+
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public Integer getUpdateUser() {
+		return updateUser;
+	}
+
+	public void setUpdateUser(Integer updateUser) {
+		this.updateUser = updateUser;
+	}
+
+	public Integer getStoretype() {
+		return storetype;
+	}
+
+	public void setStoretype(Integer storetype) {
+		this.storetype = storetype;
+	}
+
+	public Integer getMainshop() {
+		return mainshop;
+	}
+
+	public void setMainshop(Integer mainshop) {
+		this.mainshop = mainshop;
+	}
+
+	public Integer getPosnum() {
+		return posnum;
+	}
+
+	public void setPosnum(Integer posnum) {
+		this.posnum = posnum;
+	}
+    
+    
+    
+  
+	
+
+
+}

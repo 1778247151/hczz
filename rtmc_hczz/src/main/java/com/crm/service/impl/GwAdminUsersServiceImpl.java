@@ -1,0 +1,53 @@
+package com.crm.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.ServersManager;
+import com.crm.dao.GwAdminUsersDao;
+import com.crm.pojo.GwAdminUsersModel;
+import com.crm.service.GwAdminUsersService;
+
+/**
+ * 
+ * GwAdminUsersServiceImpl:管理员用户业务逻辑层实现
+ *
+ * @author yumaochun
+ * @date  2016年3月5日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwAdminUsersServiceManage")
+public class GwAdminUsersServiceImpl extends ServersManager<GwAdminUsersModel, GwAdminUsersDao> implements GwAdminUsersService{
+	
+	@Resource(name = "gwAdminUsersDaoManage")
+	@Override
+	public void setDao(GwAdminUsersDao gwAdminUsersDao) {
+		// TODO Auto-generated method stub
+		this.dao = gwAdminUsersDao;
+	}
+
+	@Override
+	public GwAdminUsersModel getAdminUsersByUsername(String username) {
+		
+		return dao.getAdminUsersByUsername(username);
+	}
+
+	@Override
+	public BasePageResultVo selectByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getAdminUsersByCondition(params);
+	}
+
+	@Override
+	public List<GwAdminUsersModel> getAdminUsersByPositionCode(String positionCode) {
+		// TODO Auto-generated method stub
+		return dao.getAdminUsersByPositionCode(positionCode);
+	}
+	
+}

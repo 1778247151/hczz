@@ -1,0 +1,74 @@
+package com.crm.service.impl;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.http.client.ClientProtocolException;
+import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
+import com.crm.core.ServersManager;
+import com.crm.dao.GwGroupInfoDao;
+import com.crm.pojo.GwAresModel;
+import com.crm.pojo.GwGroupInfoModel;
+import com.crm.service.GwGroupInfoService;
+import com.crm.util.HttpClientUtil;
+import com.crm.util.JsonMapper;
+/**
+ * 
+ * GwGroupInfoServiceImpl:集团管理业务逻辑层的实现
+ *
+ * @author yumaochun
+ * @date  2016年3月10日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwGroupInfoServiceManage")
+public class GwGroupInfoServiceImpl extends ServersManager<GwGroupInfoModel, GwGroupInfoDao> implements GwGroupInfoService{
+
+	@Resource(name = "gwGroupInfoDaoManage")
+	public void setDao(GwGroupInfoDao gwGroupInfoDao) {
+		this.dao=gwGroupInfoDao;
+	}
+
+	@Override
+	public GwGroupInfoModel getGroupInfoByCode(String code) {
+		// TODO Auto-generated method stub
+		return dao.getGroupInfoByCode(code);
+	}
+
+	@Override
+	public boolean insertMisDataForGroupInfo() throws ClientProtocolException, IOException {
+		//拉取之前先清空原有的数据
+		int deleteAll = dao.deteleAll();
+		if(deleteAll<0){
+			return false;
+		}
+		//从MIS端获取数据
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("YHBS", "E84E7273764D2D77E9FC4E9C521E8C3750");
+		map.put("XTLB", "2");
+		map.put("DYLX", "WEB_GROUPINFO_LIST");
+		String url = "http://192.168.1.58:3388/webapi.do";
+		String body = HttpClientUtil.httpPost(url, map);
+		if(body==null){
+			return false;
+		}
+		
+		String string = JSON.parseObject(body).getString("rows");
+		if(!string.startsWith("[") && !string.endsWith("]")){
+			string = "["+string+"]";
+		}
+		List<GwGroupInfoModel> groupInfoList =JsonMapper.buildNonDefaultMapper().fromJsonToList(string, GwGroupInfoModel.class);
+		//批量插入商户数据
+		int batchInsert = dao.batchInsertForGroupInfoList(groupInfoList);
+		if(batchInsert<0){
+			return false;
+		}
+		return true;
+	}
+
+}

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.promotion.integral.scope" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwPromotionIntegralScopeModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="promotion_integral_code" property="promotionIntegralCode" jdbcType="VARCHAR" />
+    <result column="type_code" property="typeCode" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="number" property="number" jdbcType="INTEGER" />
+    <result column="integral_number" property="integralNumber" jdbcType="INTEGER" />
+    <result column="exchange_money" property="exchangeMoney" jdbcType="DECIMAL" />
+    <result column="positive" property="positive" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, promotion_integral_code, type_code, type, number, integral_number, exchange_money,positive
+  </sql>
+  
+  <insert id="gw.promotion.integral.scope.insertBatch" parameterType="com.crm.pojo.GwPromotionIntegralScopeModel" >
+    insert into gw_promotion_integral_scope (
+   	 id, promotion_integral_code, type_code, type, number, integral_number, exchange_money
+    )
+    values 
+     <foreach collection="list" item="scopeList" index="index" separator="," >
+     (#{scopeList.id,jdbcType=INTEGER},
+      #{scopeList.promotionIntegralCode,jdbcType=VARCHAR},
+      #{scopeList.typeCode,jdbcType=VARCHAR}, 
+      #{scopeList.type,jdbcType=INTEGER},
+      #{scopeList.number,jdbcType=INTEGER}, 
+      #{scopeList.integralNumber,jdbcType=INTEGER}, 
+      #{scopeList.exchangeMoney,jdbcType=DECIMAL})
+      </foreach>
+  </insert>
+  <!-- 通过编号更新数据 -->
+  <update id="gw.promotion.integral.scope.updateByCode"  parameterType="java.util.Map">  
+        update gw_promotion_integral_scope
+        <set>
+	      promotion_integral_code=#{code,jdbcType=VARCHAR},
+	      positive=1
+        </set>
+        where promotion_integral_code = #{oldCode,jdbcType=VARCHAR}    
+</update>
+  
+  <!-- 批量更新数据 -->
+  <update id="gw.promotion.integral.scope.batchUpdate"  parameterType="java.util.List">  
+    <foreach collection="list" item="scopeList" index="index" separator=";">
+        update gw_promotion_integral_scope
+        <set>
+	      #{scopeList.promotionIntegralCode,jdbcType=VARCHAR},
+	      #{scopeList.typeCode,jdbcType=VARCHAR}, 
+	      #{scopeList.type,jdbcType=INTEGER},
+	      #{scopeList.number,jdbcType=INTEGER}, 
+	      #{scopeList.integralNumber,jdbcType=INTEGER}, 
+	      #{scopeList.exchangeMoney,jdbcType=DECIMAL}
+        </set>
+        where id = #{scopeList.id,jdbcType=INTEGER}
+    </foreach>      
+</update>
+  
+  
+  <select id="gw.promotion.integral.scope.selectByCode" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    id, promotion_integral_code promotionIntegralCode, type_code typeCode, 
+    <if test="Type != null and Type == 0">
+   		 (select name from gw_formats_tree where bm=d.type_code) as typeCodeName,
+    </if>
+    <if test="Type != null and Type == 1">
+   		 (select name from gw_shops_lease where code=d.type_code) as typeCodeName,
+    </if>
+    type, number, integral_number integralNumber, exchange_money exchangeMoney
+    from gw_promotion_integral_scope d
+   	<where>
+    <if test="code!=null and ''!=code">
+    	and promotion_integral_code = #{code,jdbcType=VARCHAR}
+    </if>
+    <if test="Type!=null and ''!=Type">
+   		 and type=#{Type,jdbcType=INTEGER}
+    </if>
+    </where>
+  </select>
+  
+  <select id="gw.promotion.integral.scope.selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_promotion_integral_scope
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.promotion.integral.scope.deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from gw_promotion_integral_scope
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <delete id="gw.promotion.integral.scope.deleteByCode" parameterType="java.lang.String" >
+    delete from gw_promotion_integral_scope
+    where promotion_integral_code = #{code,jdbcType=VARCHAR}
+  </delete>
+  
+  <delete id="gw.promotion.integral.scope.deleteByCodeAndType" parameterType="java.util.Map" >
+    delete from gw_promotion_integral_scope
+    where promotion_integral_code = #{code,jdbcType=VARCHAR} and type=#{type,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.promotion.integral.scope.insert" parameterType="com.crm.pojo.GwPromotionIntegralScopeModel" >
+    insert into gw_promotion_integral_scope
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="promotionIntegralCode != null" >
+        promotion_integral_code,
+      </if>
+      <if test="typeCode != null" >
+        type_code,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="number != null" >
+        number,
+      </if>
+      <if test="integralNumber != null" >
+        integral_number,
+      </if>
+      <if test="exchangeMoney != null" >
+        exchange_money,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="promotionIntegralCode != null" >
+        #{promotionIntegralCode,jdbcType=VARCHAR},
+      </if>
+      <if test="typeCode != null" >
+        #{typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="number != null" >
+        #{number,jdbcType=INTEGER},
+      </if>
+      <if test="integralNumber != null" >
+        #{integralNumber,jdbcType=INTEGER},
+      </if>
+      <if test="exchangeMoney != null" >
+        #{exchangeMoney,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.promotion.integral.scope.update" parameterType="com.crm.pojo.GwPromotionIntegralScopeModel" >
+    update gw_promotion_integral_scope
+    <set >
+      <if test="promotionIntegralCode != null" >
+        promotion_integral_code = #{promotionIntegralCode,jdbcType=VARCHAR},
+      </if>
+      <if test="typeCode != null" >
+        type_code = #{typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="number != null" >
+        number = #{number,jdbcType=INTEGER},
+      </if>
+      <if test="integralNumber != null" >
+        integral_number = #{integralNumber,jdbcType=INTEGER},
+      </if>
+      <if test="exchangeMoney != null" >
+        exchange_money = #{exchangeMoney,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

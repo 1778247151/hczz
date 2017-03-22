@@ -1,0 +1,127 @@
+package com.crm.pojo;
+
+import com.crm.enums.CardStateEnum;
+import com.crm.enums.MembersCardTypeEnum;
+
+public class GwMemberCardModel {
+    private Integer id;
+
+    private String cardCode;
+
+    private Integer cardType;
+    
+    private String cardTypeName;
+
+    private String grade;
+    
+    private String gradeName;
+
+    private Integer status;
+    
+    private String statusName;
+
+    private String openDate;
+
+    private Integer createUserId;
+    
+    private String createUserName;
+
+    private String createTime;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getCardCode() {
+        return cardCode;
+    }
+
+    public void setCardCode(String cardCode) {
+        this.cardCode = cardCode == null ? null : cardCode.trim();
+    }
+
+    public Integer getCardType() {
+        return cardType;
+    }
+
+    public void setCardType(Integer cardType) {
+        this.cardType = cardType;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade == null ? null : grade.trim();
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getOpenDate() {
+        return openDate;
+    }
+
+    public void setOpenDate(String openDate) {
+        this.openDate = openDate == null ? null : openDate.trim();
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime == null ? null : createTime.trim();
+    }
+
+	public String getCreateUserName() {
+		return createUserName;
+	}
+
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
+	}
+
+	public String getStatusName() {
+	
+		return CardStateEnum.getDisplayName(status);
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
+
+	public String getCardTypeName() {
+		return MembersCardTypeEnum.getDisplayName(cardType);
+	}
+
+	public void setCardTypeName(String cardTypeName) {
+		this.cardTypeName = cardTypeName;
+	}
+
+	public String getGradeName() {
+		return gradeName;
+	}
+
+	public void setGradeName(String gradeName) {
+		this.gradeName = gradeName;
+	}
+}

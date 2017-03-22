@@ -1,0 +1,11 @@
+package com.crm.service;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwMailRecordModel;
+
+public interface GwMailRecordService extends Services<GwMailRecordModel>  {
+	
+	
+	
+
+}

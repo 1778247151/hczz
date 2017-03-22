@@ -1,0 +1,40 @@
+package com.crm.service;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.http.client.ClientProtocolException;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwMallInfoModel;
+/**
+ * 
+ * GwMallInfoService:购物中心业务逻辑层接口
+ *
+ * @author yumaochun
+ * @date  2016年3月10日
+ * @version  jdk1.8
+ *
+ */
+public interface GwMallInfoService extends Services<GwMallInfoModel>{
+	/**
+	 * 根据编号获取购物中心信息
+	 * @param code
+	 * @return
+	 */
+	public GwMallInfoModel getGwMallInfoByCode(String code);
+	
+	/**
+	 * 获取购物中心信息接口
+	 * @return
+	 */
+	public GwMallInfoModel getMallInfoListApi();
+	
+	/**
+	 * 从MIS端拉取购物中心信息数据并存入本地数据库
+	 * @throws IOException 
+	 * @throws ClientProtocolException 
+	 */
+	public boolean insertMisDataForMallInfo(String url,Map<String, Object> map) throws ClientProtocolException, IOException;
+}

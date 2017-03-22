@@ -1,0 +1,69 @@
+package com.crm.service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwPromotionIntegralScopeModel;
+/**
+ * 
+ * GwPromotionIntegralScopeService:促销积分规则适用范围业务逻辑层接口
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+public interface GwPromotionIntegralScopeService extends Services<GwPromotionIntegralScopeModel>{
+	/**
+	 * 
+	 * 根据规则编号获取使用规则
+	 * @param code
+	 * @return
+	 */
+	List<GwPromotionIntegralScopeModel> getListByCode(Map<String,Object> params);
+	
+	/**
+	 * 
+	 * 批量插入规则适用范围
+	 * @param code
+	 * @return
+	 */
+	int insertBatch(List<GwPromotionIntegralScopeModel> list);
+
+	/**
+	 * 根据促销规则编号删除适用范围
+	 * 
+	 * @param code
+	 * @return
+	 */
+	int deleteByCode(String code);
+	/**
+	 * 
+	 * deleteByCodeAndType:通过编号和类别删除规则范围
+	 *
+	 * @author hemingjun
+	 * @date 2016年11月16日
+	 * @return
+	 */
+	int deleteByCodeAndType(Map<String,Object> params);
+	
+	/**
+	 * 批量更新
+	 * 
+	 * @param code
+	 * @return
+	 */
+	public int batchUpdate(List<GwPromotionIntegralScopeModel> list);
+	
+	/**
+	 * 
+	 * updateByCode:通过编号更新编号
+	 *
+	 * @author hemingjun
+	 * @date 2016年11月17日
+	 * @param params
+	 * @return
+	 */
+	public int updateByCode(Map<String, Object> params);
+}

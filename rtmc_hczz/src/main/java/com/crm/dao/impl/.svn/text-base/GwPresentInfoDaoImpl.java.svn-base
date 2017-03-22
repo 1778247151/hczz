@@ -1,0 +1,95 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwPresentInfoDao;
+import com.crm.pojo.GwPresentInfoModel;
+
+/**
+ * 
+ * GwPresentInfoDaoImpl:礼品维护数据访问层实现
+ *
+ * @author chengpengfei
+ * @date  2016年6月23日
+ * @version  jdk1.8
+ *
+ */
+@Repository("gwPresentInfoDaoManage")
+public class GwPresentInfoDaoImpl implements GwPresentInfoDao{
+
+	@Resource
+	private BaseDao dao;
+	@Override
+	public int insert(GwPresentInfoModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.presentInfo.insert",e);
+	}
+
+	@Override
+	public int delete(GwPresentInfoModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwPresentInfoModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.presentInfo.update",e);
+	}
+
+	@Override
+	public GwPresentInfoModel selectOne(GwPresentInfoModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwPresentInfoModel> selectList(GwPresentInfoModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.presentInfo.deleteById",id);
+	}
+
+	@Override
+	public GwPresentInfoModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwPresentInfoModel) dao.selectOne("gw.presentInfo.selectById",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.presentInfo.selectByPageList", "gw.presentInfo.selectByPageCount", params);
+	}
+
+	@Override
+	public List<GwPresentInfoModel> getAllList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public GwPresentInfoModel getPresentByLastOne(String time) {
+		// TODO Auto-generated method stub
+		return (GwPresentInfoModel) dao.selectOne("gw.presentInfo.selectByLastOne",time);
+	}
+
+}

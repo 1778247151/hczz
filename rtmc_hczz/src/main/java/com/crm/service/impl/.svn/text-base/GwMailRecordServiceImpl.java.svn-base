@@ -1,0 +1,21 @@
+package com.crm.service.impl;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwMailRecordDao;
+import com.crm.pojo.GwMailRecordModel;
+import com.crm.service.GwMailRecordService;
+@Service("gwMailRecordServiceManage")
+public class GwMailRecordServiceImpl extends ServersManager<GwMailRecordModel, GwMailRecordDao> implements GwMailRecordService {
+	@Resource(name="gwMailRecordDaoManage")
+	@Override
+	public void setDao(GwMailRecordDao dao) {
+		this.dao=dao;
+		
+		
+	}
+
+}

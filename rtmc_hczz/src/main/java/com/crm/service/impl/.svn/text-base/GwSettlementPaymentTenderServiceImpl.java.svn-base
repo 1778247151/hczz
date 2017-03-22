@@ -1,0 +1,51 @@
+package com.crm.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwSettlementPaymentTenderDao;
+import com.crm.pojo.GwSettlementPaymentTenderModel;
+import com.crm.service.GwSettlementPaymentTenderService;
+
+/**
+ * 
+ * GwSettlementPaymentTenderServiceImpl:付款方式业务逻辑层实现
+ *
+ * @author chengpengfei
+ * @date  2016年4月13日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwSettlementPaymentTenderServiceManage")
+public class GwSettlementPaymentTenderServiceImpl extends ServersManager<GwSettlementPaymentTenderModel,GwSettlementPaymentTenderDao> implements GwSettlementPaymentTenderService{
+	@Resource(name = "gwSettlementPaymentTenderDaoManage")
+	@Override
+	public void setDao(GwSettlementPaymentTenderDao dao) {
+		this.dao = dao;
+		
+	}
+
+	@Override
+	public int deleSettlementPaymentByFake(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.deleSettlementPaymentByFake(params);
+	}
+
+	@Override
+	public List<GwSettlementPaymentTenderModel> getSettlementPaymentTenderByMallInfoId(Map<String,Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getSettlementPaymentTenderByMallInfoId(params);
+	}
+
+	@Override
+	public List<GwSettlementPaymentTenderModel> getSettlementPaymentTenderByMallInfoIdApi(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getSettlementPaymentTenderByMallInfoIdApi(params);
+	}
+
+}

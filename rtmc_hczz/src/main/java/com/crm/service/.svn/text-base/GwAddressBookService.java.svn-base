@@ -1,0 +1,87 @@
+package com.crm.service;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwAddressBookModel;
+
+/**
+ * 
+ * GwAddressBookService:通讯录业务逻辑层接口
+ *
+ * @author hanzhiqiang
+ * @date  2016年11月8日
+ * @version  jdk1.8
+ *
+ */
+public interface GwAddressBookService extends Services<GwAddressBookModel>{
+	/**
+	 * 
+	 * getAddressBookById:根据编号，获得信息
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 * @param id
+	 * @return
+	 */
+	public GwAddressBookModel getAddressBookById(Integer id);
+	
+	/**
+	 * 
+	 * getListsApi:获取所有集合接口
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 * @return
+	 */
+	public List<GwAddressBookModel> getListsApi();
+	/**
+	 * 
+	 * getAddressBookListByCondition:根据条件获取集合
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 * @param params
+	 * @return
+	 */
+	public List<GwAddressBookModel> getAddressBookListByCondition(Map<String, Object> params);
+
+	/**
+	 * 
+	 * addAddressBook:添加
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 */
+	public int addAddressBook(GwAddressBookModel gwAddressBookModel);
+	
+	/**
+	 * 
+	 * updateAddressBook:修改
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 * @return
+	 */
+	public int updateAddressBook(GwAddressBookModel gwAddressBookModel);
+	
+	/**
+	 * 
+	 * deleteAddressBookById:删除业主
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 * @param id
+	 * @return
+	 */
+	public int deleteAddressBookById(int id);
+}

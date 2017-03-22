@@ -1,0 +1,5 @@
+﻿[
+    { "id": "module", "text": "菜单模块" },
+    { "id": "links", "text": "菜单链接" },
+    { "id": "func", "text": "菜单按钮" }
+]

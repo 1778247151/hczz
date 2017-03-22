@@ -1,0 +1,124 @@
+package com.crm.pojo;
+
+public class GwRepeatVisitDetailModel {
+    private Integer id;
+
+    private String repeatVisitCode;
+
+    private String cardCode;
+
+    private String content;
+
+    private Integer createUserId;
+
+    private String createTime;
+
+    private Integer updateUserId;
+
+    private String updateTime;
+    
+    //会员信息
+    private String userName;
+    
+    private String phone;
+    
+    private String vipCode;
+    
+    private String sex;
+
+    public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getVipCode() {
+		return vipCode;
+	}
+
+	public void setVipCode(String vipCode) {
+		this.vipCode = vipCode;
+	}
+
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getRepeatVisitCode() {
+        return repeatVisitCode;
+    }
+
+    public void setRepeatVisitCode(String repeatVisitCode) {
+        this.repeatVisitCode = repeatVisitCode == null ? null : repeatVisitCode.trim();
+    }
+
+    public String getCardCode() {
+        return cardCode;
+    }
+
+    public void setCardCode(String cardCode) {
+        this.cardCode = cardCode == null ? null : cardCode.trim();
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content == null ? null : content.trim();
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime == null ? null : createTime.trim();
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime == null ? null : updateTime.trim();
+    }
+}

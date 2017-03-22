@@ -1,0 +1,166 @@
+package com.crm.pojo;
+
+import java.math.BigDecimal;
+/**
+ * 
+ * GwBaseIntegralModel:基础积分规则实体类
+ *
+ * @author yumaochun
+ * @date  2016年7月12日
+ * @version  jdk1.8
+ *
+ */
+public class GwBaseIntegralModel {
+    
+    private Integer id;
+
+    private String memberGradeCode;
+
+    private String shopsCode;
+
+    private String description;
+
+    private BigDecimal lowestMoney;
+    
+    private BigDecimal saleMoney;
+
+    private Integer integralNumber;
+
+    private Integer createUserId;
+
+    private Integer updateUserId;
+
+    private String createTime;
+
+    private String updateTime;
+    
+    private String createUserName;
+    
+    private String updateUserName;
+    
+    private String proportion;//比例
+    
+    //店铺名称
+    private String shopsName;
+    
+    
+    public String getShopsName() {
+		return shopsName;
+	}
+
+	public void setShopsName(String shopsName) {
+		this.shopsName = shopsName;
+	}
+
+	public String getProportion() {
+		return proportion;
+	}
+
+	public void setProportion(String proportion) {
+		this.proportion = proportion;
+	}
+
+	public BigDecimal getLowestMoney() {
+		return lowestMoney;
+	}
+
+	public void setLowestMoney(BigDecimal lowestMoney) {
+		this.lowestMoney = lowestMoney;
+	}
+
+	public String getCreateUserName() {
+		return createUserName;
+	}
+
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
+	}
+
+	public String getUpdateUserName() {
+		return updateUserName;
+	}
+
+	public void setUpdateUserName(String updateUserName) {
+		this.updateUserName = updateUserName;
+	}
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getMemberGradeCode() {
+        return memberGradeCode;
+    }
+
+    public void setMemberGradeCode(String memberGradeCode) {
+        this.memberGradeCode = memberGradeCode == null ? null : memberGradeCode.trim();
+    }
+
+    public String getShopsCode() {
+        return shopsCode;
+    }
+
+    public void setShopsCode(String shopsCode) {
+        this.shopsCode = shopsCode == null ? null : shopsCode.trim();
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description == null ? null : description.trim();
+    }
+
+    public BigDecimal getSaleMoney() {
+        return saleMoney;
+    }
+
+    public void setSaleMoney(BigDecimal saleMoney) {
+        this.saleMoney = saleMoney;
+    }
+
+    public Integer getIntegralNumber() {
+        return integralNumber;
+    }
+
+    public void setIntegralNumber(Integer integralNumber) {
+        this.integralNumber = integralNumber;
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime == null ? null : createTime.trim();
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime == null ? null : updateTime.trim();
+    }
+}

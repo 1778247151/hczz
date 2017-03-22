@@ -1,0 +1,86 @@
+package com.crm.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.ServersManager;
+import com.crm.dao.GwmerchantsinfoDao;
+import com.crm.pojo.GwMallInfoModel;
+import com.crm.pojo.GwPropertyAttributeModel;
+import com.crm.pojo.GwformatstreeModel;
+import com.crm.pojo.GwmerchantsinfoModel;
+import com.crm.service.GwmerchantsinfoService;
+
+/**
+ * 
+ * GwmerchantsinfoServiceImpl:商铺信息业务逻辑层实现
+ *
+ * @author chengpengfei
+ * @date  2016年3月11日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwMerchaninfoService")
+public class GwmerchantsinfoServiceImpl extends ServersManager<GwmerchantsinfoModel,GwmerchantsinfoDao>implements GwmerchantsinfoService{
+	@Resource(name = "gwMerchanDao")
+	@Override
+	public void setDao(GwmerchantsinfoDao dao) {
+		// TODO Auto-generated method stub
+		this.dao = dao;
+	}
+
+	@Override
+	public BasePageResultVo getMerNameByMallId(Map<String,Object> params) {
+		return dao.getMerNameByMallId(params);
+	}
+
+	@Override
+	public List<GwmerchantsinfoModel> getMerchantsInfoList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getMerchantsInfoList(params);
+	}
+
+	@Override
+	public GwmerchantsinfoModel getMerchansInfoByCode(String code) {
+		// TODO Auto-generated method stub
+		return dao.getMerchansInfoByCode(code);
+	}
+
+	@Override
+	public List<GwmerchantsinfoModel> getMerchansInfoApi(Map<String,Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getMerchansInfoApi(params);
+	}
+
+	@Override
+	public BasePageResultVo getMerchantsInfoBySign(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getMerchantsInfoBySign(params);
+	}
+
+	@Override
+	public GwmerchantsinfoModel getMerchantsInfoSingByCode(String code) {
+		// TODO Auto-generated method stub
+		return dao.getMerchantsInfoSingByCode(code);
+	}
+
+	@Override
+	public Map<String, Object> getSimpleMerchantsInfo(String code) {
+		Object o=dao.getSimpleMerchantsInfo(code);
+		return (Map<String, Object>) o;
+	}
+
+	@Override
+	public GwmerchantsinfoModel getMerchanInfoAllById(int id) {
+		// TODO Auto-generated method stub
+		return dao.getMerchanInfoAllById(id);
+	}
+
+
+	
+}

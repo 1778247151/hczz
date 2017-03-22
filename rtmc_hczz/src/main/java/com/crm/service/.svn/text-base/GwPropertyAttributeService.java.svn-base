@@ -1,0 +1,35 @@
+package com.crm.service;
+
+import java.io.IOException;
+
+import org.apache.http.client.ClientProtocolException;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwPropertyAttributeModel;
+
+/**
+ * 
+ * GwPropertyAttributeService:物业性质业务逻辑层接口
+ *
+ * @author chengpengfei
+ * @date  2016年3月10日
+ * @version  jdk1.8
+ *
+ */
+public interface GwPropertyAttributeService extends Services<GwPropertyAttributeModel>{
+
+	/**
+	 * 根据编号获取物业性质信息
+	 * @param code
+	 * @return
+	 */
+	public GwPropertyAttributeModel getPropertyAttributeByCode(String code);
+	
+
+	/**
+	 * 从MIS端拉取物业性质信息数据并存入本地数据库
+	 * @throws IOException 
+	 * @throws ClientProtocolException 
+	 */
+	public boolean insertMisDataForProperty() throws ClientProtocolException, IOException;
+}

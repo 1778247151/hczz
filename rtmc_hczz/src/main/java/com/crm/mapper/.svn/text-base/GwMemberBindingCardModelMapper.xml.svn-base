@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.memberBindingCard" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwMemberBindingCardModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="member_code" property="memberCode" jdbcType="VARCHAR" />
+    <result column="card_code" property="cardCode" jdbcType="VARCHAR" />
+    <result column="binding_date" property="bindingDate" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, member_code, card_code, binding_date, create_user_id, create_time, update_user_id, 
+    update_time
+  </sql>
+  <select id="gw.memberBindingCard.selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_member_binding_card
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.memberBindingCard.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_member_binding_card
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.memberBindingCard.insert" parameterType="com.crm.pojo.GwMemberBindingCardModel" >
+    insert into gw_member_binding_card
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberCode != null" >
+        member_code,
+      </if>
+      <if test="cardCode != null" >
+        card_code,
+      </if>
+      <if test="bindingDate != null" >
+        binding_date,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="memberCode != null" >
+        #{memberCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cardCode != null" >
+        #{cardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bindingDate != null" >
+        #{bindingDate,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.memberBindingCard.update" parameterType="com.crm.pojo.GwMemberBindingCardModel" >
+    update gw_member_binding_card
+    <set >
+      <if test="memberCode != null" >
+        member_code = #{memberCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cardCode != null" >
+        card_code = #{cardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bindingDate != null" >
+        binding_date = #{bindingDate,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where member_code = #{memberCode,jdbcType=INTEGER}
+  </update>
+  <!-- 根据会员号获得正在使用的会员卡绑定信息 -->
+  <select id="gw.memberBindingCard.selectByMemberCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    	b.id, b.member_code, b.card_code, b.binding_date, b.create_user_id, b.create_time, b.update_user_id, 
+    	b.update_time
+    from gw_member_binding_card b,gw_member_card c
+    where b.member_code = #{memberCode,jdbcType=VARCHAR}
+	and b.card_code=c.card_code
+    and c.status = 1
+  </select>
+  <!-- 根据会vip号获得所有卡号信息 -->
+  <select id="gw.memberBindingCard.selectListByMemberCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    	b.id, b.member_code, b.card_code, b.binding_date, b.create_user_id, b.create_time, b.update_user_id, 
+    	b.update_time
+    from gw_member_binding_card b
+    where b.member_code = #{memberCode,jdbcType=VARCHAR}
+  </select>
+  
+  
+  <!-- 根据会员卡号获得会员绑定信息 -->
+  <select id="gw.memberBindingCard.selectByCardCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    	<include refid="Base_Column_List" />
+    from gw_member_binding_card
+    where card_code = #{cardCode,jdbcType=VARCHAR}
+  </select>
+  <!--获取正常使用的所有卡号  -->
+  
+<!--     <select id="gw.memberBindingCard.getAllNormalUseCardCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    	<include refid="Base_Column_List" />
+    from gw_member_binding_card
+    where status=1
+  </select> -->
+  
+   <!-- 根据条件，获取分页数据list集合 -->
+  <select id="gw.memberBindingCard.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    		b.id, b.member_code, b.card_code, b.binding_date, b.create_user_id, b.create_time, b.update_user_id, 
+    	b.update_time,
+    	(select u.name from gw_admin_users u where u.id = b.create_user_id) as createUserName,
+    	(select u.name from gw_admin_users u where u.id = b.update_user_id) as updateUserName
+    from gw_member_binding_card b  
+    <where>
+   			<if test="cardCode != null and ''!=cardCode">
+				 b.card_code LIKE CONCAT(CONCAT('%', #{cardCode,jdbcType=VARCHAR}),
+				'%')
+			</if>
+		<if test="startTime != null and '' != startTime">
+			 b.binding_date &gt;=#{startTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and '' != endTime"> 
+			and b.binding_date &lt;=#{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="startTime != null and '' != startTime and endTime !=null and ''!=endTime">
+			and b.binding_date &gt;=#{startTime,jdbcType=INTEGER} and
+			 b.binding_date &lt;=#{endTime,jdbcType=VARCHAR}
+		</if>
+    	<if test="memberCode != null and ''!=memberCode">
+				 b.member_code LIKE CONCAT(CONCAT('%', #{memberCode,jdbcType=VARCHAR}), '%')
+			</if>
+		
+			
+    </where>
+    order by b.binding_date desc
+	limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  <!-- 根据条件，获得总记录数 -->
+  <select id="gw.memberBindingCard.selectCount" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select 
+    	count(id)  from 
+   gw_member_binding_card  b
+       <where>
+   			<if test="cardCode != null and ''!=cardCode">
+				card_code LIKE CONCAT(CONCAT('%', #{cardCode,jdbcType=VARCHAR}),
+				'%')
+			</if>
+    	<if test="memberCode != null and ''!=memberCode">
+				 member_code LIKE CONCAT(CONCAT('%', #{memberCode,jdbcType=VARCHAR}), '%')
+			</if>
+		<if test="startTime != null and '' != startTime">
+				b.binding_date &gt;=#{startTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and '' != endTime"> 
+			and b.binding_date &lt;=#{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="startTime != null and '' != startTime and endTime !=null and ''!=endTime">
+			and b.binding_date &gt;=#{startTime,jdbcType=INTEGER} and
+			 b.binding_date &lt;=#{endTime,jdbcType=VARCHAR}
+		</if>
+			
+    </where>
+  </select>
+  
+  <!-- 获取所有会员卡号 -->
+
+    <select id="gw.memberBindingCard.selectAllList" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_member_binding_card
+  </select>
+</mapper>

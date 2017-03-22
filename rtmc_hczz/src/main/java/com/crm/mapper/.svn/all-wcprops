@@ -1,0 +1,395 @@
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/gw_crm/!svn/ver/522/gdws_crm/src/main/java/com/crm/mapper
+END
+GwPickupMaintenanceModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/gw_crm/!svn/ver/240/gdws_crm/src/main/java/com/crm/mapper/GwPickupMaintenanceModelMapper.xml
+END
+GwRepeatVisitModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/gw_crm/!svn/ver/180/gdws_crm/src/main/java/com/crm/mapper/GwRepeatVisitModelMapper.xml
+END
+GwGoodsOutStoreDetailModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/gw_crm/!svn/ver/412/gdws_crm/src/main/java/com/crm/mapper/GwGoodsOutStoreDetailModelMapper.xml
+END
+GwLoseMaintenanceModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/gw_crm/!svn/ver/318/gdws_crm/src/main/java/com/crm/mapper/GwLoseMaintenanceModelMapper.xml
+END
+GwSalesPaymenttenderModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/gw_crm/!svn/ver/346/gdws_crm/src/main/java/com/crm/mapper/GwSalesPaymenttenderModelMapper.xml
+END
+GwSalesModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/gw_crm/!svn/ver/346/gdws_crm/src/main/java/com/crm/mapper/GwSalesModelMapper.xml
+END
+GwMemberGradeModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/gw_crm/!svn/ver/384/gdws_crm/src/main/java/com/crm/mapper/GwMemberGradeModelMapper.xml
+END
+GwAdminUsersModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/gw_crm/!svn/ver/327/gdws_crm/src/main/java/com/crm/mapper/GwAdminUsersModelMapper.xml
+END
+GwBuildingTreeModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/gw_crm/!svn/ver/227/gdws_crm/src/main/java/com/crm/mapper/GwBuildingTreeModelMapper.xml
+END
+GwLeaseGoodsModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/gw_crm/!svn/ver/284/gdws_crm/src/main/java/com/crm/mapper/GwLeaseGoodsModelMapper.xml
+END
+GwApiAccountModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/gw_crm/!svn/ver/318/gdws_crm/src/main/java/com/crm/mapper/GwApiAccountModelMapper.xml
+END
+GwGoodsInfoModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/gw_crm/!svn/ver/221/gdws_crm/src/main/java/com/crm/mapper/GwGoodsInfoModelMapper.xml
+END
+GwMembersModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/gw_crm/!svn/ver/533/gdws_crm/src/main/java/com/crm/mapper/GwMembersModelMapper.xml
+END
+GwActivityModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/gw_crm/!svn/ver/488/gdws_crm/src/main/java/com/crm/mapper/GwActivityModelMapper.xml
+END
+GwMemberGradeDetailModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/gw_crm/!svn/ver/521/gdws_crm/src/main/java/com/crm/mapper/GwMemberGradeDetailModelMapper.xml
+END
+GwmerchantsinfoModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/gw_crm/!svn/ver/284/gdws_crm/src/main/java/com/crm/mapper/GwmerchantsinfoModelMapper.xml
+END
+GwTypeTreeModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/gw_crm/!svn/ver/300/gdws_crm/src/main/java/com/crm/mapper/GwTypeTreeModelMapper.xml
+END
+GwRoleModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/gw_crm/!svn/ver/284/gdws_crm/src/main/java/com/crm/mapper/GwRoleModelMapper.xml
+END
+GwMemberCardModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/gw_crm/!svn/ver/407/gdws_crm/src/main/java/com/crm/mapper/GwMemberCardModelMapper.xml
+END
+GwPropertyAttributeModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/gw_crm/!svn/ver/214/gdws_crm/src/main/java/com/crm/mapper/GwPropertyAttributeModelMapper.xml
+END
+GwClubDetailModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/gw_crm/!svn/ver/522/gdws_crm/src/main/java/com/crm/mapper/GwClubDetailModelMapper.xml
+END
+GwAreaModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/gw_crm/!svn/ver/59/gdws_crm/src/main/java/com/crm/mapper/GwAreaModelMapper.xml
+END
+GwRoleGroupModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/gw_crm/!svn/ver/161/gdws_crm/src/main/java/com/crm/mapper/GwRoleGroupModelMapper.xml
+END
+GwStockCheckDatailMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/gw_crm/!svn/ver/470/gdws_crm/src/main/java/com/crm/mapper/GwStockCheckDatailMapper.xml
+END
+GwPaymentTenderModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/gw_crm/!svn/ver/256/gdws_crm/src/main/java/com/crm/mapper/GwPaymentTenderModelMapper.xml
+END
+GwLockerModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/gw_crm/!svn/ver/474/gdws_crm/src/main/java/com/crm/mapper/GwLockerModelMapper.xml
+END
+GwMemberIntegralDetailModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/gw_crm/!svn/ver/489/gdws_crm/src/main/java/com/crm/mapper/GwMemberIntegralDetailModelMapper.xml
+END
+GwStockCheckModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/gw_crm/!svn/ver/470/gdws_crm/src/main/java/com/crm/mapper/GwStockCheckModelMapper.xml
+END
+GwCollectRecordModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/gw_crm/!svn/ver/47/gdws_crm/src/main/java/com/crm/mapper/GwCollectRecordModelMapper.xml
+END
+GwStoreGoodsModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/gw_crm/!svn/ver/436/gdws_crm/src/main/java/com/crm/mapper/GwStoreGoodsModelMapper.xml
+END
+GwDepartmentPositionModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/gw_crm/!svn/ver/284/gdws_crm/src/main/java/com/crm/mapper/GwDepartmentPositionModelMapper.xml
+END
+GwMemberIntegralRecordModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/gw_crm/!svn/ver/252/gdws_crm/src/main/java/com/crm/mapper/GwMemberIntegralRecordModelMapper.xml
+END
+GwLeaseMaintenanceModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/gw_crm/!svn/ver/274/gdws_crm/src/main/java/com/crm/mapper/GwLeaseMaintenanceModelMapper.xml
+END
+GwAddressBookModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/gw_crm/!svn/ver/401/gdws_crm/src/main/java/com/crm/mapper/GwAddressBookModelMapper.xml
+END
+GwGoodsInStoreDetailModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/gw_crm/!svn/ver/137/gdws_crm/src/main/java/com/crm/mapper/GwGoodsInStoreDetailModelMapper.xml
+END
+GwSettlementPaymentTenderMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/gw_crm/!svn/ver/284/gdws_crm/src/main/java/com/crm/mapper/GwSettlementPaymentTenderMapper.xml
+END
+GwDepartmentModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/gw_crm/!svn/ver/284/gdws_crm/src/main/java/com/crm/mapper/GwDepartmentModelMapper.xml
+END
+GwbrandtreeModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/gw_crm/!svn/ver/284/gdws_crm/src/main/java/com/crm/mapper/GwbrandtreeModelMapper.xml
+END
+GwShopsLeaseModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/gw_crm/!svn/ver/369/gdws_crm/src/main/java/com/crm/mapper/GwShopsLeaseModelMapper.xml
+END
+GwPromotionIntegralScopeModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/gw_crm/!svn/ver/521/gdws_crm/src/main/java/com/crm/mapper/GwPromotionIntegralScopeModelMapper.xml
+END
+GwGroupInfoModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/gw_crm/!svn/ver/214/gdws_crm/src/main/java/com/crm/mapper/GwGroupInfoModelMapper.xml
+END
+GwPromotionIntegralModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/gw_crm/!svn/ver/346/gdws_crm/src/main/java/com/crm/mapper/GwPromotionIntegralModelMapper.xml
+END
+GwNoticeModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/gw_crm/!svn/ver/106/gdws_crm/src/main/java/com/crm/mapper/GwNoticeModelMapper.xml
+END
+GwMailRecordModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/gw_crm/!svn/ver/533/gdws_crm/src/main/java/com/crm/mapper/GwMailRecordModelMapper.xml
+END
+GwRepeatVisitDetailModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/gw_crm/!svn/ver/180/gdws_crm/src/main/java/com/crm/mapper/GwRepeatVisitDetailModelMapper.xml
+END
+GwTranssalestotalModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/gw_crm/!svn/ver/237/gdws_crm/src/main/java/com/crm/mapper/GwTranssalestotalModelMapper.xml
+END
+GwMenuTreeModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/gw_crm/!svn/ver/453/gdws_crm/src/main/java/com/crm/mapper/GwMenuTreeModelMapper.xml
+END
+GwCustomerComplainModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/gw_crm/!svn/ver/304/gdws_crm/src/main/java/com/crm/mapper/GwCustomerComplainModelMapper.xml
+END
+GwActivityMemberModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/gw_crm/!svn/ver/417/gdws_crm/src/main/java/com/crm/mapper/GwActivityMemberModelMapper.xml
+END
+GwClubModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/gw_crm/!svn/ver/522/gdws_crm/src/main/java/com/crm/mapper/GwClubModelMapper.xml
+END
+GwgoodstreeModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/gw_crm/!svn/ver/214/gdws_crm/src/main/java/com/crm/mapper/GwgoodstreeModelMapper.xml
+END
+GwformatstreeModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/gw_crm/!svn/ver/266/gdws_crm/src/main/java/com/crm/mapper/GwformatstreeModelMapper.xml
+END
+GwPresentInfoModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/gw_crm/!svn/ver/150/gdws_crm/src/main/java/com/crm/mapper/GwPresentInfoModelMapper.xml
+END
+GwMemberBindingCardModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/gw_crm/!svn/ver/410/gdws_crm/src/main/java/com/crm/mapper/GwMemberBindingCardModelMapper.xml
+END
+GwBaseIntegralModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/gw_crm/!svn/ver/487/gdws_crm/src/main/java/com/crm/mapper/GwBaseIntegralModelMapper.xml
+END
+GwSmsRecordModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/gw_crm/!svn/ver/533/gdws_crm/src/main/java/com/crm/mapper/GwSmsRecordModelMapper.xml
+END
+GwMallInfoModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/gw_crm/!svn/ver/214/gdws_crm/src/main/java/com/crm/mapper/GwMallInfoModelMapper.xml
+END
+GwIntegralExchangeGoodsModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/gw_crm/!svn/ver/504/gdws_crm/src/main/java/com/crm/mapper/GwIntegralExchangeGoodsModelMapper.xml
+END
+GwShopsInfoModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/gw_crm/!svn/ver/284/gdws_crm/src/main/java/com/crm/mapper/GwShopsInfoModelMapper.xml
+END
+GwSysLoggerModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/gw_crm/!svn/ver/300/gdws_crm/src/main/java/com/crm/mapper/GwSysLoggerModelMapper.xml
+END
+GwGoodsInStoreModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/gw_crm/!svn/ver/503/gdws_crm/src/main/java/com/crm/mapper/GwGoodsInStoreModelMapper.xml
+END
+GwGoodsOutStoreModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/gw_crm/!svn/ver/503/gdws_crm/src/main/java/com/crm/mapper/GwGoodsOutStoreModelMapper.xml
+END
+GwLockerRentalModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/gw_crm/!svn/ver/474/gdws_crm/src/main/java/com/crm/mapper/GwLockerRentalModelMapper.xml
+END
+GwIntegralExchangeGoodsDetailModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/gw_crm/!svn/ver/178/gdws_crm/src/main/java/com/crm/mapper/GwIntegralExchangeGoodsDetailModelMapper.xml
+END
+GwAresModelMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/gw_crm/!svn/ver/214/gdws_crm/src/main/java/com/crm/mapper/GwAresModelMapper.xml
+END

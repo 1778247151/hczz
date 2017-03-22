@@ -1,0 +1,68 @@
+package com.crm.dao;
+
+import java.util.List;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwGroupInfoModel;
+import com.crm.pojo.GwGroupInfoModel;
+/**
+ * 
+ * GwGroupInfoModelDao:购物中心数据访问层接口
+ *
+ * @author yumaochun
+ * @date  2016年3月10日
+ * @version  jdk1.8
+ *
+ */
+public interface GwGroupInfoDao extends DaoManager<GwGroupInfoModel>{
+	
+	/**
+	 * 根据编号获取集团信息
+	 * @param code
+	 * @return
+	 */
+    public GwGroupInfoModel getGroupInfoByCode(String code);
+    
+    /**
+     * 清空集团表
+     * @return
+     */
+    public int deteleAll();
+    
+    /**
+     * 批量插入集团信息
+     * @param groupInfoList
+     * @return
+     */
+    public int batchInsertForGroupInfoList(List<GwGroupInfoModel> groupInfoList);
+    
+    /**
+	 * 批量插入
+	 * 
+	 * @param list
+	 * @return
+	 */
+	public int batchInsert(List<GwGroupInfoModel> list);
+
+	/**
+	 * 
+	 * batchUpdate:批量更新
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param list
+	 * @return
+	 */
+	public int batchUpdate(List<GwGroupInfoModel> list);
+
+	/**
+	 * 
+	 * batchDelete:批量删除
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param list
+	 * @return
+	 */
+	public int batchDelete(List<GwGroupInfoModel> list);
+}

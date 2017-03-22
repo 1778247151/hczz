@@ -1,0 +1,231 @@
+package com.crm.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.SecurityUtil;
+import com.crm.interceptor.exception.BaseException;
+import com.crm.pojo.GwMallInfoModel;
+import com.crm.service.GwMallInfoService;
+
+import com.crm.util.ValidateUtil;
+/**
+ * 
+ * GwMallInfoController:购物中心访问控制
+ *
+ * @author yumaochun
+ * @date  2016年3月10日
+ * @version  jdk1.8
+ *
+ */
+@Controller
+@RequestMapping("/mallInfo")
+public class GwMallInfoController extends BaseException{
+
+	/**
+	 * 购物中心管理业务逻辑
+	 */
+	@Resource(name="gwMallInfoServiceManage")
+	private GwMallInfoService gwMallInfoServiceImpl;
+	
+	/**
+	 * 
+	 * addMallInfo:添加购物中心
+	 *
+	 * @date 2016年3月10日 
+	 * @param MallInfo            购物中心信息对象
+	 * @return
+	 */
+	@RequestMapping("/addMallInfo.do")
+	@ResponseBody
+	public BaseResultVo addMallInfo(GwMallInfoModel MallInfo){
+		
+		if(!ValidateUtil.isAvailableAccountStr(MallInfo.getBm(), 4, 10)){
+			return BaseResultVo.responseFail("购物中心编号为4-10位的字符且不能包含非法字符");
+		}
+		GwMallInfoModel mallInfo = gwMallInfoServiceImpl.getGwMallInfoByCode(MallInfo.getBm());
+		if(mallInfo!=null){
+			return BaseResultVo.responseFail("购物中心编码已存在");
+		}
+		MallInfo.setState(1);
+		int num=gwMallInfoServiceImpl.insert(MallInfo);
+		if(num<0){
+			BaseResultVo.responseFail("添加购物中心失败");
+		}
+		
+		return BaseResultVo.responseSuccess("添加购物中心成功");
+	}
+	/**
+	 * 
+	 * getMallInfoPageList:购物中心管理
+	 *
+	 * @date 2016年3月10日
+	 * @param currentPage     当前页码
+	 * @param pageSize        每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getMallInfoPageList.do")
+	@ResponseBody
+	public LigerPageDataVo getMallInfoPageList(int currentPage,int pageSize,HttpServletRequest request){
+		
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+				
+		BasePageResultVo baseResultVo=gwMallInfoServiceImpl.selectPageList(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	/**
+	 * 
+	 * getMallById:根据购物中心id，获取购物中心信息
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getMallInfoById.do")
+	@ResponseBody
+	public BaseResultVo getMallById(int id,HttpServletRequest request){
+		if(id==0){
+			return BaseResultVo.responseFail("数据异常");
+		}
+		//获取购物中心信息
+		GwMallInfoModel gwAdminUsersModel=gwMallInfoServiceImpl.selectById(id);
+		if(gwAdminUsersModel==null){
+			return BaseResultVo.responseFail("获取购物中心失败");
+		}
+		BaseResultVo baseResultVo=BaseResultVo.responseSuccess("获取购物中心成功");
+		baseResultVo.setData(gwAdminUsersModel);
+		return baseResultVo;
+	}
+	/**
+	 * 
+	 * deleteMallInfoById:根据购物中心id，删除购物中心
+	 *
+	 * @date 206年3月5日
+	 * @param id                  购物中心id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/deleteMallInfoById.do")
+	@ResponseBody
+	public BaseResultVo deleteMallInfoById(int id,HttpServletRequest request){
+		//修改人
+		Integer userid = SecurityUtil.getAdminUser(request).getUserId();
+		if(id==0){
+			return BaseResultVo.responseFail("数据异常");
+		}
+		//新建一个购物中心对象
+		GwMallInfoModel mallInfo = new GwMallInfoModel();
+		mallInfo.setId(id);
+		mallInfo.setState(0);
+		int num=gwMallInfoServiceImpl.update(mallInfo);
+		if(num<0){
+			return BaseResultVo.responseFail("删除购物中心失败");
+		}
+		return BaseResultVo.responseSuccess("删除购物中心成功");
+	}
+	/**
+	 * 
+	 * updateMallInfo:更新购物中心信息
+	 *
+	 * @date 2016年3月5日
+	 * @param MallInfo       购物中心信息对象
+	 * @return
+	 */
+	@RequestMapping("/updateMallInfo.do")
+	@ResponseBody
+	public BaseResultVo updateMallInfo(GwMallInfoModel MallInfo){
+		if(!ValidateUtil.isAvailableAccountStr(MallInfo.getBm(), 4, 10)){
+			return BaseResultVo.responseFail("购物中心编号为4-10位的字符且不能包含非法字符");
+		}
+		//验证主键是否为空
+		if(MallInfo.getId()==0){
+			return BaseResultVo.responseFail("数据异常");
+		}
+		GwMallInfoModel gwMallInfo=gwMallInfoServiceImpl.selectById(MallInfo.getId());
+		GwMallInfoModel mallInfo = gwMallInfoServiceImpl.getGwMallInfoByCode(MallInfo.getBm());
+		if(!gwMallInfo.getBm().equals(MallInfo.getBm())&&mallInfo!=null){
+			return BaseResultVo.responseFail("购物中心编码已存在");
+		}
+		//更新就团信息
+		int num=gwMallInfoServiceImpl.update(MallInfo);
+		if(num<0){
+			return BaseResultVo.responseFail("更新购物中心失败");
+		}
+		
+		return BaseResultVo.responseSuccess("更新购物中心成功");
+	}
+	/**
+	 * 
+	 * getGruopInfoList:获取所有购物中心集合
+	 *
+	 * @date 2016年3月7日
+	 * @return
+	 */
+	@RequestMapping("/getGruopInfoList.do")
+	@ResponseBody
+	public BaseResultVo getGruopInfoList(){
+
+		//获取所有购物中心
+		List<GwMallInfoModel> MallInfoList=gwMallInfoServiceImpl.getAllList();
+		BaseResultVo baseResultVo=BaseResultVo.responseSuccess("获取所有集体成功");
+		baseResultVo.setData(MallInfoList);
+		return baseResultVo;
+	}
+	/**
+	 * 
+	 * getAllGroupInfos:获取所有购物中心集合
+	 *
+	 * @date 2016年3月7日
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/getAllGroupInfos.do")
+	public Object getAllGroupInfos(){
+
+		//获取所有购物中心
+		List<GwMallInfoModel> MallInfoList=gwMallInfoServiceImpl.getAllList();
+		List<HashMap<String,Object>> list=new ArrayList<HashMap<String,Object>>();
+		for (GwMallInfoModel mallInfo : MallInfoList) {
+			HashMap<String,Object> map=new HashMap<String,Object>();
+			map.put("id", mallInfo.getId());
+			map.put("text", mallInfo.getName());
+			list.add(map);
+		}
+		return list;
+	}
+	
+	/**
+	 * 
+	 * getAllList:获取所有购物中心集合
+	 *
+	 * @date 2016年3月7日
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/getAllList.do")
+	public List<GwMallInfoModel> getAllList(){
+		//获取所有购物中心
+		List<GwMallInfoModel> MallInfoList=gwMallInfoServiceImpl.getAllList();
+		return MallInfoList;
+	}
+}

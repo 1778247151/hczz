@@ -1,0 +1,49 @@
+package com.crm.service.impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwRepeatVisitDao;
+import com.crm.dao.GwRepeatVisitDetailDao;
+import com.crm.pojo.GwRepeatVisitDetailModel;
+import com.crm.pojo.GwRepeatVisitModel;
+import com.crm.pojo.GwSysLoggerModel;
+import com.crm.service.GwRepeatVisitDetailService;
+import com.crm.service.GwRepeatVisitService;
+
+/**
+ * 
+ * GwRepeatVisitDetailServiceImpl:回访业务逻辑层实现
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwRepeatVisitDetailServiceManage")
+public class GwRepeatVisitDetailServiceImpl extends ServersManager<GwRepeatVisitDetailModel, GwRepeatVisitDetailDao> implements GwRepeatVisitDetailService{
+	
+	@Resource(name = "gwRepeatVisitDetailDaoManage")
+	@Override
+	public void setDao(GwRepeatVisitDetailDao gwRepeatVisitDetailDao) {
+		this.dao = gwRepeatVisitDetailDao;
+	}
+
+	@Override
+	public List<GwRepeatVisitDetailModel> selectDetailVisitByCode(String code) {
+		return dao.selectDetailVisitByCode(code);
+	}
+
+	@Override
+	public int insetDetailBatch(List<GwRepeatVisitDetailModel> list) {
+		return dao.insetDetailBatch(list);
+	}
+
+	@Override
+	public List<GwRepeatVisitDetailModel> getRepeatVisitDetailByCode(String code) {
+		return dao.getRepeatVisitDetailByCode(code);
+	}
+}

@@ -1,0 +1,35 @@
+package com.crm.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwLockerModel;
+import com.crm.pojo.GwAdminUsersModel;
+
+/**
+ * 
+ * GwLockerDao:数据访问层接口
+ *
+ * @author hanzhiqiang
+ * @date  2016年11月8日
+ * @version  jdk1.8
+ *
+ */
+public interface GwLockerDao extends DaoManager<GwLockerModel>{
+
+	public GwLockerModel getLockerById(Integer id);
+
+	public List<GwLockerModel> getListsApi();
+
+	public List<GwLockerModel> getLockerListByCondition(Map<String, Object> params);
+
+	public int deleteLockerById(int id);
+
+	public GwLockerModel getLockerByLastOne(String time);
+
+	public int updateByCode(String lockerCode);
+
+	public int updateReturnByCode(String lockerCode);
+
+}

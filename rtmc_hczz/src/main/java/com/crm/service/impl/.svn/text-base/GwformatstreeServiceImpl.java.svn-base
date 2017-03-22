@@ -1,0 +1,82 @@
+package com.crm.service.impl;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.http.client.ClientProtocolException;
+import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
+import com.crm.core.ServersManager;
+import com.crm.dao.GwformatstreeDao;
+import com.crm.pojo.GwbrandtreeModel;
+import com.crm.pojo.GwformatstreeModel;
+import com.crm.service.GwformatstreeService;
+import com.crm.util.HttpClientUtil;
+import com.crm.util.JsonMapper;
+
+/**
+ * 
+ * GwformatstreeServiceImpl:业态管理业务逻辑层实现
+ *
+ * @author chengpengfei
+ * @date  2016年3月10日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwformatstreeService")
+public class GwformatstreeServiceImpl extends ServersManager<GwformatstreeModel,GwformatstreeDao>implements GwformatstreeService{
+	@Resource(name = "gwformatstreeDaoManage")
+	@Override
+	public void setDao(GwformatstreeDao dao) {
+		// TODO Auto-generated method stub
+		this.dao = dao;	
+	}
+
+	@Override
+	public boolean insertMisBrandDataForFormats(String url,Map<String, Object> map) throws ClientProtocolException, IOException {
+		// TODO Auto-generated method stub
+		//拉取之前先清空原有的数据
+		int deleteAll = dao.deleteAll();
+		if(deleteAll<0){
+			return false;
+		}
+		//从MIS端获取数据
+		String body = HttpClientUtil.httpPost(url, map);
+		if(body==null){
+			return false;
+		}
+		String string = JSON.parseObject(body).getString("rows");
+		List<GwformatstreeModel> formatsList =JsonMapper.buildNonDefaultMapper().fromJsonToList(string, GwformatstreeModel.class);
+		//批量插入品牌数据
+		int batchInsert = dao.batchInsertFormats(formatsList);
+		if(batchInsert<0){
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public List<GwformatstreeModel> getFormatselectyj() {
+		// TODO Auto-generated method stub
+		return dao.getFormatselectyj();
+	}
+
+	@Override
+	public GwformatstreeModel getFormatsTreeByCode(String code) {
+		// TODO Auto-generated method stub
+		return dao.getFormatsTreeByCode(code);
+	}
+
+	@Override
+	public List<GwformatstreeModel> getAllListStateIsOne() {
+		// TODO Auto-generated method stub
+		return dao.getAllListStateIsOne();
+	}
+	
+	
+}

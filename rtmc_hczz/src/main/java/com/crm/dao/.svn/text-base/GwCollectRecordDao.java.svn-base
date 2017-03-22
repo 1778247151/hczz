@@ -1,0 +1,25 @@
+package com.crm.dao;
+
+import java.util.List;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwCollectRecordModel;
+
+/**
+ * 
+ * GwCollectRecordDao:失物领取记录数据访问层接口
+ *
+ * @author chengpengfei
+ * @date  2016年6月24日
+ * @version  jdk1.8
+ *
+ */
+public interface GwCollectRecordDao extends DaoManager<GwCollectRecordModel>{
+
+	/**
+	 * 批量插入领取记录信息
+	 * @param list
+	 * @return
+	 */
+	public int bacthInsertCollectRecord(List<GwCollectRecordModel> list);
+}

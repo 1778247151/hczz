@@ -1,0 +1,45 @@
+package com.crm.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.bean.PromotionIntegralInfo;
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwPromotionIntegralModel;
+/**
+ * 
+ * GwPromotionIntegralDao:促销积分规则访问层接口
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+public interface GwPromotionIntegralDao extends DaoManager<GwPromotionIntegralModel>{
+
+	GwPromotionIntegralModel selectByCode(String code);
+
+	GwPromotionIntegralModel getPromotionIntegralByLastOne(String time);
+	
+	/**
+	 * 
+	 * getPromotionIntegralByFormatsCode:根据业态编号或店铺编号和销售时间，会员编号，获取促销积分规则信息
+	 *
+	 * @author yumaochun
+	 * @date 2016年7月7日
+	 * @param params                 业态编号和销售时间map
+	 * @return   返回：满足条件的促销积分规则集合
+	 */
+	public List<PromotionIntegralInfo> getPromotionIntegralBy(Map<String,Object> params);
+	/**
+	 * 
+	 * getPromotionIntegralBy1:
+	 * 根据业态编号或店铺编号和销售时间，会员等级编号，会员编号，会员等级详细的业态或店铺编号，获取促销积分规则和会员等级详细积分规则信息
+	 * @author hemingjun
+	 * @date 2016年8月25日
+	 * @param params
+	 * @return
+	 */
+	public List<PromotionIntegralInfo> getMemberDetatilPromotionIntegralBy(Map<String,Object> params);
+	
+}

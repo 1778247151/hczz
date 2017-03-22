@@ -1,0 +1,47 @@
+package com.crm.controller;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.pojo.GwSettlementPaymentTenderModel;
+import com.crm.service.GwSettlementPaymentTenderService;
+
+/**
+ * 
+ * GwSettlementPaymentTenderController:付款方式访问控制层
+ *
+ * @author xiangtao
+ * @date 2016年6月20日
+ * @version jdk.8
+ *
+ */
+@Controller
+@RequestMapping("/settlementPaymentTender1")
+public class GwSettlementPaymentTenderController {
+	/**
+	 * 付款方式业务逻辑
+	 */
+	@Resource(name="gwSettlementPaymentTenderServiceManage")
+	private GwSettlementPaymentTenderService gwSettlementPaymentTenderService;
+	
+	/**
+	 * 
+	 * getAllSettlementPaymentTender:获取所有付款方式list
+	 * 
+	 * @date 2016年6月20日
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getAllSettlementPaymentTender.do")
+	@ResponseBody
+	public List<GwSettlementPaymentTenderModel> getAllSettlementPaymentTender(HttpServletRequest request) {
+		List<GwSettlementPaymentTenderModel> list = gwSettlementPaymentTenderService.getAllList();
+		return list;
+	}
+}

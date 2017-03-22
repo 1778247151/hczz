@@ -1,0 +1,94 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwLeaseMaintenanceDao;
+import com.crm.pojo.GwLeaseMaintenanceModel;
+
+/**
+ * GwLeaseMaintenanceDaoImpl:租借维护数据访问层实现
+ *
+ * @author chengpengfei
+ * @date  2016年6月27日
+ * @version  jdk1.8
+ *
+ */
+@Repository("gwLeaseMaintenanceDaoManage")
+public class GwLeaseMaintenanceDaoImpl implements GwLeaseMaintenanceDao{
+
+	@Resource
+	private BaseDao dao;
+	@Override
+	public int insert(GwLeaseMaintenanceModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.leaseMaintenance.insertSelective",e);
+	}
+
+	@Override
+	public int delete(GwLeaseMaintenanceModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwLeaseMaintenanceModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.leaseMaintenance.update",e);
+	}
+
+	@Override
+	public GwLeaseMaintenanceModel selectOne(GwLeaseMaintenanceModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwLeaseMaintenanceModel> selectList(GwLeaseMaintenanceModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.leaseMaintenance.deleteById",id);
+	}
+
+	@Override
+	public GwLeaseMaintenanceModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwLeaseMaintenanceModel) dao.selectOne("gw.leaseMaintenance.selectById",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.leaseMaintenance.selectByPageList", "gw.leaseMaintenance.selectByPageCount", params);
+	}
+
+	@Override
+	public List<GwLeaseMaintenanceModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.leaseMaintenance.getAllList");
+	}
+
+	@Override
+	public GwLeaseMaintenanceModel getLeaseMaintenanceByLastOne(String time) {
+		// TODO Auto-generated method stub
+		return (GwLeaseMaintenanceModel) dao.selectOne("gw.leaseMaintenance.selectByLastOne",time);
+	}
+
+}

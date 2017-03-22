@@ -1,0 +1,44 @@
+package com.crm.service.impl;
+
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwLoseMaintenanceDao;
+import com.crm.pojo.GwLoseMaintenanceModel;
+import com.crm.service.GwLoseMaintenanceService;
+
+/**
+ * GwLoseMaintenanceServiceImpl:报失维护逻辑层实现
+ *
+ * @author chengpengfei
+ * @date  2016年6月23日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwLoseMaintenanceServiceManage")
+public class GwLoseMaintenanceServiceImpl extends ServersManager<GwLoseMaintenanceModel, GwLoseMaintenanceDao> implements GwLoseMaintenanceService{
+
+	@Resource(name="gwLoseMaintenanceDaoManage")
+	@Override
+	public void setDao(GwLoseMaintenanceDao dao) {
+		// TODO Auto-generated method stub
+		this.dao = dao;
+	}
+
+	@Override
+	public int updateLoseMaintenanceByCode(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.updateLoseMaintenanceByCode(params);
+	}
+
+	@Override
+	public GwLoseMaintenanceModel getLoseMaintenanceByLastOne(String time) {
+		// TODO Auto-generated method stub
+		return dao.getLoseMaintenanceByLastOne(time);
+	}
+
+}

@@ -1,0 +1,69 @@
+package com.crm.pojo;
+
+public class GwPropertyAttributeModel {
+	private Integer id;
+
+	private String bm;
+
+	private String name;
+
+	private Integer state;
+
+	private String time;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getBm() {
+		return bm;
+	}
+
+	public void setBm(String bm) {
+		this.bm = bm == null ? null : bm.trim();
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name == null ? null : name.trim();
+	}
+
+	public Integer getState() {
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
+	}
+
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time == null ? null : time.trim();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof GwPropertyAttributeModel)) {
+			return false;
+		}
+		GwPropertyAttributeModel propertyAttribute = (GwPropertyAttributeModel) obj;
+		if (propertyAttribute.getId().equals(this.getId()) && propertyAttribute.getBm().equals(this.bm)
+				&& propertyAttribute.getName().equals(this.name) && propertyAttribute.getState().equals(this.state)
+				&& propertyAttribute.getTime().equals(this.time)) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+}

@@ -1,0 +1,72 @@
+package com.crm.api;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.util.Iterator;
+
+
+import net.sf.json.JSONObject;
+
+/**
+@project: GDWS
+@author:文豪 E-mail:wenhaoboy@gmail.com
+@version QQ:403665586   2016-04-16
+*/
+public class ApiUtil {
+	
+	
+	public static String toCap(String orign)
+	{
+		return (orign.substring(0, 1).toUpperCase())+orign.substring(1);
+	}
+	/**
+	 * 传入JSONObject 返回赋值对象
+	 * @param arg
+	 */
+	public static Object JsonObjectToObject(Object orign,JSONObject jsonObj)
+	{
+		Method method;
+		 Field[] fields = orign.getClass().getDeclaredFields(); 
+		 Iterator<String> nameItr = jsonObj.keys();
+		 while (nameItr.hasNext()) {
+				String varName = nameItr.next() ;
+				try {
+					
+					Method getmethod = orign.getClass().getDeclaredMethod("get"+toCap(varName)) ;
+					Type returnType = getmethod.getGenericReturnType() ;
+//					System.out.println(returnType.getTypeName());
+					if(returnType.getTypeName().equals("java.lang.Integer"))
+					{
+						method = orign.getClass().getDeclaredMethod("set"+toCap(varName),Integer.class) ;
+						method.setAccessible(true) ;
+						method.invoke(orign, jsonObj.getInt(varName));
+					}
+					else if(returnType.getTypeName().equals("java.lang.String"))
+					{
+						method = orign.getClass().getDeclaredMethod("set"+toCap(varName),String.class) ;
+						method.setAccessible(true) ;
+						method.invoke(orign, jsonObj.getString(varName));
+					}
+					else if(returnType.getTypeName().equals("java.math.BigDecimal"))
+					{
+						method = orign.getClass().getDeclaredMethod("set"+toCap(varName),BigDecimal.class) ;
+						method.setAccessible(true) ;
+						method.invoke(orign, new BigDecimal(jsonObj.getString(varName)));
+					}
+					else if(returnType.getTypeName().equals("java.lang.Double"))
+					{
+						method = orign.getClass().getDeclaredMethod("set"+toCap(varName),Double.class) ;
+						method.setAccessible(true) ;
+						method.invoke(orign, jsonObj.getDouble(varName));
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
+			}
+		return orign;
+	}
+}

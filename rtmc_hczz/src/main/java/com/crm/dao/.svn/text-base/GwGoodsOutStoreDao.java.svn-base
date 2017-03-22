@@ -1,0 +1,27 @@
+package com.crm.dao;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwGoodsOutStoreModel;
+/**
+ * 
+ * GwGoodsOutStoreDao:礼品出库数据层接口
+ *
+ * @author  shengjinpeng
+ * @date    2016年11月9日
+ * @version jdk1.8
+ *
+ */
+public interface GwGoodsOutStoreDao extends DaoManager<GwGoodsOutStoreModel>{
+
+	/**
+	 * 
+	 * getMaxCode:获得当前日期的最大编号
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年11月9日
+	 *
+	 * @param date
+	 * @return
+	 */
+	public String getMaxCode(String date);
+}

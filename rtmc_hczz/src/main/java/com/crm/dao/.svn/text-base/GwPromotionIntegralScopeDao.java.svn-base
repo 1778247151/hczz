@@ -1,0 +1,59 @@
+package com.crm.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwPromotionIntegralModel;
+import com.crm.pojo.GwPromotionIntegralScopeModel;
+/**
+ * 
+ * GwPromotionIntegralScopeDao:促销积分规则使用范围访问层接口
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+public interface GwPromotionIntegralScopeDao extends DaoManager<GwPromotionIntegralScopeModel>{
+
+	/**
+	 * 
+	 * 根据规则编号获取使用规则
+	 * @param code
+	 * @param scopetype 
+	 * @return
+	 */
+	List<GwPromotionIntegralScopeModel> getListByCode(Map<String,Object> params);
+
+	int insertBatch(List<GwPromotionIntegralScopeModel> list);
+
+	int deleteByCode(String code);
+	/**
+	 * 
+	 * deleteByCodeAndType:通过编号和类别删除规则范围
+	 *
+	 * @author hemingjun
+	 * @date 2016年11月16日
+	 * @return
+	 */
+	int deleteByCodeAndType(Map<String,Object> params);
+	
+	/**
+	 * 批量更新
+	 * 
+	 * @param code
+	 * @return
+	 */
+	public int batchUpdate(List<GwPromotionIntegralScopeModel> list);
+	/**
+	 * 
+	 * updateByCode:通过编号更新编号
+	 *
+	 * @author hemingjun
+	 * @date 2016年11月17日
+	 * @param params
+	 * @return
+	 */
+	public int updateByCode(Map<String, Object> params);
+}

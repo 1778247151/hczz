@@ -1,0 +1,58 @@
+package com.crm.service;
+
+import java.util.List;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwMemberBindingCardModel;
+import com.crm.pojo.GwMemberCardModel;
+
+/**
+ * 
+ * 
+ * GwMemberBindingCardService:会员绑定卡管理业务逻辑层接口
+ *
+ * @author  shengjinpeng
+ * @date    2016年11月2日
+ * @version jdk1.8
+ *
+ */
+
+public interface GwMemberBindingCardService extends Services<GwMemberBindingCardModel> {
+	
+	/**
+	 * 
+	 * selectByCardCode:根据会员卡号获得会员绑定信息
+	 *
+	 * @author   meishengjun
+	 * @date     2016年11月3日
+	 *
+	 * @param card_code
+	 * @return
+	 */
+	
+	public GwMemberBindingCardModel selectByCardCode(String card_code);
+	
+	/**
+	 * 
+	 * getAllNormalUseCardCode:获取所有正常使用的卡号
+	 *
+	 * @author   meishengjun
+	 * @date     2016年11月4日
+	 *
+	 * 
+	 * @return
+	 */
+	public List<GwMemberBindingCardModel> getAllNormalUseCardCode();
+	/**
+	 * 
+	 * selectByMemberCode:根据会员号获得在用的会员卡绑定信息
+	 *
+	 * @author   meishengjun
+	 * @date     2016年11月3日
+	 *
+	 * @param memberCode
+	 * @return
+	 */
+	public List<GwMemberBindingCardModel> selectByMemberCode(String memberCode);
+
+}

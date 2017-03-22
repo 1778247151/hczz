@@ -1,0 +1,172 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.crm.bean.ShopFormatsInfo;
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.core.PagerModel;
+import com.crm.dao.GwTranssalestotalDao;
+import com.crm.pojo.GwRoleModel;
+import com.crm.pojo.GwTranssalestotalModel;
+import com.crm.pojo.GwmerchantsinfoModel;
+/**
+ * 
+ * GwTranssalestotalDaoImpl:销售数据汇总数据访问层实现
+ *
+ * @author yumaochun
+ * @date  2016年4月7日
+ * @version  jdk1.8
+ *
+ */
+@Repository("transsalestotalDaoManage")
+public class GwTranssalestotalDaoImpl implements GwTranssalestotalDao{
+	
+	@Resource
+	private BaseDao dao;
+
+	@Override
+	public int insert(GwTranssalestotalModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.transsalestotal.insertone",e);
+	}
+
+	@Override
+	public int delete(GwTranssalestotalModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwTranssalestotalModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.transsalestotal.update", e);
+	}
+
+	@Override
+	public GwTranssalestotalModel selectOne(GwTranssalestotalModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwTranssalestotalModel> selectList(GwTranssalestotalModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.transsalestotal.deleteById", id);
+	}
+
+	@Override
+	public GwTranssalestotalModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwTranssalestotalModel) dao.selectOne("gw.transsalestotal.selectById", id);
+	}
+
+	
+	@Override
+	public List<GwTranssalestotalModel> getTransalesListByConditionExport(Map<String,Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.transsalestotal.selectListExport", params);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.transsalestotal.selectPageList", "gw.transsalestotal.selectcount", params);
+	}
+
+	@Override
+	public List<GwTranssalestotalModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.transsalestotal.getAllList");
+	}
+
+	@Override
+	public List<GwTranssalestotalModel> getTranssalestotalList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.transsalestotal.selectList",params);
+	}
+
+	@Override
+	public List<GwTranssalestotalModel> getTranssalestotalListByDay(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.transsalestotal.selectListDay",params);
+	}
+
+	@Override
+	public List<GwTranssalestotalModel> getTranssalestotalListByMonth(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.transsalestotal.selectListMonth",params);
+	}
+	
+	@Override
+	public List<GwTranssalestotalModel> getTranssalestotalListByWeek(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.transsalestotal.selectListWeek",params);
+	}
+
+	@Override
+	public List<GwTranssalestotalModel> getTranssalestotalByCount(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.transsalestotal.getTranssalestotalByCount",params);
+	}
+
+	@Override
+	public List<GwTranssalestotalModel> getTranssalestotalByTenDay() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.transsalestotal.getTranssalestotalByTenDay");
+	}
+
+	@Override
+	public int batchInsertTranssaletotalList(List<GwTranssalestotalModel> list) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.transsalestotal.insert",list);
+	}
+
+	@Override
+	public List<GwTranssalestotalModel> getListGroupByGoodsId() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.transsalestotal.selectListGroupBy");
+	}
+	@Override
+	public int batchInsert(List<GwTranssalestotalModel> list) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.transsalestotal.batchInsert", list);
+	}
+
+	@Override
+	public int batchUpdate(List<GwTranssalestotalModel> list) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.transsalestotal.batchUpdate", list);
+	}
+
+	@Override
+	public int batchDelete(List<GwTranssalestotalModel> list) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.transsalestotal.batchDelete", list);
+	}
+	 @Override
+    public ShopFormatsInfo getShopformatsInfoByShopCode(Map<String, Object> paramMap) {
+        return (ShopFormatsInfo) dao.selectOne("gw.transsalestotal.getFormatsByShopCode", paramMap);
+    }
+
+
+	
+}

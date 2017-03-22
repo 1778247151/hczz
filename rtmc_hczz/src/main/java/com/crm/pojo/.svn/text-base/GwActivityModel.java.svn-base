@@ -1,0 +1,237 @@
+package com.crm.pojo;
+
+import com.crm.enums.ActivityCheckEnum;
+import com.crm.enums.ActivityStatusEnum;
+
+public class GwActivityModel {
+    private Integer id;
+
+    private String code;
+
+    private String title;
+
+    private String content;
+
+    private Integer integration;
+
+    private String startTime;
+
+    private String endTime;
+
+    private Integer activityStatus;
+
+    private Integer status;
+
+    private Integer approveUserId;
+
+    private String approveTime;
+
+    private String approveInfo;
+
+    private Integer createUserId;
+
+    private String createTime;
+
+    private Integer updateUserId;
+
+    private String updateTime;
+    
+    private String createUserName;
+    
+    private String updateUserName;
+    
+    private String approveUserName;
+    
+    private String statusName;
+    
+    private String activityStatusName;
+    
+    private Integer joinMemberNum;
+    
+    private Integer activityMemberNum;
+    
+    
+    public Integer getJoinMemberNum() {
+		return joinMemberNum;
+	}
+
+	public void setJoinMemberNum(Integer joinMemberNum) {
+		this.joinMemberNum = joinMemberNum;
+	}
+
+	public Integer getActivityMemberNum() {
+		return activityMemberNum;
+	}
+
+	public void setActivityMemberNum(Integer activityMemberNum) {
+		this.activityMemberNum = activityMemberNum;
+	}
+
+	public String getApproveInfo() {
+		return approveInfo;
+	}
+
+	public void setApproveInfo(String approveInfo) {
+		this.approveInfo = approveInfo;
+	}
+
+	public String getActivityStatusName() {
+		return ActivityCheckEnum.getDisplayName(getActivityStatus());
+	}
+
+	public void setActivityStatusName(String activityStatusName) {
+		this.activityStatusName = activityStatusName;
+	}
+
+	public String getApproveUserName() {
+		return approveUserName;
+	}
+
+	public void setApproveUserName(String approveUserName) {
+		this.approveUserName = approveUserName;
+	}
+
+	public String getCreateUserName() {
+		return createUserName;
+	}
+
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
+	}
+
+	public String getUpdateUserName() {
+		return updateUserName;
+	}
+
+	public void setUpdateUserName(String updateUserName) {
+		this.updateUserName = updateUserName;
+	}
+
+	public String getStatusName() {
+		return ActivityStatusEnum.getDisplayName(getStatus());
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code == null ? null : code.trim();
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title == null ? null : title.trim();
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content == null ? null : content.trim();
+    }
+
+    public Integer getIntegration() {
+        return integration;
+    }
+
+    public void setIntegration(Integer integration) {
+        this.integration = integration;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime == null ? null : startTime.trim();
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime == null ? null : endTime.trim();
+    }
+
+    public Integer getActivityStatus() {
+        return activityStatus;
+    }
+
+    public void setActivityStatus(Integer activityStatus) {
+        this.activityStatus = activityStatus;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getApproveUserId() {
+        return approveUserId;
+    }
+
+    public void setApproveUserId(Integer approveUserId) {
+        this.approveUserId = approveUserId;
+    }
+
+    public String getApproveTime() {
+        return approveTime;
+    }
+
+    public void setApproveTime(String approveTime) {
+        this.approveTime = approveTime == null ? null : approveTime.trim();
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime == null ? null : createTime.trim();
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime == null ? null : updateTime.trim();
+    }
+}

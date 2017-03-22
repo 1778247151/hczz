@@ -1,0 +1,63 @@
+package com.crm.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwGoodsInfoModel;
+
+public interface GwGoodsInfoDao extends DaoManager<GwGoodsInfoModel> {
+	/**
+	 * 
+	 * 根据编号获取货物信息
+	 * 
+	 * @param code
+	 * @return
+	 */
+	GwGoodsInfoModel getGoodsInfoByCode(String code);
+
+	/**
+	 * 根据店铺编号获取商品信息接口
+	 * 
+	 * @param params
+	 * @return
+	 */
+	List<GwGoodsInfoModel> getGoodsInfoByShopsLeaseCodeApi(Map<String, Object> params);
+
+	/**
+	 * 清空货品表
+	 * 
+	 * @return
+	 */
+	public int deleteAllForGoodsInfo();
+
+	/**
+	 * 批量插入
+	 * 
+	 * @param list
+	 * @return
+	 */
+	public int batchInsert(List<GwGoodsInfoModel> list);
+
+	/**
+	 * 
+	 * batchUpdate:批量更新
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param list
+	 * @return
+	 */
+	public int batchUpdate(List<GwGoodsInfoModel> list);
+
+	/**
+	 * 
+	 * batchDelete:批量删除
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param list
+	 * @return
+	 */
+	public int batchDelete(List<GwGoodsInfoModel> list);
+}

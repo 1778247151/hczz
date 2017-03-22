@@ -1,0 +1,82 @@
+package com.crm.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.ServersManager;
+import com.crm.dao.GwbrandtreeDao;
+import com.crm.pojo.GwbrandtreeModel;
+import com.crm.pojo.GwmerchantsinfoModel;
+import com.crm.service.GwbrandtreeService;
+
+/**
+ * 
+ * GwbrandtreeServiceImpl:品牌管理业务逻辑层实现
+ *
+ * @author chengpengfei
+ * @date  2016年3月13日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwbrandtreeService")
+public class GwbrandtreeServiceImpl extends ServersManager<GwbrandtreeModel,GwbrandtreeDao>implements GwbrandtreeService{
+	@Resource(name = "gwbrandtreeDaoManage")
+	@Override
+	public void setDao(GwbrandtreeDao dao) {
+		// TODO Auto-generated method stub
+		this.dao = dao;
+		
+	}
+	
+	@Override
+	public BasePageResultVo getBrandTreeByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getBrandTreeByCondition(params);
+	}
+
+	@Override
+	public List<GwbrandtreeModel> getBrandTreeByFormatstreeId(int gwFormatsTreeId) {
+		// TODO Auto-generated method stub
+		return dao.getBrandTreeByFormatstreeId(gwFormatsTreeId);
+	}
+	@Override
+	public List<GwbrandtreeModel> getBrandNameById(int id) {
+		// TODO Auto-generated method stub
+		return dao.getBrandNameById(id);
+	}
+
+	@Override
+	public GwbrandtreeModel getBrandTreeByCode(String code) {
+		// TODO Auto-generated method stub
+		return dao.getBrandTreeByCode(code);
+	}
+
+	@Override
+	public BasePageResultVo getBrandTreeBySionPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getBrandTreeBySionPageList(params);
+	}
+
+	@Override
+	public GwbrandtreeModel getBrandTreeSignByCode(String code) {
+		// TODO Auto-generated method stub
+		return dao.getBrandTreeSignByCode(code);
+	}
+
+	@Override
+	public List<GwbrandtreeModel> getAllStateNotZero() {
+		// TODO Auto-generated method stub
+		return dao.getAllStateNotZero();
+	}
+	@Override
+	public List<GwbrandtreeModel> getBrandByIds(String[] ids) {
+		// TODO Auto-generated method stub
+		return dao.getBrandByIds(ids);
+	}
+
+}

@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>#</title>
+    <script src="/js/ligerui/lib/jquery/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <link href="/js/ligerui/lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <script src="/js/ligerui/lib/ligerUI/js/core/base.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerTree.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/js/action/sys.common.js"></script>
+    <link type="text/css" rel="stylesheet" href="/css/base.css" />
+
+<style type="text/css">
+         body{ font-size:12px;}
+        .l-table-edit {}
+        .l-table-edit-td{ padding:4px;}
+        .l-button-submit,.l-button-reset{width:80px; padding-bottom:2px;display: inline;margin-left: 50px;margin-top: 20px;margin-bottom: 20px;}
+        .l-verify-tip{ left:230px; top:120px;}
+        #errorLabelContainer{ padding:10px; width:200px; border:1px solid #FF4466; display:none; background:#FFEEEE; color:Red;}
+        
+        .l-table-edit tr{
+           height: 50px;
+        }
+        
+    </style>
+    <script type="text/javascript">
+       //角色id
+         var roleId = $.fsh.requestParam("id");
+         var tree=null;
+         var hasGroups=new Array();
+         $(function(){
+        	 tree=$("#menuTree").ligerTree({  
+ 	            idFieldName :'id',
+ 	            parentIDFieldName :'pid',
+ 	            slide: false,
+                enabledCompleteCheckbox:false, 
+ 	            nodeWidth:493
+ 	            }
+ 			);
+        	 getRoleGroupsByRoleId(roleId);
+             
+         });
+       
+        //角色获取权限
+        function getRoleGroupsByRoleId(roleId){
+        	
+        	$.ajax({
+        		url:'/role/getRoleGroupsByRoleId.do?roleId='+roleId,
+        		method:'POST',
+        		dataType:'json',
+        		success:function(data){
+        			if(data.status.code=="10000"){
+        				
+        				//var data = [{"isExpand":true,"pid":0,"ischecked":false,"id":1,"text":"系统管理"},{"isExpand":true,"pid":1,"ischecked":false,"id":3,"text":"菜单管理"},{"isExpand":true,"pid":1,"ischecked":false,"id":4,"text":"权限管理"},{"isExpand":true,"pid":1,"ischecked":false,"id":5,"text":"角色管理"},{"isExpand":true,"pid":0,"ischecked":false,"id":9,"text":"用户系统"},{"isExpand":true,"pid":9,"ischecked":false,"id":10,"text":"用户管理"},{"isExpand":true,"pid":0,"ischecked":false,"id":17,"text":"基础设置"},{"isExpand":true,"pid":17,"ischecked":false,"id":18,"text":"租赁类型管理"},{"isExpand":true,"pid":17,"ischecked":false,"id":19,"text":"结算组别管理"}];
+        				if(data.status.code=="10000"){
+        					var menuData=data.data;
+        					//alert(menuData);
+        					//加载权限
+        					/**
+        					tree=$("#menuTree").ligerTree({  
+                	            data:menuData, 
+                	            idFieldName :'id',
+                	            parentIDFieldName :'pid',
+                	            nodeWidth:626
+                	            }
+                			);
+        					*/
+        					tree.setData(menuData);
+        					//获取已经具有的权限
+        					var checkedData=tree.getChecked();
+        					$.each(checkedData,function(i,n){
+        						hasGroups.push(n.data.id);
+        					});
+        					
+            			}
+        			}
+        		}		
+        	});	
+        }
+        //更新权限
+        function saveRoleGroups(){
+        	
+        	var newAddNodes=new Array();
+        	var delNodes=new Array();
+        	//获取选择的权限
+			var hasSelectData=tree.getChecked();
+        	//选择的chekedId
+			var chekedArr=new Array();
+			$.each(hasSelectData,function(i,n){
+				chekedArr.push(n.data.id);
+			});
+			//获得新增的ids
+			$.each(chekedArr,function(i,id){
+				
+				if(!checkIdIsExistArr(id,hasGroups)){
+					newAddNodes.push(id);
+				}
+			});
+			//获得删除的ids
+			$.each(hasGroups,function(i,id){
+				if(!checkIdIsExistArr(id,chekedArr)){
+					delNodes.push(id);
+				}
+			});
+			var addIds=newAddNodes.join(",");
+			var delIds=delNodes.join(",");
+			
+			var id = $.fsh.requestParam("id");
+			$.ajax({
+        		url:'/role/saveRoleGroups.do?roleId='+id+'&addIds='+addIds+'&delIds='+delIds,
+        		method:'POST',
+        		dataType:'json',
+        		success:function(data){
+        			
+        			if(data.status.code=="10000"){
+        				$.ligerDialog.alert(data.status.msg, "提示信息", "success",function(){
+      			        
+      			          parent.closeDialog();
+      			       });
+        			}else{
+        				$.ligerDialog.alert(data.status.msg, "提示信息", "error",function(){
+        			         
+        			          parent.closeDialog();
+        			       });
+        			}
+        		}		
+        	});	
+			
+        }
+        
+        //检查id，是否存在于数组arr中
+        function checkIdIsExistArr(id,arr){
+        	for (var i = 0; i < arr.length; i++) {
+        		if(id==arr[i]){
+            		return true;
+            	}
+			}
+            return false;
+        }
+       
+        
+        
+    </script>
+</head>
+<body>
+   
+    <ul id="menuTree" style="width:626px; height:356px; margin:0px;overflow: auto;"></ul>
+    
+     <div class="btn" style="margin-left:265px;margin-top:10px;">
+           <a class="update" href="javascript:saveRoleGroups()">保存</a>
+     </div> 
+</body>
+</html>

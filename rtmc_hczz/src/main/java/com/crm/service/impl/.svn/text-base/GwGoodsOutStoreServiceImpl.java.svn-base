@@ -1,0 +1,120 @@
+package com.crm.service.impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwGoodsOutStoreDao;
+import com.crm.dao.GwGoodsOutStoreDetailDao;
+import com.crm.dao.GwStoreGoodsDao;
+import com.crm.pojo.GwGoodsOutStoreDetailModel;
+import com.crm.pojo.GwGoodsOutStoreModel;
+import com.crm.pojo.GwStoreGoodsModel;
+import com.crm.service.GwGoodsOutStoreService;
+import com.crm.util.BaseCodeUtil;
+import com.crm.util.DateUtil;
+
+/**
+ * 
+ * 
+ * GwGoodsOutStoreServiceImpl:礼品出库业务层实现
+ *
+ * @author  shengjinpeng
+ * @date    2016年11月9日
+ * @version jdk1.8
+ *
+ */
+@Service("gwGoodsOutStoreServiceManage")
+public class GwGoodsOutStoreServiceImpl extends ServersManager<GwGoodsOutStoreModel, GwGoodsOutStoreDao> implements GwGoodsOutStoreService{
+	
+	@Resource(name="gwGoodsOutStoreDaoManage")
+	@Override
+	public void setDao(GwGoodsOutStoreDao dao) {
+		// TODO Auto-generated method stub
+		this.dao = dao;
+		
+	}
+	
+	@Resource(name="gwGoodsOutStoreDetailDaoManage")
+	private GwGoodsOutStoreDetailDao gwGoodsOutStoreDetailDaoImpl;
+	
+	@Resource(name="gwStoreGoodsDaoManage")
+	private GwStoreGoodsDao gwStoreGoodsDaoImpl;
+
+	@Override
+	public String getMaxCode(String date) {
+		// TODO Auto-generated method stub
+		return dao.getMaxCode(date);
+	}
+	
+	@Override
+	public String getGoodsOutStoreCode() {
+		//获取编号前缀
+		String frontCode = BaseCodeUtil.getBaseCode("CK");
+		//获取当天时间
+		String time = DateUtil.getCurrentDate("");
+		//根据当天时间查询最后一条记录
+		String code = dao.getMaxCode(time);
+		if(code==null){
+			code = frontCode+"0001";
+		}else{
+			code = code.substring(2);
+			long num = Long.parseLong(code)+1;
+			code = "CK"+String.valueOf(num);
+		}
+		return code;
+	}
+
+	@Override
+	public synchronized int addGoodsOutStore(GwGoodsOutStoreModel goodsInfoStoreModel,
+			List<GwGoodsOutStoreDetailModel> goodsOutStoreList) {
+		//设置编号
+		String code = getGoodsOutStoreCode();
+		goodsInfoStoreModel.setCode(code);
+		//插入礼品主体信息
+		dao.insert(goodsInfoStoreModel);
+		//设置明细的出库单号
+		for(GwGoodsOutStoreDetailModel goodsOutStore:goodsOutStoreList) {
+			Map<String,Object> map = new HashMap<>();
+			map.put("goodsCode", goodsOutStore.getGoodsCode());
+			map.put("storeCode", goodsOutStore.getStoreCode());
+			GwStoreGoodsModel storeGoodsModel = gwStoreGoodsDaoImpl.getStoreGoodsByGoodsCode(map);
+			if(storeGoodsModel.getNumber()<goodsOutStore.getNumber()) {
+				return -1;
+			}
+			goodsOutStore.setGoodsOutStoreCode(code);
+		}
+		//插入明细
+		gwGoodsOutStoreDetailDaoImpl.batchInsert(goodsOutStoreList);
+		return 1;
+	}
+
+	@Override
+	public int updateGoodsOutStore(GwGoodsOutStoreModel goodsInfoStoreModel,
+			List<GwGoodsOutStoreDetailModel> goodsOutStoreDetailList) {
+		String code = goodsInfoStoreModel.getCode();
+		dao.update(goodsInfoStoreModel);
+		//删除明细
+		gwGoodsOutStoreDetailDaoImpl.deleteBycode(code);
+		//设置明细的出库单号
+		for(GwGoodsOutStoreDetailModel goodsOutStore:goodsOutStoreDetailList) {
+			Map<String,Object> map = new HashMap<>();
+			map.put("goodsCode", goodsOutStore.getGoodsCode());
+			map.put("storeCode", goodsOutStore.getStoreCode());
+			GwStoreGoodsModel storeGoodsModel = gwStoreGoodsDaoImpl.getStoreGoodsByGoodsCode(map);
+			if(storeGoodsModel.getNumber()<goodsOutStore.getNumber()) {
+				return -1;
+			}
+			goodsOutStore.setGoodsOutStoreCode(code);
+		}
+		//插入明细
+		gwGoodsOutStoreDetailDaoImpl.batchInsert(goodsOutStoreDetailList);
+		return 1;
+	}
+
+}

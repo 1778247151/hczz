@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/gw_crm/!svn/ver/180/gdws_crm/src/main/java/com/crm/core
+END
+PagerModel.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/gw_crm/!svn/ver/180/gdws_crm/src/main/java/com/crm/core/PagerModel.java
+END
+Services.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/gw_crm/!svn/ver/2/gdws_crm/src/main/java/com/crm/core/Services.java
+END
+ServersManager.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/gw_crm/!svn/ver/2/gdws_crm/src/main/java/com/crm/core/ServersManager.java
+END
+ClearBean.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/gw_crm/!svn/ver/180/gdws_crm/src/main/java/com/crm/core/ClearBean.java
+END
+BaseDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/gw_crm/!svn/ver/2/gdws_crm/src/main/java/com/crm/core/BaseDao.java
+END
+DaoManager.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/gw_crm/!svn/ver/2/gdws_crm/src/main/java/com/crm/core/DaoManager.java
+END

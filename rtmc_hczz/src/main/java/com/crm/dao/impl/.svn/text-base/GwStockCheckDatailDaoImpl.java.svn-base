@@ -1,0 +1,104 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwStockCheckDatailDao;
+import com.crm.pojo.GwStockCheckDatailModel;
+
+/**
+ * 
+ * 
+ * GwStockCheckDatailDaoImpl:物品明细数据访问层的实现
+ *
+ * @author  meishengjun
+ * @date    2016年11月11日
+ * @version jdk1.8
+ *
+ */
+@Repository("gwStockCheckDatailDaoManage")
+public class GwStockCheckDatailDaoImpl implements GwStockCheckDatailDao{
+	@Resource
+	private BaseDao dao;
+	@Override
+	public int insert(GwStockCheckDatailModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.stockCheckDatail.insert",e);
+	}
+
+	@Override
+	public int delete(GwStockCheckDatailModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwStockCheckDatailModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.stockCheckDatail.update", e);
+	}
+
+	@Override
+	public GwStockCheckDatailModel selectOne(GwStockCheckDatailModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwStockCheckDatailModel> selectList(GwStockCheckDatailModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.stockCheckDatail.deleteById", id);
+	}
+
+	@Override
+	public GwStockCheckDatailModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.stockCheckDatail.selectPageList", "gw.stockCheckDatail.selectCount", params);
+	}
+
+	@Override
+	public List<GwStockCheckDatailModel> getAllList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteByCheckCode(String checkCode) {
+		return dao.delete("gw.stockCheckDatail.deleteByCheckCode", checkCode);
+	}
+
+	@Override
+	public int batchInsertStockCheckDetailList(List<GwStockCheckDatailModel> stockCheckDetailList) {
+		
+		return dao.update("gw.stockCheckDatail.batchInsert", stockCheckDetailList);
+
+	}
+	
+	
+
+
+}

@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 部门表sql映射文件 -->
+<mapper namespace="gw.department">
+	<resultMap id="BaseResultMap" type="com.crm.pojo.GwDepartmentModel">
+		<id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="code" property="code" jdbcType="VARCHAR" />
+	    <result column="cn_name" property="cnName" jdbcType="VARCHAR" />
+	    <result column="en_name" property="enName" jdbcType="VARCHAR" />
+	    <result column="description" property="description" jdbcType="VARCHAR" />
+	    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+	    <result column="updateUserName" property="updateUserName" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+	    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+	    <result column="createUserName" property="createUserName" jdbcType="VARCHAR" />
+	    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+	    <result column="order_num" property="orderNum" jdbcType="INTEGER" />
+	    <result column="status" property="status" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, code, cn_name, en_name, description, create_user_id, create_time,
+		update_user_id,
+		update_time, order_num, status
+	</sql>
+
+<!-- 删除所有数据 -->
+  <delete id="gw.department.deleteAll" parameterType="java.lang.Integer" >
+    delete from gw_department
+  </delete>
+	<!-- 批量插入 -->
+	<insert id="gw.department.batchInsert" parameterType="com.crm.pojo.GwDepartmentModel">
+		insert into gw_department (
+		id,
+		code,
+		cn_name,
+		en_name,
+		description,
+		create_user_id,
+		create_time,
+		update_user_id,
+		update_time,
+		order_num,
+		status)
+		values
+		<foreach collection="list" item="departmentList" index="index"
+			separator=",">
+			(
+			#{departmentList.id,jdbcType=INTEGER},
+			#{departmentList.code,jdbcType=VARCHAR},
+			#{departmentList.cnName,jdbcType=VARCHAR},
+			#{departmentList.enName,jdbcType=VARCHAR},
+			#{departmentList.description,jdbcType=VARCHAR},
+			#{departmentList.createUserId,jdbcType=VARCHAR},
+			#{departmentList.createTime,jdbcType=INTEGER},
+			#{departmentList.updateUserId,jdbcType=VARCHAR},
+			#{departmentList.updateTime,jdbcType=INTEGER},
+			#{departmentList.orderNum,jdbcType=INTEGER},
+			#{departmentList.status,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
+	<!-- 批量更新数据 -->
+	<update id="gw.department.batchUpdate" parameterType="java.util.List">
+		<foreach collection="list" item="departmentList" index="index"
+			separator=";">
+			update gw_department
+			<set>
+				id=#{departmentList.id,jdbcType=INTEGER},
+				code=#{departmentList.code,jdbcType=VARCHAR},
+				cn_name=#{departmentList.cnName,jdbcType=VARCHAR},
+				en_name=#{departmentList.enName,jdbcType=VARCHAR},
+				description=#{departmentList.description,jdbcType=VARCHAR},
+				create_user_id=#{departmentList.createUserId,jdbcType=VARCHAR},
+				create_time=#{departmentList.createTime,jdbcType=INTEGER},
+				update_user_id=#{departmentList.updateUserId,jdbcType=VARCHAR},
+				update_time=#{departmentList.updateTime,jdbcType=INTEGER},
+				order_num=#{departmentList.orderNum,jdbcType=INTEGER},
+				status=#{departmentList.status,jdbcType=VARCHAR}
+			</set>
+			where id = #{departmentList.id,jdbcType=INTEGER}
+		</foreach>
+	</update>
+
+	<!-- 批量删除 -->
+	<delete id="gw.department.batchDelete" parameterType="java.util.List">
+		delete from gw_department where id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item.id}
+		</foreach>
+	</delete>
+
+	<!-- 根据部门id，查询部门信息 -->
+	<select id="gw.department.selectById" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		d.id, d.code, d.cn_name, d.en_name, d.description, d.create_user_id,
+		d.create_time, d.update_user_id,
+		d.update_time, d.order_num, d.status,
+		(select u.name from gw_admin_users u where u.id = d.create_user_id) as
+		createUserName,
+		(select u.name from gw_admin_users u where u.id = d.update_user_id) as
+		updateUserName
+		from gw_department d
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<!-- 根据部门编号，查询部门信息 -->
+	<select id="gw.department.selectByCode" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		d.id, d.code, d.cn_name, d.en_name, d.description, d.create_user_id,
+		d.create_time, d.update_user_id,
+		d.update_time, d.order_num, d.status,
+		(select u.name from gw_admin_users u where u.id = d.create_user_id) as
+		createUserName,
+		(select u.name from gw_admin_users u where u.id = d.update_user_id) as
+		updateUserName
+		from gw_department d
+		where d.code = #{code,jdbcType=VARCHAR}
+	</select>
+	<!-- 根据部门id，删除部门 -->
+	<delete id="gw.department.deleteById" parameterType="java.lang.Integer">
+		delete from gw_department
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<!-- 插入新的部门记录 -->
+	<insert id="gw.department.insert" parameterType="com.crm.pojo.GwDepartmentModel"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into gw_department
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="cnName != null">
+				cn_name,
+			</if>
+			<if test="enName != null">
+				en_name,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="createUserId != null">
+				create_user_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateUserId != null">
+				update_user_id,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="orderNum != null">
+				order_num,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="cnName != null">
+				#{cnName,jdbcType=VARCHAR},
+			</if>
+			<if test="enName != null">
+				#{enName,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=VARCHAR},
+			</if>
+			<if test="createUserId != null">
+				#{createUserId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="updateUserId != null">
+				#{updateUserId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="orderNum != null">
+				#{orderNum,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<!-- 更新部门信息 -->
+	<update id="gw.department.update" parameterType="com.crm.pojo.GwDepartmentModel">
+		update gw_department
+		<set>
+			<if test="code != null">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="cnName != null">
+				cn_name = #{cnName,jdbcType=VARCHAR},
+			</if>
+			<if test="enName != null">
+				en_name = #{enName,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				description = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="createUserId != null">
+				create_user_id = #{createUserId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="updateUserId != null">
+				update_user_id = #{updateUserId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="orderNum != null">
+				order_num = #{orderNum,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<!-- 根据条件，获取分页数据list集合 -->
+	<select id="gw.department.selectPageList" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		d.id, d.code, d.cn_name, d.en_name, d.description, d.create_user_id,
+		d.create_time, d.update_user_id,
+		d.update_time, d.order_num, d.status,
+		(select u.name from gw_admin_users u where u.id = d.create_user_id) as
+		createUserName,
+		(select u.name from gw_admin_users u where u.id = d.update_user_id) as
+		updateUserName
+		from gw_department d
+		limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+	</select>
+	<!-- 查询总记录数 -->
+	<select id="gw.department.selectCount" resultType="java.lang.Integer">
+		select
+		count(d.id)
+		from gw_department d
+	</select>
+	<!-- 获取所有list集合 -->
+	<select id="gw.department.selectLists" resultMap="BaseResultMap">
+		select 
+	    <include refid="Base_Column_List" />
+	    from gw_department
+	</select>
+</mapper>

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.club" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwClubModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="start_date" property="startDate" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="entry_criteria" property="entryCriteria" jdbcType="DECIMAL" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="createUserName" property="createUserName" jdbcType="VARCHAR" />
+    <result column="updateUserName" property="updateUserName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, code, start_date, description, entry_criteria, note, create_user_id, create_time, 
+    update_user_id, update_time
+  </sql>
+  
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_club
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="gw.club.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+	   d.id, 
+	   d.code, 
+	   d.start_date, 
+	   d.description, 
+	   d.entry_criteria, 
+	   d.note, 
+	   d.create_user_id, 
+	   d.create_time, 
+       d.update_user_id,
+       d.update_time,
+	   (select u.name from gw_admin_users u where u.id = d.create_user_id) as createUserName,
+	   (select u.name from gw_admin_users u where u.id = d.update_user_id) as updateUserName
+    from gw_club d
+    <where> 
+		<if test="code!=null and code!=''">
+    		and d.code like '%${code}%'
+    	</if>
+		<if test="description!=null and description!=''">
+    		and d.description like '%${description}%'
+    	</if>
+		<if test="startDate!=null and startDate!=''">
+    		and d.start_date like '%${startDate}%'
+    	</if>
+    </where>
+        order by d.entry_criteria
+    limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  
+  <select id="gw.club.selectCount" resultType="java.lang.Integer">
+    select 
+    	count(d.id)
+    from gw_club d
+    <where> 
+		<if test="code!=null and code!=''">
+    		and d.code like '%${code}%'
+    	</if>
+		<if test="description!=null and description!=''">
+    		and d.description like '%${description}%'
+    	</if>
+		<if test="startDate!=null and startDate!=''">
+    		and d.start_date like '%${startDate}%'
+    	</if>
+    </where>
+  </select>
+  
+  <delete id="deleteById" parameterType="java.lang.Integer" >
+    delete from gw_club
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  
+  <insert id="gw.club.insert" parameterType="com.crm.pojo.GwClubModel" >
+    insert into gw_club
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="startDate != null" >
+        start_date,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="entryCriteria != null" >
+        entry_criteria,
+      </if>
+      <if test="note != null" >
+        note,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null" >
+        #{startDate,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="entryCriteria != null" >
+        #{entryCriteria,jdbcType=DECIMAL},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="gw.club.update" parameterType="com.crm.pojo.GwClubModel" >
+    update gw_club
+    <set >
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null" >
+        start_date = #{startDate,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="entryCriteria != null" >
+        entry_criteria = #{entryCriteria,jdbcType=DECIMAL},
+      </if>
+      <if test="note != null" >
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="gw.club.selectByLastOne" resultMap="BaseResultMap" >
+		SELECT
+			*
+		FROM
+			gw_club a
+		WHERE
+			a.code LIKE CONCAT(CONCAT('%', #{time,jdbcType=VARCHAR}), '%') 
+		ORDER BY
+			a.id DESC
+		LIMIT 1
+	</select>
+</mapper>

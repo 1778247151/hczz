@@ -1,0 +1,55 @@
+package com.crm.service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwIntegralExchangeGoodsModel;
+/**
+ * 
+ * GwIntegralExchangeGoodsService:积分兑换礼品业务逻辑层接口
+ *
+ * @author chengpengfei
+ * @date  2016年7月4日
+ * @version  jdk1.8
+ *
+ */
+public interface GwIntegralExchangeGoodsService extends Services<GwIntegralExchangeGoodsModel>{
+	
+	/**
+	 * 根据ID修改积分兑换礼品活动规则状态
+	 * @param params
+	 * @return
+	 */
+	public int updateIntegralExchangeGoodsById(Map<String,Object> params);
+	
+	/**
+	 * 定时检查并修改积分兑换礼品的相应状态
+	 * @return
+	 */
+	public boolean timingCheckActivityStatus();
+	
+	/**
+	 * 根据时间获取最后一条数据
+	 * 
+	 * @param time
+	 * @return
+	 */
+	public GwIntegralExchangeGoodsModel selectByLastOne(String time);
+	/**
+	 * 
+	 * selectExchangeNumberByGroupGoodsCode:通过礼品编号分组查询已兑换的礼品数
+	 *
+	 * @author hemingjun
+	 * @date 2016年10月28日
+	 * @param goodsCode
+	 * @return
+	 */
+	public GwIntegralExchangeGoodsModel selectExchangeNumberByGroupGoodsCode(String goodsCode);
+	/**
+	 * 根据条件查询积分兑换礼品集合
+	 * @param params
+	 * @return
+	 */
+	public List<GwIntegralExchangeGoodsModel> getAllListByCondition(Map<String,Object> params);
+}

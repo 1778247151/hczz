@@ -1,0 +1,86 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwActivityMemberDao;
+import com.crm.pojo.GwActivityMemberModel;
+
+@Repository("gwActivityMemberDaoManage")
+public class GwActivityMemberDaoImpl implements GwActivityMemberDao{
+	@Resource
+	private BaseDao dao;
+	
+	@Override
+	public int insert(GwActivityMemberModel e) {
+		return dao.insert("gw.activity.member.insert",e);
+	}
+
+	@Override
+	public int delete(GwActivityMemberModel e) {
+		return dao.delete("gw.activity.member.deleteById",e.getId());
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwActivityMemberModel e) {
+		return dao.update("gw.activity.member.update",e);
+	}
+
+	@Override
+	public GwActivityMemberModel selectOne(GwActivityMemberModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwActivityMemberModel> selectList(GwActivityMemberModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.activity.member.deleteByPrimaryKey",id);
+	}
+
+	@Override
+	public GwActivityMemberModel selectById(int id) {
+		return (GwActivityMemberModel) dao.selectOne("gw.activity.member.selectByPrimaryKey",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		return dao.selectPageList("gw.activity.member.selectPageList", "gw.activity.member.selectCount", params);
+	}
+
+	@Override
+	public List<GwActivityMemberModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.activity.member.getAllList");
+	}
+
+	@Override
+	public List<GwActivityMemberModel> getActivityMemberByCode(String code) {
+		return dao.selectList("gw.activity.member.selectByCode", code);
+	}
+
+	@Override
+	public int updateJoinNumber(Map<String,Object> params) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.activity.member.updateJoinNumber",params);
+	}
+
+}

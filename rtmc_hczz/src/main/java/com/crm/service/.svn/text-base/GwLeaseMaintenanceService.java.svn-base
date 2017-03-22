@@ -1,0 +1,23 @@
+package com.crm.service;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwLeaseMaintenanceModel;
+
+/**
+ * 
+ * GwLeaseMaintenanceService:租借维护业务逻辑层接口
+ *
+ * @author chengpengfei
+ * @date  2016年6月23日
+ * @version  jdk1.8
+ *
+ */
+public interface GwLeaseMaintenanceService extends Services<GwLeaseMaintenanceModel>{
+
+	/**
+	 * 根据编号查询当天最后一条记录
+	 * @param time
+	 * @return
+	 */
+	public GwLeaseMaintenanceModel getLeaseMaintenanceByLastOne(String time);
+}

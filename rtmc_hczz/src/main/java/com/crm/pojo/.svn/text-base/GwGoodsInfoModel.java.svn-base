@@ -1,0 +1,194 @@
+package com.crm.pojo;
+
+import java.math.BigDecimal;
+
+public class GwGoodsInfoModel {
+    private Integer id;
+
+    private String code;
+
+    private String name;
+
+    private Integer goodsTreeId;
+
+    private Integer goodsTreeFid;
+    private String goodTreeFName;
+    private BigDecimal money;
+
+    private Integer createUser;
+
+    private String createTime;
+
+    private Integer updateUser;
+
+    private String updateTime;
+
+    private String remark;
+
+    private Integer state;
+    
+    private String goodsTypeName;
+    
+    private String createUserName;
+    
+    private String updateUserName;
+    
+    private String shopsLeaseCode;
+    
+    private String shopsLeaseName;
+    
+    private String discountName;
+    
+    
+    public String getDiscountName() {
+		return discountName;
+	}
+
+	public void setDiscountName(String discountName) {
+		this.discountName = discountName;
+	}
+
+	public String getGoodTreeFName() {
+		return goodTreeFName;
+	}
+
+	public void setGoodTreeFName(String goodTreeFName) {
+		this.goodTreeFName = goodTreeFName;
+	}
+
+	public Integer getGoodsTreeFid() {
+		return goodsTreeFid;
+	}
+
+	public void setGoodsTreeFid(Integer goodsTreeFid) {
+		this.goodsTreeFid = goodsTreeFid;
+	}
+
+	public String getShopsLeaseName() {
+		return shopsLeaseName;
+	}
+
+	public void setShopsLeaseName(String shopsLeaseName) {
+		this.shopsLeaseName = shopsLeaseName;
+	}
+
+	public String getShopsLeaseCode() {
+		return shopsLeaseCode;
+	}
+
+	public void setShopsLeaseCode(String shopsLeaseCode) {
+		this.shopsLeaseCode = shopsLeaseCode;
+	}
+
+	public String getCreateUserName() {
+		return createUserName;
+	}
+
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
+	}
+
+	public String getUpdateUserName() {
+		return updateUserName;
+	}
+
+	public void setUpdateUserName(String updateUserName) {
+		this.updateUserName = updateUserName;
+	}
+
+	public String getGoodsTypeName() {
+		return goodsTypeName;
+	}
+
+	public void setGoodsTypeName(String goodsTypeName) {
+		this.goodsTypeName = goodsTypeName;
+	}
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code == null ? null : code.trim();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
+
+    public Integer getGoodsTreeId() {
+        return goodsTreeId;
+    }
+
+    public void setGoodsTreeId(Integer goodsTreeId) {
+        this.goodsTreeId = goodsTreeId;
+    }
+
+    public BigDecimal getMoney() {
+        return money;
+    }
+
+    public void setMoney(BigDecimal money) {
+        this.money = money;
+    }
+
+    public Integer getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(Integer createUser) {
+        this.createUser = createUser;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime == null ? null : createTime.trim();
+    }
+
+    public Integer getUpdateUser() {
+        return updateUser;
+    }
+
+    public void setUpdateUser(Integer updateUser) {
+        this.updateUser = updateUser;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime == null ? null : updateTime.trim();
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+}

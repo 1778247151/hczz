@@ -1,0 +1,58 @@
+package com.crm.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwGoodsInStoreDetailDao;
+import com.crm.pojo.GwGoodsInStoreDetailModel;
+import com.crm.service.GwGoodsInStoreDetailService;
+
+/**
+ * 
+ * GwGoodsInStoreServiceImpl:物品入库维护业务逻辑层实现
+ *
+ * @author chengpengfei
+ * @date  2016年6月23日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwGoodsInStoreDetailServiceManage")
+public class GwGoodsInStoreDetailServiceImpl extends ServersManager<GwGoodsInStoreDetailModel, GwGoodsInStoreDetailDao> implements GwGoodsInStoreDetailService{
+
+	@Resource(name="gwGoodsInStoreDetailDaoManage")
+	@Override
+	public void setDao(GwGoodsInStoreDetailDao dao) {
+		// TODO Auto-generated method stub
+		this.dao = dao;
+	}
+
+	@Override
+	public int batchInsertGoodsInStoreDeatil(List<GwGoodsInStoreDetailModel> goodsInStoreList) {
+		// TODO Auto-generated method stub
+		return dao.batchInsertGoodsInStoreDeatil(goodsInStoreList);
+	}
+
+	@Override
+	public List<GwGoodsInStoreDetailModel> getListByGoodsCode(String code) {
+		// TODO Auto-generated method stub
+		return dao.getListByGoodsCode(code);
+	}
+
+	@Override
+	public int deleteGoodsInStoreDetailByGoodsCode(Map<String,Object> params) {
+		// TODO Auto-generated method stub
+		return dao.deleteGoodsInStoreDetailByGoodsCode(params);
+	}
+
+	@Override
+	public List<GwGoodsInStoreDetailModel> getGoodsInStoreCodeByPresentCode(String presentCode) {
+		// TODO Auto-generated method stub
+		return dao.getGoodsInStoreCodeByPresentCode(presentCode);
+	}
+
+}

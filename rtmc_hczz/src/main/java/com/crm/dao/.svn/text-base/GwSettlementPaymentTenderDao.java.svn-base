@@ -1,0 +1,71 @@
+package com.crm.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwSettlementPaymentTenderModel;
+
+/**
+ * 
+ * GwSettlementPaymentTenderDao:结算付款方式信息访问层接口
+ *
+ * @author chengpengfei
+ * @date  2016年4月13日
+ * @version  jdk1.8
+ *
+ */
+public interface GwSettlementPaymentTenderDao extends DaoManager<GwSettlementPaymentTenderModel>{
+	//假删除结算收款方式信息
+	 int deleSettlementPaymentByFake(Map<String, Object> params);
+	 
+	 //根据购物中心ID获取结算付款方式集合
+	 List<GwSettlementPaymentTenderModel> getSettlementPaymentTenderByMallInfoId(Map<String,Object> params);
+	 
+	 /**
+	  * 根据购物中心ID获取付款方式集合接口
+	  * @param params
+	  * @return
+	  */
+	 List<GwSettlementPaymentTenderModel> getSettlementPaymentTenderByMallInfoIdApi(Map<String,Object> params);
+	 /**
+	  * 
+	  * batchInsert:批量插入
+	  *
+	  * @author hemingjun
+	  * @date 2016年9月12日
+	  * @param list
+	  * @return
+	  */
+	 public int batchInsertPaymentTender(List<GwSettlementPaymentTenderModel> list);
+	 /**
+	  * 
+	  * batchUpdate:批量更新
+	  *
+	  * @author hemingjun
+	  * @date 2016年9月12日
+	  * @param list
+	  * @return
+	  */
+	 public int batchUpdate(List<GwSettlementPaymentTenderModel> list);
+	 
+	 /**
+	  * 
+	  * batchDelete:批量删除
+	  *
+	  * @author hemingjun
+	  * @date 2016年9月12日
+	  * @param list
+	  * @return
+	  */
+	 public int batchDelete(List<GwSettlementPaymentTenderModel> list);
+	 /**
+	  * 
+	  * deleteAll:删除所有支付方式
+	  *
+	  * @author hemingjun
+	  * @date 2016年10月19日
+	  * @return
+	  */
+	 public int deleteAll();
+}

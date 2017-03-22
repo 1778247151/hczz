@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.mailRecord" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwMailRecordModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="attachment" property="attachment" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="send_time" property="sendTime" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="send_user" property="sendUser" jdbcType="VARCHAR" />
+    <result column="addressee" property="addressee" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, title, attachment, note, type, send_time, status, send_user,addressee,content
+  </sql>
+  <select id="gw.mailRecord.selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_mail_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.mailRecord.deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from gw_mail_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.mailRecord.insert" parameterType="com.crm.pojo.GwMailRecordModel" >
+    insert into gw_mail_record (id, title, attachment, 
+      note, type, send_time, 
+      status, send_user, addressee, 
+      content)
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{attachment,jdbcType=VARCHAR}, 
+      #{note,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{sendTime,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{sendUser,jdbcType=VARCHAR}, #{addressee,jdbcType=LONGVARCHAR}, 
+      #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="gw.mailRecord.insertSelective" parameterType="com.crm.pojo.GwMailRecordModel" >
+    insert into gw_mail_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="attachment != null" >
+        attachment,
+      </if>
+      <if test="note != null" >
+        note,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="sendTime != null" >
+        send_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="sendUser != null" >
+        send_user,
+      </if>
+      <if test="addressee != null" >
+        addressee,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="attachment != null" >
+        #{attachment,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="sendTime != null" >
+        #{sendTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="sendUser != null" >
+        #{sendUser,jdbcType=VARCHAR},
+      </if>
+      <if test="addressee != null" >
+        #{addressee,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.mailRecord.updateByPrimaryKeySelective" parameterType="com.crm.pojo.GwMailRecordModel" >
+    update gw_mail_record
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="attachment != null" >
+        attachment = #{attachment,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="sendTime != null" >
+        send_time = #{sendTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="sendUser != null" >
+        send_user = #{sendUser,jdbcType=VARCHAR},
+      </if>
+      <if test="addressee != null" >
+        addressee = #{addressee,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="gw.mailRecord.updateByPrimaryKey" parameterType="com.crm.pojo.GwMailRecordModel" >
+    update gw_mail_record
+    set title = #{title,jdbcType=VARCHAR},
+      attachment = #{attachment,jdbcType=VARCHAR},
+      note = #{note,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      send_time = #{sendTime,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      send_user = #{sendUser,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+   <!-- 根据条件，获取分页数据list集合 -->
+  <select id="gw.mailRecord.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+     c.id, c.title, c.attachment, c.note, c.type, c.send_time, c.status, c.send_user,c.addressee,c.content
+    from gw_mail_record c
+    <where>
+
+    	<if test="type!=null and type!=''">
+    		c.type=#{type,jdbcType=VARCHAR}
+    	</if>
+     	<if test="status!=null and status!=''">
+    		c.status=#{status,jdbcType=VARCHAR}
+    	</if>
+	<if test="sendUser != null and '' != sendUser">
+			 c.send_user=#{sendUser,jdbcType=VARCHAR}
+		</if>
+    </where>
+   order by c.send_time desc
+	limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  
+
+  <!-- 根据条件，获得总记录数 -->
+  <select id="gw.mailRecord.selectCount" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select 
+    	count(id)
+    from gw_mail_record c
+    <where>
+
+    	<if test="type!=null and type!=''">
+    		c.type=#{type,jdbcType=VARCHAR}
+    	</if>
+     	<if test="status!=null and status!=''">
+    		c.status=#{status,jdbcType=VARCHAR}
+    	</if>
+	<if test="sendUser != null and '' != sendUser">
+			 c.send_user=#{sendUser,jdbcType=VARCHAR}
+		</if>
+    </where>
+  </select>
+</mapper>

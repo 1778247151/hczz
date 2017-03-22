@@ -1,0 +1,108 @@
+package com.crm.pojo;
+
+import java.io.Serializable;
+
+/**
+ * 
+ * GwBuildingTreeModel:楼宇树形结构实体类
+ *
+ * @author yumaochun
+ * @date 2016年3月10日
+ * @version jdk1.8
+ *
+ */
+public class GwBuildingTreeModel implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4432007059926049727L;
+
+	private Integer id;
+
+	private Integer fid;
+
+	private String bm;
+
+	private String name;
+
+	private String area;
+
+	private Integer state;
+
+	private String time;
+
+	/**
+	 * 购物中心id
+	 */
+	private Integer gwMallInfoId;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getFid() {
+		return fid;
+	}
+
+	public void setFid(Integer fid) {
+		this.fid = fid;
+	}
+
+	public String getBm() {
+		return bm;
+	}
+
+	public void setBm(String bm) {
+		this.bm = bm == null ? null : bm.trim();
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name == null ? null : name.trim();
+	}
+
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area == null ? null : area.trim();
+	}
+
+	public Integer getState() {
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
+	}
+
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time == null ? null : time.trim();
+	}
+
+	
+
+	
+	public Integer getGwMallInfoId() {
+		return gwMallInfoId;
+	}
+
+	public void setGwMallInfoId(Integer gwMallInfoId) {
+		this.gwMallInfoId = gwMallInfoId;
+	}
+
+	
+
+}

@@ -1,0 +1,46 @@
+package com.crm.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwMemberGradeModel;
+
+/**
+ * 
+ * GwMemberGradeDao:会员等级设置据访问层接口
+ *
+ * @author chengpengfei
+ * @date  2016年7月14日
+ * @version  jdk1.8
+ *
+ */
+public interface GwMemberGradeDao extends DaoManager<GwMemberGradeModel>{
+
+	/**
+	 * 根据当天时间模糊查询当天最后一条数据
+	 * @param time
+	 * @return
+	 */
+	public GwMemberGradeModel getMemberGradeByLaseOne(String time);
+	
+	/**
+	 * 
+	 * getMemberGradeByCode:
+	 * 通过会员等级编号查询等级积分信息
+	 * @author hemingjun
+	 * @date 2016年9月6日
+	 * @param code
+	 * @return
+	 */
+	public List<GwMemberGradeModel> getMemberGradeByGradeCode(String code);
+	/**
+	 * 通过条件得到会员等级积分信息
+	 * getMemberGradeIntegralByCondition:
+	 *
+	 * @author hemingjun
+	 * @date 2016年11月4日
+	 * @return
+	 */
+	public List<GwMemberGradeModel> getMemberGradeIntegralByCondition(Map<String,Object> params);
+}

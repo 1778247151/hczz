@@ -1,0 +1,52 @@
+package com.crm.service;
+
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwLeaseGoodsModel;
+
+/**
+ * 
+ * GwGoodsService:物品维护业务逻辑层接口
+ *
+ * @author chengpengfei
+ * @date  2016年6月23日
+ * @version  jdk1.8
+ *
+ */
+public interface GwLeaseGoodsService extends Services<GwLeaseGoodsModel>{
+
+	/**
+	 * 根据编号查询物品信息
+	 * @param code
+	 * @return
+	 */
+	public GwLeaseGoodsModel getGoodsByCode(String code);
+	
+	/**
+	 * 根据编号查询当天最后一条数据
+	 * @param time
+	 * @return
+	 */
+	public GwLeaseGoodsModel getGoodsByLastOne(String time);
+	
+	/**
+	 * 添加时删除垃圾文件并复制文件到新的文件夹
+	 * @param filePathAndName
+	 * @param newPathFile
+	 * @return
+	 */
+	public boolean deleteAndCopyFile(String filePathAndName,String fileName,HttpServletRequest request);
+	/**
+	 * 
+	 * updateGoodsNumber:更新物品数量
+	 *
+	 * @author hemingjun
+	 * @date 2016年10月20日
+	 * @param map
+	 * @return
+	 */
+	public int updateGoodsNumber(Map<String, Object> map);
+}

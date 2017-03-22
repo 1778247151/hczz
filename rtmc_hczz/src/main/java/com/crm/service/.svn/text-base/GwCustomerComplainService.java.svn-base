@@ -1,0 +1,21 @@
+package com.crm.service;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwCustomerComplainModel;
+/**
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+public interface GwCustomerComplainService extends Services<GwCustomerComplainModel>{
+	/**
+	 * 根据编号查找客户投诉对象
+	 * 
+	 * @param code
+	 * @return
+	 */
+	GwCustomerComplainModel getCustomerComplainByCode(String code);
+
+	GwCustomerComplainModel getCusomerComplainByLastOne(String time);
+}

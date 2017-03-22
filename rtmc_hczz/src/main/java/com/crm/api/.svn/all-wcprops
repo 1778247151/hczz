@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/gw_crm/!svn/ver/437/gdws_crm/src/main/java/com/crm/api
+END
+CallParameters.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/gw_crm/!svn/ver/121/gdws_crm/src/main/java/com/crm/api/CallParameters.java
+END
+CommonRequest.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/gw_crm/!svn/ver/230/gdws_crm/src/main/java/com/crm/api/CommonRequest.java
+END
+CommonApi.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/gw_crm/!svn/ver/361/gdws_crm/src/main/java/com/crm/api/CommonApi.java
+END
+HandlETC.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/gw_crm/!svn/ver/437/gdws_crm/src/main/java/com/crm/api/HandlETC.java
+END
+ApiUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/gw_crm/!svn/ver/314/gdws_crm/src/main/java/com/crm/api/ApiUtil.java
+END
+CRMApi.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/gw_crm/!svn/ver/414/gdws_crm/src/main/java/com/crm/api/CRMApi.java
+END

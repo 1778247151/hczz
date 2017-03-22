@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.buildingTree" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwBuildingTreeModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="INTEGER" />
+    <result column="bm" property="bm" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="area" property="area" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="gw_mall_info_id" property="gwMallInfoId" jdbcType="INTEGER" />
+    <result column="time" property="time" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, bm, name, area, state, time , gw_mall_info_id
+  </sql>
+  <!-- 批量插入 -->
+	<insert id="gw.buildingTree.batchInsert" parameterType="com.crm.pojo.GwBuildingTreeModel">
+		insert into gw_building_tree (
+		id,
+		fid,
+		bm,
+		name,
+		area,
+		state,
+		time,
+		gw_mall_info_id
+		)
+		values
+		<foreach collection="list" item="buildingTreeList" index="index"
+			separator=",">
+			(
+			#{buildingTreeList.id,jdbcType=INTEGER},
+			#{buildingTreeList.fid,jdbcType=INTEGER},
+			#{buildingTreeList.bm,jdbcType=VARCHAR},
+			#{buildingTreeList.name,jdbcType=VARCHAR},
+			#{buildingTreeList.area,jdbcType=VARCHAR},
+			#{buildingTreeList.state,jdbcType=INTEGER},
+			#{buildingTreeList.time,jdbcType=VARCHAR},
+			#{buildingTreeList.gwMallInfoId,jdbcType=INTEGER})
+		</foreach>
+	</insert>
+	<!-- 批量更新数据 -->
+	<update id="gw.buildingTree.batchUpdate" parameterType="java.util.List">
+		<foreach collection="list" item="buildingTreeList" index="index"
+			separator=";">
+			update gw_building_tree
+			<set>
+				fid=#{buildingTreeList.fid,jdbcType=INTEGER},
+				bm=#{buildingTreeList.bm,jdbcType=VARCHAR},
+				name=#{buildingTreeList.name,jdbcType=VARCHAR},
+				area=#{buildingTreeList.area,jdbcType=VARCHAR},
+				state=#{buildingTreeList.state,jdbcType=INTEGER},
+				time=#{buildingTreeList.time,jdbcType=VARCHAR},
+				gw_mall_info_id=#{buildingTreeList.gwMallInfoId,jdbcType=INTEGER}
+			</set>
+				where id = #{buildingTreeList.id,jdbcType=INTEGER}
+		</foreach>
+	</update>
+
+	<!-- 批量删除 -->
+	<delete id="gw.buildingTree.batchDelete" parameterType="java.util.List">
+		delete from gw_building_tree where id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item.id}
+		</foreach>
+	</delete>
+  
+  <!-- 根据id，获取楼宇信息 -->
+  <select id="gw.buildingTree.selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_building_tree
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+ 
+  <!-- 根据id，删除楼宇 -->
+  <delete id="gw.buildingTree.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_building_tree
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <delete id="gw.buildingTree.deleteAll" parameterType="java.lang.Integer" >
+    delete from gw_building_tree
+  </delete>
+  
+  <!-- 添加楼宇 -->
+  <insert id="gw.buildingTree.insert" parameterType="com.crm.pojo.GwBuildingTreeModel" >
+    insert into gw_building_tree
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="bm != null" >
+        bm,
+      </if>
+      
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="area != null" >
+        area,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+       <if test="gwMallInfoId != null" >
+        gw_mall_info_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=INTEGER},
+      </if>
+      <if test="bm != null" >
+        #{bm,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=VARCHAR},
+      </if>
+      <if test="gwMallInfoId != null" >
+        #{gwMallInfoId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <!-- 更新楼宇 -->
+  <update id="gw.buildingTree.update" parameterType="com.crm.pojo.GwBuildingTreeModel" >
+    update gw_building_tree
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=INTEGER},
+      </if>
+      <if test="bm != null" >
+        bm = #{bm,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        area = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        time = #{time,jdbcType=VARCHAR},
+      </if>
+      <if test="gwMallInfoId != null" >
+        gw_mall_info_id = #{gwMallInfoId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 获取所有list集合 -->
+  <select id="gw.buildingTree.selectList" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gw_building_tree
+  </select>
+  <!-- 根据购物中心id，获取楼宇list -->
+  <select id="gw.buildingTree.selectListByMallInfoId" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" />
+    from gw_building_tree
+    where gw_mall_info_id=#{gwMallInfoId,jdbcType=INTEGER}
+  </select>
+  <!-- 根据id，获取楼宇信息 -->
+  <select id="gw.buildingTree.selectByCode" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_building_tree
+    where bm = #{code,jdbcType=VARCHAR}
+    and state = 1
+  </select>
+</mapper>

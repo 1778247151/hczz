@@ -1,0 +1,29 @@
+package com.crm.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwAddressBookModel;
+import com.crm.pojo.GwAdminUsersModel;
+
+/**
+ * 
+ * GwAddressBookDao:数据访问层接口
+ *
+ * @author hanzhiqiang
+ * @date  2016年11月8日
+ * @version  jdk1.8
+ *
+ */
+public interface GwAddressBookDao extends DaoManager<GwAddressBookModel>{
+
+	public GwAddressBookModel getAddressBookById(Integer id);
+
+	public List<GwAddressBookModel> getListsApi();
+
+	public List<GwAddressBookModel> getAddressBookListByCondition(Map<String, Object> params);
+
+	public int deleteAddressBookById(int id);
+
+}

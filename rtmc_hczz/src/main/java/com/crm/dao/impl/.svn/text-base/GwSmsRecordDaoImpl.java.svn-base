@@ -1,0 +1,87 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import org.springframework.stereotype.Repository;
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwSmsRecordDao;
+import com.crm.pojo.GwSmsRecordModel;
+
+/**
+ * 
+ * 
+ * GwSmsRecordDaoImpl:短信记录管理数据访问层的实现
+ *
+ * @author  shengjinpeng
+ * @date    2016年11月7日
+ * @version jdk1.8
+ *
+ */
+@Repository("gwSmsRecordDaoManage")
+public class GwSmsRecordDaoImpl implements GwSmsRecordDao{
+	
+	@Resource
+	private BaseDao dao;
+
+	@Override
+	public int insert(GwSmsRecordModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.smsRecord.insert", e);
+	}
+
+	@Override
+	public int delete(GwSmsRecordModel e) {
+		// TODO Auto-generated method stub
+		return dao.delete("",e);
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwSmsRecordModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.smsRecord.update", e);
+	}
+
+	@Override
+	public GwSmsRecordModel selectOne(GwSmsRecordModel e) {
+		// TODO Auto-generated method stub
+		return (GwSmsRecordModel) dao.selectOne("gw.smsRecord.selectById", e);
+	}
+	@Override
+	public List<GwSmsRecordModel> selectList(GwSmsRecordModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.smsRecord.deleteById", id);
+	}
+
+	@Override
+	public GwSmsRecordModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwSmsRecordModel) dao.selectOne("gw.smsRecord.selectById", id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.smsRecord.selectPageList", "gw.smsRecord.selectCount", params);
+	}
+
+	@Override
+	public List<GwSmsRecordModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.smsRecord.selectAllList");
+	}
+
+}

@@ -1,0 +1,382 @@
+package com.crm.controller;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import com.crm.common.AdminUser;
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.SecurityUtil;
+import com.crm.enums.CouFirmEnum;
+import com.crm.interceptor.BussAnnotation;
+import com.crm.pojo.GwGoodsOutStoreDetailModel;
+import com.crm.pojo.GwGoodsOutStoreModel;
+import com.crm.pojo.GwStoreGoodsModel;
+import com.crm.service.GwGoodsOutStoreDetailService;
+import com.crm.service.GwGoodsOutStoreService;
+import com.crm.service.GwStoreGoodsService;
+import com.crm.util.BaseCodeUtil;
+import com.crm.util.DateUtil;
+import com.crm.util.JsonMapper;
+
+
+/**
+ * 
+ * 
+ * GwGoodsOutStoreController:礼品出库控制层
+ *
+ * @author  shengjinpeng
+ * @date    2016年11月9日
+ * @version jdk1.8
+ *
+ */
+@Controller
+@RequestMapping("goodsOutStore")
+public class GwGoodsOutStoreController {
+	// 日志
+	private Logger logger = LoggerFactory.getLogger(GwGoodsOutStoreModel.class);
+	/**
+	 * 物品出库业务逻辑层
+	 */
+	@Resource(name="gwGoodsOutStoreServiceManage")
+	private GwGoodsOutStoreService gwGoodsOutStoreServiceImpl;
+	
+	/**
+	 * 物品出库明细逻辑
+	 */
+	@Resource(name="gwGoodsOutStoreDetailServiceManage")
+	private GwGoodsOutStoreDetailService gwGoodsOutStoreDetailServiceImpl;
+	
+	/**
+	 * 物品与仓库管理表业务逻辑
+	 */
+	@Resource(name="gwStoreGoodsServiceManage")
+	private GwStoreGoodsService gwStoreGoodsServiceImpl;
+	
+	/**
+	 * 获取物品出库维护数据分页集合
+	 * @author chengpengfei
+	 * @param  currentPage
+	 * @param  pageSize
+	 * @return
+	 */
+	@RequestMapping("/getGoodsOutStoreByPageList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="礼品出库管理",option="获取列表")
+	public LigerPageDataVo getGoodsOutStoreByPageList(int currentPage,int pageSize,String status,String code,String outTime){
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("status", status);
+		params.put("code", code);
+		params.put("outTime", outTime);
+		BasePageResultVo baseResultVo=gwGoodsOutStoreServiceImpl.selectPageList(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+
+	/**
+	 * 获取物品出库确认数据分页集合
+	 * @author chengpengfei
+	 * @param  currentPage
+	 * @param  pageSize
+	 * @return
+	 */
+	@RequestMapping("/getGoodsOutStoreCoufirmByPageList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="礼品出库管理",option="获取确认列表")
+	public LigerPageDataVo getGoodsOutStoreCoufirmByPageList(int currentPage,int pageSize,String code,String outTime){
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("status", "0");
+		params.put("code", code);
+		params.put("outTime", outTime);
+		BasePageResultVo baseResultVo=gwGoodsOutStoreServiceImpl.selectPageList(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 添加物品出库信息
+	 * @param goodsInfoStore
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/addGoodsOutStore.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="礼品出库管理",option="添加")
+	public BaseResultVo addGoodsOutStore(String goodsOutStoreStr,HttpServletRequest request,String goodsOutStoreDetail){
+		if(goodsOutStoreStr==null){
+			return BaseResultVo.responseFail("实体类为空");
+		}
+		GwGoodsOutStoreModel goodsInfoStoreModel =  JsonMapper.buildNonDefaultMapper().fromJson(goodsOutStoreStr, GwGoodsOutStoreModel.class);
+		//创建人
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		goodsInfoStoreModel.setCreateUserId(adminUser.getUserId());
+		//修改人
+		//goodsInfoStoreModel.setUpdateUserId(adminUser.getUserId());
+		//创建时间
+		goodsInfoStoreModel.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		//修改时间
+		//goodsInfoStoreModel.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		//设置状态
+		goodsInfoStoreModel.setStatus(CouFirmEnum.type_ENABL.getValue());
+		//把字符串转换为List对象
+		List<GwGoodsOutStoreDetailModel> goodsOutStoreList =JsonMapper.buildNonDefaultMapper().fromJsonToList(goodsOutStoreDetail, GwGoodsOutStoreDetailModel.class);
+		if(goodsOutStoreList!=null && goodsOutStoreList.size()>0){
+			for(GwGoodsOutStoreDetailModel goods : goodsOutStoreList){
+				if((goods.getStoreCode()==null)||("".equals(goods.getStoreCode()))){
+					return BaseResultVo.responseFail("请选择仓库名称");
+				}
+				if(goods.getPrice()==null||"".equals(goods.getPrice())){
+					return BaseResultVo.responseFail("请填写礼品单价");
+				}
+				if(goods.getPrice().compareTo(new BigDecimal(0))<0){
+					return BaseResultVo.responseFail("单价必须大于0");
+				}
+				if(goods.getNumber()==null||"".equals(goods.getNumber())){
+					return BaseResultVo.responseFail("请填写出库数量");
+				}
+				if(goods.getNumber()<=0){
+					return BaseResultVo.responseFail("出库数量必须大于0");
+				}
+			}
+		}
+		int number = gwGoodsOutStoreServiceImpl.addGoodsOutStore(goodsInfoStoreModel,goodsOutStoreList);
+		if(number==-1){
+			return BaseResultVo.responseFail("出库数量不能大于库存！");
+		}
+		return BaseResultVo.responseSuccess("添加成功");
+	}
+	
+	/**
+	 * 根据ID获取物品出库
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/getGoodsOutStoreById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="礼品出库管理",option="根据ID获取出库单信息")
+	public BaseResultVo getGoodsOutStoreById(int id){
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		GwGoodsOutStoreModel goods = gwGoodsOutStoreServiceImpl.selectById(id);
+		if(goods==null){
+			return BaseResultVo.responseFail("获取信息失败");
+		}
+		BaseResultVo baseResultVo = BaseResultVo.responseSuccess("获取信息成功");
+		baseResultVo.setData(goods);
+		return baseResultVo;
+	}
+	
+	/**
+	 * 修改物品出库信息
+	 * @param goods
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/updateGoodsOutStore.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="礼品出库管理",option="修改")
+	public BaseResultVo updateGoodsOutStore(int id,String code,String goodsInfoStore,HttpServletRequest request,String goodsOutStoreDetail){
+		if(goodsInfoStore==null || goodsOutStoreDetail==null){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		GwGoodsOutStoreModel goodsInfoStoreModel =  JsonMapper.buildNonDefaultMapper().fromJson(goodsInfoStore, GwGoodsOutStoreModel.class);
+		//修改时间
+		goodsInfoStoreModel.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		//修改人
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		goodsInfoStoreModel.setUpdateUserId(adminUser.getUserId());
+		//状态(待确认)
+		goodsInfoStoreModel.setStatus(0);
+		goodsInfoStoreModel.setId(id);
+		//把字符串转换为List对象
+		List<GwGoodsOutStoreDetailModel> goodsOutStoreDetailList =JsonMapper.buildNonDefaultMapper().fromJsonToList(goodsOutStoreDetail, GwGoodsOutStoreDetailModel.class);
+		if(goodsOutStoreDetailList!=null && goodsOutStoreDetailList.size()>0){
+			for(GwGoodsOutStoreDetailModel goods : goodsOutStoreDetailList){
+				if((goods.getStoreCode()==null)||("".equals(goods.getStoreCode()))){
+					return BaseResultVo.responseFail("请选择仓库名称");
+				}
+				if((goods.getGoodsCode()==null)||("".equals(goods.getGoodsCode()))){
+					return BaseResultVo.responseFail("请选择礼品名称");
+				}
+				if(goods.getNumber()==0){
+					return BaseResultVo.responseFail("出库数量不能为0");
+				}
+				//物品出库信息
+				goods.setId(goods.getId());
+				goods.setGoodsCode(goods.getGoodsCode());
+				goods.setGoodsOutStoreCode(goods.getGoodsOutStoreCode());
+				goods.setNumber(goods.getNumber());
+				goods.setPrice(goods.getPrice());
+				goods.setStoreCode(goods.getStoreCode());
+				goods.setTotalMoney(goods.getTotalMoney());
+			}
+		}
+		//修改数据
+		int number = gwGoodsOutStoreServiceImpl.updateGoodsOutStore(goodsInfoStoreModel,goodsOutStoreDetailList);
+		
+		if(number==-1){
+			return BaseResultVo.responseFail("出库数量不能大于库存！");
+		}
+		return BaseResultVo.responseSuccess("修改成功");
+	}
+	
+	/**
+	 * 删除物品信息
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/deleteGoodsOutStoreById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="礼品出库管理",option="删除")
+	public BaseResultVo deleteGoodsOutStoreById(int id,String goodsOutStoreCode,HttpServletRequest request){
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		//用户对象
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		//修改时间
+		int number = gwGoodsOutStoreServiceImpl.deleteById(id);
+		//根据物品出库单号删除物品出库明细信息
+		int deleteDetail = gwGoodsOutStoreDetailServiceImpl.deleteByCode(goodsOutStoreCode);
+		if(number<0 || deleteDetail<0){
+			return BaseResultVo.responseFail("删除失败");
+		}
+		return BaseResultVo.responseSuccess("删除成功");
+	}
+	
+	/**
+	 * 审核物品出库单
+	 * @param id
+	 * @param code
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/coufirmGoodsOutStore.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="礼品出库管理",option="确认")
+	public BaseResultVo coufirmGoodsOutStore(int id,String code,HttpServletRequest request,String approveView){
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		//新建一个对象用户修改他的状态
+		GwGoodsOutStoreModel goodsOutStore = new GwGoodsOutStoreModel();
+		goodsOutStore.setId(id);
+		goodsOutStore.setStatus(1);
+		//审核时间
+		goodsOutStore.setApproveTime(DateUtil.getCurrentDatetime("-"));
+		//审核人
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		goodsOutStore.setApproveUserId(adminUser.getUserId());
+		//审核意见
+		goodsOutStore.setApproveView(approveView);
+		//修改信息
+		int number = gwGoodsOutStoreServiceImpl.update(goodsOutStore);
+		if(number<0){
+			return BaseResultVo.responseFail("修改物品出库信息失败");
+		}
+		//新建一个物品与仓库管理对象
+		GwStoreGoodsModel storeGoods = new GwStoreGoodsModel();
+		//根据物品出库单号查询物品出库明细集合
+		List<GwGoodsOutStoreDetailModel> goodsOutStoreDetailList = gwGoodsOutStoreDetailServiceImpl.getListByCode(code);
+		for(GwGoodsOutStoreDetailModel goods : goodsOutStoreDetailList){
+			//物品与仓库关联表信息
+			storeGoods.setGoodsCode(goods.getGoodsCode());
+			storeGoods.setStoreCode(goods.getStoreCode());
+			storeGoods.setNumber(goods.getNumber());
+			Map<String,Object> map = new HashMap<>();
+			map.put("goodsCode", goods.getGoodsCode());
+			map.put("storeCode", goods.getStoreCode());
+			//根据物品编号查询物品与仓库管理信息
+			GwStoreGoodsModel storeGoodsModel = gwStoreGoodsServiceImpl.getStoreGoodsByGoodsCode(map);
+			if(storeGoodsModel==null){
+				//添加一条物品与仓库管理信息
+				gwStoreGoodsServiceImpl.insert(storeGoods);
+			}else{
+				Map<String,Object> params = new HashMap<>();
+				params.put("subnumber", storeGoods.getNumber());
+				params.put("goodsCode", storeGoodsModel.getGoodsCode());
+				params.put("storeCode", storeGoodsModel.getStoreCode());
+				//修改这条物品与仓库管理信息的数量
+				gwStoreGoodsServiceImpl.updateStoreGoodsNumber(params);
+			}
+		}
+		return BaseResultVo.responseSuccess("确认成功");
+	}	
+	
+	/**
+	 * 驳回物品出库单
+	 * @param id
+	 * @param approveView  审核意见
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/unConfirmGoodsOutStore.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="礼品出库管理",option="驳回")
+	public BaseResultVo unConfirmGoodsOutStore(int id,String approveView,HttpServletRequest request){
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		//新建一个物品出库对象
+		GwGoodsOutStoreModel goodsOutStore = new GwGoodsOutStoreModel();
+		goodsOutStore.setId(id);
+		//审核时间
+		goodsOutStore.setApproveTime(DateUtil.getCurrentDatetime("-"));
+		//审核人
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		goodsOutStore.setApproveUserId(adminUser.getUserId());
+		//状态(审核未通过)
+		goodsOutStore.setStatus(2);
+		//审核意见
+		goodsOutStore.setApproveView(approveView);
+		//根据ID查询出库单信息
+		GwGoodsOutStoreModel goods = gwGoodsOutStoreServiceImpl.selectById(id);
+		int number = gwGoodsOutStoreServiceImpl.update(goodsOutStore);
+		if(number<0){
+			return BaseResultVo.responseFail("驳回失败");
+		}
+		return BaseResultVo.responseSuccess("驳回成功");
+		
+	}
+	
+	@RequestMapping("/getGoodsOutStoreDetailByCode.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="礼品出库明细管理",option="获取列表")
+	public LigerPageDataVo getGoodsOutStoreDetailByCode(int currentPage,int pageSize,String code){
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("code", code);
+		BasePageResultVo baseResultVo=gwGoodsOutStoreDetailServiceImpl.selectPageList(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+}

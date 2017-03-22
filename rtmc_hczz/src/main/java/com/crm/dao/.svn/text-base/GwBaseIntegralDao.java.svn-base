@@ -1,0 +1,32 @@
+package com.crm.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwBaseIntegralModel;
+/**
+ * 
+ * GwBaseIntegralDao:基本积分规则访问层接口
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+public interface GwBaseIntegralDao extends DaoManager<GwBaseIntegralModel>{
+    
+    /**
+     * 
+     * getBaseIntegralByGradeCodeAndShopCode:根据会员等级编号和店铺编号，获取基本积分规则信息
+     *
+     * @author yumaochun
+     * @date 2016年7月11日
+     * @param     paramsMap         条件参数（会员等级编号和店铺编号）
+     * 
+     * @return
+     */
+    public GwBaseIntegralModel getBaseIntegralByGradeCodeAndShopCode(Map<String,Object> paramsMap);
+    
+    public List<GwBaseIntegralModel> selectByConditionList(Map<String, Object> params);
+}

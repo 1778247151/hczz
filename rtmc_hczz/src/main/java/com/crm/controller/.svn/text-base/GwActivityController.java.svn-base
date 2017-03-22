@@ -1,0 +1,506 @@
+package com.crm.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.bean.TMonPopManagerBean;
+import com.crm.common.AdminUser;
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.MD5;
+import com.crm.common.ResponseCode;
+import com.crm.common.SecurityUtil;
+import com.crm.common.Status;
+import com.crm.enums.ActivityCheckEnum;
+import com.crm.interceptor.BussAnnotation;
+import com.crm.interceptor.exception.BaseException;
+import com.crm.pojo.GwAdminUsersModel;
+import com.crm.pojo.GwLeaseGoodsModel;
+import com.crm.pojo.GwActivityMemberModel;
+import com.crm.pojo.GwActivityModel;
+import com.crm.service.GwAdminUsersService;
+import com.crm.service.GwActivityMemberService;
+import com.crm.service.GwActivityService;
+import com.crm.util.AdminUtil;
+import com.crm.util.BaseCodeUtil;
+import com.crm.util.Certification;
+import com.crm.util.DateUtil;
+import com.crm.util.ValidateUtil;
+
+
+/**
+ * 
+ * GwActivityController:活动访问控制层
+ *
+ * @author xiangtao
+ * @date 2016年6月20日
+ * @version jdk.8
+ *
+ */
+@Controller
+@RequestMapping("/activity")
+public class GwActivityController extends BaseException {
+
+	// 日志
+	private Logger logger = LoggerFactory.getLogger(GwActivityController.class);
+
+	/**
+	 * 活动业务逻辑
+	 */
+	@Resource(name = "gwActivityServiceManage")
+	private GwActivityService gwActivityServiceImpl;
+	
+	/**
+	 * 活动报名业务逻辑
+	 */
+	@Resource(name = "gwActivityMemberServiceManage")
+	private GwActivityMemberService gwActivityMemberServiceImpl;
+	/**
+	 * 
+	 * 生成活动维护的编号
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getActivityCode.do")
+	@ResponseBody
+	public String getActivityCode() {
+		//获取编号前缀
+		String frontCode = BaseCodeUtil.getBaseCode("HD");
+		//获取当天时间
+		String time = DateUtil.getCurrentDate("");
+		String code = "";
+		//根据当天时间查询最后一条记录
+		GwActivityModel activity = gwActivityServiceImpl.getActivityByLastOne(time);
+		if(activity==null){
+			code = frontCode+"0001";
+		}else{
+			String subString = activity.getCode().substring(2);
+			long num = Long.parseLong(subString)+1;
+			code = "HD"+String.valueOf(num);
+		}
+		return code;
+	}
+	
+	/**
+	 * 
+	 * getEnrollStatusActivity:根据活动id,获取活动状态
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getEnrollStatusActivity.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="活动管理",option="获取活动状态")
+	public BaseResultVo getEnrollStatusActivity(int id, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		
+		GwActivityModel gwActivityModel = gwActivityServiceImpl.selectById(id);
+		if(gwActivityModel==null ){
+			return BaseResultVo.responseFail("数据错误");
+		}else if(gwActivityModel.getActivityStatus()!=3){//3 代表活动报名中
+			return BaseResultVo.responseFail("活动当前不能报名");
+		}else{
+			Status status = new Status();
+			status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+			status.setMsg("操作成功");// 提示信息
+			status.setDebugMsg("");// bug信息
+			status.setUrl("");// url
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+	}
+	
+	/**
+	 * 
+	 * checkActivity:批量审核
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/checkActivity.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="活动管理",option="批量审核")
+	public BaseResultVo checkActivity(/*String ids*/Integer id,GwActivityModel gwActivityModel, HttpServletRequest request) {
+		if(gwActivityModel.getId()==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		Integer userid = SecurityUtil.getAdminUser(request).getUserId();
+		//审核人
+		gwActivityModel.setApproveUserId(userid);
+		//审核时间
+		gwActivityModel.setApproveTime(DateUtil.getCurrentDatetime("-"));
+		gwActivityModel.setActivityStatus(2);
+		//确认活动
+		int number = gwActivityServiceImpl.update(gwActivityModel);
+		if(number<0){
+			return BaseResultVo.responseFail("确认失败");
+		}
+		return BaseResultVo.responseSuccess("确认成功");
+	}
+	
+	/**
+	 * 
+	 * getActivityById:根据活动id，获取活动信息
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getActivityById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="活动管理",option="获取活动信息")
+	public BaseResultVo getActivityById(int id, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		if (id == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");// 提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		// 获取活动信息
+		GwActivityModel gwActivityModel = gwActivityServiceImpl.selectById(id);
+		baseResultVo.setData(gwActivityModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+	
+	/**
+	 * addActivity 添加活动
+	 * 
+	 * @date 2016年6月20日
+	 * @param
+	 * @return
+	 */
+	@RequestMapping("/addActivity.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="活动管理",option="添加活动")
+	public BaseResultVo addActivity(GwActivityModel gwActivityModel,HttpServletRequest request){
+		GwActivityModel gdm = gwActivityServiceImpl.getActivityByCode(gwActivityModel.getCode());
+		if(gdm!=null){
+			return BaseResultVo.responseFail("编号已经存在");
+		}
+		
+		Integer userid = SecurityUtil.getAdminUser(request).getUserId();
+		gwActivityModel.setCreateUserId(userid);
+		gwActivityModel.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		gwActivityServiceImpl.insert(gwActivityModel);
+		
+		// 更新时间
+		gwActivityModel.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		gwActivityModel.setUpdateUserId(userid);
+		
+		BaseResultVo baseResultVo = new BaseResultVo();
+		
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+		
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+	
+	/**
+	 * 
+	 * delActivityById:根据活动id，删除活动
+	 *
+	 * @date 2016年6月20日
+	 * @param id
+	 *            活动id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/delActivity.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="活动管理",option="删除活动")
+	public BaseResultVo delActivityById(int id,String code, HttpServletRequest request) {
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		
+		
+		List<GwActivityMemberModel> activeMember=gwActivityMemberServiceImpl.getAllList();
+		for (GwActivityMemberModel gwActivityMemberModel : activeMember) {
+			if(gwActivityMemberModel.getActivityCode().equals(code)){
+				return BaseResultVo.responseFail("编号已生成积分兑换信息，不能删除");
+			}
+		}
+		int number = gwActivityServiceImpl.deleteById(id);
+		if(number<0){
+			return BaseResultVo.responseFail("删除失败");
+		}
+		return BaseResultVo.responseSuccess("删除成功");
+	}
+	
+	/**
+	 * 
+	 * updateActivity:更新活动
+	 *
+	 * @date 2016年6月20日
+	 * @param gwActivityModel
+	 *            活动信息对象
+	 * @return
+	 */
+	@RequestMapping("/updateActivity.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="活动管理",option="更新活动")
+	public BaseResultVo updateActivity(GwActivityModel gwActivityModel,HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		// 验证主键是否为空
+		if (gwActivityModel.getId() == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		// 更新时间
+		gwActivityModel.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		int userid = SecurityUtil.getAdminUser(request).getUserId();
+		gwActivityModel.setUpdateUserId(userid);
+
+		// 更新活动信息
+		gwActivityServiceImpl.update(gwActivityModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * getActivityList:获取活动集合（分页）
+	 *
+	 * @date 2016年6月20日
+	 * @param page
+	 *            当前页码数
+	 * @param pagesize
+	 *            每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getActivityList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="活动管理",option="获取活动集合分页")
+	public LigerPageDataVo getActivityList(int currentPage, int pageSize,String code,String status,String title, HttpServletRequest request) {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("activityStatus", status);
+		params.put("title", title);
+		params.put("code", code);
+		BasePageResultVo baseResultVo = gwActivityServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 
+	 *获取待审核活动集合（分页）
+	 *
+	 * @date 2016年6月20日
+	 * @param page
+	 *            当前页码数
+	 * @param pagesize
+	 *            每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getConfirmActivityList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="活动管理",option="获取待审核活动集合")
+	public LigerPageDataVo getConfirmActivityList(int currentPage, int pageSize,String code,String title, HttpServletRequest request) {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("activityStatus", 1);
+		params.put("title", title);
+		params.put("code", code);
+		BasePageResultVo baseResultVo = gwActivityServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 
+	 *获取活动报名集合（分页）
+	 *
+	 * @date 2016年6月20日
+	 * @param page
+	 *            当前页码数
+	 * @param pagesize
+	 *            每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getEnterActivityList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="活动管理",option="获取活动报名信息")
+	public LigerPageDataVo getEnterActivityList(int currentPage, int pageSize,String code,String title, HttpServletRequest request) {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("activityStatus", ActivityCheckEnum.ALREADYCHECK.getValue());
+		params.put("activityStatus1", ActivityCheckEnum.FINISHED.getValue());
+		params.put("title", title);
+		params.put("code", code);
+		BasePageResultVo baseResultVo = gwActivityServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 开始报名
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/startEnter.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="活动管理",option="开始报名活动")
+	public BaseResultVo startEnter(Integer id){
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		Map<String,Object> params = new HashMap<>();
+		params.put("id", id);
+		params.put("startEnter", 3);
+		//修改状态
+		int number = gwActivityServiceImpl.updateStatus(params);
+		if(number==0){
+			return BaseResultVo.responseFail("修改状态失败");
+		}
+		return BaseResultVo.responseSuccess("操作成功");
+	}
+	
+	/**
+	 * 结束报名
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/stopEnter.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="活动管理",option="结束报名")
+	public BaseResultVo stopEnter(Integer id){
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		Map<String,Object> params = new HashMap<>();
+		params.put("id", id);
+		params.put("stopEnter", 4);
+		//修改状态
+		int number = gwActivityServiceImpl.updateStatus(params);
+		if(number==0){
+			return BaseResultVo.responseFail("修改状态失败");
+		}
+		return BaseResultVo.responseSuccess("操作成功");
+	}
+	
+	/**
+	 * 开始活动
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/startActivity.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="活动管理",option="开始活动")
+	public BaseResultVo startActivity(Integer id){
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		Map<String,Object> params = new HashMap<>();
+		params.put("id", id);
+		params.put("startActivity", ActivityCheckEnum.FINISHED.getValue());
+		//修改状态
+		int number = gwActivityServiceImpl.updateStatus(params);
+		if(number==0){
+			return BaseResultVo.responseFail("修改状态失败");
+		}
+		return BaseResultVo.responseSuccess("操作成功");
+	}
+	
+	/**
+	 * 结束活动
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/stopActivity.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="活动管理",option="结束活动")
+	public BaseResultVo stopActivity(Integer id){
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		Map<String,Object> params = new HashMap<>();
+		params.put("id", id);
+		params.put("stopActivity", ActivityCheckEnum.FINISHE.getValue());
+		//修改状态
+		int number = gwActivityServiceImpl.updateStatus(params);
+		if(number==0){
+			return BaseResultVo.responseFail("修改状态失败");
+		}
+		return BaseResultVo.responseSuccess("操作成功");
+	}
+	
+	
+	@RequestMapping("/updateStatusById.do")
+	@ResponseBody
+	public BaseResultVo updateStatusById(Integer id,String status){
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		Map<String,Object> params = new HashMap<>();
+		params.put("id", id);
+		params.put("status", status);
+		//修改状态
+		int number = gwActivityServiceImpl.updateStatus(params);
+		if(number==0){
+			return BaseResultVo.responseFail("修改状态失败");
+		}
+		return BaseResultVo.responseSuccess("操作成功");
+	}
+	
+}

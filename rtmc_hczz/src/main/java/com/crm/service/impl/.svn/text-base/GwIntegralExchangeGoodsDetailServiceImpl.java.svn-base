@@ -1,0 +1,79 @@
+package com.crm.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.crm.core.DaoManager;
+import com.crm.core.ServersManager;
+import com.crm.dao.GwIntegralExchangeGoodsDao;
+import com.crm.dao.GwIntegralExchangeGoodsDetailDao;
+import com.crm.dao.GwMemberIntegralDetailDao;
+import com.crm.dao.GwMembersDao;
+import com.crm.pojo.GwIntegralExchangeGoodsDetailModel;
+import com.crm.pojo.GwIntegralExchangeGoodsModel;
+import com.crm.pojo.GwMemberIntegralDetailModel;
+import com.crm.pojo.GwMembersModel;
+import com.crm.service.GwIntegralExchangeGoodsDetailService;
+
+/**
+ * 
+ * GwIntegralExchangeGoodsDetailServiceImpl:礼物兑换详细业务逻辑层实现
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwIntegralExchangeGoodsDetailServiceManage")
+public class GwIntegralExchangeGoodsDetailServiceImpl extends ServersManager<GwIntegralExchangeGoodsDetailModel, GwIntegralExchangeGoodsDetailDao> implements GwIntegralExchangeGoodsDetailService{
+	
+	@Resource(name = "gwIntegralExchangeGoodsDetailDaoManage")
+	@Override
+	public void setDao(GwIntegralExchangeGoodsDetailDao gwIntegralExchangeGoodsDetailDao) {
+		this.dao = gwIntegralExchangeGoodsDetailDao;
+	}
+	
+	//会员数据访问层接口
+	@Autowired
+	GwMembersDao gwMembersDaoImpl;
+	//礼品数据访问层接口
+	@Autowired
+	GwIntegralExchangeGoodsDao gwIntegralExchangeGoodsDaoImpl;
+	//积分明细数据访问接口
+	@Autowired
+	GwMemberIntegralDetailDao gwMemberIntegralDetailDaoImpl;
+	
+    @Override
+    public GwIntegralExchangeGoodsDetailModel getIntegralExchangeGoodsDetailByCode(String code) {
+        // TODO Auto-generated method stub
+        return dao.getIntegralExchangeGoodsDetailByCode(code);
+    }
+    /**
+     * 
+     * getIntegralExchangeGoodsDetailByCode:根据会员编号，获取礼物兑换详细信息
+     *
+     * @author xiangtao
+     * @date 2016年7月20日
+     * @param memberCode                  会员编号
+     * @param giftCode                    礼品编号
+     * @return   返回：礼物兑换详细信息
+     */
+	@Override
+	public GwIntegralExchangeGoodsDetailModel getIntegralExchangeGoodsDetailByMemberCode(String memberCode,String giftCode) {
+		return dao.getIntegralExchangeGoodsDetailByMemberCode(memberCode,giftCode);
+	}
+	
+	
+	@Override
+	public int addIntegralExchangeGoodsDetail(GwIntegralExchangeGoodsDetailModel e, GwMembersModel gwMembersModel, GwIntegralExchangeGoodsModel integralExchangeGoods,GwMemberIntegralDetailModel integralDetai) {
+		gwMembersDaoImpl.update(gwMembersModel);
+		gwIntegralExchangeGoodsDaoImpl.update(integralExchangeGoods);
+		gwMemberIntegralDetailDaoImpl.insert(integralDetai);
+		return dao.insert(e);
+	}
+}

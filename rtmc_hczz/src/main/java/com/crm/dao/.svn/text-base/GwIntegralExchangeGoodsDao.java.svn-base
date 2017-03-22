@@ -1,0 +1,50 @@
+package com.crm.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwIntegralExchangeGoodsModel;
+
+/**
+ * GwIntegralExchangeGoodsDao:积分兑换礼品活动规则数据访问层接口
+ *
+ * @author chengpengfei
+ * @date  2016年6月27日
+ * @version  jdk1.8
+ *
+ */
+public interface GwIntegralExchangeGoodsDao extends DaoManager<GwIntegralExchangeGoodsModel>{
+
+	/**
+	 * 根据ID修改积分兑换礼品活动规则状态
+	 * @param params
+	 * @return
+	 */
+	public int updateIntegralExchangeGoodsById(Map<String,Object> params);
+	
+	/**
+	 * 根据条件查询积分兑换礼品集合
+	 * @param params
+	 * @return
+	 */
+	public List<GwIntegralExchangeGoodsModel> getAllListByCondition(Map<String,Object> params);
+	
+	/**
+	 * 获取最后一条记录通过时间
+	 * @param params
+	 * @return
+	 */
+	public GwIntegralExchangeGoodsModel selectByLastOne(String time);
+	
+	/**
+	 * 
+	 * selectExchangeNumberByGroupGoodsCode:通过礼品编号分组查询已兑换的礼品数
+	 *
+	 * @author hemingjun
+	 * @date 2016年10月28日
+	 * @param goodsCode
+	 * @return
+	 */
+	public GwIntegralExchangeGoodsModel selectExchangeNumberByGroupGoodsCode(String goodsCode);
+}

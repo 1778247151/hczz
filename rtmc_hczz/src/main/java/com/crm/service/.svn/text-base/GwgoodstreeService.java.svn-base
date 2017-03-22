@@ -1,0 +1,57 @@
+package com.crm.service;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.http.client.ClientProtocolException;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwgoodstreeModel;
+
+/**
+ * 
+ * GwgoodstreeService:货品管理业务逻辑层接口
+ *
+ * @author chengpengfei
+ * @date  2016年3月10日
+ * @version  jdk1.8
+ *
+ */
+public interface GwgoodstreeService extends Services<GwgoodstreeModel>{
+	
+	/**
+	 * 
+	 * getTopGoodsTree:根据父级id，获取下级菜单集合
+	 *
+	 * @date 2016年3月22日
+	 * @param fid            父级id
+	 * @return
+	 */
+	public List<GwgoodstreeModel> getTopGoodsTree(int fid);
+	
+	/**
+	 * 获取所有货品集合接口
+	 */
+	public List<GwgoodstreeModel> getGoodsTressListApi(Map<String,Object> params);
+	
+	/**
+	 * 根据父级ID获取下级货品集合
+	 */
+	public List<GwgoodstreeModel> getLastGoodsTresListApi(Map<String,Object> params);
+	
+	/**
+	 * 根据编号获取货品信息
+	 * @param code
+	 * @return
+	 */
+	public GwgoodstreeModel getGoodsTreeByCode(String code);
+	
+	/**
+	 * 从MIS端拉取货品组别数据并存入本地数据库
+	 * @throws IOException 
+	 * @throws ClientProtocolException 
+	 */
+	public boolean insertMisDataForGoodsTree(String url,Map<String, Object> map) throws ClientProtocolException, IOException;
+
+}

@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.customer.complain" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwCustomerComplainModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="card_code" property="cardCode" jdbcType="VARCHAR" />
+    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="tel_address" property="telAddress" jdbcType="VARCHAR" />
+    <result column="subject" property="subject" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="happen_address" property="happenAddress" jdbcType="VARCHAR" />
+    <result column="happen_time" property="happenTime" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="method" property="method" jdbcType="INTEGER" />
+    <result column="opinion_type" property="opinionType" jdbcType="VARCHAR" />
+    <result column="handle_time" property="handleTime" jdbcType="VARCHAR" />
+    <result column="handle_result" property="handleResult" jdbcType="VARCHAR" />
+    <result column="handle_user" property="handleUser" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, code, card_code, customer_name, phone, sex, tel_address, subject, description, 
+    happen_address, happen_time, level, status, method, opinion_type, handle_time, handle_result, 
+    handle_user, create_user_id, create_time, update_user_id, update_time
+  </sql>
+  
+   <select id="gw.customer.complain.getAllList" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gw_customer_complain
+  </select>
+  <!-- 根据条件，获取分页数据list集合 -->
+  <select id="gw.customer.complain.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    d.id, d.code, d.card_code cardCode, d.customer_name customerName,d.phone,d.sex,d.tel_address telAddress,d.subject,d.description,
+    d.happen_address happenAddress, d.happen_time happenTime,d.level,d.status,d.method,
+    d.opinion_type opinionType,(select name from gw_type_tree t where t.code=d.opinion_type) as opinionTypeName,
+    d.handle_time handleTime,d.handle_result handleResult,
+    d.handle_user handleUser,
+    (select u.name from gw_admin_users u where u.id = d.create_user_id) as createUserName, d.create_time createTime, 
+    (select u.name from gw_admin_users u where u.id = d.update_user_id) as updateUserName, d.update_time updateTime
+    from gw_customer_complain d 
+     <where> 
+	    <if test="cardCode != null and '' != cardCode">  
+	          d.card_code LIKE CONCAT(CONCAT('%', #{cardCode,jdbcType=VARCHAR}), '%')         
+	    </if>
+	    <if test="customerName != null and '' != customerName">  
+	         and d.customer_name LIKE CONCAT(CONCAT('%', #{customerName,jdbcType=VARCHAR}), '%')         
+	    </if>
+    </where>
+    order by d.create_time desc
+    limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  <!-- 根据条件，总记录数 -->
+  <select id="gw.customer.complain.selectCount" resultType="java.lang.Integer">
+   	select count(id) from gw_customer_complain where status = 1
+  </select>
+  
+   <select id="gw.customer.complain.selectByLastOne" resultMap="BaseResultMap">
+   		SELECT
+			*
+		FROM
+			gw_customer_complain a
+		WHERE
+			a.code LIKE CONCAT(CONCAT('%', #{time,jdbcType=VARCHAR}), '%') 
+		ORDER BY
+			a.id DESC
+		LIMIT 1
+  </select>
+  
+   <select id="gw.customer.complain.selectByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_customer_complain
+    where code = #{code,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="gw.customer.complain.selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_customer_complain
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.customer.complain.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_customer_complain
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.customer.complain.insert" parameterType="com.crm.pojo.GwCustomerComplainModel" >
+    insert into gw_customer_complain
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="cardCode != null" >
+        card_code,
+      </if>
+      <if test="customerName != null" >
+        customer_name,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="telAddress != null" >
+        tel_address,
+      </if>
+      <if test="subject != null" >
+        subject,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="happenAddress != null" >
+        happen_address,
+      </if>
+      <if test="happenTime != null" >
+        happen_time,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="method != null" >
+        method,
+      </if>
+      <if test="opinionType != null" >
+        opinion_type,
+      </if>
+      <if test="handleTime != null" >
+        handle_time,
+      </if>
+      <if test="handleResult != null" >
+        handle_result,
+      </if>
+      <if test="handleUser != null" >
+        handle_user,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="cardCode != null" >
+        #{cardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null" >
+        #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="telAddress != null" >
+        #{telAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="subject != null" >
+        #{subject,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="happenAddress != null" >
+        #{happenAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="happenTime != null" >
+        #{happenTime,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="method != null" >
+        #{method,jdbcType=INTEGER},
+      </if>
+      <if test="opinionType != null" >
+        #{opinionType,jdbcType=VARCHAR},
+      </if>
+      <if test="handleTime != null" >
+        #{handleTime,jdbcType=VARCHAR},
+      </if>
+      <if test="handleResult != null" >
+        #{handleResult,jdbcType=VARCHAR},
+      </if>
+      <if test="handleUser != null" >
+        #{handleUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.customer.complain.update" parameterType="com.crm.pojo.GwCustomerComplainModel" >
+    update gw_customer_complain
+    <set >
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="cardCode != null" >
+        card_code = #{cardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null" >
+        customer_name = #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="telAddress != null" >
+        tel_address = #{telAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="subject != null" >
+        subject = #{subject,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="happenAddress != null" >
+        happen_address = #{happenAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="happenTime != null" >
+        happen_time = #{happenTime,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="method != null" >
+        method = #{method,jdbcType=INTEGER},
+      </if>
+      <if test="opinionType != null" >
+        opinion_type = #{opinionType,jdbcType=VARCHAR},
+      </if>
+      <if test="handleTime != null" >
+        handle_time = #{handleTime,jdbcType=VARCHAR},
+      </if>
+      <if test="handleResult != null" >
+        handle_result = #{handleResult,jdbcType=VARCHAR},
+      </if>
+      <if test="handleUser != null" >
+        handle_user = #{handleUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

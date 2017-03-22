@@ -1,0 +1,281 @@
+package com.crm.pojo;
+
+import com.crm.enums.ActivityStatusEnum;
+import com.crm.enums.HandleStausEnum;
+import com.crm.enums.SexNameEnum;
+
+public class GwCustomerComplainModel {
+    private Integer id;
+
+    private String code;
+
+    private String cardCode;
+
+    private String customerName;
+
+    private String phone;
+
+    private Integer sex;
+
+    private String telAddress;
+
+    private String subject;
+
+    private String description;
+
+    private String happenAddress;
+
+    private String happenTime;
+
+    private Integer level;
+
+    private Integer status;
+
+    private Integer method;
+
+    private String opinionType;
+
+    private String handleTime;
+
+    private String handleResult;
+
+    private String handleUser;
+
+    private Integer createUserId;
+
+    private String createTime;
+
+    private Integer updateUserId;
+
+    private String updateTime;
+    
+    private String createUserName;
+    
+    private String updateUserName;
+    
+    private String statusName;
+    
+    private String sexName;
+    /**
+     * 客诉类型名称
+     */
+    private String opinionTypeName;
+    
+    
+    
+    public String getOpinionTypeName() {
+		return opinionTypeName;
+	}
+
+	public void setOpinionTypeName(String opinionTypeName) {
+		this.opinionTypeName = opinionTypeName;
+	}
+
+	public String getSexName() {
+		return SexNameEnum.getDisplayName(getSex());
+	}
+
+	public void setSexName(String sexName) {
+		this.sexName = sexName;
+	}
+
+	public String getStatusName() {
+		return HandleStausEnum.getDisplayName(getStatus());
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
+
+	public String getCreateUserName() {
+		return createUserName;
+	}
+
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
+	}
+
+	public String getUpdateUserName() {
+		return updateUserName;
+	}
+
+	public void setUpdateUserName(String updateUserName) {
+		this.updateUserName = updateUserName;
+	}
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code == null ? null : code.trim();
+    }
+
+    public String getCardCode() {
+        return cardCode;
+    }
+
+    public void setCardCode(String cardCode) {
+        this.cardCode = cardCode == null ? null : cardCode.trim();
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName == null ? null : customerName.trim();
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone == null ? null : phone.trim();
+    }
+
+    public Integer getSex() {
+        return sex;
+    }
+
+    public void setSex(Integer sex) {
+        this.sex = sex;
+    }
+
+    public String getTelAddress() {
+        return telAddress;
+    }
+
+    public void setTelAddress(String telAddress) {
+        this.telAddress = telAddress == null ? null : telAddress.trim();
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject == null ? null : subject.trim();
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description == null ? null : description.trim();
+    }
+
+    public String getHappenAddress() {
+        return happenAddress;
+    }
+
+    public void setHappenAddress(String happenAddress) {
+        this.happenAddress = happenAddress == null ? null : happenAddress.trim();
+    }
+
+    public String getHappenTime() {
+        return happenTime;
+    }
+
+    public void setHappenTime(String happenTime) {
+        this.happenTime = happenTime == null ? null : happenTime.trim();
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getMethod() {
+        return method;
+    }
+
+    public void setMethod(Integer method) {
+        this.method = method;
+    }
+
+    public String getOpinionType() {
+        return opinionType;
+    }
+
+    public void setOpinionType(String opinionType) {
+        this.opinionType = opinionType == null ? null : opinionType.trim();
+    }
+
+    public String getHandleTime() {
+        return handleTime;
+    }
+
+    public void setHandleTime(String handleTime) {
+        this.handleTime = handleTime == null ? null : handleTime.trim();
+    }
+
+    public String getHandleResult() {
+        return handleResult;
+    }
+
+    public void setHandleResult(String handleResult) {
+        this.handleResult = handleResult == null ? null : handleResult.trim();
+    }
+
+    public String getHandleUser() {
+        return handleUser;
+    }
+
+    public void setHandleUser(String handleUser) {
+        this.handleUser = handleUser == null ? null : handleUser.trim();
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime == null ? null : createTime.trim();
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime == null ? null : updateTime.trim();
+    }
+}

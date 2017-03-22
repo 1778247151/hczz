@@ -1,0 +1,37 @@
+package com.crm.service.impl;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwLeaseMaintenanceDao;
+import com.crm.pojo.GwLeaseMaintenanceModel;
+import com.crm.service.GwLeaseMaintenanceService;
+
+/**
+ * 
+ * GwLeaseMaintenanceServiceImpl:租借维护业务逻辑层实现
+ *
+ * @author chengpengfei
+ * @date  2016年6月23日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwLeaseMaintenanceServiceManage")
+public class GwLeaseMaintenanceServiceImpl extends ServersManager<GwLeaseMaintenanceModel,GwLeaseMaintenanceDao> implements GwLeaseMaintenanceService{
+
+	@Resource(name="gwLeaseMaintenanceDaoManage")
+	@Override
+	public void setDao(GwLeaseMaintenanceDao dao) {
+		// TODO Auto-generated method stub
+		this.dao = dao;
+	}
+
+	@Override
+	public GwLeaseMaintenanceModel getLeaseMaintenanceByLastOne(String time) {
+		// TODO Auto-generated method stub
+		return dao.getLeaseMaintenanceByLastOne(time);
+	}
+
+}

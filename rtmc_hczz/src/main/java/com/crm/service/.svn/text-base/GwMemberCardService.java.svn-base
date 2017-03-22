@@ -1,0 +1,69 @@
+package com.crm.service;
+
+import java.util.List;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwMemberCardModel;
+/**
+ * 
+ * 
+ * GwMemberCardService:会员卡管理业务逻辑层接口
+ *
+ * @author  shengjinpeng
+ * @date    2016年11月2日
+ * @version jdk1.8
+ *
+ */
+public interface GwMemberCardService extends Services<GwMemberCardModel>{
+	/**
+	 * 
+	 * getMemberCardByCode:根据会员卡编号，获得会员卡信息
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年11月11日
+	 *
+	 * @param code
+	 * @return
+	 */
+	public GwMemberCardModel getMemberCardByCode(String code);
+	/**
+	 * 
+	 * getAllNormalUseCardCode:获取所有正常使用的卡号
+	 *
+	 * @author   meishengjun
+	 * @date     2016年11月4日
+	 *
+	 * 
+	 * @return
+	 */
+	public List<GwMemberCardModel> getAllNormalUseCardCode();
+
+	/**
+	 * 
+	 * insertList:批量插入
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年11月2日
+	 *
+	 * @param gwMemberCardModel
+	 * @param startCardCode
+	 * @param endCardCode
+	 * @return
+	 */
+	public int insertList(GwMemberCardModel gwMemberCardModel, String startCardCode, String endCardCode);
+	/**
+	 * 
+	 * selectByCode:根据卡号查询会员信息
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年11月2日
+	 *
+	 * @param gwMemberCardModel
+	 * @param startCardCode
+	 * @param endCardCode
+	 * @return
+	 */
+	public GwMemberCardModel selectByCode(String CardCode);
+	
+	
+}

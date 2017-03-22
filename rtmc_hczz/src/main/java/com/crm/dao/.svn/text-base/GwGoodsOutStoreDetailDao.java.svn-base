@@ -1,0 +1,55 @@
+package com.crm.dao;
+
+import java.util.List;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwGoodsOutStoreDetailModel;
+
+/**
+ * 
+ * 
+ * GwGoodsOutStoreDetailDao:礼品出库明细数据层接口
+ *
+ * @author  shengjinpeng
+ * @date    2016年11月9日
+ * @version jdk1.8
+ *
+ */
+public interface GwGoodsOutStoreDetailDao extends DaoManager<GwGoodsOutStoreDetailModel>{
+
+	/**
+	 * 
+	 * batchInsert:批量插入
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年11月9日
+	 *
+	 * @param list
+	 * @return
+	 */
+	public int batchInsert(List<GwGoodsOutStoreDetailModel> list);
+	
+	/**
+	 * 
+	 * getListByCode:根据出库单号获得明细列表
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年11月9日
+	 *
+	 * @param code
+	 * @return
+	 */
+	public List<GwGoodsOutStoreDetailModel> getListByCode(String code);
+	
+	/**
+	 * 
+	 * deleteBycode:根据出库单号删除明细
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年11月9日
+	 *
+	 * @param code
+	 * @return
+	 */
+	public int deleteBycode(String code);
+}

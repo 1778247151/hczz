@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.pickupMaintenance" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwPickupMaintenanceModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="pickup_user" property="pickupUser" jdbcType="VARCHAR" />
+    <result column="pickup_time" property="pickupTime" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="pickup_img" property="pickupImg" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="createUserName" property="createUserName" jdbcType="VARCHAR" />
+    <result column="updateUserName" property="updateUserName" jdbcType="VARCHAR" />
+    <result column="pickupMaintenanceCode" property="pickupMaintenanceCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, code, name, pickup_user, pickup_time, phone, pickup_img, status, create_user_id, 
+    create_time, update_user_id, update_time
+  </sql>
+  <select id="gw.pickupMaintenance.selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_pickup_maintenance
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.pickupMaintenance.deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from gw_pickup_maintenance
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.pickupMaintenance.insert" parameterType="com.crm.pojo.GwPickupMaintenanceModel" >
+    insert into gw_pickup_maintenance (id, code, name, 
+      pickup_user, pickup_time, phone, 
+      pickup_img, status, create_user_id, 
+      create_time, update_user_id, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{pickupUser,jdbcType=VARCHAR}, #{pickupTime,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{pickupImg,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=VARCHAR}, #{updateUserId,jdbcType=INTEGER}, #{updateTime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="gw.pickupMaintenance.insertSelective" parameterType="com.crm.pojo.GwPickupMaintenanceModel" >
+    insert into gw_pickup_maintenance
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="pickupUser != null" >
+        pickup_user,
+      </if>
+      <if test="pickupTime != null" >
+        pickup_time,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="pickupImg != null" >
+        pickup_img,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pickupUser != null" >
+        #{pickupUser,jdbcType=VARCHAR},
+      </if>
+      <if test="pickupTime != null" >
+        #{pickupTime,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="pickupImg != null" >
+        #{pickupImg,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.pickupMaintenance.updateByPrimaryKeySelective" parameterType="com.crm.pojo.GwPickupMaintenanceModel" >
+    update gw_pickup_maintenance
+    <set >
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pickupUser != null" >
+        pickup_user = #{pickupUser,jdbcType=VARCHAR},
+      </if>
+      <if test="pickupTime != null" >
+        pickup_time = #{pickupTime,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="pickupImg != null" >
+        pickup_img = #{pickupImg,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 根据条件，获取分页LIST集合 -->
+  <select id="gw.pickupMaintenance.selectByPageList" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	SELECT    
+    a.`code`,   
+    <if test="receive != null and '' != receive">  
+          a.code as pickupMaintenanceCode,      
+    </if>  
+    <if test="receive == null and '' == receive">  
+          a.code,    
+    </if>  
+	a.create_time,
+	a.create_user_id,
+	(select b.`name` from gw_admin_users b where b.id = a.create_user_id)as createUserName,
+	a.id,
+	a.`name`,
+	a.phone,
+	a.pickup_img,
+	a.pickup_time,
+	a.pickup_user,
+	a.status,
+	a.update_time,
+	a.update_user_id,
+	(select b.`name` from gw_admin_users b where b.id = a.update_user_id)as updateUserName
+FROM
+	gw_pickup_maintenance a
+	<where>
+	    <if test="receive != null and '' != receive">  
+	       and a.status = #{receive,jdbcType=INTEGER}         
+	    </if>
+	    <if test="name != null and '' != name">  
+           and a.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}), '%')        
+        </if>
+        <if test="startTime != null and '' != startTime">  
+           and a.pickup_time &gt;=#{startTime,jdbcType=VARCHAR}         
+        </if>
+        <if test="endTime != null and '' != endTime">  
+           and a.pickup_time  &lt;=#{endTime,jdbcType=VARCHAR}         
+        </if>
+        <if test="code != null and '' != code">  
+            and a.code LIKE CONCAT(CONCAT('%', #{code,jdbcType=VARCHAR}), '%')          
+        </if>
+        <if test="status != null and '' != status">  
+           and a.status =#{status,jdbcType=VARCHAR}         
+        </if>
+    </where>
+    order by a.create_time desc
+limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  	
+  </select>
+  <!-- 根据条件，获取分页LIST集合总数 -->
+  <select id="gw.pickupMaintenance.selectByPageCount" resultType="java.lang.Integer"  parameterType="java.util.Map">
+  	select 
+      count(a.id)
+    from gw_pickup_maintenance a 	
+    <where>
+	    <if test="receive != null and '' != receive">  
+	          a.status = #{receive,jdbcType=INTEGER}         
+	    </if>
+	    <if test="name != null and '' != name">  
+           and a.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}), '%')        
+        </if>
+        <if test="time != null and '' != time">  
+           and a.pickup_time &lt;=#{time,jdbcType=VARCHAR}         
+        </if>
+        <if test="code != null and '' != code">  
+            and a.code LIKE CONCAT(CONCAT('%', #{code,jdbcType=VARCHAR}), '%')          
+        </if>
+        <if test="status != null and '' != status">  
+           and a.status =#{status,jdbcType=VARCHAR}         
+        </if>
+    </where>
+  </select>
+  
+  <!-- 通过编号批量修改拾物维护状态 -->
+ <update id="gw.pickupMaintenance.updateStatusByCode">
+    	update gw_pickup_maintenance set status = #{pickupMaintenanceList.status} where code in 
+    	<foreach item="pickupMaintenanceList" index="index" collection="list" open="(" separator="," close=")">  
+  			#{pickupMaintenanceList.code}  
+ 	</foreach> 
+  </update>
+  
+  <select id="gw.pickupMaintenance.selectByLastOne" resultMap="BaseResultMap" >
+		SELECT
+			*
+		FROM
+			gw_pickup_maintenance a
+		WHERE
+			a.code LIKE CONCAT(CONCAT('%', #{time,jdbcType=VARCHAR}), '%') 
+		ORDER BY
+			a.id DESC
+		LIMIT 1
+	</select>
+</mapper>

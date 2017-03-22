@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.memberIntegralDetail" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwMemberIntegralDetailModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="member_code" property="memberCode" jdbcType="VARCHAR" />
+    <result column="card_code" property="cardCode" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="intergral_time" property="intergralTime" jdbcType="VARCHAR" />
+    <result column="intertral_num" property="intergralNum" jdbcType="INTEGER" />
+    <result column="intergral_type" property="intergralType" jdbcType="INTEGER" />
+    <result column="credit" property="credit" jdbcType="INTEGER" />
+    <result column="userName" property="userName" jdbcType="VARCHAR" />
+  </resultMap>
+
+ <sql id="Base_Column_List" >
+    id, member_code,card_code, intertral_num, intergral_time, intergral_type
+  </sql>
+  <select id="gw.memberIntegralDetail.selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+     select
+ 	  	a.id,
+			a.member_code memberCode,
+			(
+				SELECT
+					m.user_name
+				FROM
+					gw_members m
+				WHERE
+					m.vip_code = a.member_code
+			) AS userName,
+			a.card_code cardCode,
+			a.intergral_time intergralTime,
+			a.intertral_num intergralNum,
+			a.intergral_type intergralType,
+			a.note
+	from 
+		gw_member_integral_detatil a
+	where 
+	    a.id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <!-- 根据条件，获取分页LIST集合 -->
+  <select id="gw.memberIntegralDetail.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map">
+	    SELECT
+			a.id,
+			a.member_code memberCode,
+			(
+				SELECT
+					m.user_name
+				FROM
+					gw_members m
+				WHERE
+					m.vip_code = a.member_code
+			) AS userName,
+			a.card_code cardCode,
+			a.intergral_time intergralTime,
+			a.intertral_num intergralNum,
+			a.intergral_type,
+			a.note
+		FROM
+			gw_member_integral_detatil a
+		where 1=1
+		<if test="memberCode!=null and memberCode!=''">
+    		and a.member_code like CONCAT('%',CONCAT(#{memberCode,jdbcType=VARCHAR}),'%')
+    	</if>
+		<if test="cardCode!=null and cardCode!=''">
+    		and a.card_code like CONCAT('%',CONCAT(#{cardCode,jdbcType=VARCHAR}),'%')
+    	</if>
+    	<if test="startTime != null and '' != startTime">
+			and a.intergral_time &gt;=#{startTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and '' != endTime"> 
+			and a.intergral_time &lt;=#{endTime,jdbcType=VARCHAR}
+		</if>
+    	<if test="startTime != null and '' != startTime and endTime !=null and ''!=endTime">  
+	          and a.intergral_time &gt;=#{startTime,jdbcType=VARCHAR} and a.intergral_time &lt;=#{endTime,jdbcType=VARCHAR}
+	    </if>
+	   order by a.intergral_time desc
+ 	 limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+
+  <!-- 获取LIST集合 -->
+  <select id="gw.memberIntegralDetail.selectList" resultMap="BaseResultMap" parameterType="java.util.Map">
+ 	SELECT
+			a.id,
+			a.member_code memberCode,
+			(
+				SELECT
+					m.user_name
+				FROM
+					gw_members m
+				WHERE
+					m.vip_code = a.member_code
+			) AS userName,
+			a.card_code cardCode,
+			a.intergral_time intergralTime,
+			a.intertral_num intergralNum,
+			a.intergral_type intergralType,
+			a.note
+		FROM
+			gw_member_integral_detatil a
+			 order by a.intergral_time desc
+  </select>
+
+  <select id="gw.memberIntegralDetail.selectByPageCount" resultType="java.lang.Integer"  parameterType="java.util.Map">
+  	SELECT
+			count(id)
+		FROM
+			gw_member_integral_detatil a
+			
+		where 1=1
+		<if test="memberCode!=null and memberCode!=''">
+    		and a.member_code like CONCAT('%',CONCAT(#{memberCode,jdbcType=VARCHAR}),'%')
+    	</if>
+		<if test="cardCode!=null and cardCode!=''">
+    		and a.card_code like '%${cardCode}%'
+    	</if>
+    	<if test="startTime != null and '' != startTime">
+			and a.intergral_time &gt;=#{startTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and '' != endTime"> 
+			and a.intergral_time &lt;=#{endTime,jdbcType=VARCHAR}
+		</if>
+    	<if test="startTime != null and '' != startTime and endTime !=null and ''!=endTime">  
+	          and a.intergral_time &gt;=#{startTime,jdbcType=VARCHAR} and a.intergral_time &lt;=#{endTime,jdbcType=VARCHAR}
+	    </if>
+	    
+  </select>
+  
+  <insert id="gw.memberIntegralDetail.insert" parameterType="com.crm.pojo.GwMemberIntegralDetailModel" >
+    insert into gw_member_integral_detatil
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberCode != null" >
+        member_code,
+      </if>
+      <if test="cardCode != null" >
+        card_code,
+      </if>
+      <if test="note != null" >
+        note,
+      </if>
+      <if test="intergralTime != null" >
+        intergral_time,
+      </if>
+      <if test="intergralNum != null" >
+        intertral_num,
+      </if>
+      <if test="intergralType != null" >
+        intergral_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="memberCode != null" >
+        #{memberCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cardCode != null" >
+        #{cardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="intergralTime != null" >
+        #{intergralTime,jdbcType=VARCHAR},
+      </if>
+      <if test="intergralNum != null" >
+        #{intergralNum,jdbcType=INTEGER},
+      </if>
+      <if test="intergralType != null" >
+        #{intergralType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  <delete id="gw.memberIntegralDetail.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_member_integral_detatil
+    where id=#{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="gw.memberIntegralDetail.deleteByCondition" parameterType="java.util.Map" >
+    delete from gw_member_integral_detatil
+    where member_code=#{vipCode,jdbcType=VARCHAR}
+    and intergral_time=#{createTime,jdbcType=VARCHAR}
+  </delete>
+</mapper>

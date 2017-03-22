@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.departmentposition">
+	<resultMap id="BaseResultMap" type="com.crm.pojo.GwDepartmentPositionModel">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="cn_name" property="cnName" jdbcType="VARCHAR" />
+		<result column="en_name" property="enName" jdbcType="VARCHAR" />
+		<result column="department_code" property="departmentCode"
+			jdbcType="VARCHAR" />
+		<result column="departmentName" property="departmentName"
+			jdbcType="VARCHAR" />
+		<result column="order_num" property="orderNum" jdbcType="INTEGER" />
+		<result column="description" property="description" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="create_user_id" property="createUserId"
+			jdbcType="INTEGER" />
+		<result column="createUserName" property="createUserName"
+			jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="updateUserName" property="updateUserName"
+			jdbcType="VARCHAR" />
+		<result column="update_user_id" property="updateUserId"
+			jdbcType="INTEGER" />
+		<result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, code, cn_name, en_name, department_code, order_num, description,
+		status, create_user_id,
+		create_time, update_user_id, update_time
+	</sql>
+
+<!-- 删除所有数据 -->
+  <delete id="gw.departmentposition.deleteAll" parameterType="java.lang.Integer" >
+    delete from gw_department_positions
+  </delete>
+
+	<!-- 批量插入 -->
+	<insert id="gw.departmentposition.batchInsert" parameterType="com.crm.pojo.GwDepartmentPositionModel">
+		insert into gw_department_positions (
+		id,
+		code,
+		cn_name,
+		en_name,
+		department_code,
+		order_num,
+		description,
+		status,
+		create_user_id,
+		create_time,
+		update_user_id,
+		update_time)
+		values
+		<foreach collection="list" item="positionList" index="index"
+			separator=",">
+			(
+			#{positionList.id,jdbcType=INTEGER},
+			#{positionList.code,jdbcType=VARCHAR},
+			#{positionList.cnName,jdbcType=VARCHAR},
+			#{positionList.enName,jdbcType=VARCHAR},
+			#{positionList.departmentCode,jdbcType=VARCHAR},
+			#{positionList.orderNum,jdbcType=VARCHAR},
+			#{positionList.description,jdbcType=INTEGER},
+			#{positionList.status,jdbcType=VARCHAR},
+			#{positionList.createUserId,jdbcType=INTEGER},
+			#{positionList.createTime,jdbcType=INTEGER},
+			#{positionList.updateUserId,jdbcType=INTEGER},
+			#{positionList.updateTime,jdbcType=INTEGER}
+			)
+		</foreach>
+	</insert>
+	<!-- 批量更新数据 -->
+	<update id="gw.departmentposition.batchUpdate" parameterType="java.util.List">
+		<foreach collection="list" item="positionList" index="index"
+			separator=";">
+			update gw_department_positions
+			<set>
+				id=#{positionList.id,jdbcType=INTEGER},
+				code=#{positionList.code,jdbcType=VARCHAR},
+				cn_name=#{positionList.cnName,jdbcType=VARCHAR},
+				en_name=#{positionList.enName,jdbcType=VARCHAR},
+				department_code=#{positionList.departmentCode,jdbcType=VARCHAR},
+				order_num=#{positionList.orderNum,jdbcType=VARCHAR},
+				description=#{positionList.description,jdbcType=INTEGER},
+				status=#{positionList.status,jdbcType=VARCHAR},
+				create_user_id=#{positionList.createUserId,jdbcType=INTEGER},
+				create_time=#{positionList.createTime,jdbcType=INTEGER},
+				update_user_id=#{positionList.updateUserId,jdbcType=INTEGER},
+				update_time=#{positionList.updateTime,jdbcType=INTEGER}
+			</set>
+			where id = #{positionList.id,jdbcType=INTEGER}
+		</foreach>
+	</update>
+
+	<!-- 批量删除 -->
+	<delete id="gw.departmentposition.batchDelete" parameterType="java.util.List">
+		delete from gw_department_positions where id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item.id}
+		</foreach>
+	</delete>
+	<select id="gw.departmentposition.selectById" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		d.id, d.code, d.cn_name, d.en_name, d.department_code,d.description,
+		d.create_user_id, d.create_time, d.update_user_id,
+		d.update_time, d.order_num, d.status,
+		(select u.name from gw_admin_users u where u.id = d.create_user_id) as
+		createUserName,
+		(select u.name from gw_admin_users u where u.id = d.update_user_id) as
+		updateUserName,
+		(select a.cn_name from gw_department a where a.code = d.department_code) as
+		departmentName
+		from gw_department_positions d
+		where d.id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="gw.departmentposition.selectByCode" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		d.id, d.code, d.cn_name, d.en_name, d.department_code, d.description,
+		d.create_user_id, d.create_time, d.update_user_id,
+		d.update_time, d.order_num, d.status,
+		(select u.name from gw_admin_users u where u.id = d.create_user_id) as
+		createUserName,
+		(select u.name from gw_admin_users u where u.id = d.update_user_id) as
+		updateUserName,
+		(select a.cn_name from gw_department a where a.code = d.department_code) as
+		departmentName
+		from gw_department_positions d
+		where d.code = #{code,jdbcType=VARCHAR}
+	</select>
+	<delete id="gw.departmentposition.deleteById" parameterType="java.lang.Integer">
+		delete from gw_department_positions
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="gw.departmentposition.insert" parameterType="com.crm.pojo.GwDepartmentPositionModel"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into gw_department_positions
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="cnName != null">
+				cn_name,
+			</if>
+			<if test="enName != null">
+				en_name,
+			</if>
+			<if test="departmentCode != null">
+				department_code,
+			</if>
+			<if test="orderNum != null">
+				order_num,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="createUserId != null">
+				create_user_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateUserId != null">
+				update_user_id,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="cnName != null">
+				#{cnName,jdbcType=VARCHAR},
+			</if>
+			<if test="enName != null">
+				#{enName,jdbcType=VARCHAR},
+			</if>
+			<if test="departmentCode != null">
+				#{departmentCode,jdbcType=VARCHAR},
+			</if>
+			<if test="orderNum != null">
+				#{orderNum,jdbcType=INTEGER},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="createUserId != null">
+				#{createUserId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="updateUserId != null">
+				#{updateUserId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="gw.departmentposition.update" parameterType="com.crm.pojo.GwDepartmentPositionModel">
+		update gw_department_positions
+		<set>
+			<if test="code != null">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="cnName != null">
+				cn_name = #{cnName,jdbcType=VARCHAR},
+			</if>
+			<if test="enName != null">
+				en_name = #{enName,jdbcType=VARCHAR},
+			</if>
+			<if test="departmentCode != null">
+				department_code = #{departmentCode,jdbcType=VARCHAR},
+			</if>
+			<if test="orderNum != null">
+				order_num = #{orderNum,jdbcType=INTEGER},
+			</if>
+			<if test="description != null">
+				description = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="createUserId != null">
+				create_user_id = #{createUserId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="updateUserId != null">
+				update_user_id = #{updateUserId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<!-- 根据条件，获取分页数据list集合 -->
+	<select id="gw.departmentposition.selectPageList" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		d.id, d.code, d.cn_name, d.en_name, d.department_code, d.description,
+		d.create_user_id, d.create_time, d.update_user_id,
+		d.update_time, d.order_num, d.status,
+		(select u.name from gw_admin_users u where u.id = d.create_user_id) as
+		createUserName,
+		(select u.name from gw_admin_users u where u.id = d.update_user_id) as
+		updateUserName,
+		(select a.cn_name from gw_department a where a.code = d.department_code) as
+		departmentName
+		from gw_department_positions d
+		limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+	</select>
+	<!-- 查询总记录数 -->
+	<select id="gw.departmentposition.selectCount" resultType="java.lang.Integer">
+		select
+		count(d.id)
+		from gw_department_positions d
+	</select>
+	<!-- 获取所有list集合 -->
+	<select id="gw.departmentposition.selectLists" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gw_department_positions d
+	</select>
+	<select id="gw.departmentposition.selectListsByDeaprtmentCode"
+		resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		d.id, d.code, d.cn_name, d.en_name, d.department_code, d.description,
+		d.create_user_id, d.create_time, d.update_user_id,
+		d.update_time, d.order_num, d.status,
+		(select u.name from gw_admin_users u where u.id = d.create_user_id) as
+		createUserName,
+		(select u.name from gw_admin_users u where u.id = d.update_user_id) as
+		updateUserName,
+		(select a.cn_name from gw_department a where a.code = d.department_code) as
+		departmentName
+		from gw_department_positions d
+		where d.department_code = #{departmentCode,jdbcType=VARCHAR}
+	</select>
+</mapper>

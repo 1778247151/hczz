@@ -1,0 +1,93 @@
+package com.crm.api;
+
+import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.List;
+import com.google.gson.Gson;
+/**
+ * 
+ * 
+ * CommonRequest:公共的api请求接口实体类
+ *
+ * @author  yumaochun
+ * @date    2016年9月19日
+ * @version jdk1.8
+ *
+ */
+public class CommonRequest<T> implements Serializable {
+
+    /**
+     *
+     */
+    private static final long serialVersionUID = -369558847578246550L;
+    
+    /**
+     * 令牌
+     */
+    private String token;
+    
+    /**
+     * 用户账号
+     */
+    private String account;
+
+    /**
+     * 传递的数据
+     */
+    private List<T> data;
+
+   
+    public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public List<T> getData() {
+		return data;
+	}
+
+	public void setData(List<T> data) {
+		this.data = data;
+	}
+
+	public static CommonRequest fromJson(String json, Class clazz) {
+        Gson gson = new Gson();
+        Type objectType = type(CommonRequest.class, clazz);
+        return gson.fromJson(json, objectType);
+    }
+
+    public String toJson(Class<T> clazz) {
+        Gson gson = new Gson();
+        Type objectType = type(CommonRequest.class, clazz);
+        return gson.toJson(this, objectType);
+    }
+
+    static ParameterizedType type(final Class raw, final Type... args) {
+        return new ParameterizedType() {
+            public Type getRawType() {
+                return raw;
+            }
+
+            public Type[] getActualTypeArguments() {
+                return args;
+            }
+
+            public Type getOwnerType() {
+                return null;
+            }
+        };
+    }
+
+}

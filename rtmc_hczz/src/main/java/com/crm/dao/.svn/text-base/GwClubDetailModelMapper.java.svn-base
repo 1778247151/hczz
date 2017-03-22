@@ -1,0 +1,17 @@
+package com.crm.dao;
+
+import com.crm.pojo.GwClubDetailModel;
+
+public interface GwClubDetailModelMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(GwClubDetailModel record);
+
+    int insertSelective(GwClubDetailModel record);
+
+    GwClubDetailModel selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(GwClubDetailModel record);
+
+    int updateByPrimaryKey(GwClubDetailModel record);
+}

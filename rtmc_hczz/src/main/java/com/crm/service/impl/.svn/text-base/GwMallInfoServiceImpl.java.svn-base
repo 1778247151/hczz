@@ -1,0 +1,75 @@
+package com.crm.service.impl;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.http.client.ClientProtocolException;
+import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
+import com.crm.core.ServersManager;
+import com.crm.dao.GwMallInfoDao;
+import com.crm.pojo.GwMallInfoModel;
+import com.crm.service.GwMallInfoService;
+import com.crm.util.HttpClientUtil;
+import com.crm.util.JsonMapper;
+/**
+ * 
+ * GwMallInfoServiceImpl:购物中心基本信息 业务逻辑层实现
+ *
+ * @author yumaochun
+ * @date  2016年3月10日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwMallInfoServiceManage")
+public class GwMallInfoServiceImpl extends ServersManager<GwMallInfoModel, GwMallInfoDao> implements GwMallInfoService{
+
+	@Resource(name="gwMallInfoDaoManage")
+	public void setDao(GwMallInfoDao dao) {
+		this.dao=dao;
+	}
+
+	@Override
+	public GwMallInfoModel getGwMallInfoByCode(String code) {
+		// TODO Auto-generated method stub
+		return dao.getGwMallInfoByCode(code);
+	}
+
+	@Override
+	public GwMallInfoModel getMallInfoListApi() {
+		// TODO Auto-generated method stub
+		return dao.getMallInfoListApi();
+	}
+
+	@Override
+	public boolean insertMisDataForMallInfo(String url,Map<String, Object> map) throws ClientProtocolException, IOException {
+		//拉取之前先清空原有的数据
+		int deleteAll = dao.deleteAllForMallInfo();
+		if(deleteAll<0){
+			return false;
+		}
+		//从MIS端获取数据
+		String body = HttpClientUtil.httpPost(url, map);
+		if(body==null){
+			return false;
+		}
+		
+		String string = JSON.parseObject(body).getString("rows");
+		if(!string.startsWith("[") && !string.endsWith("]")){
+			string = "["+string+"]";
+		}
+		List<GwMallInfoModel> mallInfoList =JsonMapper.buildNonDefaultMapper().fromJsonToList(string, GwMallInfoModel.class);
+		//批量插入品牌数据
+		int batchInsert = dao.batchInsert(mallInfoList);
+		if(batchInsert<0){
+			return false;
+		}
+		return true;
+	}
+
+}

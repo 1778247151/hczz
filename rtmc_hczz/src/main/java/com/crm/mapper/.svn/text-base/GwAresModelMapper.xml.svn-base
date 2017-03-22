@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.ares" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwAresModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="bm" property="bm" jdbcType="VARCHAR" />
+    <result column="cn_name" property="cnName" jdbcType="VARCHAR" />
+    <result column="en_name" property="enName" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="time" property="time" jdbcType="VARCHAR" />
+    <result column="mallName" property="mallName" jdbcType="VARCHAR" />
+    <result column="gw_mall_info_id" property="gwMallInfoId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id,gw_mall_info_id,bm, cn_name, en_name, state, time
+  </sql>
+  
+  <!-- 批量插入 -->
+	<insert id="gw.ares.batchInsert" parameterType="com.crm.pojo.GwAresModel">
+		insert into gw_ares (
+		id,
+		gw_mall_info_id,
+		bm,
+		cn_name,
+		en_name,
+		state,
+		time)
+		values
+		<foreach collection="list" item="aresList" index="index"
+			separator=",">
+			(
+			#{aresList.id,jdbcType=INTEGER},
+			#{aresList.gwMallInfoId,jdbcType=INTEGER},
+			#{aresList.bm,jdbcType=VARCHAR},
+			#{aresList.cnName,jdbcType=VARCHAR},
+			#{aresList.enName,jdbcType=VARCHAR},
+			#{aresList.state,jdbcType=INTEGER},
+			#{aresList.time,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
+	<!-- 批量更新数据 -->
+	<update id="gw.ares.batchUpdate" parameterType="java.util.List">
+		<foreach collection="list" item="aresList" index="index"
+			separator=";">
+			update gw_ares
+			<set>
+				id=#{aresList.id,jdbcType=INTEGER},
+				gw_mall_info_id=#{aresList.gwMallInfoId,jdbcType=INTEGER},
+				bm=#{aresList.bm,jdbcType=VARCHAR},
+				cn_name=#{aresList.cnName,jdbcType=VARCHAR},
+				en_name=#{aresList.enName,jdbcType=VARCHAR},
+				state=#{aresList.state,jdbcType=INTEGER},
+				time=#{aresList.time,jdbcType=VARCHAR}
+			</set>
+				where id = #{aresList.id,jdbcType=INTEGER}
+		</foreach>
+	</update>
+
+	<!-- 批量删除 -->
+	<delete id="gw.ares.batchDelete" parameterType="java.util.List">
+		delete from gw_ares where id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item.id}
+		</foreach>
+	</delete>
+  <!-- 根据id，获取区域信息 -->
+  <select id="gw.ares.selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_ares
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 根据id，删除区域信息 -->
+  <delete id="gw.ares.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_ares
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+   <delete id="gw.ares.deleteAll" parameterType="java.lang.Integer" >
+    delete from gw_ares
+  </delete>
+  
+  <!-- 添加区域 -->
+  <insert id="gw.ares.insert" parameterType="com.crm.pojo.GwAresModel" >
+    insert into gw_ares
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="bm != null" >
+        bm,
+      </if>
+      <if test="cnName != null" >
+        cn_name,
+      </if>
+      <if test="enName != null" >
+        en_name,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="bm != null" >
+        #{bm,jdbcType=VARCHAR},
+      </if>
+      <if test="cnName != null" >
+        #{cnName,jdbcType=VARCHAR},
+      </if>
+      <if test="enName != null" >
+        #{enName,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <!-- 更新区域 -->
+  <update id="gw.ares.update" parameterType="com.crm.pojo.GwAresModel" >
+    update gw_ares
+    <set >
+      <if test="bm != null" >
+        bm = #{bm,jdbcType=VARCHAR},
+      </if>
+      <if test="cnName != null" >
+        cn_name = #{cnName,jdbcType=VARCHAR},
+      </if>
+      <if test="enName != null" >
+        en_name = #{enName,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        time = #{time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 根据条件，获取分页数据list集合 -->
+  <select id="gw.ares.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    SELECT
+	a.bm,
+	a.cn_name,
+	a.en_name,
+	a.id,
+	a.state,
+	a.time
+FROM
+	gw_ares a
+	where a.state = 1
+	order by a.time DESC
+    limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  <!-- 根据条件，总记录数 -->
+  <select id="gw.ares.selectCount" resultType="java.lang.Integer"  parameterType="java.util.Map">
+    select 
+      count(id)
+    from gw_ares
+    where state = 1 
+    
+  </select>
+  <!-- 获取所有list集合 -->
+  <select id="gw.ares.selectList" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gw_ares
+  </select>
+  
+  <!-- 获取所有list集合 -->
+  <select id="gw.ares.selectByCode" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gw_ares
+    where state=1
+    and bm=#{code,jdbcType=VARCHAR}
+  </select>
+</mapper>

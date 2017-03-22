@@ -1,0 +1,246 @@
+package com.crm.service.impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.SecurityUtil;
+import com.crm.core.ServersManager;
+import com.crm.dao.GwShopsInfoDao;
+import com.crm.enums.ShopsInfoStateEnum;
+import com.crm.enums.ShopsTypeEnum;
+import com.crm.pojo.GwShopsInfoModel;
+import com.crm.service.GwShopsInfoService;
+import com.crm.util.DateUtil;
+import com.crm.util.JsonMapper;
+import com.crm.util.ValidateUtil;
+/**
+ * 
+ * GwShopsInfoServiceImpl:商铺信息业务逻辑层的实现
+ *
+ * @author yumaochun
+ * @date  2016年3月11日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwShopsInfoServiceManage")
+public class GwShopsInfoServiceImpl extends ServersManager<GwShopsInfoModel, GwShopsInfoDao> implements GwShopsInfoService{
+
+	@Resource(name="gwShopsInfoDaoManage")
+	public void setDao(GwShopsInfoDao dao) {
+		this.dao=dao;
+		
+	}
+
+	@Override
+	public GwShopsInfoModel getShopsByUnitId(String unId) {
+		// TODO Auto-generated method stub
+		return dao.getShopsByUnitId(unId);
+	}
+
+	@Override
+	public BasePageResultVo getAllUnitInfoBybuildId(Map<String,Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getAllUnitInfoBybuildId(params);
+	}
+
+	@Override
+	public GwShopsInfoModel getShopsInfoByCode(String code) {
+		// TODO Auto-generated method stub
+		return dao.getShopsInfoByCode(code);
+	}
+
+	@Override
+	public int updateBatchShopsInfoList(List<HashMap<String,Object>> list) {
+		// TODO Auto-generated method stub
+		return dao.batchUpdateShopsInfoList(list);
+	}
+
+	@Override
+	public List<GwShopsInfoModel> getShopsInfoListById(List<HashMap<String, Object>> list) {
+		// TODO Auto-generated method stub
+		return dao.getShopsInfoListById(list);
+	}
+
+	@Override
+	public BasePageResultVo getNotLeaseShopsList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getNotLeaseShopsList(params);
+				
+	}
+
+	@Override
+	public List<GwShopsInfoModel> getShopsInfoByShopsLeaseId(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getShopsInfoByShopsLeaseId(params);
+	}
+
+	@Override
+	public BasePageResultVo getShopsInfoByIds(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getShopsInfoByIds(params);
+	}
+
+	@Override
+	public int updateByUnitNumbers(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.updateByUnitNumbers(params);
+	}
+
+	@Override
+	public int batchInsertShopsInfo(List<GwShopsInfoModel> shopsInfoList) {
+		// TODO Auto-generated method stub
+		return dao.batchInsertShopsInfo(shopsInfoList);
+	}
+
+	@Override
+	public int updateByUnitNumber(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.updateByUnitNumber(params);
+	}
+
+	@Override
+	public int addAreaChange(GwShopsInfoModel shopsInfo, Map<String,Object> params) {
+		//失效变更的单元
+		int disable = dao.updateByUnitNumber(params);
+		//如果失效失败，返回-2
+		if(disable<=0) {
+			return -2;
+		}
+		//添加变更后的单元信息记录
+		int num=dao.insert(shopsInfo);
+		//如果添加失败，返回-1
+		if(num<=0) {
+			return -1;
+		}
+		return 1;
+	}
+
+	@Override
+	public List<GwShopsInfoModel> getShopsInfoByCondition(Map params) {
+		// TODO Auto-generated method stub
+		return dao.getShopsInfoByCondition(params);
+	}
+	
+	@Override
+	public BaseResultVo addMegerShopsInfo(GwShopsInfoModel shopsInfo, String[] unitNumbers,
+			HttpServletRequest request) {
+
+		Integer userid = SecurityUtil.getAdminUser(request).getUserId();
+		if(StringUtils.isEmpty(shopsInfo.getUnitNumber())){
+			return BaseResultVo.responseFail("单元号不能为空");
+		}
+		if(!ValidateUtil.isLengthRangeStr(shopsInfo.getArea(),1,11)){
+			return BaseResultVo.responseFail("单元面积为1-11位的字符串");
+		}
+		if(StringUtils.isEmpty(shopsInfo.getGwPropertyAttributeId())){
+			return BaseResultVo.responseFail("物业性质不能为空");
+		}
+		if(StringUtils.isEmpty(shopsInfo.getUnitNumber())){
+			return BaseResultVo.responseFail("单元号不能为空");
+		}
+		StringBuffer sb = new StringBuffer();
+		if(unitNumbers!=null){
+			for(int i = 0;i<unitNumbers.length;i++){
+				if(i!=unitNumbers.length-1){
+					sb.append(unitNumbers[i]+";");
+				}else{
+					sb.append(unitNumbers[i]);
+				}
+			}
+		}
+		String unitNumberss = sb.toString();
+		shopsInfo.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		shopsInfo.setCreateUser(userid);
+		shopsInfo.setType(ShopsTypeEnum.meger.getValue());
+		//状态为已确认
+		shopsInfo.setState(ShopsInfoStateEnum.Approve.getValue());
+		GwShopsInfoModel shopsInfoMode = dao.getShopsInfoByCode(shopsInfo.getUnitNumber()); 
+		if(shopsInfoMode!=null){
+			return BaseResultVo.responseFail("单元号已存在");
+		}
+		//合并之前先失效合并的单元
+		Map<String,Object> params = new HashMap<>();
+		params.put("state", ShopsInfoStateEnum.failure.getValue());
+		params.put("unitNumbers", unitNumbers);
+		params.put("type", ShopsTypeEnum.meger.getValue());
+		//失效单元
+		Integer disable = dao.updateByUnitNumbers(params);
+		if(disable<=0){
+			return BaseResultVo.responseFail("失效单元失败");
+		}
+		//被合同的单元单元号数组
+		shopsInfo.setUnitSplit(unitNumberss);
+		shopsInfo.setType(ShopsTypeEnum.meger.getValue());
+		int number=dao.insert(shopsInfo);
+		if(number<=0){
+			BaseResultVo.responseFail("合并单元成功");
+		}
+		
+		return BaseResultVo.responseSuccess("合并单元成功");
+	}
+
+	@Override
+	public BaseResultVo addSplitShopsInfo(String shopsInfoList, String unitNumber, HttpServletRequest request) {
+		Integer userid = SecurityUtil.getAdminUser(request).getUserId();
+		GwShopsInfoModel shopsInfo = dao.getShopsByUnitId(unitNumber);
+		//把JSON字符串转换为集合
+		List<GwShopsInfoModel> shopsList=JsonMapper.buildNonDefaultMapper().fromJsonToList(shopsInfoList, GwShopsInfoModel.class);
+		for(GwShopsInfoModel shops: shopsList){
+			//创建人
+			shops.setCreateUser(userid);
+			//创建时间
+			shops.setCreateTime(DateUtil.getCurrentDatetime("-"));
+			//类别为拆分单元
+			shops.setType(ShopsTypeEnum.split.getValue());
+			//被拆分的单元
+			shops.setUnitSplit(unitNumber);
+			//楼宇
+			shops.setGwBuildingTreeId(shopsInfo.getGwBuildingTreeId());
+			//购物中心
+			shops.setGwMallInfoId(shopsInfo.getGwMallInfoId());
+			//状态为已确认
+			shops.setState(ShopsInfoStateEnum.Approve.getValue());
+			if(StringUtils.isEmpty(shops.getUnitNumber())){
+				return BaseResultVo.responseFail("单元号不能为空");
+			}
+			if(StringUtils.isEmpty(shops.getGwFormatsTreeId())){
+				return BaseResultVo.responseFail("业态不能为空");
+			}
+			if(StringUtils.isEmpty(shops.getGwPropertyAttributeId())){
+				return BaseResultVo.responseFail("物业性质不能为空");
+			}
+			
+			GwShopsInfoModel shopsInfoMode = dao.getShopsInfoByCode(shops.getUnitNumber()); 
+			if(shopsInfoMode!=null){
+				return BaseResultVo.responseFail("单元号已存在");
+			}
+			
+		}
+		//合并之前先失效合并的单元
+		Map<String,Object> params = new HashMap<>();
+		params.put("state", ShopsInfoStateEnum.failure.getValue());
+		params.put("unitNumber", unitNumber);
+		params.put("type", ShopsTypeEnum.split.getValue());
+		int disable = dao.updateByUnitNumber(params);
+		if(disable<0){
+			return BaseResultVo.responseFail("失效单元失败");
+		}
+		//批量添加单元信息
+		int number=dao.batchInsertShopsInfo(shopsList);
+		if(number<=0){
+			BaseResultVo.responseFail("拆分失败");
+		}
+		
+		return BaseResultVo.responseSuccess("拆分成功");
+	}
+
+}

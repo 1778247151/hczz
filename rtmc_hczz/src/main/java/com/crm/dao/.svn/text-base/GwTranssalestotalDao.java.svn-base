@@ -1,0 +1,135 @@
+package com.crm.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.bean.ShopFormatsInfo;
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwTranssalestotalModel;
+import com.crm.pojo.GwmerchantsinfoModel;
+/**
+ * 
+ * GwTranssalestotalDao:商铺销售记录汇总数据访问层接口
+ *
+ * @author yumaochun
+ * @date  2016年4月7日
+ * @version  jdk1.8
+ *
+ */
+public interface GwTranssalestotalDao extends DaoManager<GwTranssalestotalModel>{
+	
+	/**
+	 * 
+	 * getTranssalestotalList:获取销售数据List
+	 *
+	 * @date 2016年4月25日
+	 * @return
+	 */
+	public List<GwTranssalestotalModel> getTranssalestotalList(Map<String, Object> params);
+	/**
+	 * 
+	 * getTranssalestotalListByDay:获取日销售数据统计
+	 *
+	 * @date 2016年4月25日
+	 * @return
+	 */
+	public List<GwTranssalestotalModel> getTranssalestotalListByDay(Map<String, Object> params);
+	/**
+	 * 
+	 * getTranssalestotalListByMonth:获取月销售数据统计
+	 *
+	 * @date 2016年4月26日
+	 * @return
+	 */
+	public List<GwTranssalestotalModel> getTranssalestotalListByMonth(Map<String, Object> params);
+	/**
+	 * 获取周销售数据统计
+	 * getTranssalestotalListByWeek:
+	 *
+	 * @author hemingjun
+	 * @date 2016年8月5日
+	 * @param params
+	 * @return
+	 */
+	public List<GwTranssalestotalModel> getTranssalestotalListByWeek(Map<String, Object> params);
+	/**
+	 * 根据时间统计销售额
+	 * @param params
+	 * @return
+	 */
+	public List<GwTranssalestotalModel> getTranssalestotalByCount(Map<String,Object> params);
+	
+	/**
+	 * 根据时间统计销售额
+	 * @param params
+	 * @return
+	 */
+	public List<GwTranssalestotalModel> getTranssalestotalByTenDay();
+	
+	/**
+	 * 
+	 * batchInsertTranssaletotalList:批量插入销售数据
+	 *
+	 * @date 2016年4月18日
+	 * @param list                销售信息集合
+	 * @return
+	 */
+	public int batchInsertTranssaletotalList(List<GwTranssalestotalModel> list);
+	
+	/**
+	 * getListGroupByGoodsId:分组查询销售数据货品大类
+	 * @return
+	 */
+	public List<GwTranssalestotalModel> getListGroupByGoodsId();
+	
+	/**
+	 * 条件查询集合信息导出
+	 * getTransalesListByConditionExport:
+	 *
+	 * @author hemingjun
+	 * @date 2016年8月3日
+	 * @param params
+	 * @return
+	 */
+	public List<GwTranssalestotalModel> getTransalesListByConditionExport(Map<String,Object> params);
+	/**
+	 * 批量插入
+	 * 
+	 * @param list
+	 * @return
+	 */
+	public int batchInsert(List<GwTranssalestotalModel> list);
+
+	/**
+	 * 
+	 * batchUpdate:批量更新
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param list
+	 * @return
+	 */
+	public int batchUpdate(List<GwTranssalestotalModel> list);
+
+	/**
+	 * 
+	 * batchDelete:批量删除
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param list
+	 * @return
+	 */
+	public int batchDelete(List<GwTranssalestotalModel> list);
+	 /**
+     * 
+     * getShopformatsInfoByShopCode:根据店铺编号，获取业态等相关信息
+     *
+     * @author yumaochun
+     * @date 2016年7月6日
+     * @param paramMap      参数信息
+     * @return
+     */
+    public ShopFormatsInfo getShopformatsInfoByShopCode(Map<String,Object> paramMap); 
+    
+}

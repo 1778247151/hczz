@@ -1,0 +1,894 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.members">
+	<resultMap id="BaseResultMap" type="com.crm.pojo.GwMembersModel">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="card_code" property="cardCode" jdbcType="VARCHAR" />
+		<result column="card_type" property="cardType" jdbcType="INTEGER" />
+		<result column="vip_code" property="vipCode" jdbcType="VARCHAR" />
+		<result column="grade" property="grade" jdbcType="VARCHAR" />
+		<result column="credit" property="credit" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="mall_info_code" property="mallInfoCode"
+			jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="INTEGER" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="tell" property="tell" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="birth_time" property="birthTime" jdbcType="VARCHAR" />
+		<result column="id_card" property="idCard" jdbcType="VARCHAR" />
+		<result column="post_code" property="postCode" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="INTEGER" />
+		<result column="city" property="city" jdbcType="INTEGER" />
+		<result column="county" property="county" jdbcType="INTEGER" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="description" property="description" jdbcType="VARCHAR" />
+		<result column="effective_time" property="effectiveTime"
+			jdbcType="VARCHAR" />
+		<result column="expiry_time" property="expiryTime" jdbcType="VARCHAR" />
+		<result column="create_user_id" property="createUserId"
+			jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="update_user_id" property="updateUserId"
+			jdbcType="INTEGER" />
+		<result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+		<result column="resource" property="resource" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="register_time" property="registerTime"
+			jdbcType="VARCHAR" />
+
+		<result column="income" property="income" jdbcType="DECIMAL" />
+		<result column="degress" property="degress" jdbcType="VARCHAR" />
+		<result column="car_number" property="carNumber" jdbcType="VARCHAR" />
+		
+		<result column="sexName" property="sexName" jdbcType="VARCHAR" />
+		<result column="cardTypeName" property="cardTypeName" jdbcType="VARCHAR" />
+		
+		<result column="gradeName" property="gradeName" jdbcType="VARCHAR" />
+
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, card_code, card_type, vip_code, grade, credit, status,
+		mall_info_code, user_name,
+		password, sex, phone, tell, email, birth_time, id_card, post_code, province,
+		city,
+		county, address, description, effective_time, expiry_time, create_user_id,
+		create_time,
+		update_user_id, update_time,resource,type,register_time,income,degress,car_number
+	</sql>
+<!-- 根据id删除数据 -->
+	 <delete id="gw.members.deleteById" parameterType="java.lang.Integer" >
+	    delete from gw_members
+	    where id = #{id,jdbcType=INTEGER}
+ 	 </delete>
+
+<!-- 	根据条件，获取分页数据list集合 -->
+	
+	<select id="gw.members.selectPageList" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		id, card_code cardCode, card_type cardType, vip_code vipCode,grade,
+		(select t.name from gw_type_tree t where t.code=d.grade) as gradeName,
+		credit, status,
+		(select name from gw_mall_info where d.mall_info_code=bm) as mallInfoName,
+		user_name userName,
+		password, sex, phone, tell, email, birth_time birthTime, id_card idCard,
+		post_code postCode,
+		(select name from gw_area a where a.code=d.province) as provinceName,
+		(select name from gw_area a where a.code=d.city) as cityName,
+		(select name from gw_area a where a.code=d.county) as countyName,
+		address, description, effective_time effectiveTime, expiry_time expiryTime,
+		(select u.name from gw_admin_users u where u.id = d.create_user_id) as
+		createUserName, d.create_time createTime,
+		(select u.name from gw_admin_users u where u.id = d.update_user_id) as
+		updateUserName, d.update_time updateTime, d.status,
+		(select t.name from gw_type_tree t where t.code=d.type) as type
+		from gw_members d  
+		<where>
+			<if test="userName!=null and ''!=userName">
+				and user_name LIKE CONCAT(CONCAT('%', #{userName,jdbcType=VARCHAR}),
+				'%')
+			</if>
+			<if test="cardCode != null and ''!=cardCode">
+				and card_code LIKE CONCAT(CONCAT('%', #{cardCode,jdbcType=VARCHAR}),
+				'%')
+			</if>
+			<if test="vipCode != null and ''!=vipCode">
+				and vip_code LIKE CONCAT(CONCAT('%', #{vipCode,jdbcType=VARCHAR}), '%')
+			</if>
+			<if test="phone != null and ''!=phone">
+				and phone LIKE CONCAT(CONCAT('%', #{phone,jdbcType=VARCHAR}), '%')
+			</if>
+			<if test="grade != null and '' !=grade">
+				and grade = #{grade,jdbcType=INTEGER}
+			</if>
+			<if test="type != null and '' !=type">
+				and type = #{type,jdbcType=VARCHAR}
+			</if>
+			<if test="startTime != null and '' != startTime">
+				and effective_time &gt;=#{startTime,jdbcType=VARCHAR}
+			</if>
+			<if test="endTime != null and '' != endTime"> 
+				and expiry_time &lt;=#{endTime,jdbcType=VARCHAR}
+			</if>
+	    	<if test="startTime != null and '' != startTime and endTime !=null and ''!=endTime">  
+		        and effective_time &gt;=#{startTime,jdbcType=INTEGER} and expiry_time &lt;=#{endTime,jdbcType=VARCHAR}
+		    </if>
+		</where>
+	</select>
+	<!-- 根据条件，会员中心总记录数 -->
+	<select id="gw.members.selectCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(id) 
+		from gw_members d
+		<where>
+			<if test="userName!=null and ''!=userName">
+				and user_name LIKE CONCAT(CONCAT('%', #{userName,jdbcType=VARCHAR}),
+				'%')
+			</if>
+			<if test="cardCode != null and ''!=cardCode">
+				and card_code LIKE CONCAT(CONCAT('%', #{cardCode,jdbcType=VARCHAR}),
+				'%')
+			</if>
+			<if test="vipCode != null and ''!=vipCode">
+				and vip_code LIKE CONCAT(CONCAT('%', #{vipCode,jdbcType=VARCHAR}), '%')
+			</if>
+			<if test="phone != null and ''!=phone">
+				and phone LIKE CONCAT(CONCAT('%', #{phone,jdbcType=VARCHAR}), '%')
+			</if>
+			<if test="grade != null and '' !=grade">
+				and grade = #{grade,jdbcType=INTEGER}
+			</if>
+			<if test="type != null and '' !=type">
+				and type = #{type,jdbcType=VARCHAR}
+			</if>
+			<if test="startTime != null and '' != startTime">
+				and effective_time &gt;=#{startTime,jdbcType=VARCHAR}
+			</if>
+			<if test="endTime != null and '' != endTime"> 
+				and expiry_time &lt;=#{endTime,jdbcType=VARCHAR}
+			</if>
+	    	<if test="startTime != null and '' != startTime and endTime !=null and ''!=endTime">  
+		        and effective_time &gt;=#{startTime,jdbcType=INTEGER} and expiry_time &lt;=#{endTime,jdbcType=VARCHAR}
+		    </if>
+		</where>
+	</select>
+
+
+<!-- 根据条件，获取分页数据状态为正常的信息list集合 -->
+	<select id="gw.members.selectPageListByCondtion" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		id, card_code cardCode, card_type cardType, vip_code vipCode,grade,
+		(select t.name from gw_type_tree t where t.code=d.grade) as gradeName,
+		credit, status,
+		(select name from gw_mall_info where d.mall_info_code=bm) as mallInfoName,
+		user_name userName,
+		password, sex, phone, tell, email, birth_time birthTime, id_card idCard,
+		post_code postCode,
+		(select name from gw_area a where a.code=d.province) as provinceName,
+		(select name from gw_area a where a.code=d.city) as cityName,
+		(select name from gw_area a where a.code=d.county) as countyName,
+		address, description, effective_time effectiveTime, expiry_time expiryTime,
+		(select u.name from gw_admin_users u where u.id = d.create_user_id) as
+		createUserName, d.create_time createTime,
+		(select u.name from gw_admin_users u where u.id = d.update_user_id) as
+		updateUserName, d.update_time updateTime, d.status,
+		(select t.name from gw_type_tree t where t.code=d.type) as type
+		from gw_members d
+		where d.status=1
+		<if test="cardCode != null and ''!=cardCode">
+			and card_code LIKE CONCAT(CONCAT('%', #{cardCode,jdbcType=VARCHAR}),
+			'%')
+		</if>
+		<if test="vipCode != null and ''!=vipCode">
+			and vip_code LIKE CONCAT(CONCAT('%', #{vipCode,jdbcType=VARCHAR}), '%')
+		</if>
+		<if test="userName != null and ''!=userName">
+			and user_name LIKE CONCAT(CONCAT('%', #{userName,jdbcType=VARCHAR}), '%')
+		</if>
+		order by create_time desc
+		limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+		
+	</select>
+	<!-- 根据条件，会员状态正常的总记录数 -->
+	<select id="gw.members.selectCountByCondtion" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(id) 
+		from gw_members d
+		where d.status=1
+		<if test="cardCode != null and ''!=cardCode">
+			and card_code LIKE CONCAT(CONCAT('%', #{cardCode,jdbcType=VARCHAR}),
+			'%')
+		</if>
+		<if test="vipCode != null and ''!=vipCode">
+			and vip_code LIKE CONCAT(CONCAT('%', #{vipCode,jdbcType=VARCHAR}), '%')
+		</if>
+		<if test="userName != null and ''!=userName">
+			and user_name LIKE CONCAT(CONCAT('%', #{userName,jdbcType=VARCHAR}), '%')
+		</if>
+	</select>
+
+
+
+
+	<!-- 获取所有list集合 -->
+	<select id="gw.members.getList" resultMap="BaseResultMap">
+		select
+		d.id, c.card_code, e.card_type, d.vip_code,
+		(select t.name from gw_type_tree t where t.code=e.grade) as gradeName,
+		credit, e.status,
+		(select name from gw_mall_info where d.mall_info_code=bm) as mallInfoName,
+		user_name userName,
+		password, sex, phone, tell, email, birth_time birthTime, id_card idCard,
+		post_code postCode,
+		(select name from gw_area a where a.code=d.province) as provinceName,
+		(select name from gw_area a where a.code=d.city) as cityName,
+		(select name from gw_area a where a.code=d.county) as countyName,
+		address, description, c.binding_date AS effective_time, expiry_time expiryTime,
+		(select u.name from gw_admin_users u where u.id = c.create_user_id) as
+		createUserName, 
+		(select u.name from gw_admin_users u where u.id = c.update_user_id) as
+		updateUserName, c.update_time, e.status,
+		(select t.name from gw_type_tree t where t.code=e.card_type) as type
+		from gw_members d left join  gw_member_binding_card c on d.vip_code=c.member_code left join gw_member_card  e on e.card_code=c.card_code
+	</select>
+
+
+
+	<!--查询当天注册会员vipCode集合 -->
+	<select id="gw.members.selectMemberVipCode" resultMap="BaseResultMap">
+		select vip_code  from gw_members where status = 1 and DATE_FORMAT(create_time,'%Y-%m-%d' )=CURRENT_DATE()
+	</select>
+	<!--根据条件,查询当天注册会员的记录数  -->
+	<select id="gw.members.getCountByType" resultType="java.lang.Integer">
+		select count(id) from gw_members where status = 1 and DATE_FORMAT(create_time,'%Y-%m-%d' )=CURRENT_DATE()
+	</select>
+	<!-- 根据条件查询会员对象 -->
+	<select id="gw.members.getMemberByCondition" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from gw_members
+		where 1=1 
+		<if test="vipCode != null and ''!=vipCode">
+			and	vip_code = #{vipCode,jdbcType=VARCHAR}
+		</if>
+		<if test="cardCode != null and ''!=cardCode">
+			and	card_code = #{cardCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<!--通过vipCode或cardCode查询会员信息（销售数据中传入的编号可能为cardCode也可能为vipCode）  -->
+	<select id="gw.members.selectByCode" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		id, card_code cardCode, card_type cardType, vip_code vipCode, grade,
+		(select t.name from gw_type_tree t where t.code=d.grade) as gradeName,
+		credit, status, mall_info_code mallInfoCode, user_name userName,
+		password, sex, phone, tell, email, birth_time birthTime, id_card
+		idCard, post_code postCode,
+		(select name from gw_area a where a.code=d.province) as provinceName,
+		(select name from gw_area a where a.code=d.city) as cityName,
+		(select name from gw_area a where a.code=d.county) as countyName,
+		address, description, effective_time effectiveTime, expiry_time expiryTime,
+		(select u.name from gw_admin_users u where u.id = d.create_user_id) as
+		createUserName, d.create_time createTime,
+		(select u.name from gw_admin_users u where u.id = d.update_user_id) as
+		updateUserName, d.update_time updateTime, d.status,
+		d.resource,d.type,d.register_time,d.income,d.degress,d.car_number 
+		from gw_members d
+		where vip_code = #{code,jdbcType=VARCHAR} or
+		card_code=#{code,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 根据vipCode查询会员信息 -->
+	<select id="gw.members.selectByVipCode" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		id, card_code cardCode, card_type cardType, vip_code vipCode, grade,
+		(select t.name from gw_type_tree t where t.code=d.grade) as gradeName,
+		credit, status, mall_info_code mallInfoCode, user_name userName,
+		password, sex, phone, tell, email, birth_time birthTime, id_card
+		idCard, post_code postCode,
+		(select name from gw_area a where a.code=d.province) as provinceName,
+		(select name from gw_area a where a.code=d.city) as cityName,
+		(select name from gw_area a where a.code=d.county) as countyName,
+		address, description, effective_time effectiveTime, expiry_time expiryTime,
+		(select u.name from gw_admin_users u where u.id = d.create_user_id) as
+		createUserName, d.create_time createTime,
+		(select u.name from gw_admin_users u where u.id = d.update_user_id) as
+		updateUserName, d.update_time updateTime, d.status,
+		d.resource,
+		d.type,
+		(select t.name from gw_type_tree t where t.code=d.type) as typeName,
+		d.register_time,d.income,d.degress,d.car_number 
+		from gw_members d
+		where vip_code = #{vipCode,jdbcType=VARCHAR}
+	</select>
+
+	<!-- 获取所有list集合 -->
+	<select id="gw.members.selectList" resultMap="BaseResultMap">
+		select
+		id, card_code cardCode, card_type cardType, vip_code vipCode, grade,
+		(select t.name from gw_type_tree t where t.code=d.grade) as gradeName,
+		credit, status, mall_info_code mallInfoCode, user_name userName,
+		password, sex, phone, tell, email, birth_time birthTime, id_card
+		idCard, post_code postCode,
+		(select name from gw_area a where a.code=d.province) as provinceName,
+		(select name from gw_area a where a.code=d.city) as cityName,
+		(select name from gw_area a where a.code=d.county) as countyName,
+		address, description, effective_time effectiveTime, expiry_time expiryTime,
+		(select u.name from gw_admin_users u where u.id = d.create_user_id) as
+		createUserName, d.create_time createTime,
+		(select u.name from gw_admin_users u where u.id = d.update_user_id) as
+		updateUserName, d.update_time updateTime, d.status,
+		d.resource,d.type,d.register_time,d.income,d.degress,d.car_number 
+		from gw_members d
+		where status=1
+	</select>
+
+	<select id="gw.members.selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from gw_members
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from gw_members
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	
+	<insert id="gw.members.insertMemberSynchronize" parameterType="com.crm.pojo.GwMembersModel">
+		insert into gw_members
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="cardCode != null">
+				card_code,
+			</if>
+			<if test="cardType != null">
+				card_type,
+			</if>
+			<if test="vipCode != null">
+				vip_code,
+			</if>
+			<if test="grade != null">
+				grade,
+			</if>
+			<if test="credit != null">
+				credit,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="mallInfoCode != null">
+				mall_info_code,
+			</if>
+			<if test="userName != null">
+				user_name,
+			</if>
+			<if test="password != null">
+				password,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="tell != null">
+				tell,
+			</if>
+			<if test="email != null">
+				email,
+			</if>
+			<if test="birthTime != null">
+				birth_time,
+			</if>
+			<if test="idCard != null">
+				id_card,
+			</if>
+			<if test="postCode != null">
+				post_code,
+			</if>
+			<if test="province != null">
+				province,
+			</if>
+			<if test="city != null">
+				city,
+			</if>
+			<if test="county != null">
+				county,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="effectiveTime != null">
+				effective_time,
+			</if>
+			<if test="expiryTime != null">
+				expiry_time,
+			</if>
+			<if test="createUserId != null">
+				create_user_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateUserId != null">
+				update_user_id,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="resource != null">
+				resource,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="registerTime != null">
+				register_time,
+			</if>
+			<if test="income != null">
+				income,
+			</if>
+			<if test="degress != null">
+				degress,
+			</if>
+			<if test="carNumber != null">
+				car_number
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="cardCode != null">
+				#{cardCode,jdbcType=VARCHAR},
+			</if>
+			<if test="cardType != null">
+				#{cardType,jdbcType=INTEGER},
+			</if>
+			<if test="vipCode != null">
+				#{vipCode,jdbcType=VARCHAR},
+			</if>
+			<if test="grade != null">
+				#{grade,jdbcType=INTEGER},
+			</if>
+			<if test="credit != null">
+				#{credit,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="mallInfoCode != null">
+				#{mallInfoCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userName != null">
+				#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				#{password,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=INTEGER},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="tell != null">
+				#{tell,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="birthTime != null">
+				#{birthTime,jdbcType=VARCHAR},
+			</if>
+			<if test="idCard != null">
+				#{idCard,jdbcType=VARCHAR},
+			</if>
+			<if test="postCode != null">
+				#{postCode,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				#{province,jdbcType=INTEGER},
+			</if>
+			<if test="city != null">
+				#{city,jdbcType=INTEGER},
+			</if>
+			<if test="county != null">
+				#{county,jdbcType=INTEGER},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=VARCHAR},
+			</if>
+			<if test="effectiveTime != null">
+				#{effectiveTime,jdbcType=VARCHAR},
+			</if>
+			<if test="expiryTime != null">
+				#{expiryTime,jdbcType=VARCHAR},
+			</if>
+			<if test="createUserId != null">
+				#{createUserId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="updateUserId != null">
+				#{updateUserId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="resource != null">
+				#{resource,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="registerTime != null">
+				#{registerTime,jdbcType=VARCHAR},
+			</if>
+			<if test="income != null">
+				#{income,jdbcType=DECIMAL},
+			</if>
+			<if test="degress != null">
+				#{degress,jdbcType=VARCHAR},
+			</if>
+			<if test="carNumber != null">
+				#{carNumber,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+	<update id="gw.members.update" parameterType="com.crm.pojo.GwMembersModel">
+		update gw_members
+		<set>
+			<if test="cardCode != null">
+				card_code = #{cardCode,jdbcType=VARCHAR},
+			</if>
+			<if test="cardType != null">
+				card_type = #{cardType,jdbcType=INTEGER},
+			</if>
+			<if test="vipCode != null">
+				vip_code = #{vipCode,jdbcType=VARCHAR},
+			</if>
+			<if test="grade != null">
+				grade = #{grade,jdbcType=INTEGER},
+			</if>
+			<if test="credit != null">
+				credit = #{credit,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="mallInfoCode != null">
+				mall_info_code = #{mallInfoCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userName != null">
+				user_name = #{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				password = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				sex = #{sex,jdbcType=INTEGER},
+			</if>
+			<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="tell != null">
+				tell = #{tell,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				email = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="birthTime != null">
+				birth_time = #{birthTime,jdbcType=VARCHAR},
+			</if>
+			<if test="idCard != null">
+				id_card = #{idCard,jdbcType=VARCHAR},
+			</if>
+			<if test="postCode != null">
+				post_code = #{postCode,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				province = #{province,jdbcType=INTEGER},
+			</if>
+			<if test="city != null">
+				city = #{city,jdbcType=INTEGER},
+			</if>
+			<if test="county != null">
+				county = #{county,jdbcType=INTEGER},
+			</if>
+			<if test="address != null">
+				address = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				description = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="effectiveTime != null">
+				effective_time = #{effectiveTime,jdbcType=VARCHAR},
+			</if>
+			<if test="expiryTime != null">
+				expiry_time = #{expiryTime,jdbcType=VARCHAR},
+			</if>
+			<if test="createUserId != null">
+				create_user_id = #{createUserId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="updateUserId != null">
+				update_user_id = #{updateUserId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="resource != null">
+				resource= #{resource,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type= #{type,jdbcType=VARCHAR},
+			</if>
+			<if test="registerTime != null">
+				register_time= #{registerTime,jdbcType=VARCHAR},
+			</if>
+			<if test="income != null">
+				income= #{income,jdbcType=DECIMAL},
+			</if>
+			<if test="degress != null">
+				degress= #{degress,jdbcType=VARCHAR},
+			</if>
+			<if test="carNumber != null">
+				car_number=#{carNumber,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 通过vipCode修改会员信息，不包括修改phone -->
+	<update id="gw.members.updateByVipCode" parameterType="com.crm.pojo.GwMembersModel">
+		update gw_members
+		<set>
+			<if test="cardCode != null">
+				card_code = #{cardCode,jdbcType=VARCHAR},
+			</if>
+			<if test="cardType != null">
+				card_type = #{cardType,jdbcType=INTEGER},
+			</if>
+			<if test="vipCode != null">
+				vip_code = #{vipCode,jdbcType=VARCHAR},
+			</if>
+			<if test="grade != null">
+				grade = #{grade,jdbcType=INTEGER},
+			</if>
+			<if test="credit != null">
+				credit = #{credit,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="mallInfoCode != null">
+				mall_info_code = #{mallInfoCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userName != null">
+				user_name = #{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				password = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				sex = #{sex,jdbcType=INTEGER},
+			</if>
+			<if test="tell != null">
+				tell = #{tell,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				email = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="birthTime != null">
+				birth_time = #{birthTime,jdbcType=VARCHAR},
+			</if>
+			<if test="idCard != null">
+				id_card = #{idCard,jdbcType=VARCHAR},
+			</if>
+			<if test="postCode != null">
+				post_code = #{postCode,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				province = #{province,jdbcType=INTEGER},
+			</if>
+			<if test="city != null">
+				city = #{city,jdbcType=INTEGER},
+			</if>
+			<if test="county != null">
+				county = #{county,jdbcType=INTEGER},
+			</if>
+			<if test="address != null">
+				address = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				description = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="effectiveTime != null">
+				effective_time = #{effectiveTime,jdbcType=VARCHAR},
+			</if>
+			<if test="expiryTime != null">
+				expiry_time = #{expiryTime,jdbcType=VARCHAR},
+			</if>
+			<if test="createUserId != null">
+				create_user_id = #{createUserId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="updateUserId != null">
+				update_user_id = #{updateUserId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="resource != null">
+				resource= #{resource,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type= #{type,jdbcType=VARCHAR},
+			</if>
+			<if test="registerTime != null">
+				register_time= #{registerTime,jdbcType=VARCHAR},
+			</if>
+			<if test="income != null">
+				income= #{income,jdbcType=DECIMAL},
+			</if>
+			<if test="degress != null">
+				degress= #{degress,jdbcType=VARCHAR},
+			</if>
+			<if test="carNumber != null">
+				car_number=#{carNumber,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where vip_code = #{vipCode,jdbcType=VARCHAR}
+	</update>
+
+	<select id="gw.members.selectListApi" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		SELECT
+		(select t.name from gw_type_tree t where t.code=a.grade) as gradeName,
+		a.address,
+		a.birth_time,
+		a.card_code,
+		a.card_type,
+		a.credit,
+		a.effective_time,
+		a.email,
+		a.expiry_time,
+		a.grade,
+		a.id,
+		a.id_card,
+		a.phone,
+		a.sex,
+		a.tell,
+		a.update_time,
+		a.update_user_id,
+		a.user_name,
+		a.vip_code,
+		a.resource,
+		a.type
+		FROM
+		gw_members a
+		<where>
+			<if test="cardCode!=null and ''!=cardCode">
+				and a.card_code = #{cardCode,jdbcType=VARCHAR}
+			</if>
+			<if test="vipCode!=null and ''!=vipCode">
+				and a.vip_code = #{vipCode,jdbcType=VARCHAR}
+			</if>
+		</where>
+		ORDER BY a.create_time DESC
+	</select>
+	<!-- 获得所有生效会员的手机号 -->
+	<select id="gw.members.selectAllNameAndPhone" resultMap="BaseResultMap">
+		select
+			phone,user_name
+		from gw_members
+		where status = 1
+	</select>
+	<!-- 获得所有生效会员的邮箱号-->
+	<select id="gw.members.selectAllEmail" resultMap="BaseResultMap">
+		select
+			email,user_name
+		from gw_members
+		where status = 1
+	</select>
+	<!-- 根据会员等级获得所有生效会员的手机号 -->
+	<select id="gw.members.selectNumberByGrade" resultMap="BaseResultMap">
+		select
+			phone,user_name
+		from gw_members
+		where status = 1
+		and grade in 
+    	<foreach item="grade" index="index" collection="array" open="(" separator="," close=")">  
+  			#{grade}  
+ 		</foreach> 
+	</select>
+	
+	<!-- 更新参加活动的会员的积分 -->
+	<update id="gw.members.updateJoinActivityMemberIntergral" parameterType="java.util.Map">
+		UPDATE gw_members m
+		SET m.credit= m.credit- #{activityIntergral,jdbcType=INTEGER}
+		WHERE
+			m.vip_code = #{vipCode,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 根据条件，获取分页数据所有会员绑卡信息list集合 -->
+	<select id="gw.members.selectPageListByBingdingMessage" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+				select
+		d.id, c.card_code, d.card_type cardType, vip_code vipCode,d.grade,
+		(select t.name from gw_type_tree t where t.code=d.grade) as gradeName,
+		credit, e.status,
+		(select name from gw_mall_info where d.mall_info_code=bm) as mallInfoName,
+		user_name userName,
+		password, sex, phone, tell, email, birth_time birthTime, id_card idCard,
+		post_code postCode,
+		(select name from gw_area a where a.code=d.province) as provinceName,
+		(select name from gw_area a where a.code=d.city) as cityName,
+		(select name from gw_area a where a.code=d.county) as countyName,
+		address, description, effective_time effectiveTime, expiry_time expiryTime,
+		(select u.name from gw_admin_users u where u.id = d.create_user_id) as
+		createUserName, 
+		(select u.name from gw_admin_users u where u.id = d.update_user_id) as
+		updateUserName, d.update_time updateTime, e.status,
+		(select t.name from gw_type_tree t where t.code=d.type) as type
+
+		from  gw_member_binding_card c left join   gw_members d on d.vip_code=c.member_code  LEFT JOIN gw_member_card e ON e.card_code=c.card_code
+		<where>
+			<if test="vipCode != null and ''!=vipCode">
+				and d.vip_code LIKE CONCAT(CONCAT('%', #{vipCode,jdbcType=VARCHAR}), '%')
+			</if>
+			<if test="phone != null and ''!=phone">
+				and d.phone LIKE CONCAT(CONCAT('%', #{phone,jdbcType=VARCHAR}), '%')
+			</if>
+			<if test="grade != null and '' !=grade">
+				and d.grade = #{grade,jdbcType=INTEGER}
+			</if>
+			<if test="type != null and '' !=type">
+				and d.type = #{type,jdbcType=VARCHAR}
+			</if>
+		</where> 
+		
+	</select>
+	<!-- 根据条件，会员状态正常的总记录数 -->
+	<select id="gw.members.selectCountByBindingMessage" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(c.id) 
+		from  gw_member_binding_card c left join   gw_members d on d.vip_code=c.member_code  LEFT JOIN gw_member_card e ON e.card_code=c.card_code
+			<where>
+			<if test="vipCode != null and ''!=vipCode">
+				and d.vip_code LIKE CONCAT(CONCAT('%', #{vipCode,jdbcType=VARCHAR}), '%')
+			</if>
+			<if test="phone != null and ''!=phone">
+				and d.phone LIKE CONCAT(CONCAT('%', #{phone,jdbcType=VARCHAR}), '%')
+			</if>
+			<if test="grade != null and '' !=grade">
+				and d.grade = #{grade,jdbcType=INTEGER}
+			</if>
+			<if test="type != null and '' !=type">
+				and d.type = #{type,jdbcType=VARCHAR}
+			</if>
+		</where> 
+		
+	</select>
+	
+</mapper>

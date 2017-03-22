@@ -1,0 +1,187 @@
+package com.crm.pojo;
+
+import java.math.BigDecimal;
+
+import com.crm.enums.CouFirmEnum;
+
+public class GwGoodsOutStoreModel {
+    private Integer id;
+
+    private String code;
+
+    private String description;
+
+    private Integer totalNumber;
+
+    private BigDecimal totalMoney;
+
+    private String outTime;
+
+    private String approveView;
+
+    private Integer status;
+
+    private Integer createUserId;
+
+    private String createTime;
+
+    private Integer updateUserId;
+
+    private String updateTime;
+
+    private Integer approveUserId;
+
+    private String approveTime;
+    
+    private String createUserName;
+    
+    private String updateUserName;
+    
+    private String statusName;
+    
+    private String approveUserName;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code == null ? null : code.trim();
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description == null ? null : description.trim();
+    }
+
+    public Integer getTotalNumber() {
+        return totalNumber;
+    }
+
+    public void setTotalNumber(Integer totalNumber) {
+        this.totalNumber = totalNumber;
+    }
+
+    public BigDecimal getTotalMoney() {
+        return totalMoney;
+    }
+
+    public void setTotalMoney(BigDecimal totalMoney) {
+        this.totalMoney = totalMoney;
+    }
+
+    public String getOutTime() {
+        return outTime;
+    }
+
+    public void setOutTime(String outTime) {
+        this.outTime = outTime == null ? null : outTime.trim();
+    }
+
+    public String getApproveView() {
+        return approveView;
+    }
+
+    public void setApproveView(String approveView) {
+        this.approveView = approveView == null ? null : approveView.trim();
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime == null ? null : createTime.trim();
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime == null ? null : updateTime.trim();
+    }
+
+    public Integer getApproveUserId() {
+        return approveUserId;
+    }
+
+    public void setApproveUserId(Integer approveUserId) {
+        this.approveUserId = approveUserId;
+    }
+
+    public String getApproveTime() {
+        return approveTime;
+    }
+
+    public void setApproveTime(String approveTime) {
+        this.approveTime = approveTime == null ? null : approveTime.trim();
+    }
+
+	public String getCreateUserName() {
+		return createUserName;
+	}
+
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
+	}
+
+	public String getUpdateUserName() {
+		return updateUserName;
+	}
+
+	public void setUpdateUserName(String updateUserName) {
+		this.updateUserName = updateUserName;
+	}
+
+	public String getStatusName() {
+		return CouFirmEnum.getDisplayName(status);
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
+
+	public String getApproveUserName() {
+		return approveUserName;
+	}
+
+	public void setApproveUserName(String approveUserName) {
+		this.approveUserName = approveUserName;
+	}
+}

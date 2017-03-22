@@ -1,0 +1,35 @@
+package com.crm.service.impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwAreaDao;
+import com.crm.pojo.GwAreaModel;
+import com.crm.service.GwAreaService;
+
+/**
+ * 
+ * GwAreaServiceImpl:区域业务逻辑层实现
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwAreaServiceManage")
+public class GwAreaServiceImpl extends ServersManager<GwAreaModel, GwAreaDao> implements GwAreaService{
+	
+	@Resource(name = "gwAreaDaoManage")
+	@Override
+	public void setDao(GwAreaDao gwAreaDao) {
+		this.dao = gwAreaDao;
+	}
+
+	@Override
+	public List<GwAreaModel> getAreaByPid(int pId) {
+		return dao.getAreaByPid(pId);
+	}
+}

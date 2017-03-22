@@ -1,0 +1,57 @@
+package com.crm.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwStoreGoodsModel;
+
+/**
+ * GwStoreGoodsDao:物品与仓库管理表数据访问层接口
+ *
+ * @author chengpengfei
+ * @date  2016年6月27日
+ * @version  jdk1.8
+ *
+ */
+public interface GwStoreGoodsDao extends DaoManager<GwStoreGoodsModel>{
+
+	/**
+	 * 动态修改物品与仓库关联信息中的数量
+	 * @param params
+	 * @return
+	 */
+	public int updateStoreGoodsNumber(Map<String,Object> params);
+	
+	/**
+	 * 根据物品编号和仓库编号查询物品与仓库管理表
+	 * @param goodsCode
+	 * @return
+	 */
+	public GwStoreGoodsModel getStoreGoodsByGoodsCode(Map<String,Object> params);
+	
+	/**
+	 * 根据物品编号查询物品与仓库表集合
+	 * @param goodsCode
+	 * @return
+	 */
+	public List<GwStoreGoodsModel> getStoreGoodsListByGoodsCode(String goodsCode);
+	
+	/**
+	 * 查询全部物品与仓库关系分页集合(用于统计)
+	 * @return
+	 */
+	public BasePageResultVo getStoreGoodsByCount(Map<String,Object> params);
+	/**
+	 * 
+	 * getStoreGoodsCombox:获取下拉列表仓库礼品数量通过礼品编号分组
+	 *
+	 * @author hemingjun
+	 * @date 2016年11月11日
+	 * @param params
+	 * @return
+	 */
+	public BasePageResultVo getStoreGoodsCombox(Map<String,Object> params);
+	
+}

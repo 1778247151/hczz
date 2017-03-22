@@ -1,0 +1,21 @@
+package com.crm.service;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwStockCheckModel;
+
+/**
+ * 
+ * 
+ * GwStockCheckService:物品盘点管理业务逻辑层接口
+ *
+ * @author  meishengjun
+ * @date    2016年11月11日
+ * @version jdk1.8
+ *
+ */
+
+public interface GwStockCheckService extends Services<GwStockCheckModel> {
+	public GwStockCheckModel getStockCheckByLastOne(String time);
+	
+
+}

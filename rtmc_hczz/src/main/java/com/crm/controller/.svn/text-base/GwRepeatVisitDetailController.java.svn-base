@@ -1,0 +1,238 @@
+package com.crm.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.ResponseCode;
+import com.crm.common.SecurityUtil;
+import com.crm.common.Status;
+import com.crm.interceptor.BussAnnotation;
+import com.crm.interceptor.exception.BaseException;
+import com.crm.pojo.GwRepeatVisitDetailModel;
+import com.crm.service.GwRepeatVisitDetailService;
+import com.crm.util.BaseCodeUtil;
+import com.crm.util.DateUtil;
+import com.crm.util.ValidateUtil;
+
+/**
+ * 
+ * GwRepeatVisitDetailDetailController:回访访问控制层
+ *
+ * @author xiangtao
+ * @date 2016年6月20日
+ * @version jdk.8
+ *
+ */
+@Controller
+@RequestMapping("/repeatVisitDetail")
+public class GwRepeatVisitDetailController extends BaseException {
+
+	// 日志
+	private Logger logger = LoggerFactory.getLogger(GwRepeatVisitDetailController.class);
+
+	/**
+	 * 回访业务逻辑
+	 */
+	@Resource(name = "gwRepeatVisitDetailServiceManage")
+	private GwRepeatVisitDetailService gwRepeatVisitDetailServiceImpl;
+
+	@RequestMapping("/getRepeatVisitDetailsByCode.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="回访详细信息维护",option="根据code获取集合")
+	public BaseResultVo getRepeatVisitDetailsByCode(String visitCode, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		// 获取回访信息
+		List<GwRepeatVisitDetailModel> list = gwRepeatVisitDetailServiceImpl.selectDetailVisitByCode(visitCode);
+		baseResultVo.setData(list);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * getRepeatVisitDetailById:根据回访id，获取回访信息
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getRepeatVisitDetailById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="回访详细信息维护",option="根据ID获取信息")
+	public BaseResultVo getRepeatVisitDetailById(int id, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		if (id == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");// 提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		// 获取回访信息
+		GwRepeatVisitDetailModel gwRepeatVisitDetailModel = gwRepeatVisitDetailServiceImpl.selectById(id);
+		baseResultVo.setData(gwRepeatVisitDetailModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * addRepeatVisitDetail 添加回访
+	 * 
+	 * @date 2016年6月20日
+	 * @param
+	 * @return
+	 */
+	@RequestMapping("/addRepeatVisitDetail.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="回访详细信息维护",option="添加")
+	public BaseResultVo addRepeatVisitDetail(GwRepeatVisitDetailModel gwRepeatVisitDetailModel,
+			HttpServletRequest request) {
+
+		Integer userid = SecurityUtil.getAdminUser(request).getUserId();
+
+		gwRepeatVisitDetailModel.setCreateUserId(userid);
+		gwRepeatVisitDetailModel.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		gwRepeatVisitDetailModel.setUpdateUserId(userid);
+		gwRepeatVisitDetailModel.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		gwRepeatVisitDetailServiceImpl.insert(gwRepeatVisitDetailModel);
+
+		BaseResultVo baseResultVo = new BaseResultVo();
+
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * delRepeatVisitDetailById:根据回访id，删除回访
+	 *
+	 * @date 2016年6月20日
+	 * @param id
+	 *            回访id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/delRepeatVisitDetail.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="回访详细信息维护",option="删除")
+	public BaseResultVo delRepeatVisitDetailById(int id, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		if (id == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");// 提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		int num = gwRepeatVisitDetailServiceImpl.deleteById(id);
+
+		if (num < 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("操作失败");// 提示信息
+		}
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * updateRepeatVisitDetail:更新回访
+	 *
+	 * @date 2016年6月20日
+	 * @param gwRepeatVisitDetailModel
+	 *            回访信息对象
+	 * @return
+	 */
+	@RequestMapping("/updateRepeatVisitDetail.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="回访详细信息维护",option="修改")
+	public BaseResultVo updateRepeatVisitDetail(GwRepeatVisitDetailModel gwRepeatVisitDetailModel,
+			HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		Integer userid = SecurityUtil.getAdminUser(request).getUserId();
+
+		gwRepeatVisitDetailModel.setCreateUserId(userid);
+		gwRepeatVisitDetailModel.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		// 更新回访信息
+		gwRepeatVisitDetailServiceImpl.update(gwRepeatVisitDetailModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * getRepeatVisitDetailList:获取回访集合（分页）
+	 *
+	 * @date 2016年6月20日
+	 * @param page
+	 *            当前页码数
+	 * @param pagesize
+	 *            每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getRepeatVisitDetailList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="回访详细信息维护",option="获取详细列表")
+	public LigerPageDataVo getRepeatVisitDetailList(int currentPage, int pageSize, HttpServletRequest request) {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+
+		BasePageResultVo baseResultVo = gwRepeatVisitDetailServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+}

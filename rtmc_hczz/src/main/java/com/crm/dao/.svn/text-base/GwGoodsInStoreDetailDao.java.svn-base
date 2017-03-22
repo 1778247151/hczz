@@ -1,0 +1,49 @@
+package com.crm.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwGoodsInStoreDetailModel;
+import com.crm.pojo.GwGoodsInStoreModel;
+
+
+/**
+ * GwGoodsInStoreDetailDao:物品入库单明细数据访问层接口
+ *
+ * @author chengpengfei
+ * @date  2016年6月27日
+ * @version  jdk1.8
+ *
+ */
+
+public interface GwGoodsInStoreDetailDao extends DaoManager<GwGoodsInStoreDetailModel>{
+
+	/**
+	 * 批量插入物品入库单明细
+	 * @param goodsInStoreList
+	 * @return
+	 */
+	public int batchInsertGoodsInStoreDeatil(List<GwGoodsInStoreDetailModel> goodsInStoreList);
+	
+	/**
+	 * 根据物品入库单号获取物品入库明细集合
+	 * @param code
+	 * @return
+	 */
+	public List<GwGoodsInStoreDetailModel> getListByGoodsCode(String code);
+	
+	/**
+	 * 根据物品入库单号删除物品入库清单信息
+	 * @param goodsCode
+	 * @return
+	 */
+	public int deleteGoodsInStoreDetailByGoodsCode(Map<String,Object> params);
+	
+	/**
+	 * 根据礼品编号分组查询礼品入库明细
+	 * @param presentCode
+	 * @return
+	 */
+	public List<GwGoodsInStoreDetailModel> getGoodsInStoreCodeByPresentCode(String presentCode);
+}

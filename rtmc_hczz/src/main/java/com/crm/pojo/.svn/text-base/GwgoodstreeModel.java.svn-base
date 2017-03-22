@@ -1,0 +1,82 @@
+package com.crm.pojo;
+
+public class GwgoodstreeModel {
+	private Integer id;
+
+	private Integer fid;
+
+	private String bm;
+
+	private String name;
+
+	private Integer state;
+
+	private String time;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getFid() {
+		return fid;
+	}
+
+	public void setFid(Integer fid) {
+		this.fid = fid;
+	}
+
+	public String getBm() {
+		return bm;
+	}
+
+	public void setBm(String bm) {
+		this.bm = bm == null ? null : bm.trim();
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name == null ? null : name.trim();
+	}
+
+	public Integer getState() {
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
+	}
+
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time == null ? null : time.trim();
+	}
+
+	/**
+	 * 对比2个对象是否相等
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof GwgoodstreeModel)) {
+			return false;
+		}
+		GwgoodstreeModel goodstree = (GwgoodstreeModel) obj;
+		if (goodstree.getId() .equals(this.getId())  && goodstree.getFid().equals(this.getFid())
+				&& goodstree.getBm().equals(this.getBm()) && goodstree.getName() .equals(this.getName()) 
+				&& goodstree.getState() .equals(this.getState())  && goodstree.getTime() .equals(this.getTime()) ) {
+			return true;
+
+		} else {
+			return false;
+		}
+	}
+}

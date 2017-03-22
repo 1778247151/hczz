@@ -1,0 +1,401 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/gw_crm/!svn/ver/521/gdws_crm/src/main/java/com/crm/dao
+END
+GwGoodsInStoreDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/gw_crm/!svn/ver/137/gdws_crm/src/main/java/com/crm/dao/GwGoodsInStoreDao.java
+END
+GwStockCheckDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/gw_crm/!svn/ver/450/gdws_crm/src/main/java/com/crm/dao/GwStockCheckDao.java
+END
+GwActivityMemberDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/gw_crm/!svn/ver/150/gdws_crm/src/main/java/com/crm/dao/GwActivityMemberDao.java
+END
+GwCustomerComplainDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/gw_crm/!svn/ver/106/gdws_crm/src/main/java/com/crm/dao/GwCustomerComplainDao.java
+END
+GwMenuTreeDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/gw_crm/!svn/ver/452/gdws_crm/src/main/java/com/crm/dao/GwMenuTreeDao.java
+END
+GwApiAccountDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/gw_crm/!svn/ver/243/gdws_crm/src/main/java/com/crm/dao/GwApiAccountDao.java
+END
+GwIntegralExchangeGoodsDetailDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/gw_crm/!svn/ver/159/gdws_crm/src/main/java/com/crm/dao/GwIntegralExchangeGoodsDetailDao.java
+END
+GwMembersDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/gw_crm/!svn/ver/511/gdws_crm/src/main/java/com/crm/dao/GwMembersDao.java
+END
+GwMemberBindingCardDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/gw_crm/!svn/ver/375/gdws_crm/src/main/java/com/crm/dao/GwMemberBindingCardDao.java
+END
+GwPresentInfoDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/137/gdws_crm/src/main/java/com/crm/dao/GwPresentInfoDao.java
+END
+GwRepeatVisitDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/103/gdws_crm/src/main/java/com/crm/dao/GwRepeatVisitDao.java
+END
+GwBaseIntegralDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/gw_crm/!svn/ver/171/gdws_crm/src/main/java/com/crm/dao/GwBaseIntegralDao.java
+END
+GwGoodsOutStoreDetailDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/gw_crm/!svn/ver/412/gdws_crm/src/main/java/com/crm/dao/GwGoodsOutStoreDetailDao.java
+END
+GwIntegralExchangeGoodsDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/gw_crm/!svn/ver/300/gdws_crm/src/main/java/com/crm/dao/GwIntegralExchangeGoodsDao.java
+END
+GwSalesDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/gw_crm/!svn/ver/346/gdws_crm/src/main/java/com/crm/dao/GwSalesDao.java
+END
+GwSalesPaymenttenderDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/gw_crm/!svn/ver/346/gdws_crm/src/main/java/com/crm/dao/GwSalesPaymenttenderDao.java
+END
+GwShopsInfoDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/gw_crm/!svn/ver/284/gdws_crm/src/main/java/com/crm/dao/GwShopsInfoDao.java
+END
+GwRoleGroupDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/gw_crm/!svn/ver/2/gdws_crm/src/main/java/com/crm/dao/GwRoleGroupDao.java
+END
+GwGoodsOutStoreDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/gw_crm/!svn/ver/412/gdws_crm/src/main/java/com/crm/dao/GwGoodsOutStoreDao.java
+END
+GwNoticeDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/gw_crm/!svn/ver/17/gdws_crm/src/main/java/com/crm/dao/GwNoticeDao.java
+END
+GwMailRecordDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/gw_crm/!svn/ver/511/gdws_crm/src/main/java/com/crm/dao/GwMailRecordDao.java
+END
+GwClubDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/gw_crm/!svn/ver/444/gdws_crm/src/main/java/com/crm/dao/GwClubDao.java
+END
+GwGoodsInfoDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/gw_crm/!svn/ver/205/gdws_crm/src/main/java/com/crm/dao/GwGoodsInfoDao.java
+END
+GwStockCheckDatailDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/gw_crm/!svn/ver/456/gdws_crm/src/main/java/com/crm/dao/GwStockCheckDatailDao.java
+END
+GwSmsRecordDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/gw_crm/!svn/ver/387/gdws_crm/src/main/java/com/crm/dao/GwSmsRecordDao.java
+END
+GwMallInfoDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/gw_crm/!svn/ver/205/gdws_crm/src/main/java/com/crm/dao/GwMallInfoDao.java
+END
+GwGoodsInStoreDetailDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/gw_crm/!svn/ver/137/gdws_crm/src/main/java/com/crm/dao/GwGoodsInStoreDetailDao.java
+END
+GwbrandtreeDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/gw_crm/!svn/ver/284/gdws_crm/src/main/java/com/crm/dao/GwbrandtreeDao.java
+END
+GwShopsLeaseDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/gw_crm/!svn/ver/365/gdws_crm/src/main/java/com/crm/dao/GwShopsLeaseDao.java
+END
+GwPromotionIntegralScopeDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/gw_crm/!svn/ver/512/gdws_crm/src/main/java/com/crm/dao/GwPromotionIntegralScopeDao.java
+END
+GwPaymentTenderDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/gw_crm/!svn/ver/129/gdws_crm/src/main/java/com/crm/dao/GwPaymentTenderDao.java
+END
+GwLockerDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/gw_crm/!svn/ver/473/gdws_crm/src/main/java/com/crm/dao/GwLockerDao.java
+END
+GwRepeatVisitDetailDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/gw_crm/!svn/ver/74/gdws_crm/src/main/java/com/crm/dao/GwRepeatVisitDetailDao.java
+END
+GwSettlementPaymentTenderDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/gw_crm/!svn/ver/284/gdws_crm/src/main/java/com/crm/dao/GwSettlementPaymentTenderDao.java
+END
+GwLockerRentalDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/gw_crm/!svn/ver/473/gdws_crm/src/main/java/com/crm/dao/GwLockerRentalDao.java
+END
+GwActivityDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/gw_crm/!svn/ver/394/gdws_crm/src/main/java/com/crm/dao/GwActivityDao.java
+END
+GwmerchantsinfoDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/gw_crm/!svn/ver/284/gdws_crm/src/main/java/com/crm/dao/GwmerchantsinfoDao.java
+END
+GwDepartmentDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/gw_crm/!svn/ver/284/gdws_crm/src/main/java/com/crm/dao/GwDepartmentDao.java
+END
+GwLoseMaintenanceDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/gw_crm/!svn/ver/93/gdws_crm/src/main/java/com/crm/dao/GwLoseMaintenanceDao.java
+END
+GwAreaDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/gw_crm/!svn/ver/59/gdws_crm/src/main/java/com/crm/dao/GwAreaDao.java
+END
+GwClubDetailDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/gw_crm/!svn/ver/463/gdws_crm/src/main/java/com/crm/dao/GwClubDetailDao.java
+END
+GwPropertyAttributeDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/gw_crm/!svn/ver/205/gdws_crm/src/main/java/com/crm/dao/GwPropertyAttributeDao.java
+END
+GwBuildingTreeDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/gw_crm/!svn/ver/205/gdws_crm/src/main/java/com/crm/dao/GwBuildingTreeDao.java
+END
+GwSysLoggerDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/gw_crm/!svn/ver/274/gdws_crm/src/main/java/com/crm/dao/GwSysLoggerDao.java
+END
+GwMemberIntegralDetailDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/gw_crm/!svn/ver/383/gdws_crm/src/main/java/com/crm/dao/GwMemberIntegralDetailDao.java
+END
+GwTranssalestotalDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/gw_crm/!svn/ver/208/gdws_crm/src/main/java/com/crm/dao/GwTranssalestotalDao.java
+END
+GwCollectRecordDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/gw_crm/!svn/ver/47/gdws_crm/src/main/java/com/crm/dao/GwCollectRecordDao.java
+END
+GwLeaseGoodsDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/gw_crm/!svn/ver/284/gdws_crm/src/main/java/com/crm/dao/GwLeaseGoodsDao.java
+END
+GwDepartmentPositionDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/gw_crm/!svn/ver/284/gdws_crm/src/main/java/com/crm/dao/GwDepartmentPositionDao.java
+END
+GwStoreGoodsDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/gw_crm/!svn/ver/436/gdws_crm/src/main/java/com/crm/dao/GwStoreGoodsDao.java
+END
+GwAresDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/gw_crm/!svn/ver/205/gdws_crm/src/main/java/com/crm/dao/GwAresDao.java
+END
+GwgoodstreeDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/gw_crm/!svn/ver/205/gdws_crm/src/main/java/com/crm/dao/GwgoodstreeDao.java
+END
+GwformatstreeDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/266/gdws_crm/src/main/java/com/crm/dao/GwformatstreeDao.java
+END
+GwLeaseMaintenanceDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/gw_crm/!svn/ver/93/gdws_crm/src/main/java/com/crm/dao/GwLeaseMaintenanceDao.java
+END
+GwMemberIntegralRecordDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/gw_crm/!svn/ver/239/gdws_crm/src/main/java/com/crm/dao/GwMemberIntegralRecordDao.java
+END
+GwMemberGradeDetailDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/gw_crm/!svn/ver/521/gdws_crm/src/main/java/com/crm/dao/GwMemberGradeDetailDao.java
+END
+GwPickupMaintenanceDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/gw_crm/!svn/ver/93/gdws_crm/src/main/java/com/crm/dao/GwPickupMaintenanceDao.java
+END
+GwAddressBookDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/401/gdws_crm/src/main/java/com/crm/dao/GwAddressBookDao.java
+END
+GwMemberCardDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/gw_crm/!svn/ver/343/gdws_crm/src/main/java/com/crm/dao/GwMemberCardDao.java
+END
+GwRoleDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/gw_crm/!svn/ver/284/gdws_crm/src/main/java/com/crm/dao/GwRoleDao.java
+END
+GwTypeTreeDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/gw_crm/!svn/ver/272/gdws_crm/src/main/java/com/crm/dao/GwTypeTreeDao.java
+END
+GwGroupInfoDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/gw_crm/!svn/ver/205/gdws_crm/src/main/java/com/crm/dao/GwGroupInfoDao.java
+END
+GwClubDetailModelMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/gw_crm/!svn/ver/444/gdws_crm/src/main/java/com/crm/dao/GwClubDetailModelMapper.java
+END
+GwMemberGradeDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/346/gdws_crm/src/main/java/com/crm/dao/GwMemberGradeDao.java
+END
+GwAdminUsersDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/gw_crm/!svn/ver/284/gdws_crm/src/main/java/com/crm/dao/GwAdminUsersDao.java
+END
+GwPromotionIntegralDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/gw_crm/!svn/ver/174/gdws_crm/src/main/java/com/crm/dao/GwPromotionIntegralDao.java
+END

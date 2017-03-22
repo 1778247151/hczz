@@ -1,0 +1,26 @@
+package com.crm.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwActivityMemberModel;
+/**
+ * 
+ * GwActivityMemberDao:活动访问层接口
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+public interface GwActivityMemberDao extends DaoManager<GwActivityMemberModel>{
+	List<GwActivityMemberModel> getActivityMemberByCode(String code);
+	
+	/**
+	 * 根据ID修改参加活动的人数
+	 * @param id
+	 * @return
+	 */
+	public int updateJoinNumber(Map<String,Object> params);
+}

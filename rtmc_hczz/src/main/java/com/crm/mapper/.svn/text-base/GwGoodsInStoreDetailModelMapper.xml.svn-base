@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.goodsInStoreDetail" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwGoodsInStoreDetailModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="goods_in_store_code" property="goodsInStoreCode" jdbcType="VARCHAR" />
+    <result column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
+    <result column="number" property="number" jdbcType="INTEGER" />
+    <result column="store_code" property="storeCode" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="total_money" property="totalMoney" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, goods_in_store_code, goods_code, number, store_code, price, total_money
+  </sql>
+  <select id="gw.goodsInStoreDetail.selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_goods_in_store_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.goodsInStoreDetail.deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from gw_goods_in_store_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.goodsInStoreDetail.batchInsert" parameterType="com.crm.pojo.GwGoodsInStoreDetailModel" >
+    insert into gw_goods_in_store_detail (goods_in_store_code, goods_code, 
+      number, store_code, price, 
+      total_money)
+    values 
+     <foreach collection="list" item="goodsInStoreList" index="index" separator="," >
+    (  
+      #{goodsInStoreList.goodsInStoreCode,jdbcType=VARCHAR}, 
+      #{goodsInStoreList.goodsCode,jdbcType=VARCHAR}, 
+      #{goodsInStoreList.number,jdbcType=INTEGER}, 
+      #{goodsInStoreList.storeCode,jdbcType=VARCHAR}, 
+      #{goodsInStoreList.price,jdbcType=DECIMAL}, 
+      #{goodsInStoreList.totalMoney,jdbcType=DECIMAL})
+      </foreach>
+  </insert>
+  <insert id="gw.goodsInStoreDetail.insertSelective" parameterType="com.crm.pojo.GwGoodsInStoreDetailModel" >
+    insert into gw_goods_in_store_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="goodsInStoreCode != null" >
+        goods_in_store_code,
+      </if>
+      <if test="goodsCode != null" >
+        goods_code,
+      </if>
+      <if test="number != null" >
+        number,
+      </if>
+      <if test="storeCode != null" >
+        store_code,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="totalMoney != null" >
+        total_money,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="goodsInStoreCode != null" >
+        #{goodsInStoreCode,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsCode != null" >
+        #{goodsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null" >
+        #{number,jdbcType=INTEGER},
+      </if>
+      <if test="storeCode != null" >
+        #{storeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="totalMoney != null" >
+        #{totalMoney,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.goodsInStoreDetail.updateByPrimaryKeySelective" parameterType="com.crm.pojo.GwGoodsInStoreDetailModel" >
+    update gw_goods_in_store_detail
+    <set >
+      <if test="goodsInStoreCode != null" >
+        goods_in_store_code = #{goodsInStoreCode,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsCode != null" >
+        goods_code = #{goodsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null" >
+        number = #{number,jdbcType=INTEGER},
+      </if>
+      <if test="storeCode != null" >
+        store_code = #{storeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="totalMoney != null" >
+        total_money = #{totalMoney,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+ <!-- 根据条件，获取分页LIST集合 -->
+  <select id="gw.goodsInStoreDetail.selectByPageList" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	SELECT
+	a.goods_code,
+	(select b.`name` from gw_present_info b where b.`code` = a.goods_code)as goodsName,
+	a.goods_in_store_code,
+	a.id,
+	a.number,
+	a.price,
+	a.store_code,
+	(select c.`name` from gw_type_tree c where c.`code` = a.store_code)as storeName,
+	a.total_money
+FROM
+	gw_goods_in_store_detail a
+	<where>
+		<if test="code != null and '' != code">  
+          and a.goods_in_store_code = #{code,jdbcType=VARCHAR}         
+        </if>
+	</where>
+	
+limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER} 
+  </select>
+  
+  <!-- 根据条件，获取分页LIST总数 -->
+  <select id="gw.goodsInStoreDetail.selectByPageCount" resultType="java.lang.Integer"  parameterType="java.util.Map">
+ select
+  	count(a.id)	
+FROM
+	gw_goods_in_store_detail a
+	<where>
+		<if test="code != null and '' != code">  
+          and a.goods_in_store_code = #{code,jdbcType=VARCHAR}         
+        </if>
+	</where>
+  </select>
+  
+  <!-- 获取所有LIST集合 -->
+  <select id="gw.goodsInStoreDetail.selectAllListByStoreCode" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	SELECT
+	a.goods_code,
+	a.goods_in_store_code,
+	a.id,
+	a.number,
+	a.price,
+	a.store_code,
+	a.total_money
+FROM
+	gw_goods_in_store_detail a
+where a.goods_in_store_code = #{code,jdbcType=VARCHAR}         
+  </select>
+  
+  <delete id="gw.goodsInStoreDetail.deleteByGoodsCode" >
+    delete from gw_goods_in_store_detail
+    <where>
+    	<if test="goodsInStoreCode!=null and ''!=goodsInStoreCode">
+    		goods_in_store_code = #{goodsInStoreCode,jdbcType=VARCHAR}
+    	</if>
+    	<if test="goodsCode!=null and ''!=goodsCode">
+    		goods_code = #{goodsCode,jdbcType=VARCHAR}
+    	</if>
+    </where>
+  </delete>
+  
+  <select id="gw.goodsInStoreDetail.selectGoodsInStoreByPresentCode" resultMap="BaseResultMap">
+  	SELECT
+	a.goods_in_store_code
+FROM
+	gw_goods_in_store_detail a
+where a.goods_code = #{presentCode,jdbcType=VARCHAR}
+  </select>
+</mapper>

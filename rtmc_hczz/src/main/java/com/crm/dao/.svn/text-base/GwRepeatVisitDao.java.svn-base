@@ -1,0 +1,23 @@
+package com.crm.dao;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwAdminUsersModel;
+import com.crm.pojo.GwDepartmentModel;
+import com.crm.pojo.GwRepeatVisitDetailModel;
+import com.crm.pojo.GwRepeatVisitModel;
+/**
+ * 
+ * GwRepeatVisitDao:回访数据访问层接口
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+public interface GwRepeatVisitDao extends DaoManager<GwRepeatVisitModel>{
+
+	GwRepeatVisitModel selectVisitByCode(String visitCode);
+
+	GwRepeatVisitModel getRepeatVisitByLastOne(String time);
+	
+}

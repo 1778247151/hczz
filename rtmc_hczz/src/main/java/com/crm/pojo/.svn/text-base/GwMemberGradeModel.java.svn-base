@@ -1,0 +1,220 @@
+package com.crm.pojo;
+
+import java.math.BigDecimal;
+
+import com.crm.enums.IsFoverRuleEnum;
+
+public class GwMemberGradeModel {
+    private Integer id;
+
+    private String code;
+    
+    private String memberGradeCode;
+
+    private String description;
+
+    private Integer isForever;
+
+    private String effectiveTime;
+
+    private String expiryTime;
+
+    private Integer orderNum;
+
+    private Integer discount;
+
+    private BigDecimal exchangeMoney;
+
+    private Integer exchageIntegral;
+
+    private Integer createUserId;
+
+    private String createTime;
+
+    private Integer updateUserId;
+
+    private String updateTime;
+
+    //复选框组
+    private boolean cisForever;
+    
+    
+    public boolean isCisForever() {
+		return cisForever;
+	}
+
+	public void setCisForever(boolean cisForever) {
+		this.cisForever = cisForever;
+	}
+	/**
+	 * 会员等级名称
+	 */
+	private String memberGradeName;
+	/**
+     * 创建人名称
+     */
+    private String createUserName;
+    
+    /**
+     * 修改人名称
+     */
+    private String updateUserName;
+    
+    /**
+     * 是否永久
+     */
+    private String isFoveverName;
+    
+    
+    public String getMemberGradeName() {
+		return memberGradeName;
+	}
+
+	public void setMemberGradeName(String memberGradeName) {
+		this.memberGradeName = memberGradeName;
+	}
+
+	public String getCreateUserName() {
+		return createUserName;
+	}
+
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
+	}
+
+	public String getUpdateUserName() {
+		return updateUserName;
+	}
+
+	public void setUpdateUserName(String updateUserName) {
+		this.updateUserName = updateUserName;
+	}
+
+	public String getIsFoveverName() {
+		return IsFoverRuleEnum.getDisplayName(getIsForever());
+	}
+
+	public void setIsFoveverName(String isFoveverName) {
+		this.isFoveverName = isFoveverName;
+	}
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getMemberGradeCode() {
+		return memberGradeCode;
+	}
+
+	public void setMemberGradeCode(String memberGradeCode) {
+		this.memberGradeCode = memberGradeCode;
+	}
+
+	public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code == null ? null : code.trim();
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description == null ? null : description.trim();
+    }
+
+    public Integer getIsForever() {
+        return isForever;
+    }
+
+    public void setIsForever(Integer isForever) {
+        this.isForever = isForever;
+    }
+
+    public String getEffectiveTime() {
+        return effectiveTime;
+    }
+
+    public void setEffectiveTime(String effectiveTime) {
+        this.effectiveTime = effectiveTime == null ? null : effectiveTime.trim();
+    }
+
+    public String getExpiryTime() {
+        return expiryTime;
+    }
+
+    public void setExpiryTime(String expiryTime) {
+        this.expiryTime = expiryTime == null ? null : expiryTime.trim();
+    }
+
+    public Integer getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(Integer orderNum) {
+        this.orderNum = orderNum;
+    }
+
+    public Integer getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
+    }
+
+    public BigDecimal getExchangeMoney() {
+        return exchangeMoney;
+    }
+
+    public void setExchangeMoney(BigDecimal exchangeMoney) {
+        this.exchangeMoney = exchangeMoney;
+    }
+
+    public Integer getExchageIntegral() {
+        return exchageIntegral;
+    }
+
+    public void setExchageIntegral(Integer exchageIntegral) {
+        this.exchageIntegral = exchageIntegral;
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime == null ? null : createTime.trim();
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime == null ? null : updateTime.trim();
+    }
+}

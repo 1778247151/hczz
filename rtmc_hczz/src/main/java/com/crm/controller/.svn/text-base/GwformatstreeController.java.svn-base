@@ -1,0 +1,506 @@
+package com.crm.controller;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.ResponseCode;
+import com.crm.common.Status;
+import com.crm.dao.GwbrandtreeDao;
+import com.crm.pojo.GwBuildingTreeModel;
+import com.crm.pojo.GwMemberGradeDetailModel;
+import com.crm.pojo.GwPropertyAttributeModel;
+import com.crm.pojo.GwPromotionIntegralScopeModel;
+import com.crm.pojo.GwbrandtreeModel;
+import com.crm.pojo.GwformatstreeModel;
+import com.crm.service.GwbrandtreeService;
+import com.crm.service.GwformatstreeService;
+import com.crm.service.GwMemberGradeDetailService;
+import com.crm.service.GwPromotionIntegralScopeService;
+import com.crm.util.DateUtil;
+import com.crm.util.ValidateUtil;
+
+/**
+ * 
+ * GwformatstreeController:业态管理访问控制层
+ *
+ * @author chengpengfei
+ * @date  2016年3月10日
+ * @version  jdk1.8
+ *
+ */
+@Controller
+@RequestMapping("/formatstree")
+public class GwformatstreeController {
+	@Resource(name="gwformatstreeService")
+	private GwformatstreeService gwformatstreeService;
+
+	
+	@Resource(name="gwPromotionIntegralScopeServiceManage")
+	private GwPromotionIntegralScopeService gwPromotionIntegralScopeService;
+	
+	@Resource(name="gwbrandtreeDaoManage")
+	private GwbrandtreeDao gwbrandtreeService;
+	
+	/**
+	 * 会员等级设置适用范围业务逻辑
+	 */
+	@Resource(name="gwMemberGradeDetailServiceManage")
+	private GwMemberGradeDetailService gwMemberGradeDetailServiceImpl;
+	/**
+	 * 
+	 * getformatstree:获取业态管理集合（分页）
+	 *
+	 * @date 2016年3月10日
+	 * @param page   当前页码数
+	 * @param pagesize      每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getformatstree.do")
+	@ResponseBody
+	public LigerPageDataVo getformatstree(int currentPage,int pageSize,HttpServletRequest request){
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		
+		BasePageResultVo baseResultVo=gwformatstreeService.selectPageList(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	/**
+	 * 
+	 * addformatstree:添加业态管理数据
+	 *
+	 * @date 2016年3月10日
+	 * @param GwformatstreeModel
+	 * @return
+	 */
+	@RequestMapping("/addformatstree.do")
+	@ResponseBody
+	public BaseResultVo addformatstree(GwformatstreeModel gwformatstreeModel,HttpServletResponse response){
+		
+		if(!ValidateUtil.isAvailableAccountStr(gwformatstreeModel.getBm(), 4, 10)){
+			return BaseResultVo.responseFail("业态编号为4-10位的字符且不能包含非法字符");
+		}
+		GwformatstreeModel formatsTree = gwformatstreeService.getFormatsTreeByCode(gwformatstreeModel.getBm());
+		if(formatsTree!=null){
+			return BaseResultVo.responseFail("业态编号已存在");
+		}
+		BaseResultVo baseResultVo=new BaseResultVo();
+		Status status=new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);//提示代码
+		status.setMsg("操作成功");//提示信息
+		status.setDebugMsg("");//bug信息
+		status.setUrl("");//url
+		baseResultVo.setStatus(status);
+		/*//密码加密
+		gwAdminUsersModel.setPassword(MD5.getMD5(gwAdminUsersModel.getPassword()));*/
+		
+		//更新时间
+		gwformatstreeModel.setTime(DateUtil.getCurrentDatetime("-"));
+		gwformatstreeModel.setState(1);
+		gwformatstreeModel.setOrderNum(0);
+		gwformatstreeService.insert(gwformatstreeModel);
+		return baseResultVo;
+	}
+	/**
+	 * 
+	 * deleformatstree:删除货品管理数据
+	 *
+	 * @date 2016年3月10日
+	 * @param GwformatstreeModel      业态管理对象
+	 * @return
+	 */
+	@RequestMapping("/deleformatstree.do")
+	@ResponseBody
+	public BaseResultVo deleformatstree(int id,HttpServletRequest request){
+		BaseResultVo baseResultVo=new BaseResultVo();
+		Status status=new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);//提示代码
+		status.setMsg("操作成功");//提示信息
+		status.setDebugMsg("");//bug信息
+		status.setUrl("");//url
+		
+		if(id==0){
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");//提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+		//新建一个业态对象
+		GwformatstreeModel formats = new GwformatstreeModel();
+		formats.setId(id);
+		formats.setState(0);
+		formats.setTime(DateUtil.getCurrentDatetime("-"));
+		int num=gwformatstreeService.update(formats);
+		if(num<0){
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("操作失败");//提示信息
+		}
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+	/**
+	 * 
+	 * getformatstreeById:根据业态管理id，获取业态管理信息
+	 *
+	 * @date 2016年3月10日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getformatstreeById.do")
+	@ResponseBody
+	public BaseResultVo getformatstreeById(int id,HttpServletRequest request){
+		BaseResultVo baseResultVo=new BaseResultVo();
+		Status status=new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);//提示代码
+		status.setMsg("操作成功");//提示信息
+		status.setDebugMsg("");//bug信息
+		status.setUrl("");//url
+		
+		if(id==0){
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");//提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+		
+		//获取业态管理信息
+		GwformatstreeModel gwformatstreeModel=gwformatstreeService.selectById(id);
+		baseResultVo.setData(gwformatstreeModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+	/**
+	 * 
+	 * updateformatstree:更新业态管理数据
+	 *
+	 * @date 2016年3月10日
+	 * @param GwformatstreeModel       业态管理对象
+	 * @return
+	 */
+	@RequestMapping("/updateformatstree.do")
+	@ResponseBody
+	public BaseResultVo updateformatstree(GwformatstreeModel gwformatstreeModel){
+		BaseResultVo baseResultVo=new BaseResultVo();
+		Status status=new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);//提示代码
+		status.setMsg("操作成功");//提示信息
+		status.setDebugMsg("");//bug信息
+		status.setUrl("");//url
+		if(!ValidateUtil.isAvailableAccountStr(gwformatstreeModel.getBm(), 4, 10)){
+			return BaseResultVo.responseFail("业态编号为4-10位的字符且不能包含非法字符");
+		}
+		//验证主键是否为空
+		if(gwformatstreeModel.getId()==0){
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+		GwformatstreeModel gwformatstree=gwformatstreeService.selectById(gwformatstreeModel.getId());
+		GwformatstreeModel formatsTree = gwformatstreeService.getFormatsTreeByCode(gwformatstreeModel.getBm());
+		if(!gwformatstree.getBm().equals(gwformatstreeModel.getBm())&&formatsTree!=null){
+			return BaseResultVo.responseFail("业态编号已存在");
+		}
+		//更新时间
+		gwformatstreeModel.setTime(DateUtil.getCurrentDatetime("-"));
+		
+		//更新业态管理
+		gwformatstreeService.update(gwformatstreeModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+	/**
+	 * 
+	 * getFormatsTreeList:获取所有业态集合
+	 *
+	 * @date 2016年3月11日
+	 * @return
+	 */
+	@RequestMapping("/getFormatsTreeList.do")
+	@ResponseBody
+	public BaseResultVo getFormatsTreeList(){
+
+		//获取所有业态
+		List<GwformatstreeModel> formatsTreeList=gwformatstreeService.getAllList();
+		
+		List<HashMap<String, Object>> treeList=new ArrayList<HashMap<String,Object>>();
+		for (GwformatstreeModel menuTree : formatsTreeList) {
+			HashMap<String, Object> map=new HashMap<String, Object>();
+			map.put("id", menuTree.getId());//菜单id
+			map.put("pid", menuTree.getFid());//父级菜单id
+			map.put("text", menuTree.getName()+"【"+menuTree.getBm()+"】");//菜单名称
+			map.put("isExpand", true);
+			treeList.add(map);
+		}
+		
+		BaseResultVo baseResultVo=BaseResultVo.responseSuccess("获取所有业态成功");
+		baseResultVo.setData(treeList);
+		return baseResultVo;
+	}
+	@RequestMapping("/getFormatsTreeL.do")
+	@ResponseBody
+	public BaseResultVo getFormatsTreeL(){
+		//获取所有业态集合
+		List<GwformatstreeModel> MallInfoList=gwformatstreeService.getAllList();
+		BaseResultVo baseResultVo=BaseResultVo.responseSuccess("获取所有集体成功");
+		baseResultVo.setData(MallInfoList);
+		return baseResultVo;
+	}
+	@RequestMapping("/getFormatsTreeyj.do")
+	@ResponseBody
+	public BaseResultVo getFormatsTreeyj(){
+		//获取一级业态目录
+		List<GwformatstreeModel> MallInfoList=gwformatstreeService.getFormatselectyj();
+		BaseResultVo baseResultVo=BaseResultVo.responseSuccess("获取所有集体成功");
+		baseResultVo.setData(MallInfoList);
+		return baseResultVo;
+	}
+	/**
+	 * 
+	 * getFormatsTreeListByPid:获取一级业态集合
+	 *
+	 * @date 2016年3月15日
+	 * @return
+	 */
+	@RequestMapping("/getFormatsTreeListByPid.do")
+	@ResponseBody
+	public Object getFormatsTreeListByPid(){
+		List<GwformatstreeModel> formatsTreeList=gwformatstreeService.getFormatselectyj();
+		
+		List<HashMap<String, Object>> list=new ArrayList<HashMap<String, Object>>();
+		
+		for (GwformatstreeModel formats : formatsTreeList) {
+			HashMap<String, Object> map=new HashMap<String, Object>();
+			map.put("id", formats.getId());
+			map.put("text", formats.getName());
+			list.add(map);
+		}
+		return list;
+	}
+	/**
+	 * 
+	 * getBrandTreeByFormatstreeId:根据业态ID，获取品牌集合
+	 *
+	 * @date 2016年3月16日
+	 * @param FormatsTreeId       业态id
+	 * @return
+	 */
+	@RequestMapping("/getBrandTreeByFormatstreeId.do")
+	@ResponseBody
+	public Object getBrandTreeByFormatstreeId(int gwFormatsTreeId){
+		List<GwbrandtreeModel> formatsTreeList=gwbrandtreeService.getBrandTreeByFormatstreeId(gwFormatsTreeId);
+		List<HashMap<String, Object>> list=new ArrayList<HashMap<String, Object>>();
+		for (GwbrandtreeModel formats : formatsTreeList) {
+			HashMap<String, Object> map=new HashMap<String, Object>();
+			map.put("id", formats.getId());
+			map.put("text", formats.getName());
+			list.add(map);
+		}
+		return list;
+	}
+	
+	
+	/**
+	 * 
+	 * getFormatsTreeListByPidRemoveScope:获取一级业态集合并排除促销积分规则里已有业态
+	 *
+	 * @date 2016年3月15日
+	 * @return
+	 */
+	@RequestMapping("/getFormatsTreeListByPidRemoveScope.do")
+	@ResponseBody
+	public Object getFormatsTreeListByPidRemoveScope(String code,HttpServletRequest request){
+//		List<GwformatstreeModel> formatsTreeList=gwformatstreeService.getFormatselectyj();
+		List<GwformatstreeModel> formatsTreeList=new ArrayList<>();
+		List<GwformatstreeModel> allFormatsTreeList=gwformatstreeService.getAllList();
+		for (GwformatstreeModel formats : allFormatsTreeList) {
+			if(formats.getState()==1){
+				formatsTreeList.add(formats);
+			}
+		}
+		HttpSession session = request.getSession();
+		List<GwPromotionIntegralScopeModel> scopelistAdd = new ArrayList<>();
+		if("1".equals(code)){
+			@SuppressWarnings("unchecked")
+			List<GwPromotionIntegralScopeModel> promotionIntegralScopeList = (List<GwPromotionIntegralScopeModel>) session.getAttribute("formatIntegralScopeList");
+			if (promotionIntegralScopeList!=null) {
+				for (GwPromotionIntegralScopeModel model : promotionIntegralScopeList) {
+					if (model.getType() == 0) {
+						scopelistAdd.add(model);
+					}
+				}
+			}
+		}else{
+			@SuppressWarnings("unchecked")
+			List<GwPromotionIntegralScopeModel> promotionIntegralScopeList = (List<GwPromotionIntegralScopeModel>) session.getAttribute("formatIntegralScopeListUpdate");
+			if (promotionIntegralScopeList!=null) {
+				for (GwPromotionIntegralScopeModel model : promotionIntegralScopeList) {
+					if (model.getType() == 0) {
+						scopelistAdd.add(model);
+					}
+				}
+			}
+		}
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("Type", "0");
+		params.put("code", code);
+		List<GwPromotionIntegralScopeModel> scopelist = gwPromotionIntegralScopeService.getListByCode(params);
+		if(scopelist!=null&&scopelist.size()>0){
+			for (GwPromotionIntegralScopeModel model : scopelist) {
+				scopelistAdd.add(model);
+			}
+		}
+		
+		
+		List<Map<String, Object>> list=new ArrayList<Map<String, Object>>();
+		
+		for (GwformatstreeModel formats : formatsTreeList) {
+			boolean flag = false;
+			//过滤已经有的编号
+			for (GwPromotionIntegralScopeModel sl : scopelistAdd) {
+				if(formats.getBm().equals(sl.getTypeCode())){
+					flag = true;
+					break;
+				}
+			}
+			if(flag){
+				flag = false;
+				continue;
+			}
+			
+			HashMap<String, Object> map=new HashMap<String, Object>();
+//			map.put("id", formats.getBm());
+			map.put("id", formats.getId());
+//			map.put("pid", -1);
+			map.put("pid", formats.getFid());
+			map.put("bm", formats.getBm());
+//			map.put("text", formats.getName());
+			map.put("text", formats.getName());
+			list.add(map);
+		}
+		
+		if(list.size()!=0){
+			Map<String, Object> mapTop=new HashMap<String, Object>();
+			mapTop.put("id", 0);
+			mapTop.put("pid",-1);
+			mapTop.put("text", "所有业态");
+			mapTop.put("isExpand", false);
+			list.add(mapTop);
+		}
+		
+		return list;
+	}
+	
+	/**
+	 * 
+	 * 获取所有业态
+	 *
+	 * @date 2016年3月15日
+	 * @return
+	 */
+	@RequestMapping("/getFormatsTreeListMember.do")
+	@ResponseBody
+	public Object getFormatsTreeListMember(){
+		List<GwformatstreeModel> formatsTreeList=gwformatstreeService.getFormatselectyj();
+		List<Map<String, Object>> list=new ArrayList<Map<String, Object>>();
+		
+		for (GwformatstreeModel formats : formatsTreeList) {
+			HashMap<String, Object> map=new HashMap<String, Object>();
+			map.put("id", formats.getBm());
+			map.put("pid", -1);
+			map.put("text", formats.getName());
+			list.add(map);
+		}
+		if(list.size()!=0){
+			Map<String, Object> mapTop=new HashMap<String, Object>();
+			mapTop.put("id", -1);
+			mapTop.put("pid",-2);
+			mapTop.put("text", "所有业态");
+			mapTop.put("isExpand", false);
+			list.add(mapTop);
+		}
+		
+		return list;
+	}
+	
+	/**
+	 * 
+	 * getFormatsTreeListByPidRemoveMember:获取一级业态集合并排除会员等级设置适用范围里已有业态
+	 *
+	 * @date 2016年3月15日
+	 * @return
+	 */
+	@RequestMapping("/getFormatsTreeListByPidRemoveMember.do")
+	@ResponseBody
+	public Object getFormatsTreeListByPidRemoveMember(String code){
+//		List<GwformatstreeModel> formatsTreeList=gwformatstreeService.getFormatselectyj();
+		List<GwformatstreeModel> formatsTreeList=new ArrayList<>();
+		List<GwformatstreeModel> allFormatsTreeList=gwformatstreeService.getAllList();
+		for (GwformatstreeModel formats : allFormatsTreeList) {
+			if(formats.getState()==1){
+				formatsTreeList.add(formats);
+			}
+		}
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("type", "0");
+		params.put("code", code);
+		List<GwMemberGradeDetailModel> gradeList = gwMemberGradeDetailServiceImpl.getMemberGradeDetailListByCodeAndType(params);
+		
+		List<Map<String, Object>> list=new ArrayList<Map<String, Object>>();
+		
+		for (GwformatstreeModel formats : formatsTreeList) {
+			boolean flag = false;
+			//过滤已经有的编号
+			for (GwMemberGradeDetailModel sl : gradeList) {
+				if(formats.getBm().equals(sl.getTypeCode())){
+					flag = true;
+					break;
+				}
+			}
+			if(flag){
+				flag = false;
+				continue;
+			}
+			
+			HashMap<String, Object> map=new HashMap<String, Object>();
+//			map.put("id", formats.getBm());
+//			map.put("pid", -1);
+			map.put("id", formats.getId());
+			map.put("pid", formats.getFid());
+			map.put("text", formats.getName());
+			list.add(map);
+		}
+		
+		if(list.size()!=0){
+			Map<String, Object> mapTop=new HashMap<String, Object>();
+//			mapTop.put("id", -1);
+			mapTop.put("id", 0);
+			mapTop.put("pid",-2);
+			mapTop.put("text", "所有业态");
+			mapTop.put("isExpand", false);
+			list.add(mapTop);
+		}
+		
+		return list;
+	}
+}

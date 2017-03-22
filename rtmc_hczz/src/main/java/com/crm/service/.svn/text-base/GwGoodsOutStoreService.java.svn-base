@@ -1,0 +1,71 @@
+package com.crm.service;
+
+import java.util.List;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwGoodsOutStoreDetailModel;
+import com.crm.pojo.GwGoodsOutStoreModel;
+
+/**
+ * 
+ * 
+ * GwGoodsOutStoreService:礼品出库业务层接口
+ *
+ * @author  shengjinpeng
+ * @date    2016年11月9日
+ * @version jdk1.8
+ *
+ */
+public interface GwGoodsOutStoreService extends Services<GwGoodsOutStoreModel>{
+
+	/**
+	 * 
+	 * getMaxCode:获得当天最大的编号
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年11月9日
+	 *
+	 * @param date
+	 * @return
+	 */
+	public String getMaxCode(String date);
+
+	/**
+	 * 
+	 * addGoodsOutStore:添加礼品出库信息
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年11月9日
+	 *
+	 * @param goodsInfoStoreModel
+	 * @param goodsOutStoreList
+	 * @return
+	 */
+	public int addGoodsOutStore(GwGoodsOutStoreModel goodsInfoStoreModel,
+			List<GwGoodsOutStoreDetailModel> goodsOutStoreList);
+	
+	/**
+	 * 
+	 * getGoodsOutStoreCode:获得礼品出库编号
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年11月9日
+	 *
+	 * @return
+	 */
+	public String getGoodsOutStoreCode();
+
+	/**
+	 * 
+	 * updateGoodsOutStore:更新礼品出库信息
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年11月10日
+	 *
+	 * @param goodsInfoStoreModel
+	 * @param goodsOutStoreDetailList
+	 * @return
+	 */
+	public int updateGoodsOutStore(GwGoodsOutStoreModel goodsInfoStoreModel,
+			List<GwGoodsOutStoreDetailModel> goodsOutStoreDetailList);
+}

@@ -1,0 +1,41 @@
+package com.crm.service.impl;
+
+import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwCustomerComplainDao;
+import com.crm.dao.GwDepartmentDao;
+import com.crm.pojo.GwCustomerComplainModel;
+import com.crm.pojo.GwDepartmentModel;
+import com.crm.service.GwCustomerComplainService;
+import com.crm.service.GwDepartmentService;
+
+/**
+ * 
+ * GwCustomerComplainServiceImpl:客户投诉业务逻辑层实现
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwCustomerComplainServiceManage")
+public class GwCustomerComplainServiceImpl extends ServersManager<GwCustomerComplainModel, GwCustomerComplainDao> implements GwCustomerComplainService{
+	
+	@Resource(name = "gwCustomerComplainDaoManage")
+	@Override
+	public void setDao(GwCustomerComplainDao gwCustomerComplainDao) {
+		this.dao = gwCustomerComplainDao;
+	}
+
+	@Override
+	public GwCustomerComplainModel getCustomerComplainByCode(String code) {
+		return dao.getCustomerComplainByCode(code);
+	}
+
+	@Override
+	public GwCustomerComplainModel getCusomerComplainByLastOne(String time) {
+		return dao.getCusomerComplainByLastOne(time);
+	}
+}

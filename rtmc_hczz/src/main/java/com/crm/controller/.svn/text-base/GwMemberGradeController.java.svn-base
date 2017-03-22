@@ -1,0 +1,216 @@
+package com.crm.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.AdminUser;
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.SecurityUtil;
+import com.crm.interceptor.BussAnnotation;
+import com.crm.pojo.GwLeaseGoodsModel;
+import com.crm.pojo.GwMemberGradeModel;
+import com.crm.service.GwMemberGradeDetailService;
+import com.crm.service.GwMemberGradeService;
+import com.crm.util.BaseCodeUtil;
+import com.crm.util.DateUtil;
+
+/**
+ * 
+ * GwMemberGradeController:会员等级设置访问控制层
+ *
+ * @author chengpengfei
+ * @date 2016年5月18日
+ *
+ */
+@Controller
+@RequestMapping("/memberGrade")
+public class GwMemberGradeController {
+
+	/**
+	 * 会员等级积分设置业务逻辑
+	 */
+	@Resource(name = "gwMemberGradeServiceManage")
+	private GwMemberGradeService gwMemberGradeServiceImpl;
+	/**
+	 * 会员等级设置适用范围业务逻辑
+	 */
+	@Resource(name="gwMemberGradeDetailServiceManage")
+	private GwMemberGradeDetailService gwMemberGradeDetailServiceImpl;
+	/**
+	 * 获取会员等级设置数据分页集合
+	 * 
+	 * @author chengpengfei
+	 * @param currentPage
+	 * @param pageSize
+	 * @return
+	 */
+	@RequestMapping("/getMemberGradeByPageList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员等级设置", option = "获取列表")
+	public LigerPageDataVo getMemberGradeByPageList(int currentPage, int pageSize,  String code,
+			String isFovever, String startTime, String endTime) {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("code", code);
+		params.put("isFovever", isFovever);
+		params.put("endTime", endTime);
+		params.put("startTime", startTime);
+		BasePageResultVo baseResultVo = gwMemberGradeServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+
+	
+	public String getMemberGradeCode() {
+		String time = DateUtil.getCurrentDate("");
+		String code = gwMemberGradeServiceImpl.getMemberGradeByLaseOne(time);
+		return code;
+	}
+
+	/**
+	 * 获取所有会员等级
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getAllMemberGrade.do")
+	@ResponseBody
+	public List<GwMemberGradeModel> getAllMemberGrade() {
+		List<GwMemberGradeModel> list = gwMemberGradeServiceImpl.getAllList();
+		return list;
+	}
+
+	/**
+	 * 添加会员等级设置
+	 * 
+	 * @param goods
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/addMemberGrade.do")
+	@ResponseBody
+	public BaseResultVo addMemberGrade(GwMemberGradeModel grade, HttpServletRequest request) {
+		if (grade == null) {
+			return BaseResultVo.responseFail("实体类为空");
+		}
+		boolean flag = grade.isCisForever();
+		if (flag == true) {
+			grade.setIsForever(1);
+		} else {
+			grade.setIsForever(0);
+		}
+		// 创建时间
+		grade.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		grade.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		// 创建人
+		AdminUser adminUser = SecurityUtil.getAdminUser(request);
+		grade.setCreateUserId(adminUser.getUserId());
+		grade.setUpdateUserId(adminUser.getUserId());
+		
+		
+		String oldCode=grade.getCode();
+		String code=getMemberGradeCode();
+		grade.setCode(code);
+
+		Map<String, Object> params=new HashMap<>();
+		params.put("code", code);
+		params.put("oldCode", oldCode);
+		gwMemberGradeDetailServiceImpl.updateByCode(params);
+		// 存入数据
+		int number = gwMemberGradeServiceImpl.insert(grade);
+		if (number < 0) {
+			return BaseResultVo.responseFail("添加失败");
+		}
+		return BaseResultVo.responseSuccess("添加成功");
+	}
+
+	/**
+	 * 根据ID获取物品信息
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/getMemberGradeById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员等级设置", option = "根据ID获取信息")
+	public BaseResultVo getMemberGradeById(int id) {
+		if (id == 0) {
+			return BaseResultVo.responseFail("参数异常");
+		}
+		GwMemberGradeModel grade = gwMemberGradeServiceImpl.selectById(id);
+		if (grade == null) {
+			return BaseResultVo.responseFail("获取信息失败");
+		}
+		BaseResultVo baseResultVo = BaseResultVo.responseSuccess("获取信息成功");
+		baseResultVo.setData(grade);
+		return baseResultVo;
+	}
+
+	/**
+	 * 修改物品信息
+	 * 
+	 * @param goods
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/updateMemberGrade.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员等级设置", option = "修改")
+	public BaseResultVo updateMemberGrade(GwMemberGradeModel grade,HttpServletRequest request) {
+		if (grade == null) {
+			return BaseResultVo.responseFail("实体类为空");
+		}
+		boolean flag = grade.isCisForever();
+		if (flag == true) {
+			grade.setIsForever(1);
+		} else {
+			grade.setIsForever(0);
+		}
+		// 修改时间
+		grade.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		// 修改人
+		AdminUser adminUser = SecurityUtil.getAdminUser(request);
+		grade.setUpdateUserId(adminUser.getUserId());
+		// 修改数据
+		int number = gwMemberGradeServiceImpl.update(grade);
+		if (number < 0) {
+			return BaseResultVo.responseFail("修改失败");
+		}
+		return BaseResultVo.responseSuccess("修改成功");
+	}
+
+	/**
+	 * 删除会员等级设置
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/deleteGoodsById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员等级设置", option = "删除")
+	public BaseResultVo deleteGoodsById(int id) {
+		if (id == 0) {
+			return BaseResultVo.responseFail("参数异常");
+		}
+		int number = gwMemberGradeServiceImpl.deleteById(id);
+		if (number < 0) {
+			return BaseResultVo.responseFail("删除失败");
+		}
+		return BaseResultVo.responseSuccess("删除成功");
+	}
+}

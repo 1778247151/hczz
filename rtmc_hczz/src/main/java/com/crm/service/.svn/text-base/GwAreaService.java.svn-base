@@ -1,0 +1,24 @@
+package com.crm.service;
+
+import java.util.List;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwAreaModel;
+/**
+ * 
+ * GwAreaService:地区业务逻辑层接口
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+public interface GwAreaService extends Services<GwAreaModel>{
+	/**
+	 * 根据父节点ID获取结果集合
+	 * 
+	 * @param pId
+	 * @return
+	 */
+	List<GwAreaModel> getAreaByPid(int pId);
+}

@@ -1,0 +1,55 @@
+package com.crm.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwMemberIntegralDetailDao;
+import com.crm.pojo.GwMemberIntegralDetailModel;
+import com.crm.service.GwMemberIntegralDetailService;
+
+@Service("gwMemberIntegralDetailServiceManage")
+public class GwMemberIntegralDetailServiceImpl
+		extends ServersManager<GwMemberIntegralDetailModel, GwMemberIntegralDetailDao>
+		implements GwMemberIntegralDetailService {
+
+	@Resource(name = "gwMemberIntegralDetailDaoManage")
+	public void setDao(GwMemberIntegralDetailDao dao) {
+		this.dao = dao;
+
+	}
+	
+	@Override
+	public GwMemberIntegralDetailModel getMemberIntegralDetaiById(Integer id) {
+		// TODO Auto-generated method stub
+		return dao.getMemberIntegralDetaiById(id);
+	}
+	@Override
+	public List<GwMemberIntegralDetailModel> getListsApi() {
+		// TODO Auto-generated method stub
+		return dao.getListsApi();
+	}
+
+	@Override
+	public List<GwMemberIntegralDetailModel> getDetailByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getDetailByCondition(params);
+	}
+
+	@Override
+	public List<GwMemberIntegralDetailModel> getExportMemberIntegralDetail(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getExportMemberIntegralDetail(params);
+	}
+
+	@Override
+	public int deleteByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.deleteByCondition(params);
+	}
+	
+}

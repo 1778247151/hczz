@@ -1,0 +1,675 @@
+package com.crm.service.impl;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import com.crm.bean.PromotionIntegralInfo;
+import com.crm.bean.ShopFormatsInfo;
+import com.crm.core.ServersManager;
+import com.crm.dao.GwBaseIntegralDao;
+import com.crm.dao.GwMemberGradeDao;
+import com.crm.dao.GwMemberGradeDetailDao;
+import com.crm.dao.GwMembersDao;
+import com.crm.dao.GwPaymentTenderDao;
+import com.crm.dao.GwPromotionIntegralDao;
+import com.crm.dao.GwSalesPaymenttenderDao;
+import com.crm.dao.GwTranssalestotalDao;
+import com.crm.pojo.GwBaseIntegralModel;
+import com.crm.pojo.GwMemberGradeDetailModel;
+import com.crm.pojo.GwMemberGradeModel;
+import com.crm.pojo.GwMembersModel;
+import com.crm.pojo.GwPromotionIntegralModel;
+import com.crm.pojo.GwSalesModel;
+import com.crm.service.GwPromotionIntegralService;
+import com.crm.util.DateUtil;
+
+/**
+ * 
+ * GwPromotionIntegralServiceImpl:促销积分规则业务逻辑层实现
+ *
+ * @author xiangtao
+ * @date 2016年6月20日
+ * @version jdk1.8
+ *
+ */
+@Service("gwPromotionIntegralServiceManage")
+public class GwPromotionIntegralServiceImpl extends ServersManager<GwPromotionIntegralModel, GwPromotionIntegralDao>
+		implements GwPromotionIntegralService {
+
+	private Logger logger = LoggerFactory.getLogger(GwPromotionIntegralServiceImpl.class);
+
+	@Resource(name = "gwPromotionIntegralDaoManage")
+	@Override
+	public void setDao(GwPromotionIntegralDao gwPromotionIntegralDao) {
+		this.dao = gwPromotionIntegralDao;
+	}
+
+	/**
+	 * 会员基本信息数据访问层实现
+	 */
+	@Resource(name = "gwMembersDaoManage")
+	private GwMembersDao membersDaoImpl;
+	/**
+	 * 销售数据数据访问层实现
+	 */
+	@Resource(name = "transsalestotalDaoManage")
+	private GwTranssalestotalDao transsalestotalDaoImpl;
+
+	/**
+	 * 支付方式是否积分数据访问层
+	 */
+	@Resource(name = "gwPaymentTenderDaoManage")
+	private GwPaymentTenderDao paymentTenderDaoImpl;
+
+	/**
+	 * 基本积分规则信息数据访问层的实现
+	 */
+	@Resource(name = "gwBaseIntegralDaoManage")
+	private GwBaseIntegralDao baseIntegralDaoImpl;
+	/**
+	 * 销售数据计算积分的支付方式访问层实现
+	 */
+	@Resource(name = "salesPaymenttenderDaoManage")
+	private GwSalesPaymenttenderDao salesPaymenttenderDaoImpl;
+	/**
+	 * 会员等级积分规则业务逻辑层的实现
+	 */
+	@Resource(name = "gwMemberGradeDaoManage")
+	private GwMemberGradeDao memberGradeDaoImpl;
+	/**
+	 * 会员等级积分详细规则业务逻辑层的实现
+	 */
+	@Resource(name = "gwMemberGradeDetailDaoManage")
+	private GwMemberGradeDetailDao memberGradeDetailDaoImpl;
+	/**
+	 * 
+	 * getMemberIntegralInfo:根据销售数据信息，获取销售积分信息
+	 *
+	 * @author yumaochun
+	 * @date 2016年7月6日
+	 * @param transsalestotal
+	 *            销售数据信息
+	 * @return 返回：销售对应的积分信息
+	 */
+	public int addMemberIntegralInfo(GwSalesModel salesModel, GwMembersModel membersInfo,
+			ShopFormatsInfo shopFormatsInfo) {
+
+		String vipCode = membersInfo.getVipCode();// 会员编号
+		String gradeCode = membersInfo.getGrade();
+		// 店铺编号
+		String shopCode = salesModel.getShopCode();
+		// 交易日期
+		String saleDate = salesModel.getGwTxdate();
+
+		// 销售总金额
+		BigDecimal saleTotalMoney = salesModel.getGwSalesamount();
+
+		// 促销积分计算,默认为0
+		int theIntegral = 0;
+		// 业态编号
+		String formatsCode = shopFormatsInfo.getFormatsCode();
+		Map<String, Object> params = new HashMap<>();
+		params.put("typeCode", formatsCode);
+		params.put("saleDate", saleDate);
+		params.put("type", "0");
+		params.put("vipCode", vipCode);
+		List<GwMemberGradeDetailModel> memberGradeDetailList= memberGradeDetailDaoImpl.getMemberIntegralDetatilByCondition(params);
+		if(memberGradeDetailList.size()>0){
+			for (GwMemberGradeDetailModel model : memberGradeDetailList) {
+				BigDecimal	exchange_money=model.getExchangeMoney();
+				int integral_number= model.getIntegralNumber();
+				BigDecimal decimal = saleTotalMoney.divideToIntegralValue(exchange_money);
+				int multiple = decimal.setScale(0, RoundingMode.HALF_DOWN).intValue();
+				// 计算积分
+				int integral = new BigDecimal(multiple).multiply(new BigDecimal(integral_number)).intValue();
+				if (integral > theIntegral) {
+					theIntegral = integral;
+				}
+			}
+		}else{
+			List<GwMemberGradeModel> memberGradeList= memberGradeDaoImpl.getMemberGradeIntegralByCondition(params);
+			if(memberGradeList.size()>0){
+				for (GwMemberGradeModel model : memberGradeList) {
+					BigDecimal	exchange_money=model.getExchangeMoney();
+					int integral_number= model.getExchageIntegral();
+					BigDecimal decimal = saleTotalMoney.divideToIntegralValue(exchange_money);
+					int multiple = decimal.setScale(0, RoundingMode.HALF_DOWN).intValue();
+					// 计算积分
+					int integral = new BigDecimal(multiple).multiply(new BigDecimal(integral_number)).intValue();
+					if (integral > theIntegral) {
+						theIntegral = integral;
+					}
+				}
+			}
+		}
+//		// 根据业态和销售时间,获取促销积分规则集合
+//		List<PromotionIntegralInfo> formatsPromotionList = dao.getPromotionIntegralBy(params);
+//		// 根据业态编号或店铺编号和销售时间，会员等级编号，会员编号，会员等级详细的业态或店铺编号，获取促销积分规则和会员等级详细积分规则集合
+//		List<PromotionIntegralInfo> formatsPromotionDetatilList = dao.getMemberDetatilPromotionIntegralBy(params);
+//		// 获取连接会员等级详细表查询数据集合中的对象
+//		PromotionIntegralInfo formatsPromotionDetatil = null;
+//		if (formatsPromotionDetatilList.size() > 0) {
+//			formatsPromotionDetatil = formatsPromotionDetatilList.get(0);
+//		}
+//		for (PromotionIntegralInfo formatsPromotion : formatsPromotionList) {
+//			boolean promotion_flag = isExistCondition(membersInfo, formatsPromotion, saleDate);
+//			if (promotion_flag) {
+//				// 满足促销积分规则计算
+//				int integral = getPromotionIntegral(formatsPromotion, saleTotalMoney, formatsPromotionDetatil);
+//				if (integral > theIntegral) {
+//					theIntegral = integral;
+//				}
+//			} else {
+//				// 不满足促销积分规则
+//			}
+//
+//		}
+		// 根据店铺获取抽成规则集合
+		Map<String, Object> paramsShop = new HashMap<>();
+		String shopLeaseCode = shopFormatsInfo.getShopCode();
+		paramsShop.put("typeCode", shopLeaseCode);
+		paramsShop.put("saleDate", saleDate);
+		paramsShop.put("type", "1");
+		paramsShop.put("vipCode", vipCode);
+		List<GwMemberGradeDetailModel> memberGradeDetailShopList= memberGradeDetailDaoImpl.getMemberIntegralDetatilByCondition(paramsShop);
+		if(memberGradeDetailShopList.size()>0){
+			for (GwMemberGradeDetailModel model : memberGradeDetailShopList) {
+				BigDecimal	exchange_money=model.getExchangeMoney();
+				int integral_number= model.getIntegralNumber();
+				
+				BigDecimal decimal = saleTotalMoney.divideToIntegralValue(exchange_money);
+				int multiple = decimal.setScale(0, RoundingMode.HALF_DOWN).intValue();
+				// 计算积分
+				int integral = new BigDecimal(multiple).multiply(new BigDecimal(integral_number)).intValue();
+				if (integral > theIntegral) {
+					theIntegral = integral;
+				}
+			}
+		}else{
+			List<GwMemberGradeModel> memberGradeShopList= memberGradeDaoImpl.getMemberGradeIntegralByCondition(paramsShop);
+			if(memberGradeShopList.size()>0){
+				for (GwMemberGradeModel model : memberGradeShopList) {
+					BigDecimal	exchange_money=model.getExchangeMoney();
+					int integral_number= model.getExchageIntegral();
+					BigDecimal decimal = saleTotalMoney.divideToIntegralValue(exchange_money);
+					// 销售金额倍数
+					int multiple = decimal.setScale(0, RoundingMode.HALF_DOWN).intValue();
+					// 计算积分
+					int integral = new BigDecimal(multiple).multiply(new BigDecimal(integral_number)).intValue();
+					if (integral > theIntegral) {
+						theIntegral = integral;
+					}
+				}
+			}
+		}
+//		// 根据店铺和销售时间,获取促销积分规则集合
+//		List<PromotionIntegralInfo> promotionIntegralInfoList = dao.getPromotionIntegralBy(paramsShop);
+//		// 根据业态编号或店铺编号和销售时间，会员等级编号，会员编号，会员等级详细的业态或店铺编号，获取促销积分规则和会员等级详细积分规则信息
+//		List<PromotionIntegralInfo> promotionIntegralInfoDetatilList = dao
+//				.getMemberDetatilPromotionIntegralBy(paramsShop);
+//		// 获取连接会员等级详细表查询数据集合中的对象
+//		PromotionIntegralInfo promotionIntegralInfoDetatil = null;
+//		if (promotionIntegralInfoDetatilList.size() > 0) {
+//			promotionIntegralInfoDetatil = promotionIntegralInfoDetatilList.get(0);
+//		}
+//		for (PromotionIntegralInfo promotionIntegralInfo : promotionIntegralInfoList) {
+//			// 会员是否满足促销积分规则
+//			boolean promotion_flag1 = false;
+//			if (promotionIntegralInfo != null) {
+//				promotion_flag1 = isExistCondition(membersInfo, promotionIntegralInfo, saleDate);
+//			}
+//			if (promotion_flag1) {
+//				// 满足促销积分规则计算（计算促销积分值）
+//				int integral = getPromotionIntegral(promotionIntegralInfo, saleTotalMoney,
+//						promotionIntegralInfoDetatil);
+//				if (integral > theIntegral) {
+//					theIntegral = integral;
+//				}
+//			} else {
+//				// 不满足促销积分规则
+//			}
+//		}
+//		// 计算销售对应的基础积分
+//		int baseIntegralNumber = getBaseIntegralNumber(gradeCode, shopCode, saleTotalMoney);
+//		// 基础积分大于销售积分，则本次销售积分以最大的值为准
+//		if (baseIntegralNumber > theIntegral) {
+//			theIntegral = baseIntegralNumber;
+//		}
+		return theIntegral;
+	}
+
+	/**
+	 * 
+	 * getBaseIntegralNumber:计算销售的积分数
+	 *
+	 * @author yumaochun
+	 * @date 2016年7月12日
+	 * @param membersCode
+	 *            会员编号
+	 * @param shopCode
+	 *            店铺编号
+	 * @param saleTotalMoney
+	 *            本次销售金额
+	 * @return 返回：本次销售的基础积分分数
+	 */
+	public int getBaseIntegralNumber(String gradeCode, String shopCode, BigDecimal saleTotalMoney) {
+		Map<String, Object> paramsMap = new HashMap<>();
+		paramsMap.put("memberGradeCode", gradeCode);// 会员等级编号
+		paramsMap.put("shopCode", shopCode);// 店铺编号
+		// 默认基础积分值
+		int baseIntegralNumber = 0;
+		// 根据会员编号和店铺编号，获取基础积分规则信息
+		GwBaseIntegralModel baseIntegral = baseIntegralDaoImpl.getBaseIntegralByGradeCodeAndShopCode(paramsMap);
+
+		if (baseIntegral != null) {
+			// 最低金额
+			BigDecimal lowest_money = baseIntegral.getLowestMoney() == null ? new BigDecimal(0)
+					: baseIntegral.getLowestMoney();
+			// 如果销售金额大于等于最低消费金额，则进行相应的基础积分规则计算
+			if (saleTotalMoney.compareTo(lowest_money) >= 0) {
+				// 兑换积分需要的金额值
+				BigDecimal saleMoney = baseIntegral.getSaleMoney();
+				BigDecimal decimal = saleTotalMoney.divideToIntegralValue(saleMoney);
+				// 销售金额倍数
+				int multiple = decimal.setScale(0, RoundingMode.HALF_DOWN).intValue();
+				// 积分数
+				int integral_number = baseIntegral.getIntegralNumber();
+				// 本次销售的基础积分
+				baseIntegralNumber = integral_number * multiple;
+			}
+		}
+		return baseIntegralNumber;
+
+	}
+
+	/**
+	 * 
+	 * getPromotionIntegral:计算本次销售的积分数（促销积分计算）
+	 *
+	 * @author yumaochun
+	 * @date 2016年7月8日
+	 * @param promotionIntegralInfo
+	 *            促销规则信息
+	 * @param saleMoney
+	 *            销售总金额
+	 * @return 返回：本次销售的积分数
+	 */
+	public int getPromotionIntegral(PromotionIntegralInfo promotionIntegralInfo, BigDecimal saleMoney,
+			PromotionIntegralInfo promotionIntegralInfo1) {
+		// 促销积分
+		int promotionIntegral = 0;
+		// 模式（0-多倍积分，1-全新模式，2-固定积分）
+		int model = promotionIntegralInfo.getModel();
+		// 多倍积分
+		if (model == 0) {
+			// 积分倍数
+			int number = 1;
+			if (promotionIntegralInfo.getNumber() != null) {
+				number = promotionIntegralInfo.getNumber();
+			}
+			// 多少销售金额可以兑换
+			BigDecimal exchange_money = new BigDecimal(1);
+			// 金额可以兑换的积分数
+			int integral_number = 1;
+			if (promotionIntegralInfo1 != null) {
+				if (promotionIntegralInfo1.getDetatiExchangeMoney() != null) {
+					exchange_money = promotionIntegralInfo1.getDetatiExchangeMoney();
+				}
+				if (promotionIntegralInfo1.getDetatilIntegralNumber() != null) {
+					integral_number = promotionIntegralInfo1.getDetatilIntegralNumber();
+				}
+			} else {
+				if (promotionIntegralInfo.getMemberExchangeMoney() != null) {
+					exchange_money = promotionIntegralInfo.getMemberExchangeMoney();
+				}
+				if (promotionIntegralInfo.getMemberIntegralNumber() != null) {
+					integral_number = promotionIntegralInfo.getMemberIntegralNumber();
+				}
+			}
+			BigDecimal decimal = saleMoney.divideToIntegralValue(exchange_money);
+			// 销售金额倍数
+			int multiple = decimal.setScale(0, RoundingMode.HALF_DOWN).intValue();
+			// 计算积分
+			promotionIntegral = new BigDecimal(number * multiple).multiply(new BigDecimal(integral_number)).intValue();
+		}
+		// 全新模式
+		else if (model == 1) {
+			// 多少销售金额可以兑换
+			BigDecimal exchange_money = new BigDecimal(1);
+			if (promotionIntegralInfo.getExchangeMoney() != null) {
+				exchange_money = promotionIntegralInfo.getExchangeMoney();
+			}
+			// 金额可以兑换的积分数
+			int integral_number = 0;
+			if (promotionIntegralInfo.getIntegralNumber() != null) {
+				integral_number = promotionIntegralInfo.getIntegralNumber();
+			}
+			BigDecimal decimal = saleMoney.divideToIntegralValue(exchange_money);
+			// 销售金额倍数
+			int multiple = decimal.setScale(0, RoundingMode.HALF_DOWN).intValue();
+			// 计算积分
+			promotionIntegral = new BigDecimal(multiple).multiply(new BigDecimal(integral_number)).intValue();
+		}
+		// 固定积分
+		else if (model == 2) {
+			// 固定的加分数
+			int addNumber = 0;
+			if (promotionIntegralInfo.getNumber() != null) {
+				addNumber = promotionIntegralInfo.getNumber();
+			}
+			// 多少销售金额可以兑换
+			BigDecimal exchange_money = new BigDecimal(1);
+			// 金额可以兑换的积分数
+			int integral_number = 0;
+			if (promotionIntegralInfo1 != null) {
+				if (promotionIntegralInfo1.getDetatiExchangeMoney() != null) {
+					exchange_money = promotionIntegralInfo1.getDetatiExchangeMoney();
+				}
+				if (promotionIntegralInfo1.getDetatilIntegralNumber() != null) {
+					integral_number = promotionIntegralInfo1.getDetatilIntegralNumber();
+				}
+			} else {
+				if (promotionIntegralInfo.getMemberExchangeMoney() != null) {
+					exchange_money = promotionIntegralInfo.getMemberExchangeMoney();
+				}
+				if (promotionIntegralInfo.getMemberIntegralNumber() != null) {
+					integral_number = promotionIntegralInfo.getMemberIntegralNumber();
+				}
+			}
+			BigDecimal decimal = saleMoney.divideToIntegralValue(exchange_money);
+			// 销售金额倍数
+			int multiple = decimal.setScale(0, RoundingMode.HALF_DOWN).intValue();
+			// 计算积分
+			promotionIntegral = new BigDecimal(multiple).multiply(new BigDecimal(integral_number)).intValue();
+
+			promotionIntegral = new BigDecimal(promotionIntegral).add(new BigDecimal(addNumber)).intValue();
+		}
+		return promotionIntegral;
+	}
+
+	/**
+	 * 
+	 * isExistCondition:判断销售数据及会员信息是否满足促销积分规则
+	 *
+	 * @author yumaochun
+	 * @date 2016年7月8日
+	 * @param members
+	 *            会员基本信息
+	 * @param promotionIntegralInfo
+	 *            促销积分信息
+	 * @param saleDate
+	 *            销售日期
+	 * @return 返回：true-满足消费积分规则，false-不满足消费积分规则
+	 */
+	public boolean isExistCondition(GwMembersModel members, PromotionIntegralInfo promotionIntegralInfo,
+			String saleDate) {
+		boolean flag = false;
+		// 条件类型（0-只满足其中一种类型即可生效，1-必须满足所有勾选条件才能生效）
+		int type = promotionIntegralInfo.getType();
+		String conditionGroup = promotionIntegralInfo.getConditionGroup();
+		if (conditionGroup == null || "".equals(conditionGroup)) {
+			return flag;
+		}
+		if (conditionGroup.length() == 0) {
+			return flag;
+		}
+		// 销售月份
+		int saleMonth = DateUtil.getMonthValueByDateStr(saleDate);
+		// 生日月份
+		int birthMonth = DateUtil.getMonthValueByDateStr(members.getBirthTime());
+
+		// 销售号数
+		int saleDay = DateUtil.getDayValueByDateStr(saleDate);
+		// 生日号数
+		int birthDay = DateUtil.getDayValueByDateStr(members.getBirthTime());
+
+		// 销售星期几
+		int saleWeek = DateUtil.getMonthValueByDateStr(saleDate);
+
+		// 条件组合数组
+		String[] conditionGroupArr = conditionGroup.split(",");
+		// 只满足一个条件即可
+		if (type == 0) {
+			for (String conditionVal : conditionGroupArr) {
+				// 会员等级
+				if (conditionVal.equals("01")) {
+					// 会员等级条件
+					String memberGrade = promotionIntegralInfo.getMemberGrade();
+					if (memberGrade.length() != 0) {
+						String[] membersGradeArr = memberGrade.split(";");
+						// 判断会员等级是否存在
+						flag = isExistArr(membersGradeArr, members.getGrade() + "");
+						if (flag) {
+							return flag;
+						}
+					}
+				}
+				// 卡号段
+				else if (conditionVal.equals("02")) {
+					// 起始卡号
+					String startCardCode = promotionIntegralInfo.getStartCardCode();
+					// 结束卡号
+					String endCardCode = promotionIntegralInfo.getEndCardCode();
+					// 会员卡号
+					String memberCardCode = members.getCardCode();
+					if (memberCardCode.compareTo(startCardCode) >= 0 && memberCardCode.compareTo(endCardCode) <= 0) {
+						return true;
+					}
+				}
+				// 性别（0-women 女，1-man 男）
+				else if (conditionVal.equals("03")) {
+					int sex = members.getSex();// 性别
+					int promotionSex = promotionIntegralInfo.getSex();// 促销性别
+					if (sex == promotionSex) {
+						return true;
+					}
+				}
+				// 生日当天
+				else if (conditionVal.equals("04")) {
+					if (saleDay == birthDay) {
+						return true;
+					}
+				}
+				// 生日当月
+				else if (conditionVal.equals("05")) {
+					if (saleMonth == birthMonth) {
+						return true;
+					}
+				}
+				// 每周
+				else if (conditionVal.equals("06")) {
+					// 促销星期几 每周，周一到星期天（0,1,2,3）
+					String weekStr = promotionIntegralInfo.getWeek();
+					if (weekStr.length() > 0) {
+						String[] weekArr = weekStr.split(";");
+						flag = isExistArr(weekArr, saleWeek + "");
+						if (flag) {
+							return flag;
+						}
+					}
+				}
+				// 每月
+				else if (conditionVal.equals("07")) {
+					// 促销号数 每月，1号到31号（1,2,3）
+					String daysStr = promotionIntegralInfo.getMonth();
+					if (daysStr.length() > 0) {
+						String[] dayArr = daysStr.split(";");
+						flag = isExistArr(dayArr, saleWeek + "");
+						if (flag) {
+							return flag;
+						}
+					}
+				}
+			}
+		}
+		// 必须满足所有条件
+		if (type == 1) {
+			// true-默认设置为满足所有条件，当任一条件不满足时，返回false
+			flag = true;
+			for (String conditionVal : conditionGroupArr) {
+				// 会员等级
+				if (conditionVal.equals("01")) {
+					// 会员等级条件
+					String memberGrade = promotionIntegralInfo.getMemberGrade();
+					if (memberGrade.length() != 0) {
+						String[] membersGradeArr = memberGrade.split(";");
+						// 判断会员等级是否存在
+						flag = isExistArr(membersGradeArr, members.getGrade() + "");
+						if (!flag) {
+							return flag;
+						}
+					}
+				}
+				// 卡号段
+				else if (conditionVal.equals("02")) {
+					// 起始卡号
+					String startCardCode = promotionIntegralInfo.getStartCardCode();
+					// 结束卡号
+					String endCardCode = promotionIntegralInfo.getEndCardCode();
+					// 会员卡号
+					String memberCardCode = members.getCardCode();
+					if (memberCardCode.compareTo(startCardCode) >= 0 && memberCardCode.compareTo(endCardCode) <= 0) {
+						flag = true;
+					} else {
+						return false;
+					}
+				}
+				// 性别（0-women 女，1-man 男）
+				else if (conditionVal.equals("03")) {
+					int sex = members.getSex();// 性别
+					int promotionSex = promotionIntegralInfo.getSex();// 促销性别
+					if (sex == promotionSex) {
+						flag = true;
+					} else {
+						return false;
+					}
+				}
+				// 生日当天
+				else if (conditionVal.equals("04")) {
+					if (saleDay == birthDay) {
+						flag = true;
+					} else {
+						return false;
+					}
+				}
+				// 生日当月
+				else if (conditionVal.equals("05")) {
+					if (saleMonth == birthMonth) {
+						flag = true;
+					} else {
+						return false;
+					}
+				}
+				// 每周
+				else if (conditionVal.equals("06")) {
+					// 促销星期几 每周，周一到星期天（0,1,2,3）
+					String weekStr = promotionIntegralInfo.getWeek();
+					if (weekStr.length() > 0) {
+						String[] weekArr = weekStr.split(";");
+						flag = isExistArr(weekArr, saleWeek + "");
+						if (!flag) {
+							return flag;
+						}
+					}
+				}
+				// 每月
+				else if (conditionVal.equals("07")) {
+					// 促销号数 每月，1号到31号（1,2,3）
+					String daysStr = promotionIntegralInfo.getMonth();
+					if (daysStr.length() > 0) {
+						String[] dayArr = daysStr.split(";");
+						flag = isExistArr(dayArr, saleWeek + "");
+						if (!flag) {
+							return flag;
+						}
+					}
+				}
+			}
+		}
+
+		return flag;
+	}
+
+	/**
+	 * 
+	 * isExistArr:指定值是否存在于数组中
+	 *
+	 * @author yumaochun
+	 * @date 2016年7月7日
+	 * @param array
+	 *            数组
+	 * @param value
+	 *            要判断的值
+	 * @return 返回：true-存在，false-不存在
+	 */
+	public boolean isExistArr(String[] array, String value) {
+		boolean flag = false;
+		for (String attr : array) {
+			if (attr.equals(value)) {
+				return true;
+			}
+		}
+		return flag;
+	}
+
+	public boolean checkConditionExist(String[] conditionGroupArr, GwMembersModel members,
+			PromotionIntegralInfo promotionIntegralInfo) {
+		boolean flag = false;
+
+		return flag;
+	}
+
+	/**
+	 * 
+	 * saleTimeIsBirthTime:判断销售日期是否是会员的生日日期
+	 *
+	 * @author yumaochun
+	 * @date 2016年7月7日
+	 * @param birthTime
+	 *            生日日期
+	 * @param saleTime
+	 *            销售日期
+	 * @return 返回：true-是，false-不是
+	 */
+	public boolean saleTimeIsBirthTime(String birthTime, String saleTime) {
+		boolean flag = false;
+
+		if (birthTime.equals(saleTime)) {
+			// 销售日期是会员的生日日期
+			flag = true;
+		}
+		return flag;
+	}
+
+	/**
+	 * 根据code获取活动规则对象
+	 * 
+	 * @param code
+	 * @return
+	 */
+	@Override
+	public GwPromotionIntegralModel selectByCode(String code) {
+		return dao.selectByCode(code);
+	}
+
+	/**
+	 * 查询最后一条数据根据时间返回对象
+	 * 
+	 * @param time
+	 * @return
+	 */
+	@Override
+	public GwPromotionIntegralModel getPromotionIntegralByLastOne(String time) {
+		return dao.getPromotionIntegralByLastOne(time);
+	}
+
+}

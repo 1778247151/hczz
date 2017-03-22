@@ -1,0 +1,101 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwLoseMaintenanceDao;
+import com.crm.pojo.GwLoseMaintenanceModel;
+
+/**
+ * 
+ * GwLoseMaintenanceDaoImpl:报失维护数据访问层实现
+ *
+ * @author chengpengfei
+ * @date  2016年6月23日
+ * @version  jdk1.8
+ *
+ */
+@Repository("gwLoseMaintenanceDaoManage")
+public class GwLoseMaintenanceDaoImpl implements GwLoseMaintenanceDao{
+
+	@Resource
+	private BaseDao dao;
+	@Override
+	public int insert(GwLoseMaintenanceModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.loseMaintenance.insertSelective",e);
+	}
+
+	@Override
+	public int delete(GwLoseMaintenanceModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwLoseMaintenanceModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.loseMaintenance.updateByPrimaryKeySelective",e);
+	}
+
+	@Override
+	public GwLoseMaintenanceModel selectOne(GwLoseMaintenanceModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwLoseMaintenanceModel> selectList(GwLoseMaintenanceModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.loseMaintenance.deleteByPrimaryKey",id);
+	}
+
+	@Override
+	public GwLoseMaintenanceModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwLoseMaintenanceModel) dao.selectOne("gw.loseMaintenance.selectByPrimaryKey",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.loseMaintenance.selectByPageList", "gw.loseMaintenance.selectByPageCount", params);
+	}
+
+	@Override
+	public List<GwLoseMaintenanceModel> getAllList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int updateLoseMaintenanceByCode(Map<String,Object> params) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.loseMaintenance.updateByCode",params);
+	}
+
+	@Override
+	public GwLoseMaintenanceModel getLoseMaintenanceByLastOne(String time) {
+		// TODO Auto-generated method stub
+		return (GwLoseMaintenanceModel) dao.selectOne("gw.loseMaintenance.selectByLastOne",time);
+	}
+	
+}

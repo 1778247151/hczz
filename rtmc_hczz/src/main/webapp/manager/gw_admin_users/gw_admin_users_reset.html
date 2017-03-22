@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>#</title>
+<link href="/js/ligerui/lib/ligerUI/skins/Aqua/css/ligerui-all.css"rel="stylesheet" type="text/css" />
+<script src="/js/ligerui/lib/jquery/jquery-1.9.0.min.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/core/base.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerGrid.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerForm.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerTree.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerDateEditor.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerComboBox.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerCheckBox.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerButton.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerDialog.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerRadio.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerSpinner.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerTextBox.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerTip.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerResizable.js"type="text/javascript"></script>
+<script type="text/javascript" src="/js/action/sys.common.js"></script>
+<script type="text/javascript" src="/js/common.js"></script>
+<link type="text/css" rel="stylesheet" href="/css/base.css" />
+<script type="text/javascript" src="/js/manage/gw.admin.users.reset.js"></script>
+<style type="text/css">
+
+</style>
+
+</head>
+<body style="background:#fff;">
+      <div class="rbConAllInfo">
+           <table border="0" align="center" cellpadding="0" cellspacing="0" width="99%" style="border:solid 1px #BFD8E0;">
+            
+           </table>
+      </div>
+      <div style="border:1px solid #cccccc;height:160px;width:600px;margin-left:6px">
+      <form id="form2" style="margin-top:24px;margin-left:-70px">
+     	
+    </form>
+    </div>
+      <div class="btn" style="margin-left:250px;margin-top:-50px">
+           <a class="search" href="javascript:getUserByCondition()">搜索</a>
+     </div>
+<script>
+var form;
+$(function ()
+        {      	
+            //创建表单结构 
+            form = $("#form2").ligerForm({
+                inputWidth: 150, labelWidth:150, space: 0,labelAlign:'right',
+                fields: [	
+				{ display: "登录账号", name: "username", newline: false, type: "text" },
+				{ display: "用户姓名", name: "name", newline: false, type: "text" },
+				{ display: "身份证号", name: "sfz", newline: false, type: "text" },
+				]
+            }); 
+            
+        });
+ 		
+</script>
+</body>
+</html>

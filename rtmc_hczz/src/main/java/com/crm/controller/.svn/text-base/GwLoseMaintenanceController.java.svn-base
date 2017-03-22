@@ -1,0 +1,185 @@
+package com.crm.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.AdminUser;
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.SecurityUtil;
+import com.crm.interceptor.BussAnnotation;
+import com.crm.pojo.GwLoseMaintenanceModel;
+import com.crm.pojo.GwPickupMaintenanceModel;
+import com.crm.service.GwLoseMaintenanceService;
+import com.crm.util.BaseCodeUtil;
+import com.crm.util.DateUtil;
+
+/**
+ * 
+ * GwLoseMaintenanceController:报失维护控制层
+ *
+ * @author chengpengfei
+ * @date 2016年6月23日
+ * @version jdk1.8
+ *
+ */
+@Controller
+@RequestMapping("loseMaintenance")
+public class GwLoseMaintenanceController {
+	
+	/**
+	 * 报失维护业务逻辑 
+	 */
+	@Resource(name="gwLoseMaintenanceServiceManage")
+	private GwLoseMaintenanceService gwLoseMaintenanceServiceImpl;
+	
+	/**
+	 * 获取报失维护数据分页集合
+	 * @author chengpengfei
+	 * @param  currentPage
+	 * @param  pageSize
+	 * @return
+	 */
+	@RequestMapping("/getLostMaintenanceByPageList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="报失维护",option="获取列表")
+	public LigerPageDataVo getLostMaintenanceByPageList(int currentPage,int pageSize,String status,String code,String name){
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("code", code);
+		params.put("status", status);
+		params.put("name", name);
+		BasePageResultVo baseResultVo=gwLoseMaintenanceServiceImpl.selectPageList(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	
+	public String getLoseMaintenanceCode() {
+		//获取编号前缀
+		String frontCode = BaseCodeUtil.getBaseCode("BS");
+		//获取当天时间
+		String time = DateUtil.getCurrentDate("");
+		String code = "";
+		//根据当天时间查询最后一条记录
+		GwLoseMaintenanceModel loseMaintenanceModel = gwLoseMaintenanceServiceImpl.getLoseMaintenanceByLastOne(time);
+		if(loseMaintenanceModel==null){
+			code = frontCode+"0001";
+		}else{
+			String subString = loseMaintenanceModel.getCode().substring(2);
+			long num = Long.parseLong(subString)+1;
+			code = "BS"+String.valueOf(num);
+		}
+		return code;
+	}
+	
+	/**
+	 * 添加报失维护信息
+	 * @param loseMaintenance
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/addLostMaintenance.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="报失维护",option="添加")
+	public BaseResultVo addLostMaintenance(GwLoseMaintenanceModel loseMaintenance,HttpServletRequest request){
+		if(loseMaintenance==null){
+			return BaseResultVo.responseFail("实体类为空");
+		}
+		//创建时间
+		loseMaintenance.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		//创建人
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		//修改时间
+		loseMaintenance.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		//修改人
+		loseMaintenance.setUpdateUserId(adminUser.getUserId());
+		loseMaintenance.setCreateUserId(adminUser.getUserId());
+		String code=getLoseMaintenanceCode();
+		loseMaintenance.setCode(code);
+		int number = gwLoseMaintenanceServiceImpl.insert(loseMaintenance);
+		if(number<0){
+			return BaseResultVo.responseFail("添加失败");
+		}
+		return BaseResultVo.responseSuccess("添加成功");
+	}
+	
+	
+	/**
+	 * 根据ID获取报失维护信息
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/getLostMaintenanceById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="报失维护",option="根据ID获取信息")
+	public BaseResultVo getLostMaintenanceById(int id){
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		GwLoseMaintenanceModel loseMaintenance = gwLoseMaintenanceServiceImpl.selectById(id);
+		if(loseMaintenance==null){
+			return BaseResultVo.responseFail("获取信息失败");
+		}
+		BaseResultVo baseResultVo = BaseResultVo.responseSuccess("获取信息成功");
+		baseResultVo.setData(loseMaintenance);
+		return baseResultVo;
+	}
+	
+	/**
+	 * 修改报失维护信息
+	 * @param loseMaintenance
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/updateLostMaintenance.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="报失维护",option="修改")
+	public BaseResultVo updateLostMaintenance(GwLoseMaintenanceModel loseMaintenance,HttpServletRequest request){
+		if(loseMaintenance==null){
+			return BaseResultVo.responseFail("实体类为空");
+		}
+		//修改时间
+		loseMaintenance.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		//修改人
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		loseMaintenance.setUpdateUserId(adminUser.getUserId());
+		int number = gwLoseMaintenanceServiceImpl.update(loseMaintenance);
+		if(number<0){
+			return BaseResultVo.responseFail("修改失败");
+		}
+		return BaseResultVo.responseSuccess("修改成功");
+	}
+	
+	/**
+	 * 删除报失维护信息(只能删除未领取的,真删除)
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/deleteLoseMaintenance.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="报失维护",option="删除")
+	public BaseResultVo deleteLoseMaintenance(int id){
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		int number = gwLoseMaintenanceServiceImpl.deleteById(id);
+		if(number<0){
+			return BaseResultVo.responseFail("删除失败");
+		}
+		return BaseResultVo.responseSuccess("删除成功");
+	}
+}

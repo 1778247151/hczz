@@ -1,0 +1,140 @@
+package com.crm.service.impl;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwIntegralExchangeGoodsDao;
+import com.crm.pojo.GwIntegralExchangeGoodsModel;
+import com.crm.service.GwIntegralExchangeGoodsService;
+import com.crm.util.DateUtil;
+
+/**
+ * 
+ * GwIntegralExchangeGoodsServiceImpl:积分兑换礼品业务逻辑层实现
+ *
+ * @author chengpengfei
+ * @date  2016年7月04日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwIntegralExchangeGoodsServiceManage")
+public class GwIntegralExchangeGoodsServiceImpl extends ServersManager<GwIntegralExchangeGoodsModel, GwIntegralExchangeGoodsDao> implements GwIntegralExchangeGoodsService{
+
+	@Resource(name="gwIntegralExchangeGoodsDaoManage")
+	@Override
+	public void setDao(GwIntegralExchangeGoodsDao dao) {
+		// TODO Auto-generated method stub
+		this.dao = dao;
+	}
+
+	@Override
+	public int updateIntegralExchangeGoodsById(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.updateIntegralExchangeGoodsById(params);
+	}
+	
+	@Transactional(rollbackFor=Exception.class)
+	@Override
+	public boolean timingCheckActivityStatus() {
+		boolean flag = true;
+		// TODO Auto-generated method stub
+		//获取当天的时间
+		long toDay = DateUtil.convertToDate(DateUtil.getCurrentDate("-"));
+		//查询活动待开始和启用状态集合
+		Map<String,Object> params = new HashMap<>();
+		params.put("oneStatus", 1);
+		params.put("twoStatus", 2);
+		List<GwIntegralExchangeGoodsModel> getStartStatusList = dao.getAllListByCondition(params);
+		for(GwIntegralExchangeGoodsModel integral : getStartStatusList){
+			//开始时间
+			long startTime = DateUtil.convertToDate(integral.getStartTime());
+			if(toDay>=startTime){
+				Map<String,Object> map = new HashMap<>();
+				map.put("id", integral.getId());
+				map.put("startStatus", 3);
+				//修改为活动已开始状态
+				int number = dao.updateIntegralExchangeGoodsById(map);
+				if(number<0){
+					flag = false;
+				}
+			}
+		}
+		//查询活动进行中状态的集合
+		Map<String,Object> activityIng = new HashMap<>();
+		activityIng.put("status", 3);
+		List<GwIntegralExchangeGoodsModel> getActiviIngList = dao.getAllListByCondition(activityIng);
+		for(GwIntegralExchangeGoodsModel integral : getActiviIngList){
+			//结束时间
+			long endTime = DateUtil.convertToDate(integral.getEndTime());
+			if(toDay>=endTime){
+				Map<String,Object> map = new HashMap<>();
+				map.put("stopStatus", 4);
+				map.put("id", integral.getId());
+				//修改为活动结束的状态
+				int number = dao.updateIntegralExchangeGoodsById(map);
+				if(number<0){
+					flag = false;
+				}
+			}
+		}
+		Date date = new Date();
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.DAY_OF_MONTH, -2);
+		date = calendar.getTime();
+		//将日期转换成时间戳
+		long twoDaysAgo = DateUtil.convertToDate(DateUtil.format(date));
+		//查询启用状态的集合
+		Map<String,Object> params1 = new HashMap<>();
+		params1.put("status", 1);
+		List<GwIntegralExchangeGoodsModel> oneStatusList = dao.getAllListByCondition(params1);
+		for(GwIntegralExchangeGoodsModel integral : oneStatusList){
+			//开始时间
+			long startTime = DateUtil.convertToDate(integral.getStartTime());
+			if(twoDaysAgo<=startTime){
+				//修改为活动待开始状态
+				Map<String,Object> map = new HashMap<>();
+				map.put("startStatus", 2);
+				map.put("id", integral.getId());
+				int number = dao.updateIntegralExchangeGoodsById(map);
+				if(number<0){
+					flag = false;
+				}
+			}
+		}
+		return flag;
+	}
+
+	/**
+	 * 根据时间获取最后一条数据
+	 * 
+	 * @param time
+	 * @return
+	 */
+	@Override
+	public GwIntegralExchangeGoodsModel selectByLastOne(String time){
+		return dao.selectByLastOne(time);
+	}
+
+	@Override
+	public GwIntegralExchangeGoodsModel selectExchangeNumberByGroupGoodsCode(String goodsCode) {
+		// TODO Auto-generated method stub
+		return dao.selectExchangeNumberByGroupGoodsCode(goodsCode);
+	}
+
+	@Override
+	public List<GwIntegralExchangeGoodsModel> getAllListByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getAllListByCondition(params);
+	}
+
+}

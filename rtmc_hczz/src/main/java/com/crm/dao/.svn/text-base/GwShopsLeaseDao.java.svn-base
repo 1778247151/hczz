@@ -1,0 +1,71 @@
+package com.crm.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.bean.ShopFormatsInfo;
+import com.crm.common.BasePageResultVo;
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwShopsLeaseModel;
+
+/**
+ * 
+ * GwShopsLeaseDao:店铺管理数据访问层接口
+ *
+ * @author chengpengfei
+ * @date  2016年5月16日
+ * @version  jdk1.8
+ *
+ */
+public interface GwShopsLeaseDao extends DaoManager<GwShopsLeaseModel>{
+	
+	/**
+	 * 清空店铺表
+	 * @return
+	 */
+	public int deleteAll();
+	
+	
+	/**
+	 * 批量插入店铺数据
+	 * @param list
+	 * @return
+	 */
+	public int batchInsertShopsLease(List<GwShopsLeaseModel> list);
+	
+	/**
+	 * 根据编号获取店铺信息
+	 * @param code   店铺编号
+	 * @return
+	 */
+	public GwShopsLeaseModel getShopsLeaseByCode(String code);
+	
+	/**
+	 * 获取已经审核的店铺集合
+	 * @param params
+	 * @return
+	 */
+	public BasePageResultVo getShopsLeaseListByCoufirm(Map<String,Object> params);
+	/**
+	 * 批量更新店铺数据
+	 * @param list
+	 * @return
+	 */
+	public int batchUpdateShopsLease(List<GwShopsLeaseModel> list);
+	/**
+	 * 批量删除店铺数据
+	 * @param list
+	 * @return
+	 */
+	public int batchDeleteByCode(List<GwShopsLeaseModel> list);
+	/**
+     * 
+     * getShopformatsInfoByShopCode:根据店铺编号，获取业态等相关信息
+     *
+     * @author yumaochun
+     * @date 2016年7月6日
+     * @param paramMap      参数信息
+     * @return
+     */
+    public ShopFormatsInfo getShopformatsInfoByShopCode(Map<String,Object> paramMap); 
+}

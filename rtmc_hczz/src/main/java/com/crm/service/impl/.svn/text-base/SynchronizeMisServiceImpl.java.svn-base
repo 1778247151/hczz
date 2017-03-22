@@ -1,0 +1,2013 @@
+package com.crm.service.impl;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.http.client.ClientProtocolException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
+import com.crm.dao.GwAdminUsersDao;
+import com.crm.dao.GwAresDao;
+import com.crm.dao.GwBuildingTreeDao;
+import com.crm.dao.GwDepartmentDao;
+import com.crm.dao.GwDepartmentPositionDao;
+import com.crm.dao.GwGoodsInfoDao;
+import com.crm.dao.GwGroupInfoDao;
+import com.crm.dao.GwMallInfoDao;
+import com.crm.dao.GwPropertyAttributeDao;
+import com.crm.dao.GwRoleDao;
+import com.crm.dao.GwSettlementPaymentTenderDao;
+import com.crm.dao.GwShopsInfoDao;
+import com.crm.dao.GwShopsLeaseDao;
+import com.crm.dao.GwTranssalestotalDao;
+import com.crm.dao.GwbrandtreeDao;
+import com.crm.dao.GwformatstreeDao;
+import com.crm.dao.GwgoodstreeDao;
+import com.crm.dao.GwmerchantsinfoDao;
+import com.crm.misBaseData.CommonUrl;
+import com.crm.pojo.GwAdminUsersModel;
+import com.crm.pojo.GwAresModel;
+import com.crm.pojo.GwBuildingTreeModel;
+import com.crm.pojo.GwDepartmentModel;
+import com.crm.pojo.GwDepartmentPositionModel;
+import com.crm.pojo.GwGoodsInfoModel;
+import com.crm.pojo.GwGroupInfoModel;
+import com.crm.pojo.GwMallInfoModel;
+import com.crm.pojo.GwPropertyAttributeModel;
+import com.crm.pojo.GwRoleModel;
+import com.crm.pojo.GwSettlementPaymentTenderModel;
+import com.crm.pojo.GwShopsInfoModel;
+import com.crm.pojo.GwShopsLeaseModel;
+import com.crm.pojo.GwTranssalestotalModel;
+import com.crm.pojo.GwbrandtreeModel;
+import com.crm.pojo.GwformatstreeModel;
+import com.crm.pojo.GwgoodstreeModel;
+import com.crm.pojo.GwmerchantsinfoModel;
+import com.crm.util.DomainEqualsUtil;
+import com.crm.util.HttpClientUtil;
+import com.crm.util.JsonMapper;
+
+/**
+ * 
+ * SynchronizeMisData:同步mis系统的基本数据
+ *
+ * @author hemingjun
+ * @date 2016年9月9日
+ * @version jdk1.8
+ *
+ */
+@Service("synchronizeMisServiceImpl")
+public class SynchronizeMisServiceImpl {
+
+	// 日志
+	private Logger logger = LoggerFactory.getLogger(SynchronizeMisServiceImpl.class);
+	/**
+	 * 店铺数据访问层
+	 */
+	@Resource(name = "gwShopsLeaseDaoManage")
+	private GwShopsLeaseDao shopsLeaseDaoImpl;
+	/**
+	 * 业态数据访问层
+	 */
+	@Resource(name = "gwformatstreeDaoManage")
+	private GwformatstreeDao formatstreeDaoImpl;
+
+	/**
+	 * 品牌数据访问层
+	 */
+	@Resource(name = "gwbrandtreeDaoManage")
+	private GwbrandtreeDao brandtreeDaoImpl;
+
+	/**
+	 * 付款方式数据访问层
+	 */
+	@Resource(name = "gwSettlementPaymentTenderDaoManage")
+	private GwSettlementPaymentTenderDao settlementPaymentTenderDaoImpl;
+
+	/**
+	 * 货品组别数据访问层
+	 */
+	@Resource(name = "gwgoodstreeDaoManage")
+	private GwgoodstreeDao goodstreeDaoImpl;
+
+	/**
+	 * 购物中心数据访问层
+	 */
+	@Resource(name = "gwMallInfoDaoManage")
+	private GwMallInfoDao mallInfoDaoImpl;
+
+	/**
+	 * 货品组别数据访问层
+	 */
+	@Resource(name = "gwGoodsInfoDaoManage")
+	private GwGoodsInfoDao goodsInfoDaoImpl;
+
+	/**
+	 * 管理员用户数据访问层
+	 */
+	@Resource(name = "gwAdminUsersDaoManage")
+	private GwAdminUsersDao adminUsersDaoImpl;
+
+	/**
+	 * 角色数据访问层
+	 */
+	@Resource(name = "gwRoleDaoManage")
+	private GwRoleDao roleDaoImpl;
+
+	/**
+	 * 部门数据访问层
+	 */
+	@Resource(name = "gwDepartmentDaoManage")
+	private GwDepartmentDao departmentDaoImpl;
+
+	/**
+	 * 职位数据访问层
+	 */
+	@Resource(name = "gwDepartmentPositionDaoManage")
+	private GwDepartmentPositionDao departmentPositionDaoImpl;
+
+	/**
+	 * 物业性质数据访问层
+	 */
+	@Resource(name = "gwPropertyAttributeManage")
+	private GwPropertyAttributeDao propertyAttributeDaoImpl;
+
+	/**
+	 * 区域数据访问层
+	 */
+	@Resource(name = "gwAresDaoManage")
+	private GwAresDao aresDaoImpl;
+
+	/**
+	 * 楼宇数据访问层
+	 */
+	@Resource(name = "gwBuildingTreeDaoManage")
+	private GwBuildingTreeDao buildingTreeDaoImpl;
+
+	/**
+	 * 集团数据访问层
+	 */
+	@Resource(name = "gwGroupInfoDaoManage")
+	private GwGroupInfoDao groupInfoDaoImpl;
+
+	/**
+	 * 单元数据访问层
+	 */
+	@Resource(name = "gwShopsInfoDaoManage")
+	private GwShopsInfoDao shopsInfoDaoImpl;
+
+	/**
+	 * 商户数据访问层
+	 */
+	@Resource(name = "gwMerchanDao")
+	private GwmerchantsinfoDao merchantsinfoDaoImpl;
+
+	/**
+	 * 
+	 * sysShopLease:同步MIS店铺信息数据
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月9日
+	 * @param url
+	 *            MIS接口url地址
+	 * @param map
+	 *            map
+	 * @return 返回：true-同步成功，false-同步失败
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public boolean sysShopLease(String url, Map<String, Object> map) {
+		logger.info("***************************开始同步MIS店铺数据记录*********************");
+		boolean flag = false;
+		// 店铺数据接口地址
+		map.put("DYLX", CommonUrl.WEB_SHOPSLEASE_LIST);
+		// 从MIS端获取数据
+		String body = null;
+		try {
+			body = HttpClientUtil.httpPost(url, map);
+			logger.info("获取MIS店铺数据成功！");
+		} catch (ClientProtocolException e) {
+			logger.error("获取MIS店铺数据失败！");
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			logger.error("获取MIS店铺数据失败！");
+			e.printStackTrace();
+			return false;
+		}
+		if (body == null) {
+			return false;
+		}
+
+		// 需要新增的数据的集合
+		List<GwShopsLeaseModel> addList = new ArrayList<GwShopsLeaseModel>();
+		// 需要更新的数据的集合
+		List<GwShopsLeaseModel> updateList = new ArrayList<GwShopsLeaseModel>();
+		// 需要删除的数据的集合
+		List<GwShopsLeaseModel> deleteList = new ArrayList<GwShopsLeaseModel>();
+		String string = JSON.parseObject(body).getString("rows");
+		// 解析店铺数据集合对象
+		List<GwShopsLeaseModel> shopsLeaseList = JsonMapper.buildNonDefaultMapper().fromJsonToList(string,
+				GwShopsLeaseModel.class);
+		// 本地的店铺数据集合对象
+		List<GwShopsLeaseModel> localShopsLeaseList = shopsLeaseDaoImpl.getAllList();
+
+		if (shopsLeaseList == null) {
+			shopsLeaseDaoImpl.deleteAll();
+		} else {
+			// 遍历出新增和更新的数据
+			for (GwShopsLeaseModel shopsLease : shopsLeaseList) {
+				boolean tempFlag = false;
+				for (GwShopsLeaseModel localShopsLease : localShopsLeaseList) {
+					if (shopsLease.getId().equals(localShopsLease.getId())) {
+						if (!DomainEqualsUtil.domainEquals(localShopsLease, shopsLease)) {
+							updateList.add(shopsLease);
+						}
+						tempFlag = true;
+						break;
+					}
+				}
+				// 如果本地集合中不存在mis店铺数据集合的对象，做添加
+				if (!tempFlag) {
+					addList.add(shopsLease);
+				}
+			}
+			// 临时存放mis数据店铺code
+			List<Integer> misCodeList = new ArrayList<>();
+			for (GwShopsLeaseModel shopsLease : shopsLeaseList) {
+				misCodeList.add(shopsLease.getId());
+			}
+			// 遍历出删除的数据
+			for (GwShopsLeaseModel localShopsLease : localShopsLeaseList) {
+				if (!(misCodeList.contains(localShopsLease.getId()))) {
+					deleteList.add(localShopsLease);
+				}
+			}
+			try {
+				if (addList.size() > 0) {
+					logger.info("需要新增店铺数据记录：【" + addList.size() + "】条");
+					int addNumber = shopsLeaseDaoImpl.batchInsertShopsLease(addList);
+					logger.info("新增店铺记录：" + addNumber + "条");
+				}
+				if (updateList.size() > 0) {
+					logger.info("需要更新店铺数据记录：【" + updateList.size() + "】条");
+					int updateNumber = shopsLeaseDaoImpl.batchUpdateShopsLease(updateList);
+					logger.info("更新店铺记录：" + updateNumber + "条");
+				}
+				if (deleteList.size() > 0) {
+					logger.info("需要删除店铺数据记录：【" + deleteList.size() + "】条");
+					int deleteNumber = shopsLeaseDaoImpl.batchDeleteByCode(deleteList);
+					logger.info("删除店铺记录：" + deleteNumber + "条");
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				return flag;
+			}
+		}
+		logger.info("***************************结束同步MIS店铺数据记录*********************");
+		flag = true;
+		return flag;
+	}
+
+	/**
+	 * 
+	 * sysFormatstree:同步MIS业态信息数据
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月9日
+	 * @param url
+	 *            MIS接口url地址
+	 * @param map
+	 *            map
+	 * @return 返回：true-同步成功，false-同步失败
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public boolean sysFormatstree(String url, Map<String, Object> map) {
+		logger.info("***************************开始同步MIS业态数据记录*********************");
+		boolean flag = false;
+		// 业态数据接口地址
+		map.put("DYLX", CommonUrl.WEB_FORMATSTREE_LIST);
+		// 从MIS端获取数据
+		String body = null;
+		try {
+			body = HttpClientUtil.httpPost(url, map);
+			logger.info("获取MIS业态数据成功！");
+		} catch (ClientProtocolException e) {
+			logger.error("获取MIS业态数据失败！");
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			logger.error("获取MIS业态数据失败！");
+			e.printStackTrace();
+			return false;
+		}
+		if (body == null) {
+			return false;
+		}
+
+		// 需要新增的数据的集合
+		List<GwformatstreeModel> addList = new ArrayList<GwformatstreeModel>();
+		// 需要更新的数据的集合
+		List<GwformatstreeModel> updateList = new ArrayList<GwformatstreeModel>();
+		// 需要删除的数据的集合
+		List<GwformatstreeModel> deleteList = new ArrayList<GwformatstreeModel>();
+		String string = JSON.parseObject(body).getString("rows");
+		// 解析数据集合对象
+		List<GwformatstreeModel> formatstreeList = JsonMapper.buildNonDefaultMapper().fromJsonToList(string,
+				GwformatstreeModel.class);
+		// 本地的数据集合对象
+		List<GwformatstreeModel> localformatstreeList = formatstreeDaoImpl.getAllList();
+
+		if (formatstreeList == null) {
+			formatstreeDaoImpl.deleteAll();
+		} else {
+			// 遍历出新增和更新的数据
+			for (GwformatstreeModel formatstree : formatstreeList) {
+				boolean tempFlag = false;
+				for (GwformatstreeModel localFormatstree : localformatstreeList) {
+					if (formatstree.getId().equals(localFormatstree.getId())) {
+						if (!DomainEqualsUtil.domainEquals(localFormatstree, formatstree)) {
+							updateList.add(formatstree);
+						}
+						tempFlag = true;
+						break;
+					}
+				}
+				// 如果本地集合中不存在mis店铺数据集合的对象，做添加
+				if (!tempFlag) {
+					addList.add(formatstree);
+				}
+			}
+			// 临时存放mis数据id
+			List<Integer> misCodeList = new ArrayList<>();
+			for (GwformatstreeModel formatstree : formatstreeList) {
+				misCodeList.add(formatstree.getId());
+			}
+			// 遍历出删除的数据
+			for (GwformatstreeModel localFormatstree : localformatstreeList) {
+				if (!(misCodeList.contains(localFormatstree.getId()))) {
+					deleteList.add(localFormatstree);
+				}
+			}
+			try {
+				if (addList.size() > 0) {
+					logger.info("需要新增业态数据记录：【" + addList.size() + "】条");
+					int addNumber = formatstreeDaoImpl.batchInsertFormats(addList);
+					logger.info("新增业态记录：" + addNumber + "条");
+				}
+				if (updateList.size() > 0) {
+					logger.info("需要更新业态数据记录：【" + updateList.size() + "】条");
+					int updateNumber = formatstreeDaoImpl.batchUpdateFormatstree(updateList);
+					logger.info("更新业态记录：" + updateNumber + "条");
+				}
+				if (deleteList.size() > 0) {
+					logger.info("需要删除业态数据记录：【" + deleteList.size() + "】条");
+					int deleteNumber = formatstreeDaoImpl.batchDeleteById(deleteList);
+					logger.info("删除业态记录：" + deleteNumber + "条");
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				return flag;
+			}
+		}
+		logger.info("***************************结束同步MIS业态数据记录*********************");
+		flag = true;
+		return flag;
+	}
+
+	/**
+	 * 
+	 * sysBrandtree:同步MIS品牌信息数据
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param url
+	 *            MIS接口url地址
+	 * @param map
+	 *            map
+	 * @return 返回：true-同步成功，false-同步失败
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public boolean sysBrandtree(String url, Map<String, Object> map) {
+		logger.info("***************************开始同步MIS品牌数据记录*********************");
+		boolean flag = false;
+		// 品牌数据接口地址
+		map.put("DYLX", CommonUrl.WEB_BRANDTREE_LIST);
+		// 从MIS端获取数据
+		String body = null;
+		try {
+			body = HttpClientUtil.httpPost(url, map);
+			logger.info("获取MIS品牌数据成功！");
+		} catch (ClientProtocolException e) {
+			logger.error("获取MIS品牌数据失败！");
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			logger.error("获取MIS品牌数据失败！");
+			e.printStackTrace();
+			return false;
+		}
+		if (body == null) {
+			return false;
+		}
+
+		// 需要新增的数据的集合
+		List<GwbrandtreeModel> addList = new ArrayList<GwbrandtreeModel>();
+		// 需要更新的数据的集合
+		List<GwbrandtreeModel> updateList = new ArrayList<GwbrandtreeModel>();
+		// 需要删除的数据的集合
+		List<GwbrandtreeModel> deleteList = new ArrayList<GwbrandtreeModel>();
+		String string = JSON.parseObject(body).getString("rows");
+		// 解析数据集合对象
+		List<GwbrandtreeModel> brandtreeList = JsonMapper.buildNonDefaultMapper().fromJsonToList(string,
+				GwbrandtreeModel.class);
+		// 本地的数据集合对象
+		List<GwbrandtreeModel> localbrandtreeList = brandtreeDaoImpl.getAllList();
+
+		if (brandtreeList == null) {
+			brandtreeDaoImpl.deleteAll();
+		} else {
+			// 遍历出新增和更新的数据
+			for (GwbrandtreeModel brandtree : brandtreeList) {
+				boolean tempFlag = false;
+				for (GwbrandtreeModel localBrandtree : localbrandtreeList) {
+					if (brandtree.getId().equals(localBrandtree.getId())) {
+						if (!DomainEqualsUtil.domainEquals(localBrandtree, brandtree)) {
+							updateList.add(brandtree);
+						}
+						tempFlag = true;
+						break;
+					}
+				}
+				// 如果本地集合中不存在mis店铺数据集合的对象，做添加
+				if (!tempFlag) {
+					addList.add(brandtree);
+				}
+			}
+			// 临时存放mis数据id
+			List<Integer> misCodeList = new ArrayList<>();
+			for (GwbrandtreeModel brandtree : brandtreeList) {
+				misCodeList.add(brandtree.getId());
+			}
+			// 遍历出删除的数据
+			for (GwbrandtreeModel localBrandtree : localbrandtreeList) {
+				if (!(misCodeList.contains(localBrandtree.getId()))) {
+					deleteList.add(localBrandtree);
+				}
+			}
+			try {
+				if (addList.size() > 0) {
+					logger.info("需要增加品牌数据记录：【" + addList.size() + "】条");
+					int addNumber = brandtreeDaoImpl.batchInsertBrandtree(addList);
+					logger.info("新增品牌记录：" + addNumber + "条");
+				}
+				if (updateList.size() > 0) {
+					logger.info("需要更新品牌数据记录：【" + updateList.size() + "】条");
+					int updateNumber = brandtreeDaoImpl.batchUpdateBrandtree(updateList);
+					logger.info("更新品牌记录：" + updateNumber + "条");
+				}
+				if (deleteList.size() > 0) {
+					logger.info("需要删除品牌数据记录：【" + deleteList.size() + "】条");
+					int deleteNumber = brandtreeDaoImpl.batchDeleteById(deleteList);
+					logger.info("删除品牌记录：" + deleteNumber + "条");
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				return flag;
+			}
+		}
+		logger.info("***************************结束同步MIS品牌数据记录*********************");
+		flag = true;
+		return flag;
+	}
+
+	/**
+	 * 
+	 * sysPaymenttender:同步MIS付款方式数据
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param url
+	 *            MIS接口url地址
+	 * @param map
+	 *            map
+	 * @return 返回：true-同步成功，false-同步失败
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public boolean sysPaymenttender(String url, Map<String, Object> map) {
+		logger.info("***************************开始同步MIS付款方式数据记录*********************");
+		boolean flag = false;
+		// 付款方式数据接口地址
+		map.put("DYLX", CommonUrl.WEB_PAYMENTTENDER_LIST);
+		// 从MIS端获取数据
+		String body = null;
+		try {
+			body = HttpClientUtil.httpPost(url, map);
+			logger.info("获取MIS付款方式成功！");
+		} catch (ClientProtocolException e) {
+			logger.error("获取MIS付款方式失败！");
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			logger.error("获取MIS付款方式失败！");
+			e.printStackTrace();
+			return false;
+		}
+		if (body == null) {
+			return false;
+		}
+
+		// 需要新增的数据的集合
+		List<GwSettlementPaymentTenderModel> addList = new ArrayList<GwSettlementPaymentTenderModel>();
+		// 需要更新的数据的集合
+		List<GwSettlementPaymentTenderModel> updateList = new ArrayList<GwSettlementPaymentTenderModel>();
+		// 需要删除的数据的集合
+		List<GwSettlementPaymentTenderModel> deleteList = new ArrayList<GwSettlementPaymentTenderModel>();
+		String string = JSON.parseObject(body).getString("rows");
+		// 解析数据集合对象
+		List<GwSettlementPaymentTenderModel> paymentTenderList = JsonMapper.buildNonDefaultMapper()
+				.fromJsonToList(string, GwSettlementPaymentTenderModel.class);
+		// 本地的数据集合对象
+		List<GwSettlementPaymentTenderModel> localPaymentTenderList = settlementPaymentTenderDaoImpl.getAllList();
+
+		if (paymentTenderList == null) {
+			settlementPaymentTenderDaoImpl.deleteAll();
+		} else {
+			// 遍历出新增和更新的数据
+			for (GwSettlementPaymentTenderModel paymentTender : paymentTenderList) {
+				boolean tempFlag = false;
+				for (GwSettlementPaymentTenderModel localpaymentTender : localPaymentTenderList) {
+					if (paymentTender.getId().equals(localpaymentTender.getId())) {
+						if (!DomainEqualsUtil.domainEquals(localpaymentTender, paymentTender)) {
+							updateList.add(paymentTender);
+						}
+						tempFlag = true;
+						break;
+					}
+				}
+				// 如果本地集合中不存在mis店铺数据集合的对象，做添加
+				if (!tempFlag) {
+					addList.add(paymentTender);
+				}
+			}
+			// 临时存放mis数据id
+			List<Integer> misCodeList = new ArrayList<>();
+			for (GwSettlementPaymentTenderModel paymentTender : paymentTenderList) {
+				misCodeList.add(paymentTender.getId());
+			}
+			// 遍历出删除的数据
+			for (GwSettlementPaymentTenderModel localpaymentTender : localPaymentTenderList) {
+				if (!(misCodeList.contains(localpaymentTender.getId()))) {
+					deleteList.add(localpaymentTender);
+				}
+			}
+			try {
+				if (addList.size() > 0) {
+					logger.info("需要增加付款方式数据记录：【" + addList.size() + "】条");
+					int addNumber = settlementPaymentTenderDaoImpl.batchInsertPaymentTender(addList);
+					logger.info("新增付款方式记录：" + addNumber + "条");
+
+				}
+				if (updateList.size() > 0) {
+					logger.info("需要更新付款方式数据记录：【" + updateList.size() + "】条");
+					int updateNumber = settlementPaymentTenderDaoImpl.batchUpdate(updateList);
+					logger.info("更新付款方式记录：" + updateNumber + "条");
+
+				}
+				if (deleteList.size() > 0) {
+					logger.info("需要删除付款方式数据记录：【" + deleteList.size() + "】条");
+					int deleteNumber = settlementPaymentTenderDaoImpl.batchDelete(deleteList);
+					logger.info("删除付款方式记录：" + deleteNumber + "条");
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				return flag;
+			}
+		}
+		logger.info("***************************结束同步MIS付款方式数据记录*********************");
+		flag = true;
+		return flag;
+	}
+
+	/**
+	 * 
+	 * sysGoodsTree:同步MIS货品组别数据
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param url
+	 *            MIS接口url地址
+	 * @param map
+	 *            map
+	 * @return 返回：true-同步成功，false-同步失败
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public boolean sysGoodsTree(String url, Map<String, Object> map) {
+		logger.info("***************************开始同步MIS货品组别数据记录*********************");
+		boolean flag = false;
+		// 货品组别数据接口地址
+		map.put("DYLX", CommonUrl.WEB_GOODSTREE_LIST);
+		// 从MIS端获取数据
+		String body = null;
+		try {
+			body = HttpClientUtil.httpPost(url, map);
+			logger.info("获取MIS货品组别成功！");
+		} catch (ClientProtocolException e) {
+			logger.error("获取MIS货品组别失败！");
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			logger.error("获取MIS货品组别失败！");
+			e.printStackTrace();
+			return false;
+		}
+		if (body == null) {
+			return false;
+		}
+
+		// 需要新增的数据的集合
+		List<GwgoodstreeModel> addList = new ArrayList<GwgoodstreeModel>();
+		// 需要更新的数据的集合
+		List<GwgoodstreeModel> updateList = new ArrayList<GwgoodstreeModel>();
+		// 需要删除的数据的集合
+		List<GwgoodstreeModel> deleteList = new ArrayList<GwgoodstreeModel>();
+		String string = JSON.parseObject(body).getString("rows");
+		// 解析数据集合对象
+		List<GwgoodstreeModel> goodstreeList = JsonMapper.buildNonDefaultMapper().fromJsonToList(string,
+				GwgoodstreeModel.class);
+		// 本地的数据集合对象
+		List<GwgoodstreeModel> localgoodstreeList = goodstreeDaoImpl.getAllList();
+
+		if (goodstreeList == null) {
+			goodstreeDaoImpl.deleteAllForGoodsTree();
+		} else {
+			// 遍历出新增和更新的数据
+			for (GwgoodstreeModel goodstree : goodstreeList) {
+				boolean tempFlag = false;
+				for (GwgoodstreeModel localgoodstree : localgoodstreeList) {
+					if (localgoodstree.getId().equals(goodstree.getId())) {
+						if (!DomainEqualsUtil.domainEquals(localgoodstree, goodstree)) {
+							updateList.add(goodstree);
+						}
+						tempFlag = true;
+						break;
+					}
+				}
+				// 如果本地集合中不存在mis店铺数据集合的对象，做添加
+				if (!tempFlag) {
+					addList.add(goodstree);
+				}
+			}
+			// 临时存放mis数据id
+			List<Integer> misCodeList = new ArrayList<>();
+			for (GwgoodstreeModel goodstree : goodstreeList) {
+				misCodeList.add(goodstree.getId());
+			}
+			// 遍历出删除的数据
+			for (GwgoodstreeModel localgoodstree : localgoodstreeList) {
+				if (!(misCodeList.contains(localgoodstree.getId()))) {
+					deleteList.add(localgoodstree);
+				}
+			}
+			if (addList.size() > 0) {
+				logger.info("需要增加货品组别数据记录：【" + addList.size() + "】条");
+				int addNumber = goodstreeDaoImpl.batchInsert(addList);
+				logger.info("新增货品组别记录：" + addNumber + "条");
+			}
+			try {
+				if (updateList.size() > 0) {
+					logger.info("需要更新货品组别数据记录：【" + updateList.size() + "】条");
+					int updateNumber = goodstreeDaoImpl.batchUpdate(updateList);
+					logger.info("更新货品组别记录：" + updateNumber + "条");
+				}
+
+				if (deleteList.size() > 0) {
+					logger.info("需要删除货品组别数据记录：【" + deleteList.size() + "】条");
+					int deleteNumber = goodstreeDaoImpl.batchDelete(deleteList);
+					logger.info("删除货品组别记录：" + deleteNumber + "条");
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				return flag;
+			}
+		}
+		logger.info("***************************结束同步MIS货品组别数据记录*********************");
+		flag = true;
+		return flag;
+	}
+
+	/**
+	 * 
+	 * sysMallInfo:同步MIS购物中心数据
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param url
+	 *            MIS接口url地址
+	 * @param map
+	 *            map
+	 * @return 返回：true-同步成功，false-同步失败
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public boolean sysMallInfo(String url, Map<String, Object> map) {
+		logger.info("***************************开始同步MIS购物中心数据记录*********************");
+		boolean flag = false;
+		// 购物中心数据接口地址
+		map.put("DYLX", CommonUrl.WEB_MALLINFO_LIST);
+		// 从MIS端获取数据
+		String body = null;
+		try {
+			body = HttpClientUtil.httpPost(url, map);
+			logger.info("获取MIS购物中心数据成功！");
+		} catch (ClientProtocolException e) {
+			logger.error("获取MIS购物中心数据失败！");
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			logger.error("获取MIS购物中心数据失败！");
+			e.printStackTrace();
+			return false;
+		}
+		if (body == null) {
+			return false;
+		}
+
+		// 需要新增的数据的集合
+		List<GwMallInfoModel> addList = new ArrayList<GwMallInfoModel>();
+		// 需要更新的数据的集合
+		List<GwMallInfoModel> updateList = new ArrayList<GwMallInfoModel>();
+		// 需要删除的数据的集合
+		List<GwMallInfoModel> deleteList = new ArrayList<GwMallInfoModel>();
+		String string = JSON.parseObject(body).getString("rows");
+		string = "[" + string + "]";
+		// 解析数据集合对象
+		List<GwMallInfoModel> mallInfoList = JsonMapper.buildNonDefaultMapper().fromJsonToList(string,
+				GwMallInfoModel.class);
+		// 本地的数据集合对象
+		List<GwMallInfoModel> localmallInfoList = mallInfoDaoImpl.getAllList();
+		if (mallInfoList == null) {
+			mallInfoDaoImpl.deleteAllForMallInfo();
+		} else {
+			// 遍历出新增和更新的数据
+			for (GwMallInfoModel mallInfo : mallInfoList) {
+				boolean tempFlag = false;
+				for (GwMallInfoModel localmallInfo : localmallInfoList) {
+					if (mallInfo.getId().equals(localmallInfo.getId())) {
+						if (!DomainEqualsUtil.domainEquals(localmallInfo, mallInfo)) {
+							updateList.add(mallInfo);
+						}
+						tempFlag = true;
+						break;
+					}
+				}
+				// 如果本地集合中不存在mis店铺数据集合的对象，做添加
+				if (!tempFlag) {
+					addList.add(mallInfo);
+				}
+			}
+			// 临时存放mis数据id
+			List<Integer> misCodeList = new ArrayList<>();
+			for (GwMallInfoModel mallInfo : mallInfoList) {
+				misCodeList.add(mallInfo.getId());
+			}
+			// 遍历出删除的数据
+			for (GwMallInfoModel localmallInfo : localmallInfoList) {
+				if (!(misCodeList.contains(localmallInfo.getId()))) {
+					deleteList.add(localmallInfo);
+				}
+			}
+			try {
+				if (addList.size() > 0) {
+					logger.info("需要增加购物中心数据记录：【" + addList.size() + "】条");
+					int addNumber = mallInfoDaoImpl.batchInsert(addList);
+					logger.info("新增购物中心记录：" + addNumber + "条");
+				}
+
+				if (updateList.size() > 0) {
+					logger.info("需要更新购物中心数据记录：【" + updateList.size() + "】条");
+					int updateNumber = mallInfoDaoImpl.batchUpdate(updateList);
+					logger.info("更新购物中心记录：" + updateNumber + "条");
+				}
+
+				if (deleteList.size() > 0) {
+					logger.info("需要删除购物中心数据记录：【" + deleteList.size() + "】条");
+					int deleteNumber = mallInfoDaoImpl.batchDelete(deleteList);
+					logger.info("删除购物中心记录：" + deleteNumber + "条");
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				return flag;
+			}
+		}
+		logger.info("***************************结束同步MIS购物中心数据记录*********************");
+		flag = true;
+		return flag;
+	}
+
+	/**
+	 * 
+	 * sysAdminUsers:同步MIS货品数据
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param url
+	 *            MIS接口url地址
+	 * @param map
+	 *            map
+	 * @return 返回：true-同步成功，false-同步失败
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public boolean sysGoodsInfo(String url, Map<String, Object> map) {
+		logger.info("***************************开始同步MIS货品数据记录*********************");
+		boolean flag = false;
+		// 货品数据接口地址
+		map.put("DYLX", CommonUrl.WEB_GOODSINFOBYSHOPSCODE_LIST);
+		// 从MIS端获取数据
+		String body = null;
+		try {
+			body = HttpClientUtil.httpPost(url, map);
+			logger.info("获取MIS货品数据成功！");
+		} catch (ClientProtocolException e) {
+			logger.error("获取MIS货品数据失败！");
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			logger.error("获取MIS货品数据失败！");
+			e.printStackTrace();
+			return false;
+		}
+		if (body == null) {
+			return false;
+		}
+
+		// 需要新增的数据的集合
+		List<GwGoodsInfoModel> addList = new ArrayList<GwGoodsInfoModel>();
+		// 需要更新的数据的集合
+		List<GwGoodsInfoModel> updateList = new ArrayList<GwGoodsInfoModel>();
+		// 需要删除的数据的集合
+		List<GwGoodsInfoModel> deleteList = new ArrayList<GwGoodsInfoModel>();
+		String string = JSON.parseObject(body).getString("rows");
+		// 解析数据集合对象
+		List<GwGoodsInfoModel> goodsInfoList = JsonMapper.buildNonDefaultMapper().fromJsonToList(string,
+				GwGoodsInfoModel.class);
+		// 本地的数据集合对象
+		List<GwGoodsInfoModel> localgoodsInfoList = goodsInfoDaoImpl.getAllList();
+
+		if (goodsInfoList == null) {
+			goodsInfoDaoImpl.deleteAllForGoodsInfo();
+		} else {
+
+			// 遍历出新增和更新的数据
+			for (GwGoodsInfoModel goodsInfo : goodsInfoList) {
+				boolean tempFlag = false;
+				for (GwGoodsInfoModel localgoodsInfo : localgoodsInfoList) {
+					if (goodsInfo.getId().equals(localgoodsInfo.getId())) {
+						if (!DomainEqualsUtil.domainEquals(localgoodsInfo, goodsInfo)) {
+							updateList.add(goodsInfo);
+						}
+						tempFlag = true;
+						break;
+					}
+				}
+				// 如果本地集合中不存在mis店铺数据集合的对象，做添加
+				if (!tempFlag) {
+					addList.add(goodsInfo);
+				}
+			}
+			// 临时存放mis数据id
+			List<Integer> misCodeList = new ArrayList<>();
+			for (GwGoodsInfoModel goodsInfo : goodsInfoList) {
+				misCodeList.add(goodsInfo.getId());
+			}
+			// 遍历出删除的数据
+			for (GwGoodsInfoModel localgoodsInfo : localgoodsInfoList) {
+				if (!(misCodeList.contains(localgoodsInfo.getId()))) {
+					deleteList.add(localgoodsInfo);
+				}
+			}
+			try {
+				if (addList.size() > 0) {
+					logger.info("需要增加货品数据记录：【" + addList.size() + "】条");
+					int addNumber = goodsInfoDaoImpl.batchInsert(addList);
+					logger.info("新增货品记录：" + addNumber + "条");
+				}
+
+				if (updateList.size() > 0) {
+					logger.info("需要更新货品数据记录：【" + updateList.size() + "】条");
+					int updateNumber = goodsInfoDaoImpl.batchUpdate(updateList);
+					logger.info("更新货品记录：" + updateNumber + "条");
+				}
+
+				if (deleteList.size() > 0) {
+					logger.info("需要删除货品数据记录：【" + deleteList.size() + "】条");
+					int deleteNumber = goodsInfoDaoImpl.batchDelete(deleteList);
+					logger.info("删除货品记录：" + deleteNumber + "条");
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				return flag;
+			}
+		}
+		logger.info("***************************结束同步MIS货品数据记录*********************");
+		flag = true;
+		return flag;
+	}
+
+	/**
+	 * 
+	 * sysAdminUsers:同步MIS管理员用户数据
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param url
+	 *            MIS接口url地址
+	 * @param map
+	 *            map
+	 * @return 返回：true-同步成功，false-同步失败
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public boolean sysAdminUsers(String url, Map<String, Object> map) {
+		logger.info("***************************开始同步MIS管理员用户数据记录*********************");
+		boolean flag = false;
+		// 管理员用户数据接口地址
+		map.put("DYLX", CommonUrl.WEB_USERINFO_LIST);
+		// 从MIS端获取数据
+		String body = null;
+		try {
+			body = HttpClientUtil.httpPost(url, map);
+			logger.info("获取MIS管理员用户数据成功！");
+		} catch (ClientProtocolException e) {
+			logger.error("获取MIS管理员用户数据失败！");
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			logger.error("获取MIS管理员用户数据失败！");
+			e.printStackTrace();
+			return false;
+		}
+		if (body == null) {
+			return false;
+		}
+
+		// 需要新增的数据的集合
+		List<GwAdminUsersModel> addList = new ArrayList<GwAdminUsersModel>();
+		// 需要更新的数据的集合
+		List<GwAdminUsersModel> updateList = new ArrayList<GwAdminUsersModel>();
+		// 需要删除的数据的集合
+		List<GwAdminUsersModel> deleteList = new ArrayList<GwAdminUsersModel>();
+		String string = JSON.parseObject(body).getString("rows");
+		// 解析数据集合对象
+		List<GwAdminUsersModel> modelList = JsonMapper.buildNonDefaultMapper().fromJsonToList(string,
+				GwAdminUsersModel.class);
+		// 本地的数据集合对象
+		List<GwAdminUsersModel> localModelList = adminUsersDaoImpl.getAllList();
+
+		if (modelList == null) {
+			adminUsersDaoImpl.deleteAll();
+		} else {
+			// 遍历出新增和更新的数据
+			for (GwAdminUsersModel model : modelList) {
+				boolean tempFlag = false;
+				for (GwAdminUsersModel localModel : localModelList) {
+					if (model.getId().equals(localModel.getId())) {
+						if (!DomainEqualsUtil.domainEquals(localModel, model)) {
+							updateList.add(model);
+						}
+						tempFlag = true;
+						break;
+					}
+				}
+				// 如果本地集合中不存在mis店铺数据集合的对象，做添加
+				if (!tempFlag) {
+					addList.add(model);
+				}
+			}
+			// 临时存放mis数据id
+			List<Integer> misCodeList = new ArrayList<>();
+			for (GwAdminUsersModel model : modelList) {
+				misCodeList.add(model.getId());
+			}
+			// 遍历出删除的数据
+			for (GwAdminUsersModel localModel : localModelList) {
+				if (!(misCodeList.contains(localModel.getId()))) {
+					deleteList.add(localModel);
+				}
+			}
+			try {
+				if (addList.size() > 0) {
+					logger.info("需要增加管理员用户数据记录：【" + addList.size() + "】条");
+					int addNumber = adminUsersDaoImpl.batchInsert(addList);
+					logger.info("新增管理员用户记录：" + addNumber + "条");
+				}
+
+				if (updateList.size() > 0) {
+					logger.info("需要更新管理员用户数据记录：【" + updateList.size() + "】条");
+					int updateNumber = adminUsersDaoImpl.batchUpdate(updateList);
+					logger.info("更新管理员用户记录：" + updateNumber + "条");
+				}
+
+				if (deleteList.size() > 0) {
+					logger.info("需要删除管理员用户数据记录：【" + deleteList.size() + "】条");
+					int deleteNumber = adminUsersDaoImpl.batchDelete(deleteList);
+					logger.info("删除管理员用户记录：" + deleteNumber + "条");
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				return flag;
+			}
+		}
+		logger.info("***************************结束同步MIS管理员用户数据记录*********************");
+		flag = true;
+		return flag;
+	}
+
+	/**
+	 * 
+	 * sysRole:同步MIS角色数据
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param url
+	 *            MIS接口url地址
+	 * @param map
+	 *            map
+	 * @return 返回：true-同步成功，false-同步失败
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public boolean sysRole(String url, Map<String, Object> map) {
+		logger.info("***************************开始同步MIS角色数据记录*********************");
+		boolean flag = false;
+		// 角色数据接口地址
+		map.put("DYLX", CommonUrl.WEB_ROLEINFO_LIST);
+		// 从MIS端获取数据
+		String body = null;
+		try {
+			body = HttpClientUtil.httpPost(url, map);
+			logger.info("获取MIS角色数据成功！");
+		} catch (ClientProtocolException e) {
+			logger.error("获取MIS角色数据失败！");
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			logger.error("获取MIS角色数据失败！");
+			e.printStackTrace();
+			return false;
+		}
+		if (body == null) {
+			return false;
+		}
+
+		// 需要新增的数据的集合
+		List<GwRoleModel> addList = new ArrayList<GwRoleModel>();
+		// 需要更新的数据的集合
+		List<GwRoleModel> updateList = new ArrayList<GwRoleModel>();
+		// 需要删除的数据的集合
+		List<GwRoleModel> deleteList = new ArrayList<GwRoleModel>();
+		String string = JSON.parseObject(body).getString("rows");
+		// 解析数据集合对象
+		List<GwRoleModel> modelList = JsonMapper.buildNonDefaultMapper().fromJsonToList(string, GwRoleModel.class);
+		// 本地的数据集合对象
+		List<GwRoleModel> localModelList = roleDaoImpl.getAllList();
+
+		if (modelList == null) {
+			roleDaoImpl.deleteAll();
+		} else {
+			// 遍历出新增和更新的数据
+			for (GwRoleModel model : modelList) {
+				boolean tempFlag = false;
+				for (GwRoleModel localModel : localModelList) {
+					if (model.getId().equals(localModel.getId())) {
+						if (!DomainEqualsUtil.domainEquals(localModel, model)) {
+							updateList.add(model);
+						}
+						tempFlag = true;
+						break;
+					}
+				}
+				// 如果本地集合中不存在mis店铺数据集合的对象，做添加
+				if (!tempFlag) {
+					addList.add(model);
+				}
+			}
+			// 临时存放mis数据id
+			List<Integer> misCodeList = new ArrayList<>();
+			for (GwRoleModel model : modelList) {
+				misCodeList.add(model.getId());
+			}
+			// 遍历出删除的数据
+			for (GwRoleModel localModel : localModelList) {
+				if (!(misCodeList.contains(localModel.getId()))) {
+					deleteList.add(localModel);
+				}
+			}
+			try {
+				if (addList.size() > 0) {
+					logger.info("需要增加角色数据记录：【" + addList.size() + "】条");
+					int addNumber = roleDaoImpl.batchInsert(addList);
+					logger.info("新增角色记录：" + addNumber + "条");
+				}
+
+				if (updateList.size() > 0) {
+					logger.info("需要更新角色数据记录：【" + updateList.size() + "】条");
+					int updateNumber = roleDaoImpl.batchUpdate(updateList);
+					logger.info("更新角色记录：" + updateNumber + "条");
+				}
+
+				if (deleteList.size() > 0) {
+					logger.info("需要删除角色数据记录：【" + deleteList.size() + "】条");
+					int deleteNumber = roleDaoImpl.batchDelete(deleteList);
+					logger.info("删除角色记录：" + deleteNumber + "条");
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				return flag;
+			}
+		}
+		logger.info("***************************结束同步MIS角色数据记录*********************");
+		flag = true;
+		return flag;
+	}
+
+	/**
+	 * 
+	 * sysDepartment:同步MIS部门数据
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param url
+	 *            MIS接口url地址
+	 * @param map
+	 *            map
+	 * @return 返回：true-同步成功，false-同步失败
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public boolean sysDepartment(String url, Map<String, Object> map) {
+		logger.info("***************************开始同步MIS部门数据记录*********************");
+		boolean flag = false;
+		// 部门数据接口地址
+		map.put("DYLX", CommonUrl.WEB_DEPARTMENT_LIST);
+		// 从MIS端获取数据
+		String body = null;
+		try {
+			body = HttpClientUtil.httpPost(url, map);
+			logger.info("获取MIS部门数据成功！");
+		} catch (ClientProtocolException e) {
+			logger.error("获取MIS部门数据失败！");
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			logger.error("获取MIS部门数据失败！");
+			e.printStackTrace();
+			return false;
+		}
+		if (body == null) {
+			return false;
+		}
+
+		// 需要新增的数据的集合
+		List<GwDepartmentModel> addList = new ArrayList<GwDepartmentModel>();
+		// 需要更新的数据的集合
+		List<GwDepartmentModel> updateList = new ArrayList<GwDepartmentModel>();
+		// 需要删除的数据的集合
+		List<GwDepartmentModel> deleteList = new ArrayList<GwDepartmentModel>();
+		String string = JSON.parseObject(body).getString("rows");
+		// 解析数据集合对象
+		List<GwDepartmentModel> modelList = JsonMapper.buildNonDefaultMapper().fromJsonToList(string,
+				GwDepartmentModel.class);
+		// 本地的数据集合对象
+		List<GwDepartmentModel> localModelList = departmentDaoImpl.getAllList();
+		if (modelList == null) {
+			departmentDaoImpl.deleteAll();
+		} else {
+			// 遍历出新增和更新的数据
+			for (GwDepartmentModel model : modelList) {
+				boolean tempFlag = false;
+				for (GwDepartmentModel localModel : localModelList) {
+					if (model.getId().equals(localModel.getId())) {
+						if (!DomainEqualsUtil.domainEquals(localModel, model)) {
+							updateList.add(model);
+						}
+						tempFlag = true;
+						break;
+					}
+				}
+				// 如果本地集合中不存在mis店铺数据集合的对象，做添加
+				if (!tempFlag) {
+					addList.add(model);
+				}
+			}
+			// 临时存放mis数据id
+			List<Integer> misCodeList = new ArrayList<>();
+			for (GwDepartmentModel model : modelList) {
+				misCodeList.add(model.getId());
+			}
+			// 遍历出删除的数据
+			for (GwDepartmentModel localModel : localModelList) {
+				if (!(misCodeList.contains(localModel.getId()))) {
+					deleteList.add(localModel);
+				}
+			}
+			try {
+				if (addList.size() > 0) {
+					logger.info("需要增加部门数据记录：【" + addList.size() + "】条");
+					int addNumber = departmentDaoImpl.batchInsert(addList);
+					logger.info("新增部门记录：" + addNumber + "条");
+				}
+
+				if (updateList.size() > 0) {
+					logger.info("需要更新部门数据记录：【" + updateList.size() + "】条");
+					int updateNumber = departmentDaoImpl.batchUpdate(updateList);
+					logger.info("更新部门记录：" + updateNumber + "条");
+				}
+
+				if (deleteList.size() > 0) {
+					logger.info("需要删除部门数据记录：【" + deleteList.size() + "】条");
+					int deleteNumber = departmentDaoImpl.batchDelete(deleteList);
+					logger.info("删除部门记录：" + deleteNumber + "条");
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				return flag;
+			}
+		}
+		logger.info("***************************结束同步MIS部门数据记录*********************");
+		flag = true;
+		return flag;
+	}
+
+	/**
+	 * 
+	 * sysDepartmentPostion:同步MIS职位数据
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param url
+	 *            MIS接口url地址
+	 * @param map
+	 *            map
+	 * @return 返回：true-同步成功，false-同步失败
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public boolean sysDepartmentPostion(String url, Map<String, Object> map) {
+		logger.info("***************************开始同步MIS职位数据记录*********************");
+		boolean flag = false;
+		// 职位数据接口地址
+		map.put("DYLX", CommonUrl.WEB_DEPARTMENT_POSTIONS);
+		// 从MIS端获取数据
+		String body = null;
+		try {
+			body = HttpClientUtil.httpPost(url, map);
+			logger.info("获取MIS职位数据成功！");
+		} catch (ClientProtocolException e) {
+			logger.error("获取MIS职位数据失败！");
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			logger.error("获取MIS职位数据失败！");
+			e.printStackTrace();
+			return false;
+		}
+		if (body == null) {
+			return false;
+		}
+
+		// 需要新增的数据的集合
+		List<GwDepartmentPositionModel> addList = new ArrayList<GwDepartmentPositionModel>();
+		// 需要更新的数据的集合
+		List<GwDepartmentPositionModel> updateList = new ArrayList<GwDepartmentPositionModel>();
+		// 需要删除的数据的集合
+		List<GwDepartmentPositionModel> deleteList = new ArrayList<GwDepartmentPositionModel>();
+		String string = JSON.parseObject(body).getString("rows");
+		// 解析数据集合对象
+		List<GwDepartmentPositionModel> modelList = JsonMapper.buildNonDefaultMapper().fromJsonToList(string,
+				GwDepartmentPositionModel.class);
+		// 本地的数据集合对象
+		List<GwDepartmentPositionModel> localModelList = departmentPositionDaoImpl.getAllList();
+		if (modelList == null) {
+			departmentPositionDaoImpl.deleteAll();
+		} else {
+			// 遍历出新增和更新的数据
+			for (GwDepartmentPositionModel model : modelList) {
+				boolean tempFlag = false;
+				for (GwDepartmentPositionModel localModel : localModelList) {
+					if (model.getId().equals(localModel.getId())) {
+						if (!DomainEqualsUtil.domainEquals(localModel, model)) {
+							updateList.add(model);
+						}
+						tempFlag = true;
+						break;
+					}
+				}
+				// 如果本地集合中不存在mis店铺数据集合的对象，做添加
+				if (!tempFlag) {
+					addList.add(model);
+				}
+			}
+			// 临时存放mis数据id
+			List<Integer> misCodeList = new ArrayList<>();
+			for (GwDepartmentPositionModel model : modelList) {
+				misCodeList.add(model.getId());
+			}
+			// 遍历出删除的数据
+			for (GwDepartmentPositionModel localModel : localModelList) {
+				if (!(misCodeList.contains(localModel.getId()))) {
+					deleteList.add(localModel);
+				}
+			}
+			try {
+				if (addList.size() > 0) {
+					logger.info("需要增加职位数据记录：【" + addList.size() + "】条");
+					int addNumber = departmentPositionDaoImpl.batchInsert(addList);
+					logger.info("新增职位记录：" + addNumber + "条");
+				}
+
+				if (updateList.size() > 0) {
+					logger.info("需要更新职位数据记录：【" + updateList.size() + "】条");
+					int updateNumber = departmentPositionDaoImpl.batchUpdate(updateList);
+					logger.info("更新职位记录：" + updateNumber + "条");
+				}
+
+				if (deleteList.size() > 0) {
+					logger.info("需要删除职位数据记录：【" + deleteList.size() + "】条");
+					int deleteNumber = departmentPositionDaoImpl.batchDelete(deleteList);
+					logger.info("删除职位记录：" + deleteNumber + "条");
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				return flag;
+			}
+		}
+		logger.info("***************************结束同步MIS职位数据记录*********************");
+		flag = true;
+		return flag;
+	}
+
+	/**
+	 * 
+	 * syspropertyAttribute:同步MIS物业性质数据
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param url
+	 *            MIS接口url地址
+	 * @param map
+	 *            map
+	 * @return 返回：true-同步成功，false-同步失败
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public boolean syspropertyAttribute(String url, Map<String, Object> map) {
+		logger.info("***************************开始同步MIS物业性质数据记录*********************");
+		boolean flag = false;
+		// 物业性质数据接口地址
+		map.put("DYLX", CommonUrl.WEB_PROPERTY_LIST);
+		// 从MIS端获取数据
+		String body = null;
+		try {
+			body = HttpClientUtil.httpPost(url, map);
+			logger.info("获取MIS物业性质数据成功！");
+		} catch (ClientProtocolException e) {
+			logger.error("获取MIS物业性质数据失败！");
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			logger.error("获取MIS物业性质数据失败！");
+			e.printStackTrace();
+			return false;
+		}
+		if (body == null) {
+			return false;
+		}
+
+		// 需要新增的数据的集合
+		List<GwPropertyAttributeModel> addList = new ArrayList<GwPropertyAttributeModel>();
+		// 需要更新的数据的集合
+		List<GwPropertyAttributeModel> updateList = new ArrayList<GwPropertyAttributeModel>();
+		// 需要删除的数据的集合
+		List<GwPropertyAttributeModel> deleteList = new ArrayList<GwPropertyAttributeModel>();
+		String string = JSON.parseObject(body).getString("rows");
+		// 解析数据集合对象
+		List<GwPropertyAttributeModel> modelList = JsonMapper.buildNonDefaultMapper().fromJsonToList(string,
+				GwPropertyAttributeModel.class);
+		// 本地的数据集合对象
+		List<GwPropertyAttributeModel> localModelList = propertyAttributeDaoImpl.getAllList();
+
+		if (modelList == null) {
+			propertyAttributeDaoImpl.deleteAll();
+		} else {
+			// 遍历出新增和更新的数据
+			for (GwPropertyAttributeModel model : modelList) {
+				boolean tempFlag = false;
+				for (GwPropertyAttributeModel localModel : localModelList) {
+					if (model.getId().equals(localModel.getId())) {
+						if (!DomainEqualsUtil.domainEquals(localModel, model)) {
+							updateList.add(model);
+						}
+						tempFlag = true;
+						break;
+					}
+				}
+				// 如果本地集合中不存在mis店铺数据集合的对象，做添加
+				if (!tempFlag) {
+					addList.add(model);
+				}
+			}
+			// 临时存放mis数据id
+			List<Integer> misCodeList = new ArrayList<>();
+			for (GwPropertyAttributeModel model : modelList) {
+				misCodeList.add(model.getId());
+			}
+			// 遍历出删除的数据
+			for (GwPropertyAttributeModel localModel : localModelList) {
+				if (!(misCodeList.contains(localModel.getId()))) {
+					deleteList.add(localModel);
+				}
+			}
+			try {
+				if (addList.size() > 0) {
+					logger.info("需要增加物业性质数据记录：【" + addList.size() + "】条");
+					int addNumber = propertyAttributeDaoImpl.batchInsert(addList);
+					logger.info("新增物业性质记录：" + addNumber + "条");
+				}
+
+				if (updateList.size() > 0) {
+					logger.info("需要更新物业性质数据记录：【" + updateList.size() + "】条");
+					int updateNumber = propertyAttributeDaoImpl.batchUpdate(updateList);
+					logger.info("更新物业性质记录：" + updateNumber + "条");
+				}
+
+				if (deleteList.size() > 0) {
+					logger.info("需要删除物业性质数据记录：【" + deleteList.size() + "】条");
+					int deleteNumber = propertyAttributeDaoImpl.batchDelete(deleteList);
+					logger.info("删除物业性质记录：" + deleteNumber + "条");
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				return flag;
+			}
+		}
+		logger.info("***************************结束同步MIS物业性质数据记录*********************");
+		flag = true;
+		return flag;
+	}
+
+	/**
+	 * 
+	 * sysAres:同步MIS区域数据
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param url
+	 *            MIS接口url地址
+	 * @param map
+	 *            map
+	 * @return 返回：true-同步成功，false-同步失败
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public boolean sysAres(String url, Map<String, Object> map) {
+		logger.info("***************************开始同步MIS区域数据记录*********************");
+		boolean flag = false;
+		// 区域数据接口地址
+		map.put("DYLX", CommonUrl.WEB_ARES_LIST);
+		// 从MIS端获取数据
+		String body = null;
+		try {
+			body = HttpClientUtil.httpPost(url, map);
+			logger.info("获取MIS区域数据成功！");
+		} catch (ClientProtocolException e) {
+			logger.error("获取MIS区域数据失败！");
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			logger.error("获取MIS区域数据失败！");
+			e.printStackTrace();
+			return false;
+		}
+		if (body == null) {
+			return false;
+		}
+
+		// 需要新增的数据的集合
+		List<GwAresModel> addList = new ArrayList<GwAresModel>();
+		// 需要更新的数据的集合
+		List<GwAresModel> updateList = new ArrayList<GwAresModel>();
+		// 需要删除的数据的集合
+		List<GwAresModel> deleteList = new ArrayList<GwAresModel>();
+		String string = JSON.parseObject(body).getString("rows");
+		// 解析数据集合对象
+		List<GwAresModel> modelList = JsonMapper.buildNonDefaultMapper().fromJsonToList(string, GwAresModel.class);
+		// 本地的数据集合对象
+		List<GwAresModel> localModelList = aresDaoImpl.getAllList();
+
+		if (modelList == null) {
+			aresDaoImpl.deleteAll();
+		} else {
+			// 遍历出新增和更新的数据
+			for (GwAresModel model : modelList) {
+				boolean tempFlag = false;
+				for (GwAresModel localModel : localModelList) {
+					if (model.getId().equals(localModel.getId())) {
+						if (!DomainEqualsUtil.domainEquals(localModel, model)) {
+							updateList.add(model);
+						}
+						tempFlag = true;
+						break;
+					}
+				}
+				// 如果本地集合中不存在mis店铺数据集合的对象，做添加
+				if (!tempFlag) {
+					addList.add(model);
+				}
+			}
+			// 临时存放mis数据id
+			List<Integer> misCodeList = new ArrayList<>();
+			for (GwAresModel model : modelList) {
+				misCodeList.add(model.getId());
+			}
+			// 遍历出删除的数据
+			for (GwAresModel localModel : localModelList) {
+				if (!(misCodeList.contains(localModel.getId()))) {
+					deleteList.add(localModel);
+				}
+			}
+			try {
+				if (addList.size() > 0) {
+					logger.info("需要增加区域数据记录：【" + addList.size() + "】条");
+					int addNumber = aresDaoImpl.batchInsert(addList);
+					logger.info("新增区域记录：" + addNumber + "条");
+				}
+
+				if (updateList.size() > 0) {
+					logger.info("需要更新区域数据记录：【" + updateList.size() + "】条");
+					int updateNumber = aresDaoImpl.batchUpdate(updateList);
+					logger.info("更新区域记录：" + updateNumber + "条");
+				}
+
+				if (deleteList.size() > 0) {
+					logger.info("需要删除区域数据记录：【" + deleteList.size() + "】条");
+					int deleteNumber = aresDaoImpl.batchDelete(deleteList);
+					logger.info("删除区域记录：" + deleteNumber + "条");
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				return flag;
+			}
+		}
+		logger.info("***************************结束同步MIS区域数据记录*********************");
+		flag = true;
+		return flag;
+	}
+
+	/**
+	 * 
+	 * sysBuildingTree:同步MIS楼宇数据
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param url
+	 *            MIS接口url地址
+	 * @param map
+	 *            map
+	 * @return 返回：true-同步成功，false-同步失败
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public boolean sysBuildingTree(String url, Map<String, Object> map) {
+		logger.info("***************************开始同步MIS楼宇数据记录*********************");
+		boolean flag = false;
+		// 楼宇数据接口地址
+		map.put("DYLX", CommonUrl.WEB_BUILDING_LIST);
+		// 从MIS端获取数据
+		String body = null;
+		try {
+			body = HttpClientUtil.httpPost(url, map);
+			logger.info("获取MIS楼宇数据成功！");
+		} catch (ClientProtocolException e) {
+			logger.error("获取MIS楼宇数据失败！");
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			logger.error("获取MIS楼宇数据失败！");
+			e.printStackTrace();
+			return false;
+		}
+		if (body == null) {
+			return false;
+		}
+
+		// 需要新增的数据的集合
+		List<GwBuildingTreeModel> addList = new ArrayList<GwBuildingTreeModel>();
+		// 需要更新的数据的集合
+		List<GwBuildingTreeModel> updateList = new ArrayList<GwBuildingTreeModel>();
+		// 需要删除的数据的集合
+		List<GwBuildingTreeModel> deleteList = new ArrayList<GwBuildingTreeModel>();
+		String string = JSON.parseObject(body).getString("rows");
+		// 解析数据集合对象
+		List<GwBuildingTreeModel> modelList = JsonMapper.buildNonDefaultMapper().fromJsonToList(string,
+				GwBuildingTreeModel.class);
+		// 本地的数据集合对象
+		List<GwBuildingTreeModel> localModelList = buildingTreeDaoImpl.getAllList();
+
+		if (modelList == null) {
+			buildingTreeDaoImpl.deleteAll();
+		} else {
+			// 遍历出新增和更新的数据
+			for (GwBuildingTreeModel model : modelList) {
+				boolean tempFlag = false;
+				for (GwBuildingTreeModel localModel : localModelList) {
+					if (model.getId().equals(localModel.getId())) {
+						if (!DomainEqualsUtil.domainEquals(localModel, model)) {
+							updateList.add(model);
+						}
+						tempFlag = true;
+						break;
+					}
+				}
+				// 如果本地集合中不存在mis店铺数据集合的对象，做添加
+				if (!tempFlag) {
+					addList.add(model);
+				}
+			}
+			// 临时存放mis数据id
+			List<Integer> misCodeList = new ArrayList<>();
+			for (GwBuildingTreeModel model : modelList) {
+				misCodeList.add(model.getId());
+			}
+			// 遍历出删除的数据
+			for (GwBuildingTreeModel localModel : localModelList) {
+				if (!(misCodeList.contains(localModel.getId()))) {
+					deleteList.add(localModel);
+				}
+			}
+			try {
+				if (addList.size() > 0) {
+					logger.info("需要增加楼宇数据记录：【" + addList.size() + "】条");
+					int addNumber = buildingTreeDaoImpl.batchInsert(addList);
+					logger.info("新增楼宇记录：" + addNumber + "条");
+				}
+
+				if (updateList.size() > 0) {
+					logger.info("需要更新楼宇数据记录：【" + updateList.size() + "】条");
+					int updateNumber = buildingTreeDaoImpl.batchUpdate(updateList);
+					logger.info("更新楼宇记录：" + updateNumber + "条");
+				}
+
+				if (deleteList.size() > 0) {
+					logger.info("需要删除楼宇数据记录：【" + deleteList.size() + "】条");
+					int deleteNumber = buildingTreeDaoImpl.batchDelete(deleteList);
+					logger.info("删除楼宇记录：" + deleteNumber + "条");
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				return flag;
+			}
+		}
+		logger.info("***************************结束同步MIS楼宇数据记录*********************");
+		flag = true;
+		return flag;
+	}
+
+	/**
+	 * 
+	 * sysGroupInfo:同步MIS集团数据
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param url
+	 *            MIS接口url地址
+	 * @param map
+	 *            map
+	 * @return 返回：true-同步成功，false-同步失败
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public boolean sysGroupInfo(String url, Map<String, Object> map) {
+		logger.info("***************************开始同步MIS集团数据记录*********************");
+		boolean flag = false;
+		// 集团数据接口地址
+		map.put("DYLX", CommonUrl.WEB_GROUPINFO_LIST);
+		// 从MIS端获取数据
+		String body = null;
+		try {
+			body = HttpClientUtil.httpPost(url, map);
+			logger.info("获取MIS集团数据成功！");
+		} catch (ClientProtocolException e) {
+			logger.error("获取MIS集团数据失败！");
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			logger.error("获取MIS集团数据失败！");
+			e.printStackTrace();
+			return false;
+		}
+		if (body == null) {
+			return false;
+		}
+
+		// 需要新增的数据的集合
+		List<GwGroupInfoModel> addList = new ArrayList<GwGroupInfoModel>();
+		// 需要更新的数据的集合
+		List<GwGroupInfoModel> updateList = new ArrayList<GwGroupInfoModel>();
+		// 需要删除的数据的集合
+		List<GwGroupInfoModel> deleteList = new ArrayList<GwGroupInfoModel>();
+		String string = JSON.parseObject(body).getString("rows");
+		// 解析数据集合对象
+		List<GwGroupInfoModel> modelList = JsonMapper.buildNonDefaultMapper().fromJsonToList(string,
+				GwGroupInfoModel.class);
+		// 本地的数据集合对象
+		List<GwGroupInfoModel> localModelList = groupInfoDaoImpl.getAllList();
+
+		if (modelList == null) {
+			groupInfoDaoImpl.deteleAll();
+		} else {
+			// 遍历出新增和更新的数据
+			for (GwGroupInfoModel model : modelList) {
+				boolean tempFlag = false;
+				for (GwGroupInfoModel localModel : localModelList) {
+					if (model.getId().equals(localModel.getId())) {
+						if (!DomainEqualsUtil.domainEquals(localModel, model)) {
+							updateList.add(model);
+						}
+						tempFlag = true;
+						break;
+					}
+				}
+				// 如果本地集合中不存在mis店铺数据集合的对象，做添加
+				if (!tempFlag) {
+					addList.add(model);
+				}
+			}
+			// 临时存放mis数据id
+			List<Integer> misCodeList = new ArrayList<>();
+			for (GwGroupInfoModel model : modelList) {
+				misCodeList.add(model.getId());
+			}
+			// 遍历出删除的数据
+			for (GwGroupInfoModel localModel : localModelList) {
+				if (!(misCodeList.contains(localModel.getId()))) {
+					deleteList.add(localModel);
+				}
+			}
+			try {
+				if (addList.size() > 0) {
+					logger.info("需要增加集团数据记录：【" + addList.size() + "】条");
+					int addNumber = groupInfoDaoImpl.batchInsert(addList);
+					logger.info("新增集团记录：" + addNumber + "条");
+				}
+
+				if (updateList.size() > 0) {
+					logger.info("需要更新集团数据记录：【" + updateList.size() + "】条");
+					int updateNumber = groupInfoDaoImpl.batchUpdate(updateList);
+					logger.info("更新集团记录：" + updateNumber + "条");
+				}
+
+				if (deleteList.size() > 0) {
+					logger.info("需要删除集团数据记录：【" + deleteList.size() + "】条");
+					int deleteNumber = groupInfoDaoImpl.batchDelete(deleteList);
+					logger.info("删除集团记录：" + deleteNumber + "条");
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				return flag;
+			}
+		}
+		logger.info("***************************结束同步MIS集团数据记录*********************");
+		flag = true;
+		return flag;
+	}
+
+	/**
+	 * 
+	 * sysShopsInfo:同步MIS单元数据
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param url
+	 *            MIS接口url地址
+	 * @param map
+	 *            map
+	 * @return 返回：true-同步成功，false-同步失败
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public boolean sysShopsInfo(String url, Map<String, Object> map) {
+		logger.info("***************************开始同步MIS单元数据记录*********************");
+		boolean flag = false;
+		// 单元数据接口地址
+		map.put("DYLX", CommonUrl.WEB_SHOPSINFO_LIST);
+		// 从MIS端获取数据
+		String body = null;
+		try {
+			body = HttpClientUtil.httpPost(url, map);
+			logger.info("获取MIS单元数据成功！");
+		} catch (ClientProtocolException e) {
+			logger.error("获取MIS单元数据失败！");
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			logger.error("获取MIS单元数据失败！");
+			e.printStackTrace();
+			return false;
+		}
+		if (body == null) {
+			return false;
+		}
+
+		// 需要新增的数据的集合
+		List<GwShopsInfoModel> addList = new ArrayList<GwShopsInfoModel>();
+		// 需要更新的数据的集合
+		List<GwShopsInfoModel> updateList = new ArrayList<GwShopsInfoModel>();
+		// 需要删除的数据的集合
+		List<GwShopsInfoModel> deleteList = new ArrayList<GwShopsInfoModel>();
+		String string = JSON.parseObject(body).getString("rows");
+		// 解析数据集合对象
+		List<GwShopsInfoModel> modelList = JsonMapper.buildNonDefaultMapper().fromJsonToList(string,
+				GwShopsInfoModel.class);
+		// 本地的数据集合对象
+		List<GwShopsInfoModel> localModelList = shopsInfoDaoImpl.getAllList();
+
+		if (modelList == null) {
+			shopsInfoDaoImpl.deleteAll();
+		} else {
+			// 遍历出新增和更新的数据
+			for (GwShopsInfoModel model : modelList) {
+				boolean tempFlag = false;
+				for (GwShopsInfoModel localModel : localModelList) {
+					if (model.getId().equals(localModel.getId())) {
+						if (!DomainEqualsUtil.domainEquals(localModel, model)) {
+							updateList.add(model);
+						}
+						tempFlag = true;
+						break;
+					}
+				}
+				// 如果本地集合中不存在mis店铺数据集合的对象，做添加
+				if (!tempFlag) {
+					addList.add(model);
+				}
+			}
+			// 临时存放mis数据id
+			List<Integer> misCodeList = new ArrayList<>();
+			for (GwShopsInfoModel model : modelList) {
+				misCodeList.add(model.getId());
+			}
+			// 遍历出删除的数据
+			for (GwShopsInfoModel localModel : localModelList) {
+				if (!(misCodeList.contains(localModel.getId()))) {
+					deleteList.add(localModel);
+				}
+			}
+			try {
+				if (addList.size() > 0) {
+					logger.info("需要增加单元数据记录：【" + addList.size() + "】条");
+					int addNumber = shopsInfoDaoImpl.batchInsert(addList);
+					logger.info("新增单元记录：" + addNumber + "条");
+				}
+
+				if (updateList.size() > 0) {
+					logger.info("需要更新单元数据记录：【" + updateList.size() + "】条");
+					int updateNumber = shopsInfoDaoImpl.batchUpdate(updateList);
+					logger.info("更新单元记录：" + updateNumber + "条");
+				}
+
+				if (deleteList.size() > 0) {
+					logger.info("需要删除单元数据记录：【" + deleteList.size() + "】条");
+					int deleteNumber = shopsInfoDaoImpl.batchDelete(deleteList);
+					logger.info("删除单元记录：" + deleteNumber + "条");
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				return flag;
+			}
+		}
+		logger.info("***************************结束同步MIS单元数据记录*********************");
+		flag = true;
+		return flag;
+	}
+
+	/**
+	 * 
+	 * sysMerchantsInfo:同步MIS商户数据
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param url
+	 *            MIS接口url地址
+	 * @param map
+	 *            map
+	 * @return 返回：true-同步成功，false-同步失败
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public boolean sysMerchantsInfo(String url, Map<String, Object> map) {
+		logger.info("***************************开始同步MIS商户数据记录*********************");
+		boolean flag = false;
+		// 商户数据接口地址
+		map.put("DYLX", CommonUrl.WEB_MERCHANTS_LIST);
+		// 从MIS端获取数据
+		String body = null;
+		try {
+			body = HttpClientUtil.httpPost(url, map);
+			logger.info("获取MIS商户数据成功！");
+		} catch (ClientProtocolException e) {
+			logger.error("获取MIS商户数据失败！");
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			logger.error("获取MIS商户数据失败！");
+			e.printStackTrace();
+			return false;
+		}
+		if (body == null) {
+			return false;
+		}
+
+		// 需要新增的数据的集合
+		List<GwmerchantsinfoModel> addList = new ArrayList<GwmerchantsinfoModel>();
+		// 需要更新的数据的集合
+		List<GwmerchantsinfoModel> updateList = new ArrayList<GwmerchantsinfoModel>();
+		// 需要删除的数据的集合
+		List<GwmerchantsinfoModel> deleteList = new ArrayList<GwmerchantsinfoModel>();
+		String string = JSON.parseObject(body).getString("rows");
+		// 解析数据集合对象
+		List<GwmerchantsinfoModel> modelList = JsonMapper.buildNonDefaultMapper().fromJsonToList(string,
+				GwmerchantsinfoModel.class);
+		// 本地的数据集合对象
+		List<GwmerchantsinfoModel> localModelList = merchantsinfoDaoImpl.getAllList();
+		if (modelList == null) {
+			merchantsinfoDaoImpl.deleteAll();
+		} else {
+			// 遍历出新增和更新的数据
+			for (GwmerchantsinfoModel model : modelList) {
+				boolean tempFlag = false;
+				for (GwmerchantsinfoModel localModel : localModelList) {
+					if (model.getId().equals(localModel.getId())) {
+						if (!DomainEqualsUtil.domainEquals(localModel, model)) {
+							updateList.add(model);
+						}
+						tempFlag = true;
+						break;
+					}
+				}
+				// 如果本地集合中不存在mis店铺数据集合的对象，做添加
+				if (!tempFlag) {
+					addList.add(model);
+				}
+			}
+			// 临时存放mis数据id
+			List<Integer> misCodeList = new ArrayList<>();
+			for (GwmerchantsinfoModel model : modelList) {
+				misCodeList.add(model.getId());
+			}
+			// 遍历出删除的数据
+			for (GwmerchantsinfoModel localModel : localModelList) {
+				if (!(misCodeList.contains(localModel.getId()))) {
+					deleteList.add(localModel);
+				}
+			}
+			try {
+				if (addList.size() > 0) {
+					logger.info("需要增加商户数据记录：【" + addList.size() + "】条");
+					int addNumber = merchantsinfoDaoImpl.batchInsert(addList);
+					logger.info("新增商户记录：" + addNumber + "条");
+				}
+
+				if (updateList.size() > 0) {
+					logger.info("需要更新商户数据记录：【" + updateList.size() + "】条");
+					int updateNumber = merchantsinfoDaoImpl.batchUpdate(updateList);
+					logger.info("更新商户记录：" + updateNumber + "条");
+				}
+
+				if (deleteList.size() > 0) {
+					logger.info("需要删除商户数据记录：【" + deleteList.size() + "】条");
+					int deleteNumber = merchantsinfoDaoImpl.batchDelete(deleteList);
+					logger.info("删除商户记录：" + deleteNumber + "条");
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				return flag;
+			}
+		}
+		logger.info("***************************结束同步MIS商户数据记录*********************");
+		flag = true;
+		return flag;
+	}
+}

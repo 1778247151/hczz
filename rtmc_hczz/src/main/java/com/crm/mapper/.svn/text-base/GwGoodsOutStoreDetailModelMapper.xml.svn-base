@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.goodsOutStoreDetail" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwGoodsOutStoreDetailModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="goods_out_store_code" property="goodsOutStoreCode" jdbcType="VARCHAR" />
+    <result column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
+    <result column="number" property="number" jdbcType="INTEGER" />
+    <result column="store_code" property="storeCode" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="total_money" property="totalMoney" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, goods_out_store_code, goods_code, number, store_code, price, total_money
+  </sql>
+  <select id="gw.goodsOutStoreDetail.selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_goods_out_store_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.goodsOutStoreDetail.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_goods_out_store_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.goodsOutStoreDetail.insert" parameterType="com.crm.pojo.GwGoodsOutStoreDetailModel" >
+    insert into gw_goods_out_store_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="goodsOutStoreCode != null" >
+        goods_out_store_code,
+      </if>
+      <if test="goodsCode != null" >
+        goods_code,
+      </if>
+      <if test="number != null" >
+        number,
+      </if>
+      <if test="storeCode != null" >
+        store_code,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="totalMoney != null" >
+        total_money,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="goodsOutStoreCode != null" >
+        #{goodsOutStoreCode,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsCode != null" >
+        #{goodsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null" >
+        #{number,jdbcType=INTEGER},
+      </if>
+      <if test="storeCode != null" >
+        #{storeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="totalMoney != null" >
+        #{totalMoney,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.goodsOutStoreDetail.update" parameterType="com.crm.pojo.GwGoodsOutStoreDetailModel" >
+    update gw_goods_out_store_detail
+    <set >
+      <if test="goodsOutStoreCode != null" >
+        goods_out_store_code = #{goodsOutStoreCode,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsCode != null" >
+        goods_code = #{goodsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null" >
+        number = #{number,jdbcType=INTEGER},
+      </if>
+      <if test="storeCode != null" >
+        store_code = #{storeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="totalMoney != null" >
+        total_money = #{totalMoney,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 批量插入 -->
+  <insert id="gw.goodsOutStoreDetail.batchInsert" parameterType="com.crm.pojo.GwGoodsOutStoreDetailModel" >
+    insert into gw_goods_out_store_detail (goods_out_store_code, goods_code, 
+      number, store_code, price, 
+      total_money)
+    values 
+     <foreach collection="list" item="goodsOutStore" index="index" separator="," >
+    (  
+      #{goodsOutStore.goodsOutStoreCode,jdbcType=VARCHAR}, 
+      #{goodsOutStore.goodsCode,jdbcType=VARCHAR}, 
+      #{goodsOutStore.number,jdbcType=INTEGER}, 
+      #{goodsOutStore.storeCode,jdbcType=VARCHAR}, 
+      #{goodsOutStore.price,jdbcType=DECIMAL}, 
+      #{goodsOutStore.totalMoney,jdbcType=DECIMAL}
+    )
+      </foreach>
+  </insert>
+  <!-- 根据出库单号获得明细 -->
+  <select id="gw.goodsOutStoreDetail.selectListByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_goods_out_store_detail
+    where goods_out_store_code = #{code,jdbcType=VARCHAR}
+  </select>
+  <!-- 根据出库单号删除明细 -->
+  <delete id="gw.goodsOutStoreDetail.deleteByCode" parameterType="java.lang.String" >
+    delete from gw_goods_out_store_detail
+    where goods_out_store_code = #{code,jdbcType=VARCHAR}
+  </delete>
+  <!-- 根据条件，获取分页LIST集合 -->
+  <select id="gw.goodsOutStoreDetail.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	SELECT
+		a.goods_code,
+		(select b.`name` from gw_present_info b where b.`code` = a.goods_code)as goodsName,
+		a.goods_out_store_code,
+		a.id,
+		a.number,
+		a.price,
+		a.store_code,
+		(select c.`name` from gw_type_tree c where c.`code` = a.store_code)as storeName,
+		a.total_money
+	FROM
+	gw_goods_out_store_detail a
+	<where>
+		<if test="code != null and '' != code">  
+          and a.goods_out_store_code = #{code,jdbcType=VARCHAR}         
+        </if>
+	</where>
+	
+	limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER} 
+  </select>
+  <!-- 根据条件，获取分页LIST总数 -->
+  <select id="gw.goodsOutStoreDetail.selectCount" resultType="java.lang.Integer"  parameterType="java.util.Map">
+ 	select
+  		count(a.id)	
+	FROM
+		gw_goods_out_store_detail a
+	<where>
+		<if test="code != null and '' != code">  
+          and a.goods_out_store_code = #{code,jdbcType=VARCHAR}         
+        </if>
+	</where>
+  </select>
+</mapper>

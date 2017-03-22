@@ -1,0 +1,86 @@
+package com.crm.service.impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.api.HandlETC;
+import com.crm.common.BaseResultVo;
+import com.crm.core.ServersManager;
+import com.crm.dao.GwSalesDao;
+import com.crm.pojo.GwSalesModel;
+import com.crm.service.GwSalesService;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+@Service("gwSalesServiceManage")
+public class GwSalesServiceImpl extends ServersManager<GwSalesModel, GwSalesDao> implements GwSalesService {
+	@Resource(name = "gwSalesDaoManage")
+	@Override
+	public void setDao(GwSalesDao dao) {
+		this.dao = dao;
+	}
+	//接口数据的校验
+	@Resource(name = "webapiServiceManage")
+	private HandlETC handlETCImpl;
+	
+	@Override
+	public BaseResultVo addSales(String formData,String salesList, HttpServletRequest request) {
+		//表单的json数据
+		JSONObject formJson=JSONObject.fromObject(formData);
+		//销售时间
+		String time =formJson.getString("gwTxdate");
+		String showTime = time.substring(11);
+		String txTime = time.substring(0, 10);
+		String gwTxdate=txTime;
+		String gwTxtime=showTime;
+		
+		
+		//获取添加的销售数据
+		String gwTillid=formJson.getString("gwTillid");//收银机编号
+		String gwTxserial=formJson.getString("gwTxserial");//流水单号
+		List<GwSalesModel> salesModelList= dao.selectSalesByTxserial(gwTxserial);
+		if(salesModelList.size()>0){
+			return BaseResultVo.responseFail("流水单号已存在");
+		}
+
+		int gwSalesnumber=Integer.parseInt(formJson.getString("gwSalesnumber")) ;//销售数量
+//		BigDecimal gwSalesamount=new BigDecimal(formJson.getString("gwSalesamount"));//销售总金额
+		String gwMemberCode=formJson.getString("gwMembercode");//会员号
+		String gwStoreCode=formJson.getString("shopCode");//店铺编号
+		//grid支付方式数据转json数组
+		JSONArray jArray=JSONArray.fromObject(salesList); 
+		
+		//销售数据存入json
+		JSONObject jsonPaymentCode=new JSONObject();
+		jsonPaymentCode.put("gwTillid", gwTillid);
+		jsonPaymentCode.put("gwTxserial", gwTxserial);
+		jsonPaymentCode.put("gwSalesnumber", gwSalesnumber);
+//		jsonPaymentCode.put("gwSalesamount", gwSalesamount);
+		jsonPaymentCode.put("gwTxdate", gwTxdate);
+		jsonPaymentCode.put("gwMemberCode", gwMemberCode);
+		jsonPaymentCode.put("gwStoreCode", gwStoreCode);
+		jsonPaymentCode.put("gwTxtime", gwTxtime);
+		jsonPaymentCode.put("gwPaymenttenderCode", jArray);
+
+		
+		String DATA=jsonPaymentCode.toString();
+		BaseResultVo remes=	handlETCImpl.verification(DATA, request);
+		if ("10000".equals(remes.getStatus().getCode())) {
+			return BaseResultVo.responseSuccess("补录成功");
+		} 
+		
+		return BaseResultVo.responseFail(remes.getStatus().getMsg());
+	}
+
+	@Override
+	public List<GwSalesModel> getListByMemberCode(String memberCode) {
+		// TODO Auto-generated method stub
+		return dao.getListByMemberCode(memberCode);
+	}
+	
+}

@@ -1,0 +1,87 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwDepartmentDao;
+import com.crm.dao.GwRepeatVisitDao;
+import com.crm.pojo.GwDepartmentModel;
+import com.crm.pojo.GwRepeatVisitModel;
+
+@Repository("gwRepeatVisitDaoManage")
+public class GwRepeatVisitDaoImpl implements GwRepeatVisitDao{
+	@Resource
+	private BaseDao dao;
+
+	@Override
+	public int insert(GwRepeatVisitModel e) {
+		return dao.insert("gw.repeat.visit.insert",e);
+	}
+
+	@Override
+	public int delete(GwRepeatVisitModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwRepeatVisitModel e) {
+		return dao.update("gw.repeat.visit.update",e);
+	}
+
+	@Override
+	public GwRepeatVisitModel selectOne(GwRepeatVisitModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwRepeatVisitModel> selectList(GwRepeatVisitModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.repeat.visit.deleteById", id);
+	}
+
+	@Override
+	public GwRepeatVisitModel selectById(int id) {
+		return (GwRepeatVisitModel) dao.selectOne("gw.repeat.visit.selectByPrimaryKey",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		return dao.selectPageList("gw.repeat.visit.selectPageList", "gw.repeat.visit.selectCount", params);
+	}
+
+	@Override
+	public List<GwRepeatVisitModel> getAllList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public GwRepeatVisitModel selectVisitByCode(String visitCode) {
+		return (GwRepeatVisitModel) dao.selectOne("gw.repeat.visit.selectVisitByCode", visitCode);
+	}
+
+	@Override
+	public GwRepeatVisitModel getRepeatVisitByLastOne(String time) {
+		return (GwRepeatVisitModel) dao.selectOne("gw.repeat.visit.selectByLastOne", time);
+	}
+}

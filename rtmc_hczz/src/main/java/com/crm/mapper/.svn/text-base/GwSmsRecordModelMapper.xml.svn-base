@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.smsRecord" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwSmsRecordModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="send_time" property="sendTime" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="send_user" property="sendUser" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.crm.pojo.GwSmsRecordModel" extends="BaseResultMap" >
+    <result column="phone" property="phone" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, content, note, type, send_time, status, send_user
+  </sql>
+  <sql id="Blob_Column_List" >
+    phone
+  </sql>
+  <select id="gw.smsRecord.selectById" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from gw_sms_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.smsRecord.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_sms_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.smsRecord.insert" parameterType="com.crm.pojo.GwSmsRecordModel" >
+    insert into gw_sms_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="note != null" >
+        note,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="sendTime != null" >
+        send_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="sendUser != null" >
+        send_user,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="sendTime != null" >
+        #{sendTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="sendUser != null" >
+        #{sendUser,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.smsRecord.update" parameterType="com.crm.pojo.GwSmsRecordModel" >
+    update gw_sms_record
+    <set >
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="sendTime != null" >
+        send_time = #{sendTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="sendUser != null" >
+        send_user = #{sendUser,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 根据条件获得分页数据-->
+  <select id="gw.smsRecord.selectPageList" resultMap="ResultMapWithBLOBs" parameterType="java.util.Map" >
+    select c.id,c.phone,c.content,c.note,c.type,c.send_time,c.send_user,c.status
+  
+    from gw_sms_record c
+    <where>
+
+    	<if test="phone!=null and phone!=''">
+    		c.phone like CONCAT('%',CONCAT(#{phone,jdbcType=VARCHAR}),'%')
+    	</if>
+  
+    	<if test="type != null and '' != type">
+			 c.type =#{type,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null and '' != status"> 
+			c.status =#{status,jdbcType=VARCHAR}
+		</if>
+    </where>
+    limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  <!-- 查询总记录数 -->
+  <select id="gw.smsRecord.selectCount" resultType="java.lang.Integer">
+	select
+		count(id)
+	from gw_sms_record c
+	
+	 <where>
+
+    	<if test="phone!=null and phone!=''">
+    		c.phone like CONCAT('%',CONCAT(#{phone,jdbcType=VARCHAR}),'%')
+    	</if>
+  
+    	<if test="type != null and '' != type">
+			 c.type =#{type,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null and '' != status"> 
+			 c.status =#{status,jdbcType=VARCHAR}
+		</if>
+    </where>
+  </select>
+</mapper>

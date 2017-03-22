@@ -1,0 +1,239 @@
+package com.crm.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.SecurityUtil;
+import com.crm.pojo.GwGoodsInfoModel;
+import com.crm.pojo.GwShopsInfoModel;
+import com.crm.pojo.GwbrandtreeModel;
+import com.crm.service.GwGoodsInfoService;
+import com.crm.util.DateUtil;
+import com.crm.util.ValidateUtil;
+
+/**
+ * 
+ * GwGoodsInfoController:货物信息访问控制层
+ *
+ * @author xiangtao
+ * @date  2016年5月18日
+ *
+ */
+@Controller
+@RequestMapping("/goodsInfo")
+public class GwGoodsInfoController {
+	
+	/**
+	 * 货物信息管理业务逻辑
+	 */
+	@Resource(name="gwGoodsInfoServiceManage")
+	private GwGoodsInfoService gwGoodsInfoServiceImpl;
+	
+	/**
+	 * 
+	 * addGoodsInfo:添加货物信息
+	 *
+	 * @date 2016年3月10日 
+	 * @param GoodsInfo            货物信息对象
+	 * @return
+	 */
+	@RequestMapping("/addGoodsInfo.do")
+	@ResponseBody
+	public BaseResultVo addGoodsInfo(GwGoodsInfoModel GoodsInfo,HttpServletRequest request){
+		Integer userid = SecurityUtil.getAdminUser(request).getUserId();
+		if(!ValidateUtil.isLengthRangeStr(GoodsInfo.getCode(),4,20)){
+			return BaseResultVo.responseFail("货物编号为4-20位的字符串");
+		}
+		if(!ValidateUtil.isNum(GoodsInfo.getMoney().toString())){
+			return BaseResultVo.responseFail("货物单价必须为数字");
+		}
+		GoodsInfo.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		GoodsInfo.setCreateUser(userid);
+		GoodsInfo.setState(1);
+		GwGoodsInfoModel GoodsInfoMode = gwGoodsInfoServiceImpl.getGoodsInfoByCode(GoodsInfo.getCode()); 
+		if(GoodsInfoMode!=null){
+			return BaseResultVo.responseFail("货物编号已存在");
+		}
+		int num=gwGoodsInfoServiceImpl.insert(GoodsInfo);
+		if(num<=0){
+			BaseResultVo.responseFail("添加货物信息失败");
+		}
+		
+		return BaseResultVo.responseSuccess("添加货物信息成功");
+	}
+	
+	/**
+	 * 
+	 * getGoodsInfoPageList:货物信息管理（分页）
+	 *
+	 * @date 2016年5月16日
+	 * @param currentPage     当前页码
+	 * @param pageSize        每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getGoodsInfoPageList.do")
+	@ResponseBody
+	public LigerPageDataVo getGoodsInfoPageList(String name, String code, String goodsTreeId,int currentPage,int pageSize,String shopsLeaseCode,HttpServletRequest request){
+		
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		
+		params.put("goodsTreeId", goodsTreeId);
+		params.put("name", name);
+		params.put("code", code);
+		params.put("shopsLeaseCode", shopsLeaseCode);
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		BasePageResultVo baseResultVo=gwGoodsInfoServiceImpl.selectPageList(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 
+	 * getGoodsInfoById:根据货物id，获取货物信息
+	 *
+	 * @date 2016年5月16日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getGoodsInfoById.do")
+	@ResponseBody
+	public BaseResultVo getGoodsInfoById(int id,HttpServletRequest request){
+		if(id==0){
+			return BaseResultVo.responseFail("数据异常");
+		}
+		//获取商铺信息信息
+		GwGoodsInfoModel GoodsInfo=gwGoodsInfoServiceImpl.selectById(id);
+		if(GoodsInfo==null){
+			return BaseResultVo.responseFail("获取货物信息失败");
+		}
+		BaseResultVo baseResultVo=BaseResultVo.responseSuccess("获取货物信息成功");
+		baseResultVo.setData(GoodsInfo);
+		return baseResultVo;
+	}
+	
+	/**
+	 * 
+	 * deleteGoodsInfoById:根据货物id，删除货物信息(假删除)
+	 *
+	 * @date 2016年5月16日
+	 * @param id                  商铺信息id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/deleteGoodsInfoById.do")
+	@ResponseBody
+	public BaseResultVo deleteGoodsInfoById(int id,HttpServletRequest request){
+		if(id==0){
+			return BaseResultVo.responseFail("数据异常");
+		}
+		GwGoodsInfoModel GoodsInfo = new GwGoodsInfoModel();
+		GoodsInfo.setId(id);
+		GoodsInfo.setState(0);
+		//根据商铺信息id，删除商铺信息
+		int num=gwGoodsInfoServiceImpl.update(GoodsInfo);
+		if(num<=0){
+			return BaseResultVo.responseFail("删除货物信息失败");
+		}
+		return BaseResultVo.responseSuccess("删除货物信息成功");
+	}
+	
+	/**
+	 * 
+	 * updateGoodsInfo:更新货物信息
+	 *
+	 * @date 2016年3月5日
+	 * @param GoodsInfo       货物信息对象
+	 * @return
+	 */
+	@RequestMapping("/updateGoodsInfo.do")
+	@ResponseBody
+	public BaseResultVo updateGoodsInfo(GwGoodsInfoModel GoodsInfo,HttpServletRequest request){
+		Integer userid = SecurityUtil.getAdminUser(request).getUserId();
+		//验证主键是否为空
+		if(GoodsInfo.getId()==0){
+			return BaseResultVo.responseFail("数据异常");
+		}
+		if(!ValidateUtil.isLengthRangeStr(GoodsInfo.getCode(),4,20)){
+			return BaseResultVo.responseFail("货物编号为4-20位的字符串");
+		}
+		//更新时间
+		GoodsInfo.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		GoodsInfo.setUpdateUser(userid);
+		GwGoodsInfoModel gwGoodsInfo=gwGoodsInfoServiceImpl.selectById(GoodsInfo.getId());
+		GwGoodsInfoModel GoodsInfoMode = gwGoodsInfoServiceImpl.getGoodsInfoByCode(GoodsInfo.getCode()); 
+		if(!gwGoodsInfo.getCode().equals(GoodsInfo.getCode())&&GoodsInfoMode!=null){
+			return BaseResultVo.responseFail("货物编号已存在");
+		}
+		//更新货物信息
+		int num=gwGoodsInfoServiceImpl.update(GoodsInfo);
+		if(num<=0){
+			return BaseResultVo.responseFail("更新货物信息失败");
+		}
+		
+		return BaseResultVo.responseSuccess("更新货物信息成功");
+	}
+	
+	/**
+	 * 
+	 * getGoodsInfoByShopsLeaseCode:通过店铺编号获取对应的货品信息
+	 *
+	 * @date 2016年5月23日
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getGoodsInfoByShopsLeaseCode.do")
+	@ResponseBody
+	public LigerPageDataVo getGoodsInfoByShopsLeaseCode(HttpServletRequest request,String code){
+		//条件参数
+		Map<String,Object> params=new HashMap<>();
+		params.put("shopsLeaseCode", code);
+		List<GwGoodsInfoModel> goodsInfoList=gwGoodsInfoServiceImpl.getGoodsInfoByShopsLeaseCodeApi(params);
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(goodsInfoList);
+		data.setTotal(goodsInfoList.size());
+		return data;
+	}
+	
+	/**
+	 * 
+	 * getGoodsInfoAllByShopsLeaseCode:通过店铺编号获取对应的货品信息(添加销售数据)
+	 *
+	 * @date 2016年5月23日
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getGoodsInfoAllByShopsLeaseCode.do")
+	@ResponseBody
+	public Object getGoodsInfoAllByShopsLeaseCode(HttpServletRequest request,String code){
+		Map<String,Object> params=new HashMap<>();
+		params.put("shopsLeaseCode", code);
+		List<GwGoodsInfoModel> goodsInfoList=gwGoodsInfoServiceImpl.getGoodsInfoByShopsLeaseCodeApi(params);
+		List<HashMap<String,Object>> list=new ArrayList<HashMap<String,Object>>();
+		for (GwGoodsInfoModel goodsinfo : goodsInfoList) {
+			HashMap<String,Object> map=new HashMap<String,Object>();
+			map.put("id", goodsinfo.getCode());
+			map.put("text", goodsinfo.getName());
+			list.add(map);
+		}
+		return list;
+	}
+}

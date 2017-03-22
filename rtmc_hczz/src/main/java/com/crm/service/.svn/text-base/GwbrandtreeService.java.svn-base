@@ -1,0 +1,83 @@
+package com.crm.service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.Services;
+import com.crm.pojo.GwbrandtreeModel;
+
+/**
+ * 
+ * GwbrandtreeService:品牌管理业务逻辑层接口
+ *
+ * @author chengpengfei
+ * @date  2016年3月13日
+ * @version  jdk1.8
+ *
+ */
+public interface GwbrandtreeService extends Services<GwbrandtreeModel>{
+	/**
+	 * 
+	 * getBrandTreeByFormatstreeId:根据业态ID，获取品牌树形集合
+	 *
+	 * @date 2016年3月16日
+	 * @param FormatsTreeId       业态id
+	 * @return
+	 */
+	public List<GwbrandtreeModel> getBrandTreeByFormatstreeId(int gwFormatsTreeId);
+	public List<GwbrandtreeModel> getBrandNameById(int id);
+	
+	/**
+	 * 根据品牌编号获取品牌对象
+	 * @param code
+	 * @return
+	 */
+	public GwbrandtreeModel getBrandTreeByCode(String code);
+	
+	/**
+	 * 获取已签约的品牌分页信息
+	 * @param params
+	 * @return
+	 */
+	public BasePageResultVo getBrandTreeBySionPageList(Map<String, Object> params);
+	
+	/**
+	 * 根据编号查询已签约的品牌信息
+	 * @param code
+	 * @return
+	 */
+	public GwbrandtreeModel getBrandTreeSignByCode(String code);
+	
+	/**
+	 * 根据条件查询品牌集合信息,分页
+	 * getBrandTreeByCondition:
+	 *
+	 * @author hemingjun
+	 * @date 2016年8月9日
+	 * @param params
+	 * @return
+	 */
+	public BasePageResultVo getBrandTreeByCondition(Map<String, Object> params);
+	
+	/**
+	 * 
+	 * getAllStateNotZero:查询状态不为0（删除状态）的全部品牌集合信息
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月30日
+	 * @return
+	 */
+	public List<GwbrandtreeModel> getAllStateNotZero();
+	/**
+	 * 
+	 * getBrandByIds:根据id数组查询品牌数据
+	 *
+	 * @author   cpf
+	 * @date     2016年10月11日
+	 *
+	 * @param ids
+	 * @return
+	 */
+	public List<GwbrandtreeModel> getBrandByIds(String[] ids);
+}

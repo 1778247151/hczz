@@ -1,0 +1,39 @@
+package com.crm.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwBaseIntegralDao;
+import com.crm.pojo.GwBaseIntegralModel;
+import com.crm.service.GwBaseIntegralService;
+
+/**
+ * 
+ * GwBaseIntegralServiceImpl:基础积分规则业务逻辑层实现
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwBaseIntegralServiceManage")
+public class GwBaseIntegralServiceImpl extends ServersManager<GwBaseIntegralModel, GwBaseIntegralDao> implements GwBaseIntegralService{
+	
+	@Resource(name = "gwBaseIntegralDaoManage")
+	@Override
+	public void setDao(GwBaseIntegralDao gwBaseIntegralDao) {
+		this.dao = gwBaseIntegralDao;
+	}
+
+	@Override
+	public List<GwBaseIntegralModel> selectByConditionList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectByConditionList(params);
+	}
+	
+	
+}

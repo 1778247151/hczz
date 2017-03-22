@@ -1,0 +1,120 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwMemberIntegralDetailDao;
+import com.crm.pojo.GwMemberIntegralDetailModel;
+
+/**
+ * 
+ * GwMemberIntegralDetailDaoImpl:会员信息数据访问层实现
+ *
+ * @author hanzhiqiang
+ * @date  2016年11月2日
+ * @version  jdk1.8
+ *
+ */
+@Repository("gwMemberIntegralDetailDaoManage")
+public class GwMemberIntegralDetailDaoImpl  implements GwMemberIntegralDetailDao{
+	@Resource
+	private BaseDao dao;
+
+	@Override
+	public int insert(GwMemberIntegralDetailModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.memberIntegralDetail.insert", e);
+	}
+
+	@Override
+	public int delete(GwMemberIntegralDetailModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwMemberIntegralDetailModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public GwMemberIntegralDetailModel selectOne(GwMemberIntegralDetailModel e) {
+		// TODO Auto-generated method stub
+		return (GwMemberIntegralDetailModel) dao.selectOne("gw.memberIntegralDetail.selectById", e);
+	}
+
+	@Override
+	public List<GwMemberIntegralDetailModel> selectList(GwMemberIntegralDetailModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.memberIntegralDetail.deleteById", id);
+	}
+
+	@Override
+	public GwMemberIntegralDetailModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwMemberIntegralDetailModel) dao.selectOne("gw.memberIntegralDetail.selectById",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.memberIntegralDetail.selectPageList", "gw.memberIntegralDetail.selectByPageCount", params);
+	}
+
+	@Override
+	public List<GwMemberIntegralDetailModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.memberIntegralDetail.selectList");
+	}
+
+
+	@Override
+	public List<GwMemberIntegralDetailModel> getListsApi() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public GwMemberIntegralDetailModel getMemberIntegralDetaiById(Integer id) {
+		// TODO Auto-generated method stub
+		return (GwMemberIntegralDetailModel)dao.selectOne("gw.memberIntegralDetail.selectById", id);
+	}
+
+	@Override
+	public List<GwMemberIntegralDetailModel> getDetailByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.memberIntegralDetail.selectPageList",params);
+	}
+
+	@Override
+	public List<GwMemberIntegralDetailModel> getExportMemberIntegralDetail(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.memberIntegralDetail.selectList",params);
+	}
+
+	@Override
+	public int deleteByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.memberIntegralDetail.deleteByCondition", params);
+	}
+	
+}

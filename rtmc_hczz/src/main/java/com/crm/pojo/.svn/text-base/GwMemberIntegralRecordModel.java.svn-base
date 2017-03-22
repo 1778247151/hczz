@@ -1,0 +1,95 @@
+package com.crm.pojo;
+
+import com.crm.enums.IntegralTypeEnum;
+
+public class GwMemberIntegralRecordModel {
+	private Integer id;
+
+	private String code;
+
+	private String integralTime;//积分时间
+
+	private Integer integralnum;
+
+	private Integer integraltype;
+
+	private String description;
+
+	private String createtime;
+	private String memberCode;// 会员VIP号
+	// 积分类型名称(1-销售积分，2-礼品兑换（扣分），3活动兑换（扣分）,4-第三方平台（积分、扣分）
+	private String integraltypeName;
+
+	
+	public String getMemberCode() {
+		return memberCode;
+	}
+
+	public void setMemberCode(String memberCode) {
+		this.memberCode = memberCode;
+	}
+
+	public String getIntegraltypeName() {
+		return IntegralTypeEnum.getDisplayName(getIntegraltype());
+	}
+
+	public void setIntegraltypeName(String integraltypeName) {
+		this.integraltypeName = integraltypeName;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code == null ? null : code.trim();
+	}
+
+	public String getIntegralTime() {
+		return integralTime;
+	}
+
+	public void setIntegralTime(String integralTime) {
+		this.integralTime = integralTime == null ? null : integralTime.trim();
+	}
+
+	public Integer getIntegralnum() {
+		return integralnum;
+	}
+
+	public void setIntegralnum(Integer integralnum) {
+		this.integralnum = integralnum;
+	}
+
+	public Integer getIntegraltype() {
+		return integraltype;
+	}
+
+	public void setIntegraltype(Integer integraltype) {
+		this.integraltype = integraltype;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description == null ? null : description.trim();
+	}
+
+	public String getCreatetime() {
+		return createtime;
+	}
+
+	public void setCreatetime(String createtime) {
+		this.createtime = createtime == null ? null : createtime.trim();
+	}
+}

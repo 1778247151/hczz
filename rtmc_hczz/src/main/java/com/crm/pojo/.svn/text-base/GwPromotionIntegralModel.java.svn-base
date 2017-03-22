@@ -1,0 +1,337 @@
+package com.crm.pojo;
+
+import com.crm.enums.IsFoverRuleEnum;
+import com.crm.enums.SexNameEnum;
+
+public class GwPromotionIntegralModel {
+    private Integer id;
+
+    private String code;
+
+    private String description;
+
+    private Integer isForever;
+
+    private Integer priority;
+    
+    private String startTime;
+
+    private String endTime;
+
+    private Integer model;
+
+    private Integer type;
+
+    private String conditionGroup;
+
+    private String memberGrade;
+
+    private String startCardCode;
+
+    private String endCardCode;
+
+    private Integer sex;
+
+    private String week;
+
+    private String month;
+
+    private Integer status;
+
+    private Integer createUserId;
+
+    private String createTime;
+
+    private Integer updateUserId;
+
+    private String updateTime;
+    
+    private String createUserName;
+    
+    private String updateUserName;
+    
+    private String sexName;
+    
+    private String isForeverName;
+    
+    //复选框组
+    private boolean cisForever;
+
+	private boolean cmemberGrade;
+    
+    private boolean ccardCode;
+    
+    private boolean csex;
+    
+    private boolean cCurrentDay;
+    
+    private boolean cCurrentMonth;
+    
+    private boolean cWeek;
+    
+    private boolean cMonth;
+    
+	public Integer getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Integer priority) {
+		this.priority = priority;
+	}
+
+	public boolean isCisForever() {
+		return cisForever;
+	}
+
+	public void setCisForever(boolean cisForever) {
+		this.cisForever = cisForever;
+	}
+
+	public boolean isCmemberGrade() {
+		return cmemberGrade;
+	}
+
+	public void setCmemberGrade(boolean cmemberGrade) {
+		this.cmemberGrade = cmemberGrade;
+	}
+
+	public boolean isCcardCode() {
+		return ccardCode;
+	}
+
+	public void setCcardCode(boolean ccardCode) {
+		this.ccardCode = ccardCode;
+	}
+
+	public boolean isCsex() {
+		return csex;
+	}
+
+	public void setCsex(boolean csex) {
+		this.csex = csex;
+	}
+
+	public boolean iscCurrentDay() {
+		return cCurrentDay;
+	}
+
+	public void setcCurrentDay(boolean cCurrentDay) {
+		this.cCurrentDay = cCurrentDay;
+	}
+
+	public boolean iscCurrentMonth() {
+		return cCurrentMonth;
+	}
+
+	public void setcCurrentMonth(boolean cCurrentMonth) {
+		this.cCurrentMonth = cCurrentMonth;
+	}
+
+	public boolean iscWeek() {
+		return cWeek;
+	}
+
+	public void setcWeek(boolean cWeek) {
+		this.cWeek = cWeek;
+	}
+
+	public boolean iscMonth() {
+		return cMonth;
+	}
+
+	public void setcMonth(boolean cMonth) {
+		this.cMonth = cMonth;
+	}
+
+	public String getIsForeverName() {
+		return IsFoverRuleEnum.getDisplayName(getIsForever());
+	}
+
+	public void setIsForeverName(String isForeverName) {
+		this.isForeverName = isForeverName;
+	}
+
+	public String getCreateUserName() {
+		return createUserName;
+	}
+
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
+	}
+
+	public String getUpdateUserName() {
+		return updateUserName;
+	}
+
+	public void setUpdateUserName(String updateUserName) {
+		this.updateUserName = updateUserName;
+	}
+
+	public String getSexName() {
+		return SexNameEnum.getDisplayName(getSex());
+	}
+
+	public void setSexName(String sexName) {
+		this.sexName = sexName;
+	}
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code == null ? null : code.trim();
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description == null ? null : description.trim();
+    }
+
+    public Integer getIsForever() {
+        return isForever;
+    }
+
+    public void setIsForever(Integer isForever) {
+        this.isForever = isForever;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime == null ? null : startTime.trim();
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime == null ? null : endTime.trim();
+    }
+
+    public Integer getModel() {
+        return model;
+    }
+
+    public void setModel(Integer model) {
+        this.model = model;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public String getConditionGroup() {
+        return conditionGroup;
+    }
+
+    public void setConditionGroup(String conditionGroup) {
+        this.conditionGroup = conditionGroup == null ? null : conditionGroup.trim();
+    }
+
+    public String getMemberGrade() {
+        return memberGrade;
+    }
+
+    public void setMemberGrade(String memberGrade) {
+        this.memberGrade = memberGrade == null ? null : memberGrade.trim();
+    }
+
+    public String getStartCardCode() {
+        return startCardCode;
+    }
+
+    public void setStartCardCode(String startCardCode) {
+        this.startCardCode = startCardCode == null ? null : startCardCode.trim();
+    }
+
+    public String getEndCardCode() {
+        return endCardCode;
+    }
+
+    public void setEndCardCode(String endCardCode) {
+        this.endCardCode = endCardCode == null ? null : endCardCode.trim();
+    }
+
+    public Integer getSex() {
+        return sex;
+    }
+
+    public void setSex(Integer sex) {
+        this.sex = sex;
+    }
+
+    public String getWeek() {
+        return week;
+    }
+
+    public void setWeek(String week) {
+        this.week = week == null ? null : week.trim();
+    }
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month == null ? null : month.trim();
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime == null ? null : createTime.trim();
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime == null ? null : updateTime.trim();
+    }
+}

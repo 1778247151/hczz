@@ -1,0 +1,276 @@
+package com.crm.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.AdminUser;
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.SecurityUtil;
+import com.crm.interceptor.BussAnnotation;
+import com.crm.pojo.GwGoodsInStoreModel;
+import com.crm.pojo.GwIntegralExchangeGoodsDetailModel;
+import com.crm.pojo.GwLeaseGoodsModel;
+import com.crm.pojo.GwRepeatVisitModel;
+import com.crm.pojo.GwIntegralExchangeGoodsModel;
+import com.crm.pojo.GwStoreGoodsModel;
+import com.crm.service.GwIntegralExchangeGoodsDetailService;
+import com.crm.service.GwIntegralExchangeGoodsService;
+import com.crm.util.BaseCodeUtil;
+import com.crm.util.DateUtil;
+
+/**
+ * 
+ * GwIntegralExchangeGoodsController:积分兑换礼品活动规则维护控制层
+ *
+ * @author chengpengfei
+ * @date 2016年6月23日
+ * @version jdk1.8
+ *
+ */
+@Controller
+@RequestMapping("integralExchangeGoods")
+public class GwIntegralExchangeGoodsController {
+	// 日志
+	private Logger logger = LoggerFactory.getLogger(GwIntegralExchangeGoodsModel.class);
+	/**
+	 * 积分兑换礼品活动规则业务逻辑
+	 */
+	@Resource(name="gwIntegralExchangeGoodsServiceManage")
+	private GwIntegralExchangeGoodsService gwIntegralExchangeGoodsServiceImpl;
+	
+	
+	/**
+	 * 礼物兑换详细业务逻辑
+	 */
+	@Resource(name = "gwIntegralExchangeGoodsDetailServiceManage")
+	private GwIntegralExchangeGoodsDetailService gwIntegralExchangeGoodsDetailServiceImpl;
+	/**
+	 * 获取积分兑换礼品活动规则数据分页集合
+	 * @author chengpengfei
+	 * @param  currentPage
+	 * @param  pageSize
+	 * @return
+	 */
+	@RequestMapping("/getIntegralExchangeGoodsByPageList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="积分兑换礼品活动规则",option="获取列表")
+	public LigerPageDataVo getIntegralExchangeGoodsByPageList(int currentPage,int pageSize,String status,String goodsCode,String startTime,String endTime){
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("status", status);
+		params.put("goodsCode", goodsCode);
+		params.put("startTime", startTime);
+		params.put("endTime", endTime);
+		BasePageResultVo baseResultVo=gwIntegralExchangeGoodsServiceImpl.selectPageList(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 添加积分兑换礼品活动规则数据
+	 * @param goods
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/addIntegralExchangeGoods.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="积分兑换礼品活动规则",option="添加")
+	public BaseResultVo addIntegralExchangeGoods(GwIntegralExchangeGoodsModel integralExchangeGoods,HttpServletRequest request){
+		if(integralExchangeGoods==null){
+			return BaseResultVo.responseFail("实体类为空");
+		}
+		//创建时间
+		integralExchangeGoods.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		//修改时间
+		integralExchangeGoods.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		//创建人
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		integralExchangeGoods.setCreateUserId(adminUser.getUserId());
+		//修改人
+		integralExchangeGoods.setUpdateUserId(adminUser.getUserId());
+		
+		//生成code
+		// 获取编号前缀
+		String frontCode = BaseCodeUtil.getBaseCode("DH");
+		// 获取当天时间
+		String time = DateUtil.getCurrentDate("");
+		String code = "";
+		// 根据当天时间查询最后一条记录
+		GwIntegralExchangeGoodsModel exchangeGoodsModel = gwIntegralExchangeGoodsServiceImpl.selectByLastOne(time);
+		if (exchangeGoodsModel == null) {
+			code = frontCode + "0001";
+		} else {
+			String subString = exchangeGoodsModel.getCode().substring(2);
+			long num = Long.parseLong(subString) + 1;
+			code = "DH" + String.valueOf(num);
+		}
+
+		integralExchangeGoods.setCode(code);
+		integralExchangeGoods.setExchageMemberNum(0);
+		
+		//存入数据
+		int number = gwIntegralExchangeGoodsServiceImpl.insert(integralExchangeGoods);
+		if(number<0){
+			return BaseResultVo.responseFail("添加失败");
+		}
+		return BaseResultVo.responseSuccess("添加成功");
+	}
+	
+	/**
+	 * 根据ID获取积分兑换礼品活动规则信息
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/getIntegralExchangeGoodsById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="积分兑换礼品活动规则",option="根据ID获取信息")
+	public BaseResultVo getIntegralExchangeGoodsById(int id){
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		GwIntegralExchangeGoodsModel integralExchangeGoods = gwIntegralExchangeGoodsServiceImpl.selectById(id);
+		if(integralExchangeGoods==null){
+			return BaseResultVo.responseFail("获取信息失败");
+		}
+		BaseResultVo baseResultVo = BaseResultVo.responseSuccess("获取信息成功");
+		baseResultVo.setData(integralExchangeGoods);
+		return baseResultVo;
+	}
+	
+	/**
+	 * 添加积分兑换礼品活动规则已兑换数量
+	 * @param goods
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/increamExchangeNum.do")
+	@ResponseBody
+	public BaseResultVo increamExchangeNum(int id,HttpServletRequest request){
+		GwIntegralExchangeGoodsModel integralExchangeGoods = gwIntegralExchangeGoodsServiceImpl.selectById(id);
+		if(integralExchangeGoods==null){
+			return BaseResultVo.responseFail("实体类为空");
+		}
+
+		int exchangeNum = integralExchangeGoods.getExchageMemberNum();
+		integralExchangeGoods.setExchageMemberNum(exchangeNum+1);
+		//修改数据
+		int number = gwIntegralExchangeGoodsServiceImpl.update(integralExchangeGoods);
+		if(number<0){
+			return BaseResultVo.responseFail("修改失败");
+		}
+		return BaseResultVo.responseSuccess("修改成功");
+	}
+	
+	/**
+	 * 修改积分兑换礼品活动规则
+	 * @param goods
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/updateIntegralExchangeGoods.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="积分兑换礼品活动规则",option="修改")
+	public BaseResultVo updateIntegralExchangeGoods(GwIntegralExchangeGoodsModel integralExchangeGoods,HttpServletRequest request){
+		if(integralExchangeGoods==null){
+			return BaseResultVo.responseFail("实体类为空");
+		}
+		//修改时间
+		integralExchangeGoods.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		//修改人
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		integralExchangeGoods.setUpdateUserId(adminUser.getUserId());
+		//修改数据
+		int number = gwIntegralExchangeGoodsServiceImpl.update(integralExchangeGoods);
+		if(number<0){
+			return BaseResultVo.responseFail("修改失败");
+		}
+		return BaseResultVo.responseSuccess("修改成功");
+	}
+	
+	/**
+	 * 删除积分兑换礼品规则
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/deleteIntegralExchangeGoodsById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="积分兑换礼品活动规则",option="删除")
+	public BaseResultVo deleteIntegralExchangeGoodsById(int id,String code,HttpServletRequest request){
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		
+		
+		List<GwIntegralExchangeGoodsDetailModel> detatil=gwIntegralExchangeGoodsDetailServiceImpl.getAllList();
+		for (GwIntegralExchangeGoodsDetailModel gwIntegralExchangeGoodsDetailModel : detatil) {
+			if(gwIntegralExchangeGoodsDetailModel.getIntegralExchageGoodsCode().equals(code)){
+				return BaseResultVo.responseFail("编号已生成兑换信息，不能删除");
+			}
+		}
+		int number = gwIntegralExchangeGoodsServiceImpl.deleteById(id);
+		if(number<0){
+			return BaseResultVo.responseFail("删除失败");
+		}
+		//用户对象
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		return BaseResultVo.responseSuccess("删除成功");
+	}
+	
+	/**
+	 * 根据ID修改对应的状态
+	 * @param id
+	 * @param disableStatus
+	 * @param startStatus
+	 * @return
+	 */
+	@RequestMapping("/updateStatusById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="积分兑换礼品活动规则",option="修改状态")
+	public BaseResultVo updateStatusById(int id,String disableStatus,String startStatus,String stopStatus,String enableStatus,HttpServletRequest request){
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		Map<String,Object> params = new HashMap<>();
+		//禁用状态
+		if(disableStatus!=null){
+			params.put("disableStatus", disableStatus);
+		}
+		//活动开始状态
+		if(startStatus!=null){
+			params.put("startStatus", startStatus);
+		}
+		//强制终止状态
+		if(stopStatus!=null){
+			params.put("stopStatus", stopStatus);
+		}
+		//启用状态
+		if(enableStatus!=null){
+			params.put("enableStatus", enableStatus);
+		}
+		params.put("id", id);
+		//根据ID修改对应的状态
+		int updateStatus = gwIntegralExchangeGoodsServiceImpl.updateIntegralExchangeGoodsById(params);
+		if(updateStatus<0){
+			return BaseResultVo.responseFail("修改状态失败");
+		}
+		return BaseResultVo.responseSuccess("操作成功");
+		
+	}
+}

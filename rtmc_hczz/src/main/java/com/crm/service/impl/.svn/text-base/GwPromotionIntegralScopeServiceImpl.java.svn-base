@@ -1,0 +1,78 @@
+package com.crm.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwPromotionIntegralScopeDao;
+import com.crm.pojo.GwPromotionIntegralModel;
+import com.crm.pojo.GwPromotionIntegralScopeModel;
+import com.crm.service.GwPromotionIntegralScopeService;
+
+/**
+ * 
+ * GwPromotionIntegralScopeServiceImpl:促销积分规则业务逻辑层实现
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwPromotionIntegralScopeServiceManage")
+public class GwPromotionIntegralScopeServiceImpl extends ServersManager<GwPromotionIntegralScopeModel, GwPromotionIntegralScopeDao> implements GwPromotionIntegralScopeService{
+	
+	@Resource(name = "gwPromotionIntegralScopeDaoManage")
+	@Override
+	public void setDao(GwPromotionIntegralScopeDao gwPromotionIntegralScopeDao) {
+		this.dao = gwPromotionIntegralScopeDao;
+	}
+
+	@Override
+	public List<GwPromotionIntegralScopeModel> getListByCode(Map<String,Object> params) {
+		return dao.getListByCode(params);
+	}
+
+	/**
+	 * 
+	 * 批量插入规则适用范围
+	 * @param code
+	 * @return
+	 */
+	@Override
+	public int insertBatch(List<GwPromotionIntegralScopeModel> list) {
+		return dao.insertBatch(list);
+	}
+
+	/**
+	 * 根据促销规则编号删除适用范围
+	 * 
+	 * @param code
+	 * @return
+	 */
+	@Override
+	public int deleteByCode(String code) {
+		return dao.deleteByCode(code);
+	}
+
+	@Override
+	public int deleteByCodeAndType(Map<String,Object> params) {
+		// TODO Auto-generated method stub
+		return dao.deleteByCodeAndType(params);
+	}
+
+	@Override
+	public int batchUpdate(List<GwPromotionIntegralScopeModel> list) {
+		// TODO Auto-generated method stub
+		return dao.batchUpdate(list);
+	}
+
+	@Override
+	public int updateByCode(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.updateByCode(params);
+	}
+	
+}

@@ -1,0 +1,99 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.bean.PromotionIntegralInfo;
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwPromotionIntegralDao;
+import com.crm.dao.GwPromotionIntegralDao;
+import com.crm.pojo.GwPromotionIntegralModel;
+
+@Repository("gwPromotionIntegralDaoManage")
+public class GwPromotionIntegralDaoImpl implements GwPromotionIntegralDao{
+	@Resource
+	private BaseDao dao;
+	
+	@Override
+	public int insert(GwPromotionIntegralModel e) {
+		return dao.insert("gw.promotion.integral.insert",e);
+	}
+
+	@Override
+	public int delete(GwPromotionIntegralModel e) {
+		return dao.delete("gw.promotion.integral.deleteById",e.getId());
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwPromotionIntegralModel e) {
+		return dao.update("gw.promotion.integral.update",e);
+	}
+
+	@Override
+	public GwPromotionIntegralModel selectOne(GwPromotionIntegralModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwPromotionIntegralModel> selectList(GwPromotionIntegralModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		return dao.delete("gw.promotion.integral.deleteByPrimaryKey", id);
+	}
+
+	@Override
+	public GwPromotionIntegralModel selectById(int id) {
+		return (GwPromotionIntegralModel) dao.selectOne("gw.promotion.integral.selectByPrimaryKey",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		return dao.selectPageList("gw.promotion.integral.selectPageList", "gw.promotion.integral.selectCount", params);
+	}
+
+	@Override
+	public List<GwPromotionIntegralModel> getAllList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public GwPromotionIntegralModel selectByCode(String code) {
+		return (GwPromotionIntegralModel) dao.selectOne("gw.promotion.integral.selectByCode",code);
+	}
+
+	@Override
+	public GwPromotionIntegralModel getPromotionIntegralByLastOne(String time) {
+		return (GwPromotionIntegralModel) dao.selectOne("gw.promotion.integral.selectByLastOne", time);
+	}
+
+    @Override
+    public List<PromotionIntegralInfo> getPromotionIntegralBy(Map<String,Object> params) {
+        // TODO Auto-generated method stub
+        return (List<PromotionIntegralInfo>) dao.selectList("gw.promotion.integral.getPromotionIntegralBy", params);
+    }
+
+	@Override
+	public List<PromotionIntegralInfo> getMemberDetatilPromotionIntegralBy(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		 return (List<PromotionIntegralInfo>) dao.selectList("gw.promotion.integral.getMemberDetatilPromotionIntegralBy", params);
+	}
+    
+    
+}

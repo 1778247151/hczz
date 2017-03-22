@@ -1,0 +1,99 @@
+package com.crm.pojo;
+
+import java.math.BigDecimal;
+
+public class GwClubDetailModel implements Cloneable{
+    private Integer id;
+
+    private String gwClubCode;
+
+    private String typeCode;
+
+    private Integer type;
+
+    private BigDecimal discountRate;
+
+    private BigDecimal exchangeMoney;
+
+    private Integer integralNumber;
+    
+    private String formatsTreeName;
+    
+    private String shopsLeaseName;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getGwClubCode() {
+        return gwClubCode;
+    }
+
+    public void setGwClubCode(String gwClubCode) {
+        this.gwClubCode = gwClubCode == null ? null : gwClubCode.trim();
+    }
+
+    public String getTypeCode() {
+        return typeCode;
+    }
+
+    public void setTypeCode(String typeCode) {
+        this.typeCode = typeCode == null ? null : typeCode.trim();
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public BigDecimal getDiscountRate() {
+        return discountRate;
+    }
+
+    public void setDiscountRate(BigDecimal discountRate) {
+        this.discountRate = discountRate;
+    }
+
+    public BigDecimal getExchangeMoney() {
+        return exchangeMoney;
+    }
+
+    public void setExchangeMoney(BigDecimal exchangeMoney) {
+        this.exchangeMoney = exchangeMoney;
+    }
+
+    public Integer getIntegralNumber() {
+        return integralNumber;
+    }
+
+    public void setIntegralNumber(Integer integralNumber) {
+        this.integralNumber = integralNumber;
+    }
+    
+    public String getFormatsTreeName() {
+		return formatsTreeName;
+	}
+
+	public void setFormatsTreeName(String formatsTreeName) {
+		this.formatsTreeName = formatsTreeName;
+	}
+
+	public String getShopsLeaseName() {
+		return shopsLeaseName;
+	}
+
+	public void setShopsLeaseName(String shopsLeaseName) {
+		this.shopsLeaseName = shopsLeaseName;
+	}
+    @Override
+   	public GwClubDetailModel clone() throws CloneNotSupportedException {
+   		return (GwClubDetailModel) super.clone();
+   	}
+}

@@ -1,0 +1,70 @@
+package com.crm.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwAddressBookDao;
+import com.crm.pojo.GwAddressBookModel;
+import com.crm.service.GwAddressBookService;
+
+/**
+ * 
+ * GwAddressBookServiceImpl:业务逻辑层实现
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwAddressBookServiceManage")
+public class GwAddressBookServiceImpl extends ServersManager<GwAddressBookModel, GwAddressBookDao> implements GwAddressBookService{
+
+	@Resource(name = "gwAddressBookDaoManage")
+	@Override
+	public void setDao(GwAddressBookDao gwAddressBookDao) {
+		// TODO Auto-generated method stub
+		this.dao = gwAddressBookDao;
+	}
+
+	@Override
+	public GwAddressBookModel getAddressBookById(Integer id) {
+		// TODO Auto-generated method stub
+		return dao.getAddressBookById(id);
+	}
+
+	@Override
+	public List<GwAddressBookModel> getListsApi() {
+		// TODO Auto-generated method stub
+		return dao.getListsApi();
+	}
+
+	@Override
+	public List<GwAddressBookModel> getAddressBookListByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getAddressBookListByCondition(params);
+	}
+
+	@Override
+	public int addAddressBook(GwAddressBookModel gwAddressBookModel) {
+		// TODO Auto-generated method stub
+		return dao.insert(gwAddressBookModel);
+	}
+
+	@Override
+	public int updateAddressBook(GwAddressBookModel gwAddressBookModel) {
+		// TODO Auto-generated method stub
+		return dao.update(gwAddressBookModel);
+	}
+
+	@Override
+	public int deleteAddressBookById(int id) {
+		// TODO Auto-generated method stub
+		return dao.deleteAddressBookById(id);
+	}
+
+}

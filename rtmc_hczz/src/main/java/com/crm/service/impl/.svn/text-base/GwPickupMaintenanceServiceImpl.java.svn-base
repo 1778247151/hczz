@@ -1,0 +1,46 @@
+package com.crm.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwPickupMaintenanceDao;
+import com.crm.pojo.GwPickupMaintenanceModel;
+import com.crm.service.GwPickupMaintenanceService;
+
+/**
+ * 
+ * GwPickupMaintenanceServiceImpl:拾物维护业务逻辑层实现
+ *
+ * @author chengpengfei
+ * @date  2016年6月23日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwPickupMaintenanceServiceManage")
+public class GwPickupMaintenanceServiceImpl extends ServersManager<GwPickupMaintenanceModel, GwPickupMaintenanceDao> implements GwPickupMaintenanceService{
+
+	@Resource(name="gwPickupMaintenanceDaoManage")
+	@Override
+	public void setDao(GwPickupMaintenanceDao dao) {
+		// TODO Auto-generated method stub
+		this.dao = dao;
+	}
+
+	@Override
+	public int updatePickupMaintenanceStatusByCode(List<Map<String, Object>> list) {
+		// TODO Auto-generated method stub
+		return dao.updatePickupMaintenanceStatusByCode(list);
+	}
+
+	@Override
+	public GwPickupMaintenanceModel getPickupMaintenanceByLaseOne(String time) {
+		// TODO Auto-generated method stub
+		return dao.getPickupMaintenanceByLaseOne(time);
+	}
+
+}

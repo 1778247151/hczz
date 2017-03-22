@@ -1,0 +1,900 @@
+package com.crm.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.QueryConditon;
+import com.crm.common.ResponseCode;
+import com.crm.common.SecurityUtil;
+import com.crm.common.Status;
+import com.crm.enums.ShopsInfoStateEnum;
+import com.crm.enums.ShopsTypeEnum;
+import com.crm.interceptor.exception.BaseException;
+import com.crm.pojo.GwShopsInfoModel;
+import com.crm.service.GwShopsInfoService;
+import com.crm.util.DateUtil;
+import com.crm.util.JsonMapper;
+import com.crm.util.QueryConditionUtil;
+import com.crm.util.ValidateUtil;
+/**
+ * 
+ * GwShopsInfoController:商铺信息管理  访问控制层
+ *
+ * @author yumaochun
+ * @date  2016年3月10日
+ * @version  jdk1.8
+ *
+ */
+@Controller
+@RequestMapping("/shopsInfo")
+public class GwShopsInfoController extends BaseException{
+	
+	/**
+	 * 商铺信息管理业务逻辑
+	 */
+	@Resource(name="gwShopsInfoServiceManage")
+	private GwShopsInfoService gwShopsInfoServiceImpl;
+	
+	/**
+	 * 
+	 * addShopsInfo:添加单元信息
+	 *
+	 * @date 2016年3月10日 
+	 * @param ShopsInfo            单元信息对象
+	 * @return
+	 */
+	@RequestMapping("/addShopsInfo.do")
+	@ResponseBody
+	public BaseResultVo addShopsInfo(GwShopsInfoModel shopsInfo,HttpServletRequest request){
+		Integer userid = SecurityUtil.getAdminUser(request).getUserId();
+		if(StringUtils.isEmpty(shopsInfo.getUnitNumber())){
+			return BaseResultVo.responseFail("单元号不能为空");
+		}
+		if(StringUtils.isEmpty(shopsInfo.getGwPropertyAttributeId())){
+			return BaseResultVo.responseFail("物业性质不能为空");
+		}
+		if(StringUtils.isEmpty(shopsInfo.getUnitNumber())){
+			return BaseResultVo.responseFail("单元号不能为空");
+		}
+		
+		shopsInfo.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		shopsInfo.setCreateUser(userid);
+		GwShopsInfoModel shopsInfoMode = gwShopsInfoServiceImpl.getShopsInfoByCode(shopsInfo.getUnitNumber()); 
+		if(shopsInfoMode!=null){
+			return BaseResultVo.responseFail("单元号已存在");
+		}
+		int num=gwShopsInfoServiceImpl.insert(shopsInfo);
+		if(num<=0){
+			BaseResultVo.responseFail("添加单元信息失败");
+		}
+		
+		return BaseResultVo.responseSuccess("添加单元信息成功");
+	}
+	
+	/**
+	 * 
+	 * areaChangeInfo:单元面积变更
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年8月18日
+	 *
+	 * @param shopsInfo 		待变更的单元信息对象
+	 * @param newUnitNumber		变更后的单元号
+	 * @param newArea			变更后的单元面积
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/areaChangeInfo.do")
+	@ResponseBody
+	public BaseResultVo areaChangeInfo(GwShopsInfoModel shopsInfo,String newUnitNumber,String newArea,HttpServletRequest request){
+		Integer userid = SecurityUtil.getAdminUser(request).getUserId();
+		//判断变更后的单元号是否已存在
+		GwShopsInfoModel shopsInfoMode = gwShopsInfoServiceImpl.getShopsInfoByCode(newUnitNumber); 
+		if(shopsInfoMode!=null){
+			return BaseResultVo.responseFail("单元号已存在");
+		}
+		
+		if(StringUtils.isEmpty(newUnitNumber)){
+			return BaseResultVo.responseFail("单元号不能为空");
+		}
+		if(StringUtils.isEmpty(shopsInfo.getGwPropertyAttributeId())){
+			return BaseResultVo.responseFail("物业性质不能为空");
+		}
+		if(StringUtils.isEmpty(shopsInfo.getUnitNumber())){
+			return BaseResultVo.responseFail("单元号不能为空");
+		}
+		
+		String unitNumber = shopsInfo.getUnitNumber();
+		//设置失效变更的单元信息
+		Map<String,Object> params = new HashMap<>();
+		params.put("state", ShopsInfoStateEnum.failure.getValue());
+		params.put("unitNumber", unitNumber);
+		params.put("type", ShopsTypeEnum.AREA_CHANGE.getValue());
+		
+		//设置变更后的单元信息
+		shopsInfo.setUnitNumber(newUnitNumber);
+		shopsInfo.setArea(newArea);
+		shopsInfo.setUnitSplit(unitNumber);
+		shopsInfo.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		shopsInfo.setCreateUser(userid);
+		shopsInfo.setType(ShopsTypeEnum.AREA_CHANGE.getValue());
+		//执行失效变更单元和添加变更后的单元记录
+		int num = gwShopsInfoServiceImpl.addAreaChange(shopsInfo,params);
+		
+		if(num==-2){
+			BaseResultVo.responseFail("失效单元失败");
+		}
+		if(num==-1){
+			BaseResultVo.responseFail("单元面积变更失败");
+		}
+		
+		return BaseResultVo.responseSuccess("单元面积变更成功");
+	}
+	
+	/**
+	 * 
+	 * megerShopsInfo:合并单元信息
+	 *
+	 * @date 2016年3月10日 
+	 * @param ShopsInfo            单元信息对象
+	 * @return
+	 */
+	@RequestMapping("/megerShopsInfo.do")
+	@ResponseBody
+	public BaseResultVo megerShopsInfo(GwShopsInfoModel shopsInfo,String unitNumbers[],HttpServletRequest request){
+		if(StringUtils.isEmpty(shopsInfo.getUnitNumber())){
+			return BaseResultVo.responseFail("单元号不能为空");
+		}
+		if(!ValidateUtil.isLengthRangeStr(shopsInfo.getArea(),1,11)){
+			return BaseResultVo.responseFail("单元面积为1-11位的字符串");
+		}
+		if(StringUtils.isEmpty(shopsInfo.getGwPropertyAttributeId())){
+			return BaseResultVo.responseFail("物业性质不能为空");
+		}
+		if(StringUtils.isEmpty(shopsInfo.getUnitNumber())){
+			return BaseResultVo.responseFail("单元号不能为空");
+		}
+		return gwShopsInfoServiceImpl.addMegerShopsInfo(shopsInfo, unitNumbers, request);
+	}
+	
+	/**
+	 * 
+	 * splitShopsInfo:拆分单元信息
+	 *
+	 * @date 2016年3月10日 
+	 * @param ShopsInfo            单元信息对象
+	 * @return
+	 */
+	@RequestMapping("/splitShopsInfo.do")
+	@ResponseBody
+	public BaseResultVo splitShopsInfo(String shopsInfoList,String unitNumber,HttpServletRequest request){
+		return gwShopsInfoServiceImpl.addSplitShopsInfo(shopsInfoList, unitNumber, request);
+	}
+	/**
+	 * 
+	 * getShopsInfoPageList:单元信息管理
+	 *
+	 * @date 2016年3月10日
+	 * @param currentPage     当前页码
+	 * @param pageSize        每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getShopsInfoPageList.do")
+	@ResponseBody
+	public LigerPageDataVo getShopsInfoPageList(int currentPage,int pageSize,Integer state,Integer type,String unitNumber,HttpServletRequest request,Integer gwFormatsTreeId,Integer buildingTreeId){
+		
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("state", state);
+		params.put("type", type);
+		params.put("unitNumber", unitNumber);
+		params.put("gwFormatsTreeId", gwFormatsTreeId);
+		params.put("buildingTreeId", buildingTreeId);
+		BasePageResultVo baseResultVo=gwShopsInfoServiceImpl.selectPageList(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 
+	 * getShopsInfoPageList:获取待确认单元分页信息
+	 *
+	 * @date 2016年3月10日
+	 * @param currentPage     当前页码
+	 * @param pageSize        每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getConfirmShopsInfoPageList.do")
+	@ResponseBody
+	public LigerPageDataVo getConfirmShopsInfoPageList(int currentPage,int pageSize,Integer state,String unitNumber,Integer type,Integer gwFormatsTreeId,Integer[] notids,HttpServletRequest request,Integer buildingTreeId){
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("state", state);
+		params.put("unitNumber", unitNumber);
+		params.put("type", type);
+		params.put("state2", ShopsInfoStateEnum.new_checkPending.getValue());
+		params.put("state3", ShopsInfoStateEnum.cancel_approve.getValue());
+		params.put("gwFormatsTreeId", gwFormatsTreeId);
+		params.put("buildingTreeId", buildingTreeId);
+		BasePageResultVo baseResultVo=gwShopsInfoServiceImpl.selectPageList(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 
+	 * getShopsInfoByIds:根据Id数组查询单元信息
+	 *
+	 * @date 2016年3月10日
+	 * @param currentPage     当前页码
+	 * @param pageSize        每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getShopsInfoByIds.do")
+	@ResponseBody
+	public LigerPageDataVo getShopsInfoByIds(int currentPage,int pageSize,Integer[] ids,HttpServletRequest request){
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+	    params.put("ids", ids);
+		BasePageResultVo baseResultVo=gwShopsInfoServiceImpl.getShopsInfoByIds(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 
+	 * getShopsInfoByUnitNumbers:根据单元号数组查询单元信息
+	 *
+	 * @date 2016年3月10日
+	 * @param currentPage     当前页码
+	 * @param pageSize        每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getShopsInfoByUnitNumbers.do")
+	@ResponseBody
+	public LigerPageDataVo getShopsInfoByUnitNumbers(int currentPage,int pageSize,Integer id,Integer type,HttpServletRequest request){
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		BasePageResultVo baseResultVo = new BasePageResultVo();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		//根据ID查询单元信息
+		GwShopsInfoModel shopsInfo = gwShopsInfoServiceImpl.selectById(id);
+		if(type==ShopsTypeEnum.meger.getValue()){
+			//ID数组
+			String numbers = shopsInfo.getUnitSplit();
+			String[] unitNumbers = numbers.split(";");
+			params.put("unitNumbers", unitNumbers);
+			baseResultVo=gwShopsInfoServiceImpl.getShopsInfoByIds(params);
+		}else{
+			//被拆分的单元号
+			String unitSplit = shopsInfo.getUnitNumber();
+			params.put("unitSplit", unitSplit);
+			baseResultVo = gwShopsInfoServiceImpl.selectPageList(params);
+		}
+		
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 
+	 * getShopsInfoPageList:获取待取消确认单元分页信息
+	 *
+	 * @date 2016年3月10日
+	 * @param currentPage     当前页码
+	 * @param pageSize        每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getUnConfirmShopsInfoPageList.do")
+	@ResponseBody
+	public LigerPageDataVo getUnConfirmShopsInfoPageList(int currentPage,int pageSize,Integer type,Integer[] notids,Integer state,String unitNumber,Integer gwFormatsTreeId,HttpServletRequest request,Integer buildingTreeId){
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("state", state);
+		params.put("type", type);
+		params.put("notids", notids);
+		params.put("unitNumber", unitNumber);
+		params.put("gwFormatsTreeId", gwFormatsTreeId);
+		params.put("buildingTreeId", buildingTreeId);
+		params.put("state", ShopsInfoStateEnum.Approve.getValue());
+		BasePageResultVo baseResultVo=gwShopsInfoServiceImpl.selectPageList(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 
+	 * getMergerAndSplitShopsInfoPageList:获取合并的单元分页信息
+	 *
+	 * @date 2016年3月10日
+	 * @param currentPage     当前页码
+	 * @param pageSize        每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getMergerShopsInfoPageList.do")
+	@ResponseBody
+	public LigerPageDataVo getMergerAndSplitShopsInfoPageList(int currentPage,int pageSize,String unitNumber,HttpServletRequest request,Integer gwFormatsTreeId,Integer buildingTreeId){
+		
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("state4", ShopsInfoStateEnum.failure.getValue());
+		params.put("state5", ShopsInfoStateEnum.delete.getValue()+"");
+		params.put("unitNumber", unitNumber);
+		params.put("type", ShopsTypeEnum.meger.getValue());
+		params.put("gwFormatsTreeId", gwFormatsTreeId);
+		params.put("buildingTreeId", buildingTreeId);
+		BasePageResultVo baseResultVo=gwShopsInfoServiceImpl.selectPageList(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 
+	 * getSplitShopsInfoPageList:获取拆分的单元分页信息
+	 *
+	 * @date 2016年3月10日
+	 * @param currentPage     当前页码
+	 * @param pageSize        每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getSplitShopsInfoPageList.do")
+	@ResponseBody
+	public LigerPageDataVo getSplitShopsInfoPageList(int currentPage,int pageSize,Integer state,String unitNumber,HttpServletRequest request,Integer gwFormatsTreeId,Integer buildingTreeId){
+		
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("state",ShopsInfoStateEnum.failure.getValue());
+		params.put("unitNumber", unitNumber);
+		params.put("type", ShopsTypeEnum.split.getValue());
+		params.put("gwFormatsTreeId",gwFormatsTreeId);
+		params.put("buildingTreeId",buildingTreeId);
+		BasePageResultVo baseResultVo=gwShopsInfoServiceImpl.selectPageList(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	/**
+	 * 
+	 * getShopsInfoById:根据商铺信息id，获取商铺信息信息
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getShopsInfoById.do")
+	@ResponseBody
+	public BaseResultVo getShopsInfoById(int id,HttpServletRequest request){
+		if(id==0){
+			return BaseResultVo.responseFail("数据异常");
+		}
+		//获取商铺信息信息
+		GwShopsInfoModel shopsInfo=gwShopsInfoServiceImpl.selectById(id);
+		if(shopsInfo==null){
+			return BaseResultVo.responseFail("获取单元信息失败");
+		}
+		BaseResultVo baseResultVo=BaseResultVo.responseSuccess("获取单元信息成功");
+		baseResultVo.setData(shopsInfo);
+		return baseResultVo;
+	}
+	/**
+	 * 
+	 * deleteShopsInfoById:根据商铺信息id，删除商铺信息(假删除)
+	 *
+	 * @date 206年3月5日
+	 * @param id                  商铺信息id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/deleteShopsInfoById.do")
+	@ResponseBody
+	public BaseResultVo deleteShopsInfoById(int id,HttpServletRequest request){
+		//修改人
+		Integer userid = SecurityUtil.getAdminUser(request).getUserId();
+		if(id==0){
+			return BaseResultVo.responseFail("数据异常");
+		}
+		//根据商铺信息id，删除商铺信息
+		GwShopsInfoModel shopsInfo = new GwShopsInfoModel();
+		shopsInfo.setId(id);
+		shopsInfo.setState(0);
+		shopsInfo.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		shopsInfo.setUpdateUser(userid);
+		//假删除
+		int num=gwShopsInfoServiceImpl.update(shopsInfo);
+		if(num<=0){
+			return BaseResultVo.responseFail("删除单元信息失败");
+		}
+		return BaseResultVo.responseSuccess("删除单元信息成功");
+	}
+	/**
+	 * 
+	 * updateShopsInfo:更新商铺信息信息
+	 *
+	 * @date 2016年3月5日
+	 * @param ShopsInfo       商铺信息信息对象
+	 * @return
+	 */
+	@RequestMapping("/updateShopsInfo.do")
+	@ResponseBody
+	public BaseResultVo updateShopsInfo(GwShopsInfoModel shopsInfo,HttpServletRequest request){
+		if(StringUtils.isEmpty(shopsInfo.getUnitNumber())){
+			return BaseResultVo.responseFail("单元号不能为空");
+		}
+		if(!ValidateUtil.isLengthRangeStr(shopsInfo.getArea(),1,11)){
+			return BaseResultVo.responseFail("单元面积为1-11位的字符串");
+		}
+		Integer userid = SecurityUtil.getAdminUser(request).getUserId();
+		//验证主键是否为空
+		if(shopsInfo.getId()==0){
+			return BaseResultVo.responseFail("数据异常");
+		}
+		GwShopsInfoModel shopsInfoModel=gwShopsInfoServiceImpl.selectById(shopsInfo.getId());
+		GwShopsInfoModel shopsInfoMode = gwShopsInfoServiceImpl.getShopsInfoByCode(shopsInfo.getUnitNumber()); 
+		if(!shopsInfoModel.getUnitNumber().equals(shopsInfo.getUnitNumber())&& shopsInfoMode!=null){
+			return BaseResultVo.responseFail("单元号已存在");
+		}
+		//更新时间
+		shopsInfo.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		shopsInfo.setUpdateUser(userid);
+		//更新就团信息
+		int num=gwShopsInfoServiceImpl.update(shopsInfo);
+		if(num<=0){
+			return BaseResultVo.responseFail("更新单元信息失败");
+		}
+		
+		return BaseResultVo.responseSuccess("更新单元信息成功");
+	}
+	
+	/**
+	 * 
+	 * getShopsInfoList:获取所有商铺信息集合
+	 *
+	 * @date 2016年3月7日
+	 * @return
+	 */
+	@RequestMapping("/getShopsInfoList.do")
+	@ResponseBody
+	public BaseResultVo getShopsInfoList(){
+
+		//获取所有商铺信息集合
+		List<GwShopsInfoModel> shopsInfoList=gwShopsInfoServiceImpl.getAllList();
+		BaseResultVo baseResultVo=BaseResultVo.responseSuccess("获取所有单元成功");
+		baseResultVo.setData(shopsInfoList);
+		return baseResultVo;
+	}
+	/**
+	 * 
+	 * getAllUnitInfo:获取所有单元号
+	 *
+	 * @date 2016年3月7日
+	 * @return
+	 */
+	@RequestMapping("/getAllUnitInfo.do")
+	@ResponseBody
+	public LigerPageDataVo getAllUnitInfo(QueryConditon queryCondition,Integer build){
+		//查询条件数组字符串（前端传递的字符串名称需和xml查询名称一致）
+		String[] queryParamArr=new String[]{"unitNumber"};
+		//获取分页参数信息map
+		Map<String, Object> params=QueryConditionUtil.getParamsMap(queryParamArr, queryCondition);
+		params.put("build", build);
+		params.put("state", ShopsInfoStateEnum.Approve.getValue());
+		//获取所有单元号
+		BasePageResultVo baseResultVo=gwShopsInfoServiceImpl.getAllUnitInfoBybuildId(params);
+		
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 
+	 * 获取带审核的单元
+	 *
+	 * @date 2016年3月7日
+	 * @return
+	 */
+	@RequestMapping("/getConfirmUnitInfo.do")
+	@ResponseBody
+	public LigerPageDataVo getConfirmUnitInfo(QueryConditon queryCondition,Integer type){
+		//查询条件数组字符串（前端传递的字符串名称需和xml查询名称一致）
+		String[] queryParamArr=new String[]{"unitNumber"};
+		//获取分页参数信息map
+		Map<String, Object> params=QueryConditionUtil.getParamsMap(queryParamArr, queryCondition);
+		params.put("type", type);
+		params.put("state", ShopsInfoStateEnum.Approve.getValue());
+		
+		//获取所有单元号
+		BasePageResultVo baseResultVo=gwShopsInfoServiceImpl.selectPageList(params);
+		
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 
+	 * 获取已经确认的单元
+	 *
+	 * @date 2016年3月7日
+	 * @return
+	 */
+	@RequestMapping("/getUnConfirmUnitInfo.do")
+	@ResponseBody
+	public LigerPageDataVo getUnConfirmUnitInfo(QueryConditon queryCondition,Integer type){
+		//查询条件数组字符串（前端传递的字符串名称需和xml查询名称一致）
+		String[] queryParamArr=new String[]{"unitNumber"};
+		//获取分页参数信息map
+		Map<String, Object> params=QueryConditionUtil.getParamsMap(queryParamArr, queryCondition);
+		params.put("state", ShopsInfoStateEnum.Approve.getValue());
+		//获取所有单元号
+		BasePageResultVo baseResultVo=gwShopsInfoServiceImpl.selectPageList(params);
+		
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	/**
+	 * 
+	 * getShipsByUnitId:根据单元号获取商铺信息
+	 *
+	 * @date 2016年3月18日
+	 * @return
+	 */
+	@RequestMapping("/getShipsByUnitId.do")
+	@ResponseBody
+	public Object getShipsByUnitId(String unId){
+		BaseResultVo baseResultVo=new BaseResultVo();
+		Status status=new Status();
+		if(unId==null){
+			status.setCode(ResponseCode.OPR_FAIL);
+			baseResultVo.setStatus(status);
+			status.setMsg("数据异常");//提示信息
+			return baseResultVo;
+		}
+		//获取商铺信息信息
+		GwShopsInfoModel shopsInfo=gwShopsInfoServiceImpl.getShopsByUnitId(unId);
+		
+		if(shopsInfo==null || unId == null){
+			status.setCode(ResponseCode.OPR_FAIL);
+			baseResultVo.setStatus(status);
+			status.setMsg("数据异常");//提示信息
+			return baseResultVo;
+		}
+		baseResultVo.setStatus(status);
+		baseResultVo.setData(shopsInfo);
+		return baseResultVo;
+	}
+	/**
+	 * 
+	 * getAreaChangeInfoById:根据id，获得单元面积变更前的信息
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年8月19日
+	 *
+	 * @param id  变更后的单元id
+	 * @return
+	 */
+	@RequestMapping("/getAreaChangeInfoById.do")
+	@ResponseBody
+	public Object getAreaChangeInfoById(Integer id){
+		BaseResultVo baseResultVo=new BaseResultVo();
+		Status status=new Status();
+		if(id==null){
+			status.setCode(ResponseCode.OPR_FAIL);
+			baseResultVo.setStatus(status);
+			status.setMsg("数据异常");//提示信息
+			return baseResultVo;
+		}
+		//获得面积变更前的单元号
+		GwShopsInfoModel shopsInfoModel=gwShopsInfoServiceImpl.selectById(id);
+		String unitnumber = shopsInfoModel.getUnitSplit();
+		if(unitnumber==null || unitnumber.equals("")){
+			status.setCode(ResponseCode.OPR_FAIL);
+			baseResultVo.setStatus(status);
+			status.setMsg("数据异常");//提示信息
+			return baseResultVo;
+		}
+		//得到面积变更前的单元信息
+		GwShopsInfoModel shopsInfo = gwShopsInfoServiceImpl.getShopsByUnitId(unitnumber);
+		//设置返回的数据
+		List<GwShopsInfoModel> list=new ArrayList<>();
+		list.add(shopsInfo);
+		Map<String,Object> map = new HashMap<>();
+		map.put("rows", list);
+		map.put("total", 1);
+		
+		return map;
+	}
+	/**
+	 * 
+	 * getShopsInfoListL:获取所有商铺信息集合
+	 *
+	 * @date 2016年3月7日
+	 * @return
+	 *//*
+	@RequestMapping("/getShopsInfoListL.do")
+	@ResponseBody
+	public Object getShopsInfoListL(){
+		//获取所有商铺
+		List<GwShopsInfoModel> shopsInfoList=gwShopsInfoServiceImpl.getAllList();
+		List<HashMap<String, Object>> list=new ArrayList<HashMap<String, Object>>();
+		for (GwShopsInfoModel formats : shopsInfoList) {
+			HashMap<String, Object> map=new HashMap<String, Object>();
+			map.put("id", formats.getId());
+			map.put("text", formats.getName()+"("+formats.getBuildingTreeName()+")");
+			list.add(map);
+		}
+		return list;
+	}*/
+	
+	/**
+	 * 
+	 * getNotLeaseShopsPageList:单元信息管理
+	 *
+	 * @date 2016年5月3日
+	 * @param currentPage     当前页码
+	 * @param pageSize        每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getNotLeaseShopsPageList.do")
+	@ResponseBody
+	public LigerPageDataVo getNotLeaseShopsPageList(int currentPage,int pageSize, HttpServletRequest request){		
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);	
+		
+		BasePageResultVo baseResultVo=gwShopsInfoServiceImpl.getNotLeaseShopsList(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 
+	 * getShopsInfoByShopsLeaseId:通过店铺ID获取对应的单元信息
+	 *
+	 * @date 2016年5月18日
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getShopsInfoByShopsLeaseId.do")
+	@ResponseBody
+	public LigerPageDataVo getShopsInfoByShopsLeaseId(HttpServletRequest request,Integer id){
+		//条件参数
+		Map<String,Object> params=new HashMap<>();
+		params.put("id", id);
+		List<GwShopsInfoModel> shopsInfoLise=gwShopsInfoServiceImpl.getShopsInfoByShopsLeaseId(params);
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(shopsInfoLise);
+		data.setTotal(shopsInfoLise.size());
+		return data;
+	}
+	
+	/**
+	 * 确认单元
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/confirmShopsInfo.do")
+	@ResponseBody
+	public BaseResultVo confirmShopsInfo(Integer id,HttpServletRequest request){
+		if(id==0){
+			return BaseResultVo.responseFail("ID为空");
+		}
+		//新建一个单元对象
+		GwShopsInfoModel shopsInfo = new GwShopsInfoModel();
+		shopsInfo.setId(id);
+		//确认人
+		Integer confirmUserid = SecurityUtil.getAdminUser(request).getUserId();
+		shopsInfo.setConfirmUserId(confirmUserid);
+		//确认时间
+		shopsInfo.setConfirmTime(DateUtil.getCurrentDatetime("-"));
+		//修改状态为确认
+		shopsInfo.setState(ShopsInfoStateEnum.Approve.getValue());
+		//确认单元
+		int number = gwShopsInfoServiceImpl.update(shopsInfo);
+		if(number==0){
+			return BaseResultVo.responseFail("确认失败");
+		}
+		return BaseResultVo.responseSuccess("确认成功");
+		
+	}
+	
+	/**
+	 * 
+	 * confirmShopsInfoByIds:批量确认单元
+	 *
+	 * @param ids
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/confirmShopsInfoByIds.do")
+	@ResponseBody
+	public BaseResultVo confirmShopsInfoByIds(Integer[] ids,HttpServletRequest request){
+		if(ids==null || ids.length==0){
+			return BaseResultVo.responseFail("ID为空");
+		}
+		
+		for(int i=0;i<ids.length;i++) {
+			//新建一个单元对象
+			GwShopsInfoModel shopsInfo = new GwShopsInfoModel();
+			shopsInfo.setId(ids[i]);
+			//确认人
+			Integer confirmUserid = SecurityUtil.getAdminUser(request).getUserId();
+			shopsInfo.setConfirmUserId(confirmUserid);
+			//确认时间
+			shopsInfo.setConfirmTime(DateUtil.getCurrentDatetime("-"));
+			//修改状态为确认
+			shopsInfo.setState(ShopsInfoStateEnum.Approve.getValue());
+			//确认单元
+			int number = gwShopsInfoServiceImpl.update(shopsInfo);
+			if(number==0){
+				return BaseResultVo.responseFail("确认失败");
+			}
+		}
+		return BaseResultVo.responseSuccess("确认成功");
+		
+	}
+	
+	/**
+	 * 
+	 * confirmShopsInfoByIds:批量取消确认单元
+	 *
+	 * @param ids
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/unconfirmShopsInfoByIds.do")
+	@ResponseBody
+	public BaseResultVo unconfirmShopsInfoByIds(Integer[] ids,HttpServletRequest request){
+		if(ids==null || ids.length==0){
+			return BaseResultVo.responseFail("ID为空");
+		}
+		
+		for(int i=0;i<ids.length;i++) {
+			//新建一个单元对象
+			GwShopsInfoModel shopsInfo = new GwShopsInfoModel();
+			shopsInfo.setId(ids[i]);
+			//确认人
+			Integer confirmUserid = SecurityUtil.getAdminUser(request).getUserId();
+			shopsInfo.setConfirmUserId(confirmUserid);
+			//确认时间
+			shopsInfo.setConfirmTime(DateUtil.getCurrentDatetime("-"));
+			//修改状态为确认
+			shopsInfo.setState(ShopsInfoStateEnum.cancel_approve.getValue());
+			//确认单元
+			int number = gwShopsInfoServiceImpl.update(shopsInfo);
+			if(number==0){
+				return BaseResultVo.responseFail("取消确认失败");
+			}
+		}
+		return BaseResultVo.responseSuccess("取消确认成功");
+		
+	}
+	
+	/**
+	 * 取消确认单元
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/unConfirmShopsInfo.do")
+	@ResponseBody
+	public BaseResultVo unConfirmShopsInfo(Integer id,HttpServletRequest request){
+		if(id==0){
+			return BaseResultVo.responseFail("ID为空");
+		}
+		//新建一个单元对象
+		GwShopsInfoModel shopsInfo = new GwShopsInfoModel();
+		shopsInfo.setId(id);
+		//取消确认人
+		Integer unConfirmUserid = SecurityUtil.getAdminUser(request).getUserId();
+		shopsInfo.setUnconfirmUserId(unConfirmUserid);
+		//取消确认时间
+		shopsInfo.setUnconfirmTime(DateUtil.getCurrentDatetime("-"));
+		//修改状态为取消确认
+		shopsInfo.setState(ShopsInfoStateEnum.cancel_approve.getValue());
+		//取消确认单元
+		int number = gwShopsInfoServiceImpl.update(shopsInfo);
+		if(number==0){
+			return BaseResultVo.responseFail("取消确认失败");
+		}
+		return BaseResultVo.responseSuccess("取消确认成功");
+		
+	}
+	
+	/**
+	 * 失效单元
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/failureShopsInfo.do")
+	@ResponseBody
+	public BaseResultVo failureShopsInfo(Integer id,HttpServletRequest request){
+		if(id==0){
+			return BaseResultVo.responseFail("ID为空");
+		}
+		//新建一个单元对象
+		GwShopsInfoModel shopsInfo = new GwShopsInfoModel();
+		shopsInfo.setId(id);
+		//修改状态为失效
+		shopsInfo.setState(ShopsInfoStateEnum.failure.getValue());
+		//失效单元
+		int number = gwShopsInfoServiceImpl.update(shopsInfo);
+		if(number==0){
+			return BaseResultVo.responseFail("操作失败");
+		}
+		return BaseResultVo.responseSuccess("操作成功");
+		
+	}
+}

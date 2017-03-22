@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.activity.member" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwActivityMemberModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="activity_code" property="activityCode" jdbcType="VARCHAR" />
+    <result column="member_code" property="memberCode" jdbcType="VARCHAR" />
+    <result column="enrol_time" property="enrolTime" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="signed_status" property="signedStatus" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, activity_code, member_code, enrol_time, status, signed_status, create_user_id, 
+    create_time, update_user_id, update_time
+  </sql>
+  
+  
+  <select id="gw.activity.member.getAllList" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List"></include>
+    from gw_activity_member d 
+    where d.status = 1
+  </select>
+  <!-- 根据条件，获取分页数据list集合 -->
+  <select id="gw.activity.member.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    id, activity_code, (select user_name from gw_members m where m.vip_code=d.member_code) as memberName,member_code, enrol_time, status, signed_status,
+    (select u.name from gw_admin_users u where u.id = d.create_user_id) as createUserName, create_time createTime, 
+    (select u.name from gw_admin_users u where u.id = d.update_user_id) as updateUserName, update_time updateTime
+    from gw_activity_member d 
+    where d.status = 1
+    <if test="activityCode!=null and ''!=acitityCode">
+    	and activity_code = #{activityCode,jdbcType=VARCHAR}
+    </if>
+    limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  <!-- 根据条件，总记录数 -->
+  <select id="gw.activity.member.selectCount" resultType="java.lang.Integer">
+   	select count(id) from gw_activity_member where status = 1
+   	<if test="activityCode!=null and ''!=acitityCode">
+    	and activity_code = #{activityCode,jdbcType=VARCHAR}
+    </if>
+  </select>
+  
+  <select id="gw.activity.member.selectByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_activity_member
+    where status=1 and activity_code = #{code,jdbcType=VARCHAR} 
+  </select>
+  
+  <select id="gw.activity.member.selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT
+	a.activity_code,
+	a.create_time,
+	a.create_user_id,
+	a.enrol_time,
+	a.id,
+	a.member_code,
+	(select b.user_name from gw_members b where b.vip_code = a.member_code)as memberName,
+	a.signed_status,
+	a.`status`,
+	a.update_time,
+	a.update_user_id
+FROM
+	gw_activity_member a
+    where a.id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.activity.member.deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from gw_activity_member
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.activity.member.insert" parameterType="com.crm.pojo.GwActivityMemberModel" >
+    insert into gw_activity_member
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="activityCode != null" >
+        activity_code,
+      </if>
+      <if test="memberCode != null" >
+        member_code,
+      </if>
+      <if test="enrolTime != null" >
+        enrol_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="signedStatus != null" >
+        signed_status,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="activityCode != null" >
+        #{activityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="memberCode != null" >
+        #{memberCode,jdbcType=VARCHAR},
+      </if>
+      <if test="enrolTime != null" >
+        #{enrolTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="signedStatus != null" >
+        #{signedStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.activity.member.update" parameterType="com.crm.pojo.GwActivityMemberModel" >
+    update gw_activity_member
+    <set >
+      <if test="activityCode != null" >
+        activity_code = #{activityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="memberCode != null" >
+        member_code = #{memberCode,jdbcType=VARCHAR},
+      </if>
+      <if test="enrolTime != null" >
+        enrol_time = #{enrolTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="signedStatus != null" >
+        signed_status = #{signedStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="gw.activity.member.updateJoinNumber">
+  	update gw_activity 
+  	<set>
+  		<if test="add!=null and ''!=add">
+  			join_member_num = join_member_num + 1 
+  		</if>
+  		<if test="delete!=null and ''!=delete">
+  			join_member_num = join_member_num - 1 
+  		</if>
+  	</set> 
+  	where id=#{id,jdbcType=INTEGER}
+  	
+  </update>
+  <update id="gw.activity.member.updateIntergral">
+  	update gw_activity 
+  	<set>
+  		<if test="add!=null and ''!=add">
+  			join_member_num = join_member_num + 1 
+  		</if>
+  		<if test="delete!=null and ''!=delete">
+  			join_member_num = join_member_num - 1 
+  		</if>
+  	</set> 
+  	where id=#{id,jdbcType=INTEGER}
+  	
+  </update>
+</mapper>

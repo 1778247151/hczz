@@ -1,0 +1,93 @@
+package com.crm.pojo;
+
+public class GwformatstreeModel {
+	private Integer id;
+
+	private Integer fid;
+
+	private String bm;
+
+	private String name;
+
+	private Integer state;
+
+	private String time;
+
+	private Integer orderNum;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getFid() {
+		return fid;
+	}
+
+	public void setFid(Integer fid) {
+		this.fid = fid;
+	}
+
+	public String getBm() {
+		return bm;
+	}
+
+	public void setBm(String bm) {
+		this.bm = bm == null ? null : bm.trim();
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name == null ? null : name.trim();
+	}
+
+	public Integer getState() {
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
+	}
+
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time == null ? null : time.trim();
+	}
+
+	public Integer getOrderNum() {
+		return orderNum;
+	}
+
+	public void setOrderNum(Integer orderNum) {
+		this.orderNum = orderNum;
+	}
+
+	/**
+	 * 对比2个对象是否相等
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof GwformatstreeModel)) {
+			return false;
+		}
+		GwformatstreeModel formatstree = (GwformatstreeModel) obj;
+		if (formatstree.getFid().equals(this.getFid()) && formatstree.bm.equals(this.getBm())
+				&& formatstree.getName().equals(this.getName()) && formatstree.getState().equals(this.getState())
+				&& formatstree.getTime().equals(this.getTime())
+				&& formatstree.getOrderNum().equals(this.getOrderNum())) {
+			return true;
+
+		} else {
+			return false;
+		}
+	}
+}

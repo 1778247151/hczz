@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="Gw.formatstreeModel" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwformatstreeModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="INTEGER" />
+    <result column="bm" property="bm" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="time" property="time" jdbcType="VARCHAR" />
+    <result column="order_num" property="orderNum" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, bm, name, state, time, order_num
+  </sql>
+  <select id="Gw.formatstreeModel.selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_formats_tree
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="Gw.formatstreeModel.deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from gw_formats_tree
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 批量插入 -->
+  <insert id="Gw.formatstreeModel.batchinsert" parameterType="com.crm.pojo.GwformatstreeModel" >
+    insert into gw_formats_tree (id, fid, bm, name, state, time, order_num)
+    values 
+     <foreach collection="list" item="formatsList" index="index" separator="," >
+     (#{formatsList.id,jdbcType=INTEGER},
+      #{formatsList.fid,jdbcType=INTEGER},
+      #{formatsList.bm,jdbcType=VARCHAR}, 
+      #{formatsList.name,jdbcType=VARCHAR},
+      #{formatsList.state,jdbcType=INTEGER}, 
+      #{formatsList.time,jdbcType=VARCHAR}, 
+      #{formatsList.orderNum,jdbcType=INTEGER})
+      </foreach>
+  </insert>
+  <!-- 批量更新数据 -->
+  <update id="Gw.formatstreeModel.batchUpdateFormatstree"  parameterType="java.util.List">  
+    <foreach collection="list" item="formatstreeList" index="index" separator=";">
+        update gw_formats_tree
+        <set>
+	       fid=#{formatstreeList.fid,jdbcType=INTEGER},
+	       bm=#{formatstreeList.bm,jdbcType=VARCHAR}, 
+	       name=#{formatstreeList.name,jdbcType=VARCHAR}, 
+	       state=#{formatstreeList.state,jdbcType=INTEGER}, 
+	       time=#{formatstreeList.time,jdbcType=VARCHAR},
+	       order_num=#{formatstreeList.orderNum,jdbcType=INTEGER}
+        </set>
+        where id = #{formatstreeList.id,jdbcType=INTEGER}
+    </foreach>      
+</update>
+
+<!-- 批量删除 -->
+<delete id="Gw.formatstreeModel.batchDeleteById" parameterType="java.util.List">
+      delete from gw_formats_tree where id in
+      <foreach collection="list" index="index" item="item" open="(" separator="," close=")">   
+        #{item.id}   
+      </foreach>  
+ </delete>
+  
+  
+  
+  <delete id="Gw.formatstreeModel.deleteAll" parameterType="java.lang.Integer" >
+    delete from gw_formats_tree
+  </delete>
+  <insert id="Gw.formatstreeModel.insert" parameterType="com.crm.pojo.GwformatstreeModel" >
+    insert into gw_formats_tree (id, fid, bm, 
+      name, state, time, 
+      order_num)
+    values (#{id,jdbcType=INTEGER}, #{fid,jdbcType=INTEGER}, #{bm,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, #{time,jdbcType=VARCHAR}, 
+      #{orderNum,jdbcType=INTEGER})
+  </insert>
+ 
+  <insert id="Gw.formatstreeModel.insertSelective" parameterType="com.crm.pojo.GwformatstreeModel" >
+    insert into gw_formats_tree
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="bm != null" >
+        bm,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+      <if test="orderNum != null" >
+        order_num,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=INTEGER},
+      </if>
+      <if test="bm != null" >
+        #{bm,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNum != null" >
+        #{orderNum,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="Gw.formatstreeModel.updateByPrimaryKeySelective" parameterType="com.crm.pojo.GwformatstreeModel" >
+    update gw_formats_tree
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=INTEGER},
+      </if>
+      <if test="bm != null" >
+        bm = #{bm,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        time = #{time,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNum != null" >
+        order_num = #{orderNum,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="Gw.formatstreeModel.updateByPrimaryKey" parameterType="com.crm.pojo.GwformatstreeModel" >
+    update gw_formats_tree
+    set fid = #{fid,jdbcType=INTEGER},
+      bm = #{bm,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      state = #{state,jdbcType=INTEGER},
+      time = #{time,jdbcType=VARCHAR},
+      order_num = #{orderNum,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 根据条件，获取分页数据list集合 -->
+  <select id="Gw.formatstreeModel.selectAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	select 
+    s.id, s.bm, s.name, s.state, s.time,s.fid
+    from gw_formats_tree s
+    where s.state=1
+    limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+    
+  </select>
+  <!-- 根据条件，获取总记录数 -->
+  <select id="Gw.formatstreeModel.selectCount" resultType="java.lang.Integer">
+   select 
+      count(s.id)
+    from gw_formats_tree s
+    where s.state = 1
+  </select>
+  <!-- 获取所有list集合 -->
+  <select id="Gw.formatstreeModel.selectList" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gw_formats_tree where state=1
+  </select>
+  <!-- 获取所有list集合 -->
+  <select id="Gw.formatstreeModel.selectLists" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gw_formats_tree
+  </select>
+  <!-- 获取所有一级目录集合 -->
+  <select id="Gw.formatstreeModel.selectListsyj" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gw_formats_tree
+    where fid=0
+    and state = 1
+  </select>
+  <!-- 根据编号获取业态信息 -->
+   <select id="Gw.formatstreeModel.selectByCode" resultMap="BaseResultMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_formats_tree
+    where bm = #{code,jdbcType=VARCHAR}
+    and state = 1
+  </select>
+</mapper>

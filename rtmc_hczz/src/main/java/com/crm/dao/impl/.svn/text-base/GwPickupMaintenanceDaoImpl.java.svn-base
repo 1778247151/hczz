@@ -1,0 +1,101 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwPickupMaintenanceDao;
+import com.crm.pojo.GwPickupMaintenanceModel;
+
+/**
+ * 
+ * GwPickupMaintenanceDaoImpl:拾物维护数据访问层实现
+ *
+ * @author chengpengfei
+ * @date  2016年6月23日
+ * @version  jdk1.8
+ *
+ */
+@Repository("gwPickupMaintenanceDaoManage")
+public class GwPickupMaintenanceDaoImpl implements GwPickupMaintenanceDao{
+
+	@Resource
+	private BaseDao dao;
+	@Override
+	public int insert(GwPickupMaintenanceModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.pickupMaintenance.insertSelective",e);
+	}
+
+	@Override
+	public int delete(GwPickupMaintenanceModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwPickupMaintenanceModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.pickupMaintenance.updateByPrimaryKeySelective",e);
+	}
+
+	@Override
+	public GwPickupMaintenanceModel selectOne(GwPickupMaintenanceModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwPickupMaintenanceModel> selectList(GwPickupMaintenanceModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.pickupMaintenance.deleteByPrimaryKey",id);
+	}
+
+	@Override
+	public GwPickupMaintenanceModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwPickupMaintenanceModel) dao.selectOne("gw.pickupMaintenance.selectByPrimaryKey",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.pickupMaintenance.selectByPageList", "gw.pickupMaintenance.selectByPageCount", params);
+	}
+
+	@Override
+	public List<GwPickupMaintenanceModel> getAllList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int updatePickupMaintenanceStatusByCode(List<Map<String, Object>> list) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.pickupMaintenance.updateStatusByCode",list);
+	}
+
+	@Override
+	public GwPickupMaintenanceModel getPickupMaintenanceByLaseOne(String time) {
+		// TODO Auto-generated method stub
+		return (GwPickupMaintenanceModel) dao.selectOne("gw.pickupMaintenance.selectByLastOne",time);
+	}
+
+}

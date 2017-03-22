@@ -1,0 +1,106 @@
+package com.crm.pojo;
+
+public class GwCollectRecordModel {
+    private Integer id;
+
+    private String pickupMaintenanceCode;
+
+    private String loseMaintenanceCode;
+
+    private String collectTime;
+
+    private String collectUser;
+
+    /**
+     * 报失人
+     */
+    private String lostMaintenanceName;
+    
+    /**
+     * 拾物名称
+     */
+    private String pickupMaintenanceName;
+    
+    /**
+     * 拾获人
+     */
+    private String pickupUserName;
+    
+    /**
+     * 拾获时间
+     */
+    private String pickupTime;
+    
+    
+    public String getLostMaintenanceName() {
+		return lostMaintenanceName;
+	}
+
+	public void setLostMaintenanceName(String lostMaintenanceName) {
+		this.lostMaintenanceName = lostMaintenanceName;
+	}
+
+	public String getPickupMaintenanceName() {
+		return pickupMaintenanceName;
+	}
+
+	public void setPickupMaintenanceName(String pickupMaintenanceName) {
+		this.pickupMaintenanceName = pickupMaintenanceName;
+	}
+
+	public String getPickupUserName() {
+		return pickupUserName;
+	}
+
+	public void setPickupUserName(String pickupUserName) {
+		this.pickupUserName = pickupUserName;
+	}
+
+	public String getPickupTime() {
+		return pickupTime;
+	}
+
+	public void setPickupTime(String pickupTime) {
+		this.pickupTime = pickupTime;
+	}
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getPickupMaintenanceCode() {
+        return pickupMaintenanceCode;
+    }
+
+    public void setPickupMaintenanceCode(String pickupMaintenanceCode) {
+        this.pickupMaintenanceCode = pickupMaintenanceCode == null ? null : pickupMaintenanceCode.trim();
+    }
+
+    public String getLoseMaintenanceCode() {
+        return loseMaintenanceCode;
+    }
+
+    public void setLoseMaintenanceCode(String loseMaintenanceCode) {
+        this.loseMaintenanceCode = loseMaintenanceCode == null ? null : loseMaintenanceCode.trim();
+    }
+
+    public String getCollectTime() {
+        return collectTime;
+    }
+
+    public void setCollectTime(String collectTime) {
+        this.collectTime = collectTime == null ? null : collectTime.trim();
+    }
+
+    public String getCollectUser() {
+        return collectUser;
+    }
+
+    public void setCollectUser(String collectUser) {
+        this.collectUser = collectUser == null ? null : collectUser.trim();
+    }
+}

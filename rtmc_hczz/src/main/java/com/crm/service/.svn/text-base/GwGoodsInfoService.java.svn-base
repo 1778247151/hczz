@@ -1,0 +1,41 @@
+package com.crm.service;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.http.client.ClientProtocolException;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwGoodsInfoModel;
+import com.crm.pojo.GwShopsLeaseModel;
+
+/**
+ * 
+ * GwGoodsInfoService:货品信息业务逻辑层接口
+ *
+ * @author xiangtao
+ * @date 2016年5月18日
+ */
+public interface GwGoodsInfoService extends Services<GwGoodsInfoModel> {
+	/**
+	 * 根据编号获取货物信息
+	 * @param code   货物编号
+	 * @return
+	 */
+	GwGoodsInfoModel getGoodsInfoByCode(String code);
+	
+	/**
+	 * 根据店铺编号获取商品信息接口
+	 * @param params
+	 * @return
+	 */
+	List<GwGoodsInfoModel> getGoodsInfoByShopsLeaseCodeApi(Map<String,Object> params);
+	
+	/**
+	 * 从MIS端拉取货品信息数据并存入本地数据库
+	 * @throws IOException 
+	 * @throws ClientProtocolException 
+	 */
+	public boolean insertMisDataForGoodsInfo(String url,Map<String, Object> map) throws ClientProtocolException, IOException;
+}

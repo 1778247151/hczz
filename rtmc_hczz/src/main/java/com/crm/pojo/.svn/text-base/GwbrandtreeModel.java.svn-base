@@ -1,0 +1,187 @@
+package com.crm.pojo;
+
+import com.crm.enums.DepositInfoEnum;
+
+public class GwbrandtreeModel {
+    private Integer id;
+
+    private String bm;
+
+    private String name;
+    
+    private String ownedCompany;
+    
+    private String personInCharge;
+    
+    private String address;
+    
+    private String phone;
+
+    private Integer state;
+    
+    private String time;
+
+    private Integer gwFormatsTreeId;
+    private String forName;
+    
+    private Integer confirmUserId;
+    
+    private String  confirmTime;
+    
+    private Integer unconfirmUserId;
+    
+    private String unconfirmTime;
+    
+    private String confirmUserName;
+    
+    private String unconfirmUserName;
+    
+    private String stateName;
+    
+    
+    
+    
+    public String getOwnedCompany() {
+		return ownedCompany;
+	}
+
+	public void setOwnedCompany(String ownedCompany) {
+		this.ownedCompany = ownedCompany;
+	}
+
+	public String getPersonInCharge() {
+		return personInCharge;
+	}
+
+	public void setPersonInCharge(String personInCharge) {
+		this.personInCharge = personInCharge;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getStateName() {
+		return DepositInfoEnum.getDisplayName(getState());
+	}
+
+	public void setStateName(String stateName) {
+		this.stateName = stateName;
+	}
+
+	public String getConfirmUserName() {
+		return confirmUserName;
+	}
+
+	public void setConfirmUserName(String confirmUserName) {
+		this.confirmUserName = confirmUserName;
+	}
+
+	public String getUnconfirmUserName() {
+		return unconfirmUserName;
+	}
+
+	public void setUnconfirmUserName(String unconfirmUserName) {
+		this.unconfirmUserName = unconfirmUserName;
+	}
+
+	public Integer getUnconfirmUserId() {
+		return unconfirmUserId;
+	}
+
+	public void setUnconfirmUserId(Integer unconfirmUserId) {
+		this.unconfirmUserId = unconfirmUserId;
+	}
+
+	public String getUnconfirmTime() {
+		return unconfirmTime;
+	}
+
+	public void setUnconfirmTime(String unconfirmTime) {
+		this.unconfirmTime = unconfirmTime;
+	}
+
+	public Integer getConfirmUserId() {
+		return confirmUserId;
+	}
+
+	public void setConfirmUserId(Integer confirmUserId) {
+		this.confirmUserId = confirmUserId;
+	}
+
+	public String getConfirmTime() {
+		return confirmTime;
+	}
+
+	public void setConfirmTime(String confirmTime) {
+		this.confirmTime = confirmTime;
+	}
+
+	public String getForName() {
+		return forName;
+	}
+
+	public void setForName(String forName) {
+		this.forName = forName;
+	}
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getBm() {
+        return bm;
+    }
+
+    public void setBm(String bm) {
+        this.bm = bm == null ? null : bm.trim();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time == null ? null : time.trim();
+    }
+
+    public Integer getGwFormatsTreeId() {
+        return gwFormatsTreeId;
+    }
+
+    public void setGwFormatsTreeId(Integer gwFormatsTreeId) {
+        this.gwFormatsTreeId = gwFormatsTreeId;
+    }
+}

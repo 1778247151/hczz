@@ -1,0 +1,44 @@
+package com.crm.service.impl;
+
+import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwRepeatVisitDao;
+import com.crm.pojo.GwRepeatVisitDetailModel;
+import com.crm.pojo.GwRepeatVisitModel;
+import com.crm.service.GwRepeatVisitService;
+
+/**
+ * 
+ * GwRepeatVisitServiceImpl:回访业务逻辑层实现
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwRepeatVisitServiceManage")
+public class GwRepeatVisitServiceImpl extends ServersManager<GwRepeatVisitModel, GwRepeatVisitDao> implements GwRepeatVisitService{
+	
+	@Resource(name = "gwRepeatVisitDaoManage")
+	@Override
+	public void setDao(GwRepeatVisitDao gwRepeatVisitDao) {
+		this.dao = gwRepeatVisitDao;
+	}
+
+	@Override
+	public GwRepeatVisitModel selectVisitByCode(String visitCode) {
+		return dao.selectVisitByCode(visitCode);
+	}
+
+	/**
+	 * 查询最后一条数据根据时间返回对象
+	 * @param time
+	 * @return
+	 */
+	@Override
+	public GwRepeatVisitModel getRepeatVisitByLastOne(String time) {
+		return dao.getRepeatVisitByLastOne(time);
+	}
+}

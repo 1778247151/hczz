@@ -1,0 +1,39 @@
+package com.crm.service;
+
+import java.util.List;
+
+import com.crm.core.Services;
+import com.crm.enums.StockCheckStatusEnum;
+import com.crm.pojo.GwGoodsInStoreDetailModel;
+import com.crm.pojo.GwStockCheckDatailModel;
+
+/**
+ * 
+ * 
+ * GwStockCheckDatailService:物品盘点明细管理业务逻辑层接口
+ *
+ * @author  meishengjun
+ * @date    2016年11月11日
+ * @version jdk1.8
+ *
+ */
+
+public interface GwStockCheckDatailService extends Services<GwStockCheckDatailModel> {
+	/**
+	 * deleteByCheckCode:根据盘点单号删除盘点单明细信息
+	 * @param checkCode
+	 * @return
+	 */
+	  
+
+public int deleteByCheckCode(String checkCode);
+
+/**
+ * 批量插入物品盘点明细
+ * @param stockCheckDetailList
+ * @return
+ */
+public int batchInsertStockCheckDetailList(List<GwStockCheckDatailModel> stockCheckDetailList);
+	
+
+}

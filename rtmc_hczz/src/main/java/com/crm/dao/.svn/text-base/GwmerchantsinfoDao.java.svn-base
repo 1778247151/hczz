@@ -1,0 +1,114 @@
+package com.crm.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwmerchantsinfoModel;
+
+/**
+ * 
+ * GwmerchantsinfoDao:商户信息数据访问层接口
+ *
+ * @author chengpengfei
+ * @date  2016年3月11日
+ * @version  jdk1.8
+ *
+ */
+public interface GwmerchantsinfoDao extends DaoManager<GwmerchantsinfoModel>{
+	BasePageResultVo getMerNameByMallId(Map<String,Object> params);
+	/**
+	 * 
+	 * getMerchantsInfoList:获取商户信息的接口
+	 *
+	 * @date 2016年4月26日
+	 * @return
+	 */
+	public List<GwmerchantsinfoModel> getMerchantsInfoList(Map<String, Object> params);
+
+	/**
+	 * 根据编号获取商户信息
+	 * @param code
+	 * @return
+	 */
+	public GwmerchantsinfoModel getMerchansInfoByCode(String code);
+	
+	
+	/**
+	 * 获取商户信息接口
+	 * @param params
+	 * @return
+	 */
+	public List<GwmerchantsinfoModel> getMerchansInfoApi(Map<String,Object> params);
+	
+	/**
+	 * 获取已签约的商户分页信息
+	 * @param params
+	 * @return
+	 */
+	public BasePageResultVo getMerchantsInfoBySign(Map<String,Object> params);
+	
+	/**
+	 * 根据编号查询已签约的商户信息
+	 * @param code
+	 * @return
+	 */
+	public GwmerchantsinfoModel getMerchantsInfoSingByCode(String code);
+	
+	/**
+	 * 根据合同号查询简单商户信息
+	 * @param code
+	 * @return
+	 */
+	public Object getSimpleMerchantsInfo(String code);
+	/**
+	 * 通过id得到商户的全部信息
+	 * getMerchanInfoAllById:
+	 *
+	 * @author hemingjun
+	 * @date 2016年8月10日
+	 * @param id
+	 * @return
+	 */
+	public GwmerchantsinfoModel getMerchanInfoAllById(int id);
+	
+	/**
+	 * 批量插入
+	 * 
+	 * @param list
+	 * @return
+	 */
+	public int batchInsert(List<GwmerchantsinfoModel> list);
+
+	/**
+	 * 
+	 * batchUpdate:批量更新
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param list
+	 * @return
+	 */
+	public int batchUpdate(List<GwmerchantsinfoModel> list);
+
+	/**
+	 * 
+	 * batchDelete:批量删除
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param list
+	 * @return
+	 */
+	public int batchDelete(List<GwmerchantsinfoModel> list);
+	/**
+	 * 
+	 * deleteAll:删除所有信息
+	 *
+	 * @author hemingjun
+	 * @date 2016年10月19日
+	 * @return
+	 */
+	public int deleteAll();
+}

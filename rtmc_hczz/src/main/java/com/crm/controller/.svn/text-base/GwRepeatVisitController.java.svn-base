@@ -1,0 +1,295 @@
+package com.crm.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.ResponseCode;
+import com.crm.common.SecurityUtil;
+import com.crm.common.Status;
+import com.crm.interceptor.BussAnnotation;
+import com.crm.interceptor.exception.BaseException;
+import com.crm.pojo.GwLoseMaintenanceModel;
+import com.crm.pojo.GwRepeatVisitDetailModel;
+import com.crm.pojo.GwRepeatVisitModel;
+import com.crm.service.GwRepeatVisitDetailService;
+import com.crm.service.GwRepeatVisitService;
+import com.crm.util.BaseCodeUtil;
+import com.crm.util.DateUtil;
+import com.crm.util.ValidateUtil;
+
+/**
+ * 
+ * GwRepeatVisitController:回访访问控制层
+ *
+ * @author xiangtao
+ * @date 2016年6月20日
+ * @version jdk.8
+ *
+ */
+@Controller
+@RequestMapping("/repeatVisit")
+public class GwRepeatVisitController extends BaseException {
+
+	// 日志
+	private Logger logger = LoggerFactory.getLogger(GwRepeatVisitController.class);
+
+	/**
+	 * 回访业务逻辑
+	 */
+	@Resource(name = "gwRepeatVisitServiceManage")
+	private GwRepeatVisitService gwRepeatVisitServiceImpl;
+	
+	/**
+	 * 回访详细业务逻辑
+	 */
+	@Resource(name = "gwRepeatVisitDetailServiceManage")
+	private GwRepeatVisitDetailService gwRepeatVisitDetailServiceImpl;
+	
+	
+	
+	@RequestMapping("/getRepeatVisitByCode.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="回访维护",option="通过code获取信息")
+	public BaseResultVo getRepeatVisitDetailsByCode(String visitCode, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		// 获取回访信息
+		GwRepeatVisitModel gwRepeatVisitModel = gwRepeatVisitServiceImpl.selectVisitByCode(visitCode);
+		baseResultVo.setData(gwRepeatVisitModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * getRepeatVisitById:根据回访id，获取回访信息
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getRepeatVisitById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="回访维护",option="通过ID获取信息")
+	public BaseResultVo getRepeatVisitById(int id, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		if (id == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");// 提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		// 获取回访信息
+		GwRepeatVisitModel gwRepeatVisitModel = gwRepeatVisitServiceImpl.selectById(id);
+		baseResultVo.setData(gwRepeatVisitModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * generateCode 生成回访编号
+	 * 
+	 * @date 2016年6月20日
+	 * @param
+	 * @return
+	 */
+	@RequestMapping("/generateCode.do")
+	@ResponseBody
+	public String generateCode(HttpServletRequest request) {
+		// 获取编号前缀
+		String frontCode = BaseCodeUtil.getBaseCode("HF");
+		// 获取当天时间
+		String time = DateUtil.getCurrentDate("");
+		String code = "";
+		// 根据当天时间查询最后一条记录
+		GwRepeatVisitModel gwRepeatVisitModel = gwRepeatVisitServiceImpl.getRepeatVisitByLastOne(time);
+		if (gwRepeatVisitModel == null) {
+			code = frontCode + "0001";
+		} else {
+			String subString = gwRepeatVisitModel.getCode().substring(2);
+			long num = Long.parseLong(subString) + 1;
+			code = "HF" + String.valueOf(num);
+		}
+		return code;
+	}
+
+	/**
+	 * addRepeatVisit 添加回访
+	 * 
+	 * @date 2016年6月20日
+	 * @param
+	 * @return
+	 */
+	@RequestMapping("/addRepeatVisit.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="回访维护",option="添加")
+	public BaseResultVo addRepeatVisit(GwRepeatVisitModel gwRepeatVisitModel, HttpServletRequest request) {
+		Integer userid = SecurityUtil.getAdminUser(request).getUserId();
+		gwRepeatVisitModel.setCreateUserId(userid);
+		gwRepeatVisitModel.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		gwRepeatVisitModel.setUpdateUserId(userid);
+		gwRepeatVisitModel.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		gwRepeatVisitServiceImpl.insert(gwRepeatVisitModel);
+
+		BaseResultVo baseResultVo = new BaseResultVo();
+
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * delRepeatVisitById:根据回访id，删除回访
+	 *
+	 * @date 2016年6月20日
+	 * @param id
+	 *            回访id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/delRepeatVisit.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="回访维护",option="删除")
+	public BaseResultVo delRepeatVisitById(int id, String code,HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		if (id == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");// 提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+		
+		List<GwRepeatVisitDetailModel> detatilList=gwRepeatVisitDetailServiceImpl.getAllList();
+		for (GwRepeatVisitDetailModel gwRepeatVisitDetailModel : detatilList) {
+			if(gwRepeatVisitDetailModel.getRepeatVisitCode().equals(code)){
+				return BaseResultVo.responseFail("回访记录包含详细信息，不能删除");
+			}
+		}
+		int num = gwRepeatVisitServiceImpl.deleteById(id);
+		if (num < 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("操作失败");// 提示信息
+		}
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * updateRepeatVisit:更新回访
+	 *
+	 * @date 2016年6月20日
+	 * @param gwRepeatVisitModel
+	 *            回访信息对象
+	 * @return
+	 */
+	@RequestMapping("/updateRepeatVisit.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="回访维护",option="更新")
+	public BaseResultVo updateRepeatVisit(GwRepeatVisitModel gwRepeatVisitModel, int id, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		// 验证主键是否为空
+		if (id == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+		GwRepeatVisitModel rv = gwRepeatVisitServiceImpl.selectById(id);// 根据id获取修改的对象
+		String visitcode = null;
+		if (rv != null) {
+			visitcode = rv.getCode();
+		}
+
+		gwRepeatVisitModel.setId(id);
+		// 更新时间
+		gwRepeatVisitModel.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		int userid = SecurityUtil.getAdminUser(request).getUserId();
+		gwRepeatVisitModel.setUpdateUserId(userid);
+		gwRepeatVisitModel.setCode(visitcode);
+
+		// 更新回访信息
+		gwRepeatVisitServiceImpl.update(gwRepeatVisitModel);
+		baseResultVo.setStatus(status);
+		baseResultVo.setData(visitcode);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * getRepeatVisitList:获取回访集合（分页）
+	 *
+	 * @date 2016年6月20日
+	 * @param page
+	 *            当前页码数
+	 * @param pagesize
+	 *            每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getRepeatVisitList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="回访维护",option="获取回访列表")
+	public LigerPageDataVo getRepeatVisitList(int currentPage, int pageSize,String title,String content,String startTime,String endTime, HttpServletRequest request) {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		
+		params.put("title", title);
+		params.put("content", content);
+		params.put("endTime", endTime);
+		params.put("startTime", startTime);
+
+		BasePageResultVo baseResultVo = gwRepeatVisitServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+}

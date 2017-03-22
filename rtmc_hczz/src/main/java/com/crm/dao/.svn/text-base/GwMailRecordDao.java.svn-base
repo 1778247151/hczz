@@ -1,0 +1,18 @@
+package com.crm.dao;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwMailRecordModel;
+
+public interface GwMailRecordDao extends DaoManager<GwMailRecordModel>  {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(GwMailRecordModel record);
+
+    int insertSelective(GwMailRecordModel record);
+
+    int updateByPrimaryKeySelective(GwMailRecordModel record);
+
+    int updateByPrimaryKeyWithBLOBs(GwMailRecordModel record);
+
+    int updateByPrimaryKey(GwMailRecordModel record);
+}

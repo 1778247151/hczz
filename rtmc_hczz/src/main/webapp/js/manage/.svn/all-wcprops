@@ -1,0 +1,419 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/gw_crm/!svn/ver/532/gdws_crm/src/main/webapp/js/manage
+END
+gw.paymentTender.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/gw_crm/!svn/ver/109/gdws_crm/src/main/webapp/js/manage/gw.paymentTender.list.js
+END
+gw.merchaninfo.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/gw_crm/!svn/ver/109/gdws_crm/src/main/webapp/js/manage/gw.merchaninfo.list.js
+END
+gw.members.exportExcel.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/gw_crm/!svn/ver/146/gdws_crm/src/main/webapp/js/manage/gw.members.exportExcel.list.js
+END
+gw_goods.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/gw_crm/!svn/ver/109/gdws_crm/src/main/webapp/js/manage/gw_goods.list.js
+END
+gw.payment.tender.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/gw_crm/!svn/ver/179/gdws_crm/src/main/webapp/js/manage/gw.payment.tender.list.js
+END
+gw.customer.complain.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/gw_crm/!svn/ver/317/gdws_crm/src/main/webapp/js/manage/gw.customer.complain.list.js
+END
+gw.locker.rental.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/gw_crm/!svn/ver/477/gdws_crm/src/main/webapp/js/manage/gw.locker.rental.list.js
+END
+gw.synchronizeMisData.js
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/gw_crm/!svn/ver/283/gdws_crm/src/main/webapp/js/manage/gw.synchronizeMisData.js
+END
+gw.loseMaintenance.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/gw_crm/!svn/ver/317/gdws_crm/src/main/webapp/js/manage/gw.loseMaintenance.list.js
+END
+CardCodeData.js
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/gw_crm/!svn/ver/375/gdws_crm/src/main/webapp/js/manage/CardCodeData.js
+END
+gw_storeGoodsCount.js
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/151/gdws_crm/src/main/webapp/js/manage/gw_storeGoodsCount.js
+END
+gw_leaseMaintenance.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/gw_crm/!svn/ver/317/gdws_crm/src/main/webapp/js/manage/gw_leaseMaintenance.list.js
+END
+gw.sysLogger.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/gw_crm/!svn/ver/299/gdws_crm/src/main/webapp/js/manage/gw.sysLogger.list.js
+END
+gw.notice.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/gw_crm/!svn/ver/248/gdws_crm/src/main/webapp/js/manage/gw.notice.list.js
+END
+gw.customer.complain.type.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/gw_crm/!svn/ver/153/gdws_crm/src/main/webapp/js/manage/gw.customer.complain.type.list.js
+END
+gw.transsalestotal.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/gw_crm/!svn/ver/277/gdws_crm/src/main/webapp/js/manage/gw.transsalestotal.list.js
+END
+gw_integralExchangeGoods.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/gw_crm/!svn/ver/299/gdws_crm/src/main/webapp/js/manage/gw_integralExchangeGoods.list.js
+END
+gw.propertyAttibute.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/gw_crm/!svn/ver/109/gdws_crm/src/main/webapp/js/manage/gw.propertyAttibute.list.js
+END
+gw.group.info.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/109/gdws_crm/src/main/webapp/js/manage/gw.group.info.list.js
+END
+gw.members.reg.type.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/gw_crm/!svn/ver/307/gdws_crm/src/main/webapp/js/manage/gw.members.reg.type.list.js
+END
+gw.admin.users.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/gw_crm/!svn/ver/195/gdws_crm/src/main/webapp/js/manage/gw.admin.users.list.js
+END
+gw.customer.complain.view.type.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/gw_crm/!svn/ver/153/gdws_crm/src/main/webapp/js/manage/gw.customer.complain.view.type.list.js
+END
+gw.sendMessage.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/gw_crm/!svn/ver/388/gdws_crm/src/main/webapp/js/manage/gw.sendMessage.list.js
+END
+gw.pickupMaintenance.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/gw_crm/!svn/ver/317/gdws_crm/src/main/webapp/js/manage/gw.pickupMaintenance.list.js
+END
+gw.sendMail.record.js
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/533/gdws_crm/src/main/webapp/js/manage/gw.sendMail.record.js
+END
+gw.admin.users.reset.js
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/gw_crm/!svn/ver/195/gdws_crm/src/main/webapp/js/manage/gw.admin.users.reset.js
+END
+gw_goodsInStore.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/gw_crm/!svn/ver/501/gdws_crm/src/main/webapp/js/manage/gw_goodsInStore.list.js
+END
+gw.goods.info.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/gw_crm/!svn/ver/79/gdws_crm/src/main/webapp/js/manage/gw.goods.info.list.js
+END
+gw.shopsLease.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/277/gdws_crm/src/main/webapp/js/manage/gw.shopsLease.list.js
+END
+gw.base.integral.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/gw_crm/!svn/ver/491/gdws_crm/src/main/webapp/js/manage/gw.base.integral.list.js
+END
+gw.address.book.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/gw_crm/!svn/ver/402/gdws_crm/src/main/webapp/js/manage/gw.address.book.list.js
+END
+gw.locker.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/gw_crm/!svn/ver/461/gdws_crm/src/main/webapp/js/manage/gw.locker.list.js
+END
+gw.mall.info.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/gw_crm/!svn/ver/79/gdws_crm/src/main/webapp/js/manage/gw.mall.info.list.js
+END
+gw_stockCheckConfirm.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/gw_crm/!svn/ver/532/gdws_crm/src/main/webapp/js/manage/gw_stockCheckConfirm.list.js
+END
+gw_goodsInStoreCoufirm.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/gw_crm/!svn/ver/525/gdws_crm/src/main/webapp/js/manage/gw_goodsInStoreCoufirm.list.js
+END
+gw.shops.info.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/257/gdws_crm/src/main/webapp/js/manage/gw.shops.info.list.js
+END
+gw.activity.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/gw_crm/!svn/ver/395/gdws_crm/src/main/webapp/js/manage/gw.activity.list.js
+END
+gw.membersFilter.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/gw_crm/!svn/ver/299/gdws_crm/src/main/webapp/js/manage/gw.membersFilter.list.js
+END
+gw.department.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/192/gdws_crm/src/main/webapp/js/manage/gw.department.list.js
+END
+gw.api.account.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/gw_crm/!svn/ver/310/gdws_crm/src/main/webapp/js/manage/gw.api.account.list.js
+END
+gw.sms.record.js
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/gw_crm/!svn/ver/533/gdws_crm/src/main/webapp/js/manage/gw.sms.record.js
+END
+gw_club.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/gw_crm/!svn/ver/461/gdws_crm/src/main/webapp/js/manage/gw_club.list.js
+END
+gw.membersGradeManage.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/gw_crm/!svn/ver/299/gdws_crm/src/main/webapp/js/manage/gw.membersGradeManage.list.js
+END
+gw.sales.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/gw_crm/!svn/ver/347/gdws_crm/src/main/webapp/js/manage/gw.sales.list.js
+END
+gw.goodsOutStore.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/gw_crm/!svn/ver/506/gdws_crm/src/main/webapp/js/manage/gw.goodsOutStore.list.js
+END
+gw.sendMail.recordSetDada.js
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/gw_crm/!svn/ver/533/gdws_crm/src/main/webapp/js/manage/gw.sendMail.recordSetDada.js
+END
+gw_club_detail.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/gw_crm/!svn/ver/491/gdws_crm/src/main/webapp/js/manage/gw_club_detail.list.js
+END
+gw.departmentPosition.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/gw_crm/!svn/ver/189/gdws_crm/src/main/webapp/js/manage/gw.departmentPosition.list.js
+END
+gw.promotion.integral.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/gw_crm/!svn/ver/513/gdws_crm/src/main/webapp/js/manage/gw.promotion.integral.list.js
+END
+gw.ares.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/gw_crm/!svn/ver/109/gdws_crm/src/main/webapp/js/manage/gw.ares.list.js
+END
+gw.activity.enterlist.js
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/gw_crm/!svn/ver/395/gdws_crm/src/main/webapp/js/manage/gw.activity.enterlist.js
+END
+gw_membergrade.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/gw_crm/!svn/ver/520/gdws_crm/src/main/webapp/js/manage/gw_membergrade.list.js
+END
+gw.store.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/gw_crm/!svn/ver/299/gdws_crm/src/main/webapp/js/manage/gw.store.list.js
+END
+gw.admin.users.quit.js
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/gw_crm/!svn/ver/195/gdws_crm/src/main/webapp/js/manage/gw.admin.users.quit.js
+END
+gw.typeTree.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/gw_crm/!svn/ver/105/gdws_crm/src/main/webapp/js/manage/gw.typeTree.list.js
+END
+gw.role.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/gw_crm/!svn/ver/12/gdws_crm/src/main/webapp/js/manage/gw.role.list.js
+END
+gw.menber.bindingCard.js
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/gw_crm/!svn/ver/410/gdws_crm/src/main/webapp/js/manage/gw.menber.bindingCard.js
+END
+gw.memberCard.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/375/gdws_crm/src/main/webapp/js/manage/gw.memberCard.list.js
+END
+gw_stockCheck.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/456/gdws_crm/src/main/webapp/js/manage/gw_stockCheck.list.js
+END
+gw.members.credit.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/gw_crm/!svn/ver/146/gdws_crm/src/main/webapp/js/manage/gw.members.credit.list.js
+END
+gw.goodsOutStoreCoufirm.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/gw_crm/!svn/ver/526/gdws_crm/src/main/webapp/js/manage/gw.goodsOutStoreCoufirm.list.js
+END
+gw_leasegoods.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/290/gdws_crm/src/main/webapp/js/manage/gw_leasegoods.list.js
+END
+gw.vipinfo.bindCardcode.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/gw_crm/!svn/ver/435/gdws_crm/src/main/webapp/js/manage/gw.vipinfo.bindCardcode.list.js
+END
+gw.activity.confirmlist.js
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/gw_crm/!svn/ver/151/gdws_crm/src/main/webapp/js/manage/gw.activity.confirmlist.js
+END
+gw.vipinfo.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/gw_crm/!svn/ver/356/gdws_crm/src/main/webapp/js/manage/gw.vipinfo.list.js
+END
+gw.members.grade.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/gw_crm/!svn/ver/179/gdws_crm/src/main/webapp/js/manage/gw.members.grade.list.js
+END
+gw.member.integral.detail.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/gw_crm/!svn/ver/391/gdws_crm/src/main/webapp/js/manage/gw.member.integral.detail.list.js
+END
+gw.repeat.visit.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/gw_crm/!svn/ver/275/gdws_crm/src/main/webapp/js/manage/gw.repeat.visit.list.js
+END
+gw_presentinfo.list.js
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/gw_crm/!svn/ver/179/gdws_crm/src/main/webapp/js/manage/gw_presentinfo.list.js
+END

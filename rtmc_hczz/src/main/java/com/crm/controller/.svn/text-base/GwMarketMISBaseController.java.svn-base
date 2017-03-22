@@ -1,0 +1,602 @@
+package com.crm.controller;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.http.client.ClientProtocolException;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.pojo.GwBuildingTreeModel;
+import com.crm.pojo.GwMallInfoModel;
+import com.crm.pojo.GwbrandtreeModel;
+import com.crm.pojo.GwformatstreeModel;
+import com.crm.pojo.GwgoodstreeModel;
+import com.crm.pojo.GwmerchantsinfoModel;
+import com.crm.service.GwAresService;
+import com.crm.service.GwBuildingTreeService;
+import com.crm.service.GwGoodsInfoService;
+import com.crm.service.GwGroupInfoService;
+import com.crm.service.GwMallInfoService;
+import com.crm.service.GwPropertyAttributeService;
+import com.crm.service.GwSettlementPaymentTenderService;
+import com.crm.service.GwShopsInfoService;
+import com.crm.service.GwShopsLeaseService;
+import com.crm.service.GwTranssalestotalService;
+import com.crm.service.GwbrandtreeService;
+import com.crm.service.GwformatstreeService;
+import com.crm.service.GwgoodstreeService;
+import com.crm.service.GwmerchantsinfoService;
+
+/**
+ * 
+ * GwMarketMISBase:MIS系统基础数据控制层
+ *
+ * @author chengpengfei
+ * @date 2016年6月22日
+ * @version jdk1.8
+ *
+ */
+@Controller
+@RequestMapping("marketMisBase")
+public class GwMarketMISBaseController {
+	/**
+	 * 品牌业务逻辑
+	 */
+	@Resource(name = "gwbrandtreeService")
+	private GwbrandtreeService gwbrandtreeService;
+
+	/**
+	 * 业态业务逻辑
+	 */
+	@Resource(name = "gwformatstreeService")
+	private GwformatstreeService gwformatstreeService;
+
+	/**
+	 * 店铺业务逻辑
+	 */
+	@Resource(name = "gwShopsLeaseServiceManage")
+	private GwShopsLeaseService gwShopsLeaseServiceImpl;
+
+	/**
+	 * 付款方式业务逻辑
+	 */
+	@Resource(name = "gwSettlementPaymentTenderServiceManage")
+	private GwSettlementPaymentTenderService gwSettlementPaymentTenderService;
+
+	/**
+	 * 货品组别业务逻辑
+	 */
+	@Resource(name = "gwgoodstreeService")
+	private GwgoodstreeService gwGoodsTreeServiceImpl;
+
+	/**
+	 * 货品业务逻辑
+	 */
+	@Resource(name = "gwGoodsInfoServiceManage")
+	private GwGoodsInfoService gwGoodsInfoServiceImpl;
+
+	/**
+	 * 购物中心业务逻辑
+	 */
+	@Resource(name = "gwMallInfoServiceManage")
+	private GwMallInfoService gwMallInfoServiceImpl;
+
+	/**
+	 * 销售数据业务逻辑
+	 */
+	@Resource(name = "transsalestotalServiceManage")
+	private GwTranssalestotalService gwTranssalestotalServiceImpl;
+
+	/**
+	 * 销售数据业务逻辑
+	 */
+	@Resource(name = "gwMerchaninfoService")
+	private GwmerchantsinfoService gwMerchantsInfoServiceImpl;
+
+	/**
+	 * 物业性质业务逻辑
+	 */
+	@Resource(name = "gwPropertyAttributeService")
+	private GwPropertyAttributeService gwPropertyAttributeServiceImpl;
+
+	/**
+	 * 区域业务逻辑
+	 */
+	@Resource(name = "gwAresServiceManage")
+	private GwAresService gwAresServiceImpl;
+
+	/**
+	 * 楼宇业务逻辑
+	 */
+	@Resource(name = "gwBuildingTreeServiceManage")
+	private GwBuildingTreeService gwBuildingTreeServiceImpl;
+
+	/**
+	 * 集团业务逻辑
+	 */
+	@Resource(name = "gwGroupInfoServiceManage")
+	private GwGroupInfoService gwGroupInfoServiceImpl;
+
+	/**
+	 * 单元业务逻辑
+	 */
+	@Resource(name = "gwShopsInfoServiceManage")
+	private GwShopsInfoService gwShopsInfoServiceImpl;
+
+	/**
+	 * 从MIS端获取店铺基础数据
+	 * 
+	 * @author chengpengfei
+	 * @param currentPage
+	 * @param pageSize
+	 * @param request
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	@RequestMapping("/getMisShopsLeaseByPageList.do")
+	@ResponseBody
+	public LigerPageDataVo getMisShopsLeaseByPageList(int currentPage, int pageSize, String shopsLeaseName,
+			String shopsLeaseCode, Integer state, HttpServletRequest request)
+					throws ClientProtocolException, IOException {
+
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("shopsLeaseName", shopsLeaseName);
+		params.put("shopsLeaseCode", shopsLeaseCode);
+		params.put("state", state);
+		BasePageResultVo baseResultVo = gwShopsLeaseServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+
+	/**
+	 * 从MIS端获取付款方式基础数据
+	 * 
+	 * @author chengpengfei
+	 * @param currentPage
+	 * @param pageSize
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	@RequestMapping("/getMisPaymentTenderByPageList.do")
+	@ResponseBody
+	public LigerPageDataVo getMisPaymentTenderByPageList(int currentPage, int pageSize)
+			throws ClientProtocolException, IOException {
+		/*
+		 * boolean flag =
+		 * gwSettlementPaymentTenderService.insertMisBrandDataForPaymentTender()
+		 * ; if(flag==false){ return null; }
+		 */
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		BasePageResultVo baseResultVo = gwSettlementPaymentTenderService.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+
+	/**
+	 * 从MIS端获取业态基础数据
+	 * 
+	 * @author chengpengfei
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	@RequestMapping("/getMisForMatsTreeList.do")
+	@ResponseBody
+	public BaseResultVo getMisForMatsTreeList() throws ClientProtocolException, IOException {
+		List<GwformatstreeModel> formatsTreeList=new ArrayList<>();
+		// 获取所有业态
+		List<GwformatstreeModel> allFormatsTreeList = gwformatstreeService.getAllList();
+		for (GwformatstreeModel formats : allFormatsTreeList) {
+			if(formats.getState()==1){
+				formatsTreeList.add(formats);
+			}
+		}
+
+		List<HashMap<String, Object>> treeList = new ArrayList<HashMap<String, Object>>();
+		for (GwformatstreeModel formatsTree : formatsTreeList) {
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("id", formatsTree.getId());// 菜单id
+			map.put("pid", formatsTree.getFid());// 父级菜单id
+			map.put("text", formatsTree.getName() + "【" + formatsTree.getBm() + "】");// 菜单名称
+			map.put("isExpand", true);
+			treeList.add(map);
+		}
+
+		BaseResultVo baseResultVo = BaseResultVo.responseSuccess("获取所有业态成功");
+		baseResultVo.setData(treeList);
+		return baseResultVo;
+	}
+
+	/**
+	 * 从MIS端获取品牌基础数据
+	 * 
+	 * @author chengpengfei
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	@RequestMapping("/getMisBrandTreeList.do")
+	@ResponseBody
+	public BaseResultVo getMisBrandTreeList() throws ClientProtocolException, IOException {
+		// 获取所有品牌
+		List<GwbrandtreeModel> brandTreeList = gwbrandtreeService.getAllStateNotZero();
+		List<GwformatstreeModel> formatsTreeList = gwformatstreeService.getAllListStateIsOne();
+		List<HashMap<String, Object>> treeList = new ArrayList<HashMap<String, Object>>();
+		for (GwbrandtreeModel menuTree : brandTreeList) {
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("id", menuTree.getId());// 菜单id
+			map.put("pid", "m_" + menuTree.getGwFormatsTreeId());// 父级菜单id
+			map.put("text", menuTree.getName() + "【" + menuTree.getBm() + "】");// 菜单名称
+			map.put("isExpand", true);
+//			map.put("icon", "/images/icons/brand.png");
+			treeList.add(map);
+		}
+		for (GwformatstreeModel formatstree : formatsTreeList) {
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("id", "m_" + formatstree.getId());// 菜单id
+			map.put("pid", "m_" + formatstree.getFid());// 父级菜单id
+			map.put("text", formatstree.getName() + "【" + formatstree.getBm() + "】");// 菜单名称
+			map.put("isExpand", true);
+//			map.put("icon", "/images/icons/format.png");
+			treeList.add(map);
+		}
+		BaseResultVo baseResultVo = BaseResultVo.responseSuccess("获取所有品牌成功");
+		baseResultVo.setData(treeList);
+		return baseResultVo;
+	}
+
+	/**
+	 * 从MIS端获取货品组别数据
+	 * 
+	 * @author chengpengfei
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	@RequestMapping("/getMisForGoodsTreeList.do")
+	@ResponseBody
+	public BaseResultVo getMisForGoodsTreeList() throws ClientProtocolException, IOException {
+
+		List<GwgoodstreeModel> goodstreeList=new ArrayList<>();
+		
+		// 获取所有货品
+		List<GwgoodstreeModel> allGoodstreeList = gwGoodsTreeServiceImpl.getAllList();
+		for (GwgoodstreeModel goodsTree : allGoodstreeList) {
+			if(goodsTree.getState()==1){
+				goodstreeList.add(goodsTree);
+			}
+		}
+		List<HashMap<String, Object>> treeList = new ArrayList<HashMap<String, Object>>();
+		for (GwgoodstreeModel menuTree : goodstreeList) {
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("id", menuTree.getId());// 菜单id
+			map.put("pid", menuTree.getFid());// 父级菜单id
+			map.put("text", menuTree.getName() + "【" + menuTree.getBm() + "】");// 菜单名称
+			map.put("isExpand", true);
+			treeList.add(map);
+		}
+
+		BaseResultVo baseResultVo = BaseResultVo.responseSuccess("获取所有货品成功");
+		baseResultVo.setData(treeList);
+		return baseResultVo;
+	}
+
+	/**
+	 * 从MIS端获取货品信息数据
+	 * 
+	 * @author chengpengfei
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	@RequestMapping("/getMisFoGoodsInfoList.do")
+	@ResponseBody
+	public LigerPageDataVo getMisFoGoodsInfoList(String name, String code, String goodsTreeId, int currentPage,
+			int pageSize, String shopsLeaseCode, HttpServletRequest request)
+					throws ClientProtocolException, IOException {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("goodsTreeId", goodsTreeId);
+		params.put("name", name);
+		params.put("code", code);
+		params.put("shopsLeaseCode", shopsLeaseCode);
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		BasePageResultVo baseResultVo = gwGoodsInfoServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+
+	/**
+	 * 从MIS端获取购物中心数据
+	 * 
+	 * @author chengpengfei
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	@RequestMapping("/getMisFoMallInfoList.do")
+	@ResponseBody
+	public LigerPageDataVo getMisFoMallInfoList(int currentPage, int pageSize, HttpServletRequest request)
+			throws ClientProtocolException, IOException {
+
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+
+		BasePageResultVo baseResultVo = gwMallInfoServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+
+	/**
+	 * 从MIS端获取销售数据
+	 * 
+	 * @author chengpengfei
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	@RequestMapping("/getMisFoTranssaleTotal.do")
+	@ResponseBody
+	public LigerPageDataVo getMisFoTranssaleTotal(int currentPage, int pageSize, HttpServletRequest request,
+			String startTime, String endTime, String shopsInfoId, String goodstreeId, String merchantsInfoId)
+					throws ClientProtocolException, IOException {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		// 根据开始时间查询
+		params.put("startTime", startTime);
+		// 根据结束时间查询
+		params.put("endTime", endTime);
+		// 根据商铺名称
+		params.put("shopsInfoId", shopsInfoId);
+		// 根据货品类别查询
+		params.put("goodstreeId", goodstreeId);
+		params.put("merchantsInfoId", merchantsInfoId);
+		BasePageResultVo baseResultVo = gwTranssalestotalServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+
+	/**
+	 * 从MIS端获取商户信息
+	 * 
+	 * @author chengpengfei
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	@RequestMapping("/getMisFoMerchantsInfoList.do")
+	@ResponseBody
+	public LigerPageDataVo getMisFoMerchantsInfoList(int currentPage, int pageSize, HttpServletRequest request)
+			throws ClientProtocolException, IOException {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		BasePageResultVo baseResultVo = gwMerchantsInfoServiceImpl.selectPageList(params);
+		
+		List<GwmerchantsinfoModel> list = (List<GwmerchantsinfoModel>) baseResultVo.getRows();
+		for(GwmerchantsinfoModel merchants : list){
+			//品牌ID字符串
+			String brandTreeIds = merchants.getGwBrandTreeId();
+			String[] ids = brandTreeIds.split(";");
+			//根据品牌ID字符串查询品牌集合
+			List<GwbrandtreeModel> brandList = gwbrandtreeService.getBrandByIds(ids);
+			String brandNames = "";
+			int i = 1;
+			for(GwbrandtreeModel brand : brandList){
+				if(brandList.size()>i)
+				{
+					brandNames += brand.getName()+"、";
+				}else{
+					brandNames += brand.getName();
+				}
+				i++;
+			}
+			merchants.setBrandName(brandNames);
+		}
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+
+	/**
+	 * 从MIS端获取物业性质信息
+	 * 
+	 * @author chengpengfei
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	@RequestMapping("/getMisFoPropertyList.do")
+	@ResponseBody
+	public LigerPageDataVo getMisFoPropertyList(int currentPage, int pageSize, HttpServletRequest request)
+			throws ClientProtocolException, IOException {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		BasePageResultVo baseResultVo = gwPropertyAttributeServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+
+	/**
+	 * 从MIS端获取区域信息
+	 * 
+	 * @author chengpengfei
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	@RequestMapping("/getMisFoAresList.do")
+	@ResponseBody
+	public LigerPageDataVo getMisFoAresList(int currentPage, int pageSize, HttpServletRequest request)
+			throws ClientProtocolException, IOException {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		BasePageResultVo baseResultVo = gwAresServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+
+	/**
+	 * 从MIS端获取楼宇信息
+	 * 
+	 * @author chengpengfei
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	@RequestMapping("/getMisFoBuildingList.do")
+	@ResponseBody
+	public BaseResultVo getMisFoBuildingList() throws ClientProtocolException, IOException {
+
+		// 获取所有楼宇
+		List<GwBuildingTreeModel> allBuildingTreeList = gwBuildingTreeServiceImpl.getAllList();
+
+		List<GwBuildingTreeModel> buildingTreeList=new ArrayList<>();
+		for (GwBuildingTreeModel build : allBuildingTreeList) {
+			if(build.getState()==1){
+				buildingTreeList.add(build);
+			}
+		}
+		// 获取所有购物中心
+		List<GwMallInfoModel> mallInfoList = gwMallInfoServiceImpl.getAllList();
+		List<HashMap<String, Object>> treeList = new ArrayList<HashMap<String, Object>>();
+		
+		for (GwMallInfoModel mallInfo : mallInfoList ) {
+	    	HashMap<String, Object> map=new HashMap<String, Object>();
+			map.put("id", "m_"+mallInfo.getId());//菜单id
+			map.put("pid", "m_0");//父级菜单id
+			map.put("text", mallInfo.getName()+"【"+mallInfo.getBm()+"|"+mallInfo.getArea()+"m²】");//菜单名称
+			map.put("isExpand", true);
+			treeList.add(map);
+	    }	
+		for (GwBuildingTreeModel menuTree : buildingTreeList) {
+			HashMap<String, Object> map=new HashMap<String, Object>();
+			if(menuTree.getFid()==0){
+				map.put("id", menuTree.getId());//菜单id
+				map.put("pid", "m_"+menuTree.getGwMallInfoId());//父级菜单id
+				map.put("text", menuTree.getName()+"【"+menuTree.getBm()+"|"+menuTree.getArea()+"m²】");//菜单名称
+				map.put("isExpand", true);
+				treeList.add(map);
+			}else{
+				map.put("id", menuTree.getId());//菜单id
+				map.put("pid", menuTree.getFid());//父级菜单id
+				map.put("text", menuTree.getName()+"【"+menuTree.getBm()+"|"+menuTree.getArea()+"m²】");//菜单名称
+				map.put("isExpand", true);
+				treeList.add(map);
+			}
+			
+		}
+
+		BaseResultVo baseResultVo = BaseResultVo.responseSuccess("获取所有楼宇成功");
+		baseResultVo.setData(treeList);
+		return baseResultVo;
+	}
+
+	/**
+	 * 从MIS端获取区域信息
+	 * 
+	 * @author chengpengfei
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	@RequestMapping("/getMisFoGroupInfoList.do")
+	@ResponseBody
+	public LigerPageDataVo getMisFoGroupInfoList(int currentPage, int pageSize, HttpServletRequest request)
+			throws ClientProtocolException, IOException {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		BasePageResultVo baseResultVo = gwGroupInfoServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+
+	/**
+	 * 
+	 * 从MIS端获取单元信息
+	 *
+	 * @date 2016年3月10日
+	 * @param currentPage
+	 *            当前页码
+	 * @param pageSize
+	 *            每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getMisForShopsInfoList.do")
+	@ResponseBody
+	public LigerPageDataVo getMisForShopsInfoList(int currentPage, int pageSize, Integer state, String unitNumber,
+			HttpServletRequest request) {
+
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("state", state);
+		params.put("unitNumber", unitNumber);
+		BasePageResultVo baseResultVo = gwShopsInfoServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+}

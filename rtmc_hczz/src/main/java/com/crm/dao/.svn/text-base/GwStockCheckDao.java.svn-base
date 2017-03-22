@@ -1,0 +1,19 @@
+package com.crm.dao;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwStockCheckModel;
+
+/**
+ * 
+ * GwStockCheckDao:物品盘点数据层接口
+ *
+ * @author  meishengjun
+ * @date    2016年11月11日
+ * @version jdk1.8
+ *
+ */
+public interface GwStockCheckDao extends DaoManager<GwStockCheckModel>{
+
+public GwStockCheckModel getStockCheckByLastOne(String time);
+	
+}

@@ -1,0 +1,52 @@
+package com.crm.service.impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwMemberBindingCardDao;
+import com.crm.pojo.GwMemberBindingCardModel;
+import com.crm.service.GwMemberBindingCardService;
+/**
+ * 
+ * 
+ * GwMemberBindingCardServiceImpl:会员绑卡管理业务逻辑层实现
+ *
+ * @author  meishengjun
+ * @date    2016年11月3日
+ * @version jdk1.8
+ *
+ */
+@Service("gwMemberBindingCardServiceManage")
+public class GwMemberBindingCardServiceImpl extends ServersManager<GwMemberBindingCardModel, GwMemberBindingCardDao> implements GwMemberBindingCardService {
+	@Resource(name = "gwMemberBindingCardDaoManage")
+	@Override
+	public void setDao(GwMemberBindingCardDao dao) {
+		this.dao=dao;
+		
+	}
+
+	@Override
+	public GwMemberBindingCardModel selectByCardCode(String card_code) {
+		// TODO Auto-generated method stub
+		return dao.selectByCardCode(card_code);
+	}
+
+	@Override
+	public List<GwMemberBindingCardModel> selectByMemberCode(String memberCode) {
+		// TODO Auto-generated method stub
+		return dao.selectByMemberCode(memberCode);
+	}
+
+	@Override
+	public List<GwMemberBindingCardModel> getAllNormalUseCardCode() {
+		
+		return dao.getAllNormalUseCardCode();
+	}
+
+	
+
+}

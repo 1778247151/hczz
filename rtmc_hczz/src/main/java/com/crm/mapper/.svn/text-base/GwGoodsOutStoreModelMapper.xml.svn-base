@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.goodsOutStore" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwGoodsOutStoreModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="total_number" property="totalNumber" jdbcType="INTEGER" />
+    <result column="total_money" property="totalMoney" jdbcType="DECIMAL" />
+    <result column="out_time" property="outTime" jdbcType="VARCHAR" />
+    <result column="approve_view" property="approveView" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="approve_user_id" property="approveUserId" jdbcType="INTEGER" />
+    <result column="approve_time" property="approveTime" jdbcType="VARCHAR" />
+    <result column="createUserName" property="createUserName" jdbcType="VARCHAR" />
+    <result column="updateUserName" property="updateUserName" jdbcType="VARCHAR" />
+    <result column="approveUserName" property="approveUserName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, code, description, total_number, total_money, out_time, approve_view, status, 
+    create_user_id, create_time, update_user_id, update_time, approve_user_id, approve_time
+  </sql>
+  <select id="gw.goodsOutStore.selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_goods_out_store
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.goodsOutStore.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_goods_out_store
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.goodsOutStore.insert" parameterType="com.crm.pojo.GwGoodsOutStoreModel" >
+    insert into gw_goods_out_store
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="totalNumber != null" >
+        total_number,
+      </if>
+      <if test="totalMoney != null" >
+        total_money,
+      </if>
+      <if test="outTime != null" >
+        out_time,
+      </if>
+      <if test="approveView != null" >
+        approve_view,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="approveUserId != null" >
+        approve_user_id,
+      </if>
+      <if test="approveTime != null" >
+        approve_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="totalNumber != null" >
+        #{totalNumber,jdbcType=INTEGER},
+      </if>
+      <if test="totalMoney != null" >
+        #{totalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="outTime != null" >
+        #{outTime,jdbcType=VARCHAR},
+      </if>
+      <if test="approveView != null" >
+        #{approveView,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="approveUserId != null" >
+        #{approveUserId,jdbcType=INTEGER},
+      </if>
+      <if test="approveTime != null" >
+        #{approveTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.goodsOutStore.update" parameterType="com.crm.pojo.GwGoodsOutStoreModel" >
+    update gw_goods_out_store
+    <set >
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="totalNumber != null" >
+        total_number = #{totalNumber,jdbcType=INTEGER},
+      </if>
+      <if test="totalMoney != null" >
+        total_money = #{totalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="outTime != null" >
+        out_time = #{outTime,jdbcType=VARCHAR},
+      </if>
+      <if test="approveView != null" >
+        approve_view = #{approveView,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="approveUserId != null" >
+        approve_user_id = #{approveUserId,jdbcType=INTEGER},
+      </if>
+      <if test="approveTime != null" >
+        approve_time = #{approveTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="gw.goodsOutStore.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    	o.id, o.code, o.description, o.total_number, o.total_money, o.out_time, o.approve_view, o.status, 
+    	o.create_user_id, o.create_time, o.update_user_id, o.update_time, approve_user_id, approve_time,
+    	(select b.`name` from gw_admin_users b where b.id = o.create_user_id)as createUserName,
+    	(select b.`name` from gw_admin_users b where b.id = o.update_user_id)as updateUserName,
+    	(select b.`name` from gw_admin_users b where b.id = o.approve_user_id)as approveUserName
+    from gw_goods_out_store o
+    <where>
+		<if test="outTime != null and ''!=outTime">
+			and o.out_time =#{outTime,jdbcType=VARCHAR}
+		</if>
+		<if test="status!=null and ''!=status">
+			and o.status = #{status,jdbcType=INTEGER}
+		</if>
+		<if test="code!=null and ''!=code">
+			and o.code LIKE CONCAT(CONCAT('%', #{code,jdbcType=VARCHAR}), '%')  
+		</if>
+	</where>
+	order by o.create_time desc
+	limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER} 
+  </select>
+  <select id="gw.goodsOutStore.selectCount" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select 
+    	count(id)
+    from gw_goods_out_store o
+    <where>
+    	<if test="outTime != null and ''!=outTime">
+			and o.out_time =#{outTime,jdbcType=VARCHAR}
+		</if>
+		<if test="status!=null and ''!=status">
+			and o.status = #{status,jdbcType=INTEGER}
+		</if>
+		<if test="code!=null and ''!=code">
+			and o.code LIKE CONCAT(CONCAT('%', #{code,jdbcType=VARCHAR}), '%')  
+		</if>
+	</where>
+  </select>
+  <select id="gw.goodsOutStore.selectMaxCode" resultType="java.lang.String" parameterType="java.lang.String">
+  	select
+  		max(code)
+  	from gw_goods_out_store
+  	where code like '%${value}%'
+  </select>
+</mapper>

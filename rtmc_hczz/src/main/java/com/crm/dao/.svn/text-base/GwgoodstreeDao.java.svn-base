@@ -1,0 +1,79 @@
+package com.crm.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwgoodstreeModel;
+
+/**
+ * 
+ * GwgoodstreeDao:货物管理数据访问层接口
+ *
+ * @author chengpengfei
+ * @date  2016年3月10日
+ * @version  jdk1.8
+ *
+ */
+public interface GwgoodstreeDao extends DaoManager<GwgoodstreeModel>{
+
+	/**
+	 * 
+	 * getTopGoodsTree:根据父级id，获取下级菜单集合
+	 *
+	 * @date 2016年3月22日
+	 * @param fid            父级id
+	 * @return
+	 */
+	public List<GwgoodstreeModel> getTopGoodsTree(int fid);
+	
+	/**
+	 * 获取所有货品集合接口
+	 */
+	public List<GwgoodstreeModel> getGoodsTressListApi(Map<String,Object> params);
+	
+	/**
+	 * 根据父级ID获取下级货品集合接口
+	 */
+	public List<GwgoodstreeModel> getLastGoodsTresListApi(Map<String,Object> params);
+	
+	/**
+	 * 根据编号获取货品信息
+	 * @param code
+	 * @return
+	 */
+	public GwgoodstreeModel getGoodsTreeByCode(String code);
+	
+	/**
+	 * 清空货品组别表
+	 * @return
+	 */
+	public int deleteAllForGoodsTree();
+	
+	/**
+	 * 批量插入货品组别信息
+	 * @param goodsTreeList
+	 * @return
+	 */
+	public int batchInsert(List<GwgoodstreeModel> goodsTreeList);
+	/**
+	 * 
+	 * batchUpdate:批量更新
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param goodsTreeList
+	 * @return
+	 */
+	public int batchUpdate(List<GwgoodstreeModel> goodsTreeList);
+	/**
+	 * 
+	 * batchDelete:批量删除
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param goodsTreeList
+	 * @return
+	 */
+	public int batchDelete(List<GwgoodstreeModel> goodsTreeList);
+}

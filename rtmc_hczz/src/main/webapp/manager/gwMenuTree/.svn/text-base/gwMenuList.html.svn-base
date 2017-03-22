@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>#</title>
+    <link href="/js/ligerui/lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link href="/js/ligerui/lib/ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" />
+    <script src="/js/ligerui/lib/jquery/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/core/base.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerGrid.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerForm.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerTree.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerDateEditor.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerComboBox.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerCheckBox.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerButton.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerRadio.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerTextBox.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerToolBar.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerTip.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/js/action/bui.min.js"></script>
+    <script type="text/javascript" src="/js/action/sys.common.js"></script>
+    <script type="text/javascript" src="/js/common.js"></script>
+    <link type="text/css" rel="stylesheet" href="/css/base.css" />
+
+<style type="text/css">
+.l-tree{margin:0; padding:0; list-style:none; position:position; display:block; background:white;overflow: no;width:100%;}
+</style>
+
+<script type="text/javascript">
+//菜单树对象
+var tree=null;
+        //添加节点的父级id
+        var fid="0";
+        //节点类型
+        var type="";
+        //修改，删除时，当前id
+        var id="";
+        $(function(){
+        	var width=$("#tree").width()-100;
+        	
+        	 tree=$("#gwMenuTree").ligerTree({  
+        	        idFieldName :'id',
+        	        parentIDFieldName :'pid',
+        	        slide: false,
+        	        checkbox:false,
+        	        
+        	        onClick:function(note){
+        	           fid=note.data.id;
+        	      	   id=note.data.id;
+        	      	   type=note.data.type;
+        	          }
+        	        });
+        	 
+        	 getMenuTree();
+        });
+        function getMenuTree(){
+        	fid="0";
+     	    id="";
+        	$.ajax({
+        		url:'/gw_menu_tree/getMenuTreeList.do',
+        		method:'POST',
+        		dataType:'json',
+        		success:function(data){  
+        			if(data.status.code=="10000"){
+        				var menuData=data.data;
+        				tree.setData(menuData);
+           			}
+        		}
+        	});
+        }
+        //添加节点
+        function addNote() {
+        	if(type=="func"){
+        		$.ligerDialog.alert("该节点下面不能再添加下级节点！", "提示信息", "warn");
+        		return ;
+        	}
+        	var url="/manager/gwMenuTree/gw_menu_tree_add.html?fid="+fid+"&type="+type;
+        	$.ligerDialog.open({ width:640, height: 500, url: url, isResize: false, title: "添加节点"});
+        }
+       //编辑节点
+        function editNote() {
+    	    if(id==""){
+    	    	$.ligerDialog.alert("请选择您要操作的节点！", "提示信息", "warn");
+    	    	return;
+    	    }else{
+    	    	var url="/manager/gwMenuTree/gw_menu_tree_edit.html?id="+id+"&type="+type;
+            	$.ligerDialog.open({ width:640, height: 500, url: url, isResize: false, title: "编辑节点"});
+    	    }
+        	
+        }
+        //删除节点
+        function deleteNode(){
+        	if(id==""){
+    	    	$.ligerDialog.alert("请选择您要操作的节点！", "提示信息", "warn");
+    	    	return;
+    	    }
+        	
+        	$.ligerDialog.confirm("您确定要删除该节点吗？", '提示信息', function(yes) {
+        		if (yes) {
+        			$.ajax({
+                		url:'/gw_menu_tree/deleteMenuTreeById.do?id='+id,
+                		method:'POST',
+                		dataType:'json',
+                		success:function(data){       			
+                			if(data.status.code=="10000"){
+                				$.ligerDialog.alert(data.status.msg, "提示信息", "success",function(){
+                			          getMenuTree();
+                			          reLoad();
+                			          closeDialog();
+                			       });
+                			}else{
+                				$.ligerDialog.alert(data.status.msg, "提示信息", "error");
+                				closeDialog();
+                			}
+                		}
+                	});
+        		}
+        	});
+
+        }
+        //展开
+        function expandAll(){
+        	tree.expandAll();
+        }
+        //收缩
+        function collapseAll(){
+        	tree.collapseAll();
+        }
+        //刷新
+        function reLoad(){
+        	tree.reload();
+        }
+
+		
+	</script>
+</head>
+<style>
+	.btn a{
+		float: left;
+	}
+</style>
+<body style="background:#fff;">
+    <div class="topInfo">
+         <div class="rbContents">
+              <div class="rbConInfo">
+                  <div class="btn">
+	                  <a href="javascript:collapseAll();" id="collapseAll" class="search">收缩</a>
+	                  <a href="javascript:expandAll();" id="expandAll" class="look">展开</a>
+	                  <a href="javascript:addNote();" id="addNote" class="add">添加节点</a>
+	                  <a href="javascript:editNote();" id="updateInfo" class="update">修改节点</a>
+	                  <a href="javascript:deleteNode();" id="delNote" class="delete">删除</a>
+             	  </div>
+           	  </div>
+       </div>
+    </div>
+    <div class="rbConAllInfo">
+  <table id="tree" border="0" align="center" cellpadding="0" cellspacing="0" width="99%" style="border:solid 1px #BFD8E0;">
+    <tbody><tr>
+      <td class="mmccd"><b>菜单设置管理</b></td>
+    </tr>
+    <tr><td>
+        
+         <div id="gwMenuTree" class="ztree" style="">
+         </div>
+    </td></tr>
+  </tbody></table>
+</div>
+</body>
+</html>

@@ -1,0 +1,112 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwIntegralExchangeGoodsDao;
+import com.crm.pojo.GwIntegralExchangeGoodsModel;
+/**
+ * 
+ * GwIntegralExchangeGoodsDaoImpl:积分兑换礼品数据访问层实现
+ *
+ * @author chengpengfei
+ * @date  2016年6月23日
+ * @version  jdk1.8
+ *
+ */
+
+@Repository("gwIntegralExchangeGoodsDaoManage")
+public class GwIntegralExchangeGoodsDaoImpl implements GwIntegralExchangeGoodsDao{
+
+	@Resource
+	private BaseDao dao;
+	@Override
+	public int insert(GwIntegralExchangeGoodsModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.integralExchangeGoods.insert",e);
+	}
+
+	@Override
+	public int delete(GwIntegralExchangeGoodsModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwIntegralExchangeGoodsModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.integralExchangeGoods.update",e);
+	}
+
+	@Override
+	public GwIntegralExchangeGoodsModel selectOne(GwIntegralExchangeGoodsModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwIntegralExchangeGoodsModel> selectList(GwIntegralExchangeGoodsModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.integralExchangeGoods.deleteById",id);
+	}
+
+	@Override
+	public GwIntegralExchangeGoodsModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwIntegralExchangeGoodsModel) dao.selectOne("gw.integralExchangeGoods.selectById",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.integralExchangeGoods.selectByPageList", "gw.integralExchangeGoods.selectByPageCount", params);
+	}
+
+	@Override
+	public List<GwIntegralExchangeGoodsModel> getAllList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int updateIntegralExchangeGoodsById(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.integralExchangeGoods.updateById",params);
+	}
+
+	@Override
+	public List<GwIntegralExchangeGoodsModel> getAllListByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.integralExchangeGoods.selectAllListByCondition",params);
+	}
+
+	@Override
+	public GwIntegralExchangeGoodsModel selectByLastOne(String time) {
+		return (GwIntegralExchangeGoodsModel) dao.selectOne("gw.integralExchangeGoods.selectByLastOne",time);
+	}
+
+	@Override
+	public GwIntegralExchangeGoodsModel selectExchangeNumberByGroupGoodsCode(String goodsCode) {
+		// TODO Auto-generated method stub
+		return (GwIntegralExchangeGoodsModel) dao.selectOne("gw.integralExchangeGoods.selectExchangeNumberByGroupGoodsCode",goodsCode);
+	}
+
+}

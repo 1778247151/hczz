@@ -1,0 +1,54 @@
+package com.crm.dao;
+
+import java.util.List;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwMemberBindingCardModel;
+
+/**
+ * 
+ * GwMemberBindingCardDao:会员卡绑定数据层接口
+ *
+ * @author  shengjinpeng
+ * @date    2016年11月2日
+ * @version jdk1.8
+ *
+ */
+public interface GwMemberBindingCardDao extends DaoManager<GwMemberBindingCardModel>{
+
+	/**
+	 * 
+	 * selectByMemberCode:根据会员号获得在用的会员卡绑定信息
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年11月2日
+	 *
+	 * @param memberCode
+	 * @return
+	 */
+	public List<GwMemberBindingCardModel> selectByMemberCode(String memberCode);
+	
+	/**
+	 * 
+	 * getAllNormalUseCardCode:获取所有正常使用的卡号
+	 *
+	 * @author   meishengjun
+	 * @date     2016年11月4日
+	 *
+	 * 
+	 * @return
+	 */
+	public List<GwMemberBindingCardModel> getAllNormalUseCardCode();
+	/**
+	 * 
+	 * selectByCardCode:根据会员卡号获得绑定信息
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年11月2日
+	 *
+	 * @param cardCode
+	 * @return
+	 */
+	public GwMemberBindingCardModel selectByCardCode(String cardCode);
+	
+}

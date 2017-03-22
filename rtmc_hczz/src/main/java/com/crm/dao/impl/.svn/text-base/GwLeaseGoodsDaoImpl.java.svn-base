@@ -1,0 +1,107 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwLeaseGoodsDao;
+import com.crm.pojo.GwLeaseGoodsModel;
+
+/**
+ * 
+ * GwLoseMaintenanceDaoImpl:物品维护数据访问层实现
+ *
+ * @author chengpengfei
+ * @date  2016年6月23日
+ * @version  jdk1.8
+ *
+ */
+@Repository("gwGoodsDaoManage")
+public class GwLeaseGoodsDaoImpl implements GwLeaseGoodsDao{
+
+	@Resource
+	private BaseDao dao;
+	@Override
+	public int insert(GwLeaseGoodsModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.goods.insertSelective",e);
+	}
+
+	@Override
+	public int delete(GwLeaseGoodsModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwLeaseGoodsModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.goods.updateByPrimaryKeySelective",e);
+	}
+
+	@Override
+	public GwLeaseGoodsModel selectOne(GwLeaseGoodsModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwLeaseGoodsModel> selectList(GwLeaseGoodsModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.goods.deleteByPrimaryKey",id);
+	}
+
+	@Override
+	public GwLeaseGoodsModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwLeaseGoodsModel) dao.selectOne("gw.goods.selectByPrimaryKey",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.goods.selectByPageList", "gw.goods.selectByPageCount", params);
+	}
+
+	@Override
+	public List<GwLeaseGoodsModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.goods.selectAllList");
+	}
+
+	@Override
+	public GwLeaseGoodsModel getGoodsByCode(String code) {
+		// TODO Auto-generated method stub
+		return (GwLeaseGoodsModel) dao.selectOne("gw.goods.selectByCode",code);
+	}
+
+	@Override
+	public GwLeaseGoodsModel getGoodsByLastOne(String time) {
+		// TODO Auto-generated method stub
+		return (GwLeaseGoodsModel) dao.selectOne("gw.goods.selectByLastOne",time);
+	}
+
+	@Override
+	public int updateGoodsNumber(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.goods.updateGoodsNumber", map);
+	}
+
+}

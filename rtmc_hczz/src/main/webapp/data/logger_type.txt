@@ -1,0 +1,5 @@
+[
+    { "id": "info", "text": "信息" },
+    { "id": "debug", "text": "调试" },
+    { "id": "error", "text": "错误" }
+]

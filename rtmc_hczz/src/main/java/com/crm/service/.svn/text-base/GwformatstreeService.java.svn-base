@@ -1,0 +1,50 @@
+package com.crm.service;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.http.client.ClientProtocolException;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwformatstreeModel;
+
+/**
+ * 
+ * GwformatstreeService:业态管理业务逻辑层接口
+ *
+ * @author chengpengfei
+ * @date  2016年3月10日
+ * @version  jdk1.8
+ *
+ */
+public interface GwformatstreeService extends Services<GwformatstreeModel>{
+	/**
+	 * 从MIS端拉取业态数据并存入本地数据库
+	 * @throws IOException 
+	 * @throws ClientProtocolException 
+	 */
+	public boolean insertMisBrandDataForFormats(String url,Map<String, Object> map) throws ClientProtocolException, IOException;
+	
+	/**
+	 * 获取业态一级目录
+	 * @return
+	 */
+	List<GwformatstreeModel> getFormatselectyj();
+	/**
+	 * 根据编号查询
+	 * @param code
+	 * @return
+	 */
+	public GwformatstreeModel getFormatsTreeByCode(String code);
+	/**
+	 * 
+	 * getAllListStateIsOne:查询状态为1（正常）的全部集合信息
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月30日
+	 * @return
+	 */
+	public List<GwformatstreeModel> getAllListStateIsOne();
+
+}

@@ -1,0 +1,85 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwPaymentTenderDao;
+import com.crm.dao.GwPaymentTenderDao;
+import com.crm.pojo.GwPaymentTenderModel;
+
+@Repository("gwPaymentTenderDaoManage")
+public class GwPaymentTenderDaoImpl implements GwPaymentTenderDao{
+	@Resource
+	private BaseDao dao;
+	
+	@Override
+	public int insert(GwPaymentTenderModel e) {
+		return dao.insert("gw.payment.tender.insert",e);
+	}
+
+	@Override
+	public int delete(GwPaymentTenderModel e) {
+		return dao.delete("gw.payment.tender.deleteById",e.getId());
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwPaymentTenderModel e) {
+		return dao.update("gw.payment.tender.update",e);
+	}
+
+	@Override
+	public GwPaymentTenderModel selectOne(GwPaymentTenderModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwPaymentTenderModel> selectList(GwPaymentTenderModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		return dao.delete("gw.payment.tender.deleteByPrimaryKey", id);
+	}
+
+	@Override
+	public GwPaymentTenderModel selectById(int id) {
+		return (GwPaymentTenderModel) dao.selectOne("gw.payment.tender.selectByPrimaryKey",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		return dao.selectPageList("gw.payment.tender.selectPageList", "gw.payment.tender.selectCount", params);
+	}
+
+	@Override
+	public List<GwPaymentTenderModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.payment.tender.selectList");
+	}
+
+    @Override
+    public GwPaymentTenderModel getPaymentTenderByCode(String paymentTenderCode) {
+        return (GwPaymentTenderModel) dao.selectOne("gw.payment.tender.getPaymentTenderByCode", paymentTenderCode);
+    }
+
+	@Override
+	public List<GwPaymentTenderModel> getPaymentTenderAllListApi(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.payment.tender.selectListApi",params);
+	}
+}

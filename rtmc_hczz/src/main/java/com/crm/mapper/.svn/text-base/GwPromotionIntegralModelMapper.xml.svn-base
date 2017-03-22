@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.promotion.integral" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwPromotionIntegralModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="is_forever" property="isForever" jdbcType="INTEGER" />
+    <result column="priority" property="priority" jdbcType="INTEGER" />
+    <result column="start_time" property="startTime" jdbcType="VARCHAR" />
+    <result column="end_time" property="endTime" jdbcType="VARCHAR" />
+    <result column="model" property="model" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="condition_group" property="conditionGroup" jdbcType="VARCHAR" />
+    <result column="member_grade" property="memberGrade" jdbcType="VARCHAR" />
+    <result column="start_card_code" property="startCardCode" jdbcType="VARCHAR" />
+    <result column="end_card_code" property="endCardCode" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="week" property="week" jdbcType="VARCHAR" />
+    <result column="month" property="month" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, code, description, is_forever,priority,start_time, end_time, model, type, condition_group, 
+    member_grade, start_card_code, end_card_code, sex, week, month, status, create_user_id, 
+    create_time, update_user_id, update_time
+  </sql>
+  
+  <!-- 根据条件，获取分页数据list集合 -->
+  <select id="gw.promotion.integral.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    id, code, description,priority, is_forever isForever, start_time startTime, end_time endTime, model, type, condition_group conditionGroup, 
+    member_grade memberGrade, start_card_code startCardCode, end_card_code endCardCode, sex, week, month, status,
+	(select u.name from gw_admin_users u where u.id = d.create_user_id) as createUserName, d.create_time createTime, 
+    (select u.name from gw_admin_users u where u.id = d.update_user_id) as updateUserName, d.update_time updateTime
+    from gw_promotion_integral d 
+    <where>
+    	<if test="description != null and '' != description">  
+          	d.description LIKE CONCAT(CONCAT('%', #{description,jdbcType=VARCHAR}), '%')         
+	    </if>
+	    <if test="startTime != null and '' != startTime">  
+	          and str_to_date(d.start_time, '%Y-%m-%d') &gt;= str_to_date(#{startTime,jdbcType=VARCHAR}, '%Y-%m-%d')
+	    </if>
+	    <if test="endTime != null and '' != endTime">  
+	          and str_to_date(d.end_time, '%Y-%m-%d') &lt;= str_to_date(#{endTime,jdbcType=VARCHAR}, '%Y-%m-%d')
+	    </if>
+    </where>
+    limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  <!-- 根据条件，总记录数 -->
+  <select id="gw.promotion.integral.selectCount" resultType="java.lang.Integer">
+   	select count(id) from gw_promotion_integral
+  </select>
+  
+  <select id="gw.promotion.integral.selectByLastOne" resultMap="BaseResultMap">
+   		SELECT
+			*
+		FROM
+			gw_promotion_integral a
+		WHERE
+			a.code LIKE CONCAT(CONCAT('%', #{time,jdbcType=VARCHAR}), '%') 
+		ORDER BY
+			a.id DESC
+		LIMIT 1
+  </select>
+  
+  <select id="gw.promotion.integral.selectByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_promotion_integral
+    where code = #{code,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="gw.promotion.integral.selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_promotion_integral
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.promotion.integral.deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from gw_promotion_integral
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.promotion.integral.insert" parameterType="com.crm.pojo.GwPromotionIntegralModel" >
+    insert into gw_promotion_integral
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="priority != null" >
+        priority,
+      </if>
+      <if test="isForever != null" >
+        is_forever,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="model != null" >
+        model,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="conditionGroup != null" >
+        condition_group,
+      </if>
+      <if test="memberGrade != null" >
+        member_grade,
+      </if>
+      <if test="startCardCode != null" >
+        start_card_code,
+      </if>
+      <if test="endCardCode != null" >
+        end_card_code,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="week != null" >
+        week,
+      </if>
+      <if test="month != null" >
+        month,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="priority != null" >
+        #{priority,jdbcType=INTEGER},
+      </if>
+      <if test="isForever != null" >
+        #{isForever,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null" >
+        #{model,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="conditionGroup != null" >
+        #{conditionGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="memberGrade != null" >
+        #{memberGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="startCardCode != null" >
+        #{startCardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="endCardCode != null" >
+        #{endCardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="week != null" >
+        #{week,jdbcType=VARCHAR},
+      </if>
+      <if test="month != null" >
+        #{month,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.promotion.integral.update" parameterType="com.crm.pojo.GwPromotionIntegralModel" >
+    update gw_promotion_integral
+    <set >
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="priority != null" >
+        priority = #{priority,jdbcType=INTEGER},
+      </if>
+      <if test="isForever != null" >
+        is_forever = #{isForever,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null" >
+        model = #{model,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="conditionGroup != null" >
+        condition_group = #{conditionGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="memberGrade != null" >
+        member_grade = #{memberGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="startCardCode != null" >
+        start_card_code = #{startCardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="endCardCode != null" >
+        end_card_code = #{endCardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="week != null" >
+        week = #{week,jdbcType=VARCHAR},
+      </if>
+      <if test="month != null" >
+        month = #{month,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 根据业态编号或店铺编号和销售时间，获取活动规则集合 -->
+  <select id="gw.promotion.integral.getPromotionIntegralBy" parameterType="java.util.Map" resultType="com.crm.bean.PromotionIntegralInfo">
+   select   
+      b.code,b.type,b.priority,b.model,b.condition_group conditionGroup,b.is_forever isForever,
+      b.member_grade memberGrade,b.start_card_code startCardCode,b.end_card_code endCardCode,
+      b.start_time startTime,b.end_time endTime,b.sex,b.week,b.month,
+      a.type_code typeCode,a.number,a.integral_number integralNumber,a.exchange_money exchangeMoney,c.card_code cardCode,c.grade,c.credit,c.birth_time birthTime,c.grade gradeCode,
+      mg.exchage_integral memberIntegralNumber,mg.exchange_money memberExchangeMoney
+   from 
+        gw_promotion_integral_scope a,gw_promotion_integral b,gw_members c,gw_member_grade_integral mg
+       
+   where 
+        a.type_code=#{typeCode} and a.type=#{type} and a.promotion_integral_code=b.code AND c.grade=mg.`member_grade_code`
+		AND c.vip_code=#{vipCode}
+        
+        and (b.is_forever=1 or (b.is_forever=0 and b.end_time &gt;=#{saleDate} and b.start_time &lt;=#{saleDate}))
+        
+        ORDER BY b.priority desc
+  </select>
+  
+    <!-- 根据业态编号或店铺编号和销售时间，会员等级编号，会员编号，会员等级详细的业态或店铺编号，获取促销积分规则信息 -->
+  <select id="gw.promotion.integral.getMemberDetatilPromotionIntegralBy" parameterType="java.util.Map" resultType="com.crm.bean.PromotionIntegralInfo">
+   select   
+      b.code,b.type,b.priority,b.model,b.condition_group conditionGroup,b.is_forever isForever,
+      b.member_grade memberGrade,b.start_card_code startCardCode,b.end_card_code endCardCode,
+      b.start_time startTime,b.end_time endTime,b.sex,b.week,b.month,
+      a.type_code typeCode,a.number,a.integral_number integralNumber,a.exchange_money exchangeMoney,c.card_code cardCode,c.grade grade,c.credit,c.birth_time birthTime,c.grade gradeCode,
+      mg.exchage_integral memberIntegralNumber,mg.exchange_money memberExchangeMoney, mg.`code`,md.exchange_money detatiExchangeMoney,md.integral_number detatilIntegralNumber
+   from 
+        gw_promotion_integral_scope a,gw_promotion_integral b,gw_members c,gw_member_grade_integral mg,gw_member_grade_integral_detail md
+       
+   where 
+        a.type_code=#{typeCode} and a.type=#{type} and a.promotion_integral_code=b.code AND c.grade=mg.`member_grade_code`
+		AND c.vip_code=#{vipCode} AND md.member_grade_integral_code=mg.`code` and md.type_code=#{typeCode} AND md.type=#{type}
+        
+        and (b.is_forever=1 or (b.is_forever=0 and b.end_time &gt;=#{saleDate} and b.start_time &lt;=#{saleDate}))
+        
+        ORDER BY b.priority desc
+  </select>
+  
+</mapper>

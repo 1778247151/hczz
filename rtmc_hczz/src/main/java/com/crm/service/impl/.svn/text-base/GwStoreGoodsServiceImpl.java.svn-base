@@ -1,0 +1,65 @@
+package com.crm.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.ServersManager;
+import com.crm.dao.GwStoreGoodsDao;
+import com.crm.pojo.GwStoreGoodsModel;
+import com.crm.service.GwStoreGoodsService;
+
+/**
+ * 
+ * GwStoreGoodsServiceImpl:物品与仓库管理表业务逻辑层实现
+ *
+ * @author chengpengfei
+ * @date  2016年6月23日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwStoreGoodsServiceManage")
+public class GwStoreGoodsServiceImpl extends ServersManager<GwStoreGoodsModel,GwStoreGoodsDao> implements GwStoreGoodsService{
+
+	@Resource(name="gwStoreGoodsDaoManage")
+	@Override
+	public void setDao(GwStoreGoodsDao dao) {
+		// TODO Auto-generated method stub
+		this.dao = dao;
+	}
+
+	@Override
+	public int updateStoreGoodsNumber(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.updateStoreGoodsNumber(params);
+	}
+
+	@Override
+	public GwStoreGoodsModel getStoreGoodsByGoodsCode(Map<String,Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getStoreGoodsByGoodsCode(params);
+	}
+
+	@Override
+	public List<GwStoreGoodsModel> getStoreGoodsListByGoodsCode(String goodsCode) {
+		// TODO Auto-generated method stub
+		return dao.getStoreGoodsListByGoodsCode(goodsCode);
+	}
+
+	@Override
+	public BasePageResultVo getStoreGoodsByCount(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getStoreGoodsByCount(params);
+	}
+
+	@Override
+	public BasePageResultVo getStoreGoodsCombox(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getStoreGoodsCombox(params);
+	}
+
+}

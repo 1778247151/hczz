@@ -1,0 +1,295 @@
+/*package com.crm.util;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.crm.pojo.GwAreaModel;
+
+*//**
+ * 
+ * ExcelUtil:excel文件的导入导出工具类
+ *
+ * @author yumaochun
+ * @date  2016年6月30日
+ * @version  jdk1.8
+ *
+ *//*
+public class ExcelUtil {
+	// 日志
+	private static Logger logger = LoggerFactory.getLogger(ExcelUtil.class);
+	
+    
+     * 表头的高度
+     
+    private static short headerHeight=30*20;
+    
+    *//**
+     * 行的高度
+     *//*
+    private static short rowHeight=20*20;
+
+    
+    public static void main(String[] args) {
+        String sheetName="员工列表";
+        //属性字段及excel头部列名
+        String[] columnArr={"id","code","name"};
+        String[] headerAtrr={"序号","编号","名称"};
+        int[] colWidthArr={10,20,20};
+        List<GwAreaModel> list=new ArrayList<>();
+        GwAreaModel area=new GwAreaModel();
+        area.setId(1);
+        area.setCode(10001);
+        area.setName("四川省");
+        list.add(area);
+        GwAreaModel area1=new GwAreaModel();
+        area1.setId(2);
+        area1.setCode(10003);
+        area1.setName("云南省");
+        list.add(area1);
+       // exportExcel(sheetName,list,columnArr,headerAtrr,colWidthArr);
+    }
+    
+    *//**
+     * 
+     * exportExcel:导出excel数据
+     *
+     * @author yumaochun
+     * @date 2016年7月1日
+     * @param sheetName          excel名称
+     * @param list               导出的数据集合
+     * @param headerMap          表头信息集合
+     * @param colWidthArr        列宽度数据
+     * @return     返回：导出数据是否成功
+     *//*
+    public static <T> boolean exportExcel(String sheetName, List<T> list, String[] columnArr, String[] headerAtrr,int[] colWidthArr,HttpServletRequest request,HttpServletResponse response){
+    	boolean flag=false;
+    	if(columnArr==null || headerAtrr==null || colWidthArr==null){
+    		logger.info("属性对应数据、表头数组或者单元格数组宽度数组为空");
+    		return flag;
+    	}
+    	
+    	if(!(columnArr.length==headerAtrr.length && headerAtrr.length==colWidthArr.length)){
+    		logger.info("属性对应数据、表头数组或者单元格数组宽度数组长度不一致");
+    		return flag;
+    	}
+    	
+        // 创建表格
+        HSSFWorkbook wb = new HSSFWorkbook();//产生工作簿对象
+        HSSFSheet sheet = wb.createSheet();//产生工作表对象
+        //设置第一个工作表的名称为会员信息表
+        //为了工作表能支持中文，设置字符编码为UTF_16
+        wb.setSheetName(0,sheetName);
+        //产生一行
+        HSSFRow row = sheet.createRow(0);
+        row.setHeight(headerHeight); 
+        
+        //创建一列
+        HSSFCell cell = row.createCell(0);
+        // 定义表头
+        for (int i=0;i<headerAtrr.length;i++) {
+            cell = row.createCell(i);
+            //设置单元格内容为字符串型
+            cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+            //设置列名称
+            cell.setCellValue(headerAtrr[i]);
+            //获取样式
+            HSSFCellStyle style=getCellStyle(wb,true);
+            //设置列样式
+            cell.setCellStyle(style);
+        }
+
+        //设置excel表格的列宽度
+        for(int i=0;i<colWidthArr.length;i++){
+            //设置列宽度
+            sheet.setColumnWidth(i, colWidthArr[i]*256);
+        }
+       
+        //遍历list数据集合
+        for(int i=0;i<list.size();i++){
+            T t = list.get(i);
+            //创建新行
+            HSSFRow newRow = sheet.createRow(i + 1);
+            newRow.setHeight(rowHeight);//设置行高
+            for (int j=0;j<columnArr.length;j++) {
+                try {
+                    String attribute = columnArr[j];//属性名
+                    Field f;//字段对象
+                    Object fvalue;//属性值
+                    f = t.getClass().getDeclaredField(attribute);
+                    f.setAccessible(true);
+                    //获取属性值
+                    fvalue = f.get(t);
+                    
+                    //创建新列
+                    HSSFCell newCell = newRow.createCell(j);
+                    //设置列值
+                    if(fvalue instanceof String){
+                        newCell.setCellValue((String) fvalue);
+                    }else if(fvalue instanceof Integer){
+                        newCell.setCellValue((int) fvalue);
+                    }else if(fvalue instanceof Double){
+                        newCell.setCellValue((double) fvalue);
+                    }else if(fvalue instanceof Long){
+                        newCell.setCellValue((long) fvalue);
+                    }else if(fvalue instanceof Date){
+                        newCell.setCellValue(new SimpleDateFormat("yyyy-MM-dd").format((Date) fvalue));
+                    }else{
+                        newCell.setCellValue(fvalue==null?null:fvalue.toString());
+                    }
+                    //获取样式
+                    HSSFCellStyle style=getCellStyle(wb,false);
+                   
+                    //设置列样式
+                    newCell.setCellStyle(style);
+                    
+                    flag=true;
+                } catch (NoSuchFieldException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (SecurityException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }catch (IllegalArgumentException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } 
+            }
+
+        }
+        // 保存临时表格到本地，再下载
+        String xlsPath =request.getSession().getServletContext().getRealPath("/");
+        System.out.println("=="+xlsPath);
+        File file = new File(xlsPath + File.separator + "excel");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        //生成excel的文件路径
+        String filePath=xlsPath + File.separator + "excel" + File.separator + "example.xls";
+        file = new File(filePath);
+        FileOutputStream fout;
+        try {
+            fout = new FileOutputStream(file.getAbsolutePath());
+            wb.write(fout);
+            fout.flush();
+            fout.close();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        if(flag){
+            downLoadExcel(filePath,sheetName,response);
+        }
+        
+       
+       
+        return flag;
+    }
+    
+    *//**
+     * 
+     * getCellStyle:获取列的样式
+     *
+     * @author yumaochun
+     * @date 2016年7月1日
+     * @param wb  HSSFWorkbook
+     * @param isHeadCell     是否是表头样式
+     * @return
+     *//*
+    public static HSSFCellStyle getCellStyle(HSSFWorkbook wb,boolean isHeadCell){
+        //产生第一个单元格
+        HSSFCellStyle style = wb.createCellStyle();
+        // 居中
+        style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+        style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+       
+        // 边框
+        style.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
+        style.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
+        style.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
+        style.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
+        // 单元格自动换行
+        style.setWrapText(true);
+        // 字体
+        HSSFFont font = wb.createFont();
+        //如果是表头列
+        if(isHeadCell){
+            font.setFontName("宋体");
+            font.setFontHeightInPoints((short) 14);
+            font.setBoldweight((short)30);
+            style.setFont(font);
+            //设置单元格颜色
+            style.setFillPattern(XSSFCellStyle.FINE_DOTS );
+            style.setFillForegroundColor(IndexedColors.BLUE.getIndex());
+            style.setFillBackgroundColor(IndexedColors.BLUE.getIndex());
+        }else{
+            font.setFontName("宋体");
+            font.setFontHeightInPoints((short) 12);
+            style.setFont(font);
+        }
+        return style;
+    }
+    *//**
+     * 
+     * downLoadExcel:下载excel文件
+     *
+     * @author yumaochun
+     * @date 2016年7月1日
+     * @param filePath       文件路径
+     * @param excelName      导出的excel名称
+     * @param response       response
+     *//*
+    public static void downLoadExcel(String filePath,String excelName,HttpServletResponse response){
+        InputStream inputStream;
+        try {
+            inputStream = new FileInputStream(filePath);
+            //设置导出文件名   
+            String contentType = "application/vnd.ms-excel;charset=utf-8";
+            String contentDisposition = "attachment; filename="+ URLEncoder.encode(excelName, "UTF-8") + ".xls";
+            response.setContentType(contentType);
+            response.addHeader("Content-Disposition", contentDisposition);
+            byte[] b = new byte[1024];
+            int len;
+            try {
+                while ((len = inputStream.read(b)) > 0) {
+                    response.getOutputStream().write(b, 0, len);
+                }
+                inputStream.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        
+    }
+}
+*/

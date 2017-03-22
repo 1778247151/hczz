@@ -1,0 +1,44 @@
+package com.crm.service;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.http.client.ClientProtocolException;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwBuildingTreeModel;
+/**
+ * 
+ * GwbuildingTreeService:购物中心  楼宇树形结构
+ *
+ * @author yumaochun
+ * @date  2016年3月10日
+ * @version  jdk1.8
+ *
+ */
+public interface GwBuildingTreeService extends Services<GwBuildingTreeModel>{
+	/**
+	 * 
+	 * getBuildingTreeListByMallInfoId:根据购物中心id，获取楼宇列表
+	 *
+	 * @date 2016年3月15日
+	 * @param params
+	 * @return
+	 */
+	public List<GwBuildingTreeModel> getBuildingTreeListByMallInfoId(Map<String,Object> params);
+
+	/**
+	 * 根据编号查询楼宇信息
+	 * @param code
+	 * @return
+	 */
+	GwBuildingTreeModel getBuildingTreeByCode(String code);
+	
+	/**
+	 * 从MIS端拉取楼宇信息数据并存入本地数据库
+	 * @throws IOException 
+	 * @throws ClientProtocolException 
+	 */
+	public boolean insertMisDataForBuildingList() throws ClientProtocolException, IOException;
+}

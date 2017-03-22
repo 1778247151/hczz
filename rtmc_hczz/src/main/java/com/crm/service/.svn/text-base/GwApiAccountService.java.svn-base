@@ -1,0 +1,61 @@
+package com.crm.service;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwApiAccountModel;
+
+/**
+ * 
+ * GwApiAccountService:CRM系统对外接口账号认证业务逻辑层
+ *
+ * @author hemingjun
+ * @date  2016年9月19日
+ * @version  jdk1.8
+ *
+ */
+public interface GwApiAccountService extends Services<GwApiAccountModel>{
+	/**
+	 * 
+	 * getApiAccountById:通过id得到对象
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月19日
+	 * @param account
+	 * @return
+	 */
+     public GwApiAccountModel getApiAccountById(int id);
+     
+     /**
+      * 
+      * updateApiAccount:根据认证账号，更新认证账号的token
+      *
+      * @author   hemingjun
+      * @date     2016年9月19日
+      *
+      * @param    apiAccount   认证账号信息
+      * @return    
+      */
+     public int updateApiAccount(GwApiAccountModel apiAccount);
+     /**
+ 	 * 
+ 	 * getApiAccountByAccount:通过账号得到对象
+ 	 *
+ 	 * @author yumaochun
+ 	 * @date 2016年9月18日
+ 	 * @param account
+ 	 * @return
+ 	 */
+     public GwApiAccountModel getApiAccountByAccount(String account);
+     
+     /**
+      * 
+      * updateApiAccountToken:根据认证账号，更新认证账号的token
+      *
+      * @author   yumaochun
+      * @date     2016年9月19日
+      *
+      * @param    apiAccount   认证账号信息
+      * @return    
+      */
+     public int  updateApiAccountToken(GwApiAccountModel apiAccount);
+     
+}

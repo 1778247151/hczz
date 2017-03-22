@@ -1,0 +1,89 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwAreaDao;
+import com.crm.pojo.GwAreaModel;
+
+@Repository("gwAreaDaoManage")
+public class GwAreaDaoImpl implements GwAreaDao{
+	@Resource
+	private BaseDao dao;
+
+	@Override
+	public int insert(GwAreaModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int delete(GwAreaModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwAreaModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public GwAreaModel selectOne(GwAreaModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwAreaModel> selectList(GwAreaModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public GwAreaModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwAreaModel> getAllList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	/**
+	 * 根据父节点ID获取结果集合
+	 * 
+	 * @param pId
+	 * @return
+	 */
+	public List<GwAreaModel> getAreaByPid(int pId){
+		return dao.selectList("gw.area.selectListByPid", pId);
+	}
+}

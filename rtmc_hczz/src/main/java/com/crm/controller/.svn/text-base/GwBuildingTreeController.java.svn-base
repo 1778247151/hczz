@@ -1,0 +1,336 @@
+package com.crm.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.ResponseCode;
+import com.crm.common.Status;
+import com.crm.interceptor.exception.BaseException;
+import com.crm.pojo.GwBuildingTreeModel;
+import com.crm.pojo.GwMallInfoModel;
+import com.crm.pojo.GwMenuTreeModel;
+import com.crm.service.GwBuildingTreeService;
+import com.crm.service.GwMallInfoService;
+import com.crm.util.DateUtil;
+import com.crm.util.ValidateUtil;
+/**
+ * 
+ * GwBuildingTreeController:楼宇管理  访问控制层
+ *
+ * @author yumaochun
+ * @date  2016年3月10日
+ * @version  jdk1.8
+ *
+ */
+@Controller
+@RequestMapping("/buildingTree")
+public class GwBuildingTreeController extends BaseException{
+	
+	/**
+	 * 楼宇管理业务逻辑
+	 */
+	@Resource(name="gwBuildingTreeServiceManage")
+	private GwBuildingTreeService gwBuildingTreeServiceImpl;
+	
+	/**
+	 * 购物中心业务逻辑
+	 */
+	@Resource(name="gwMallInfoServiceManage")
+	private GwMallInfoService gwMallInfoServiceImpl;
+	
+	/**
+	 * 
+	 * addBuildingTree:添加楼宇
+	 *
+	 * @date 2016年3月10日 
+	 * @param BuildingTree            楼宇信息对象
+	 * @return
+	 */
+	@RequestMapping("/addBuildingTree.do")
+	@ResponseBody
+	public BaseResultVo addBuildingTree(GwBuildingTreeModel buildingTree,String gwMallInfoId,int fid){
+		
+		if(!ValidateUtil.isAvailableLength(buildingTree.getBm(), 5, 10)){
+			return BaseResultVo.responseFail("编号为5-10位的字符字符");
+		}
+		if(!ValidateUtil.isLengthRangeStr(buildingTree.getName(),2,20)){
+			return BaseResultVo.responseFail("名称为2-20位的字符串");
+		}
+		GwBuildingTreeModel building = gwBuildingTreeServiceImpl.getBuildingTreeByCode(buildingTree.getBm());
+		if(building!=null){
+		return BaseResultVo.responseFail("楼宇编号已存在");	
+		}
+		int mallInfoId=Integer.parseInt(gwMallInfoId);
+		buildingTree.setGwMallInfoId(mallInfoId);
+		buildingTree.setFid(fid);
+		if(buildingTree.getGwMallInfoId()==null||buildingTree.getGwMallInfoId().equals("")){
+			GwBuildingTreeModel data= gwBuildingTreeServiceImpl.selectById(buildingTree.getFid());
+			if(data==null){
+				BaseResultVo.responseFail("父级id为空");
+			}else{
+				buildingTree.setGwMallInfoId(data.getGwMallInfoId());
+			}
+		}
+		
+		buildingTree.setTime(DateUtil.getCurrentDatetime("-"));
+		
+		int num=gwBuildingTreeServiceImpl.insert(buildingTree);
+		if(num<=0){
+			BaseResultVo.responseFail("添加楼宇失败");
+		}
+		
+		return BaseResultVo.responseSuccess("添加楼宇成功");
+	}
+	/**
+	 * 
+	 * getBuildingTreePageList:楼宇管理
+	 *
+	 * @date 2016年3月10日
+	 * @param currentPage     当前页码
+	 * @param pageSize        每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getBuildingTreePageList.do")
+	@ResponseBody
+	public LigerPageDataVo getBuildingTreePageList(int currentPage,int pageSize,HttpServletRequest request){
+		
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+				
+		BasePageResultVo baseResultVo=gwBuildingTreeServiceImpl.selectPageList(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	/**
+	 * 
+	 * getBuildingTreeById:根据楼宇id，获取楼宇信息
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getBuildingTreeById.do")
+	@ResponseBody
+	public BaseResultVo getBuildingTreeById(int id,HttpServletRequest request){
+		if(id==0){
+			return BaseResultVo.responseFail("数据异常");
+		}
+		//获取楼宇信息
+		GwBuildingTreeModel BuildingTree=gwBuildingTreeServiceImpl.selectById(id);
+		if(BuildingTree==null){
+			return BaseResultVo.responseFail("获取楼宇失败");
+		}
+		BaseResultVo baseResultVo=BaseResultVo.responseSuccess("获取楼宇成功");
+		baseResultVo.setData(BuildingTree);
+		return baseResultVo;
+	}
+	/**
+	 * 
+	 * deleteBuildingTreeById:根据楼宇id，删除楼宇
+	 *
+	 * @date 206年3月5日
+	 * @param id                  楼宇id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/deleteBuildingTreeById.do")
+	@ResponseBody
+	public BaseResultVo deleteBuildingTreeById(int id,HttpServletRequest request){
+		if(id==0){
+			return BaseResultVo.responseFail("数据异常");
+		}
+		//新建一个楼宇对象
+		GwBuildingTreeModel building = new GwBuildingTreeModel();
+		building.setId(id);
+		building.setState(0);
+		building.setTime(DateUtil.getCurrentDatetime("-"));
+		int num=gwBuildingTreeServiceImpl.update(building);
+		if(num<0){
+			return BaseResultVo.responseFail("删除楼宇失败");
+		}
+		return BaseResultVo.responseSuccess("删除楼宇成功");
+	}
+	/**
+	 * 
+	 * updateRole:更新楼宇信息
+	 *
+	 * @date 2016年3月5日
+	 * @param BuildingTree       楼宇信息对象
+	 * @return
+	 */
+	@RequestMapping("/updateBuildingTree.do")
+	@ResponseBody
+	public BaseResultVo updateBuildingTree(GwBuildingTreeModel buildingTree){
+		if(!ValidateUtil.isAvailableLength(buildingTree.getBm(), 5, 10)){
+			return BaseResultVo.responseFail("编号为5-10位的字符字符");
+		}
+		if(!ValidateUtil.isLengthRangeStr(buildingTree.getName(),2,20)){
+			return BaseResultVo.responseFail("名称为2-20位的字符串");
+		}
+		//验证主键是否为空
+		if(buildingTree.getId()==0){
+			return BaseResultVo.responseFail("数据异常");
+		}
+		GwBuildingTreeModel BuildingTree=gwBuildingTreeServiceImpl.selectById(buildingTree.getId());
+		GwBuildingTreeModel building = gwBuildingTreeServiceImpl.getBuildingTreeByCode(buildingTree.getBm());
+		if(!BuildingTree.getBm().equals(buildingTree.getBm())&&building!=null){
+		return BaseResultVo.responseFail("楼宇编号已存在");	
+		}
+		//更新时间
+		buildingTree.setTime(DateUtil.getCurrentDatetime("-"));
+		
+		//更新就团信息
+		int num=gwBuildingTreeServiceImpl.update(buildingTree);
+		if(num<=0){
+			return BaseResultVo.responseFail("更新楼宇失败");
+		}
+		
+		return BaseResultVo.responseSuccess("更新楼宇成功");
+	}
+	/**
+	 * 
+	 * getBuildingTreeList:获取所有楼宇集合
+	 *
+	 * @date 2016年3月7日
+	 * @return
+	 */
+	@RequestMapping("/getBuildingTreeList.do")
+	@ResponseBody
+	public BaseResultVo getBuildingTreeList(){
+
+		//获取所有楼宇
+		List<GwBuildingTreeModel> buildingTreeList=gwBuildingTreeServiceImpl.getAllList();
+		//获取所有购物中心
+		List<GwMallInfoModel> mallInfoList =gwMallInfoServiceImpl.getAllList();
+		
+		List<HashMap<String, Object>> treeList=new ArrayList<HashMap<String,Object>>();
+		//购物中心
+	    for (GwMallInfoModel mallInfo : mallInfoList ) {
+	    	HashMap<String, Object> map=new HashMap<String, Object>();
+			map.put("id", "m_"+mallInfo.getId());//菜单id
+			map.put("pid", "m_0");//父级菜单id
+			map.put("text", mallInfo.getName());//菜单名称
+			map.put("isExpand", true);
+			treeList.add(map);
+	    }	
+		for (GwBuildingTreeModel menuTree : buildingTreeList) {
+			HashMap<String, Object> map=new HashMap<String, Object>();
+			if(menuTree.getFid()==0){
+				map.put("id", menuTree.getId());//菜单id
+				map.put("pid", "m_"+menuTree.getGwMallInfoId());//父级菜单id
+				map.put("text", menuTree.getName()+"【"+menuTree.getBm()+"|"+menuTree.getArea()+"m²】");//菜单名称
+				map.put("isExpand", true);
+				treeList.add(map);
+			}else{
+				map.put("id", menuTree.getId());//菜单id
+				map.put("pid", menuTree.getFid());//父级菜单id
+				map.put("text", menuTree.getName()+"【"+menuTree.getBm()+"|"+menuTree.getArea()+"m²】");//菜单名称
+				map.put("isExpand", true);
+				treeList.add(map);
+			}
+			
+		}
+		
+		BaseResultVo baseResultVo=BaseResultVo.responseSuccess("获取所有楼宇成功");
+		baseResultVo.setData(treeList);
+		return baseResultVo;
+	}
+	/**
+	 * 
+	 * getBuildingTreeListByMallInfoId:根据购物中心id，获取购物中心楼宇树形集合
+	 *
+	 * @date 2016年3月15日
+	 * @param mallInfoId        购物中心id
+	 * @return
+	 */
+	@RequestMapping("/getBuildingTreeListByMallInfoId.do")
+	@ResponseBody
+	public BaseResultVo getBuildingTreeListByMallInfoId(int mallInfoId){
+		Map<String, Object> params=new HashMap<String, Object>();
+		params.put("gwMallInfoId", mallInfoId);
+		List<HashMap<String, Object>> list=new ArrayList<HashMap<String, Object>>();
+		List<GwBuildingTreeModel> builddingTreeList=gwBuildingTreeServiceImpl.getBuildingTreeListByMallInfoId(params);
+		for (GwBuildingTreeModel gwBuildingTreeModel : builddingTreeList) {
+			HashMap<String, Object> map=new HashMap<String, Object>();
+			map.put("id", gwBuildingTreeModel.getId());
+			map.put("pid", gwBuildingTreeModel.getFid());
+			map.put("text", gwBuildingTreeModel.getName());
+			list.add(map);
+		}
+		BaseResultVo baseResultVo=BaseResultVo.responseSuccess("获取获取购物中心下的楼宇成功");
+		baseResultVo.setData(list);
+		return baseResultVo;
+	}
+	/**
+	 * 
+	 * getBuildingTreeAndMallNameBymerId:根据购物中心id，获取购物中心楼宇树形集合
+	 *
+	 * @date 2016年3月15日
+	 * @param mallInfoId        购物中心id
+	 * @return
+	 *//*
+	@RequestMapping("/getBuildingTreeAndMallNameBymerId.do")
+	@ResponseBody
+	public BaseResultVo getBuildingTreeAndMallNameBymerId(HttpServletRequest request){
+		BaseResultVo baseResultVo=new BaseResultVo();
+		Status status=new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);//提示代码
+		status.setMsg("操作成功");//提示信息
+		//获取的合同基本信息
+		ContractInfo contractInfo= ContractInfoSessionUtil.getAddContractInfoSession(request);
+		Integer gwMallInfoId = contractInfo.getMallid();
+		HashMap<String, Object> maps = new HashMap<>();
+		maps.put("gwMallInfoId", gwMallInfoId);
+		//根据购物中心获取楼宇数据
+		List<GwBuildingTreeModel> buildingTreeList=gwBuildingTreeServiceImpl.getBuildingTreeListByMallInfoId(maps);
+		//根据购物中心获取购物中心数据
+		GwMallInfoModel mallInfo =gwMallInfoServiceImpl.selectById(gwMallInfoId);
+		
+		List<HashMap<String, Object>> treeList=new ArrayList<HashMap<String,Object>>();
+		//购物中心
+	    	HashMap<String, Object> map=new HashMap<String, Object>();
+			map.put("id", "m_"+mallInfo.getId());//菜单id
+			map.put("pid", "m_0");//父级菜单id
+			map.put("text", mallInfo.getName());//菜单名称
+			map.put("isExpand", true);
+			treeList.add(map);
+		for (GwBuildingTreeModel menuTree : buildingTreeList) {
+			HashMap<String, Object> mapsq=new HashMap<String, Object>();
+			if(menuTree.getFid()==0){
+				mapsq.put("id", menuTree.getId());//菜单id
+				mapsq.put("pid", "m_"+menuTree.getGwMallInfoId());//父级菜单id
+				mapsq.put("text", menuTree.getName());//菜单名称
+				mapsq.put("isExpand", true);
+				treeList.add(mapsq);
+			}else{
+				mapsq.put("id", menuTree.getId());//菜单id
+				mapsq.put("pid", menuTree.getFid());//父级菜单id
+				mapsq.put("text", menuTree.getName());//菜单名称
+				mapsq.put("isExpand", true);
+				treeList.add(mapsq);
+			}
+			
+		}
+		
+		baseResultVo.setStatus(status);
+		baseResultVo.setData(treeList);
+		return baseResultVo;
+
+	}*/
+}

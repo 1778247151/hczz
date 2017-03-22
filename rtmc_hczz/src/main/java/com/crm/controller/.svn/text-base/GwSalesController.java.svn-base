@@ -1,0 +1,161 @@
+package com.crm.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.enums.IntergralTypeEnum;
+import com.crm.interceptor.exception.BaseException;
+import com.crm.pojo.GwMemberIntegralDetailModel;
+import com.crm.pojo.GwMembersModel;
+import com.crm.pojo.GwSalesModel;
+import com.crm.service.GwMemberIntegralDetailService;
+import com.crm.service.GwMembersService;
+import com.crm.service.GwSalesPaymenttenderService;
+import com.crm.service.GwSalesService;
+import com.crm.util.DateUtil;
+@Controller
+@RequestMapping("/gwSales")
+public class GwSalesController extends BaseException{
+	@Resource(name = "gwSalesServiceManage")
+	private GwSalesService gwSalesServiceImpl;
+	/**
+	 * 会员业务逻辑
+	 */
+	@Resource(name = "gwMembersServiceManage")
+	private GwMembersService gwMembersServiceImpl;
+	
+	/**
+	 * 销售数据支付方式业务逻辑层
+	 */
+	@Resource(name = "salesPaymenttenderServiceManage")
+	private GwSalesPaymenttenderService salesPaymenttenderServiceImpl;
+	
+	/**
+	 * 会员积分明细业务逻辑层实心
+	 */
+	@Resource(name = "gwMemberIntegralDetailServiceManage")
+	private GwMemberIntegralDetailService memberIntegralDetailServiceImpl;
+	/**
+	 * getTranssalestotalByPageList:
+	 * 根据条件获取销售数据积分信息
+	 * @author hemingjun
+	 * @date 2016年9月5日
+	 * @param startTime
+	 * @param endTime
+	 * @param shopCode
+	 * @return
+	 */
+	@RequestMapping("/getSalesByPageList.do")
+	@ResponseBody
+	public LigerPageDataVo getTranssalestotalByPageList(int currentPage, int pageSize, HttpServletRequest request,
+			String startTime, String endTime, String shopCode){
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		// 根据开始时间查询
+		params.put("startTime", startTime);
+		// 根据结束时间查询
+		params.put("endTime", endTime);
+		// 根据商铺编号
+		params.put("shopCode", shopCode);
+		BasePageResultVo baseResultVo = gwSalesServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 
+	 * addSales:
+	 * 添加销售信息并计算销售积分
+	 * @author hemingjun
+	 * @date 2016年9月5日
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/addSales.do")
+	@ResponseBody
+	public BaseResultVo addSales(String formData,String salesList,HttpServletRequest request) {	
+
+		BaseResultVo res=gwSalesServiceImpl.addSales(formData,salesList, request);
+		return res;
+	}
+	
+	
+	
+	
+	@RequestMapping("/deleteById.do")
+	@ResponseBody
+	public BaseResultVo deleteById(int id,HttpServletRequest request) {	
+		
+		GwSalesModel sales= gwSalesServiceImpl.selectById(id);
+		//更新会员积分
+		String vipCode=sales.getGwMembercode();
+		GwMembersModel member= gwMembersServiceImpl.selectByVipCode(vipCode);
+		int credit=member.getCredit()-sales.getIntegralNumber();
+		member.setCredit(credit);
+		int numberMember= gwMembersServiceImpl.updateByVipCode(member);
+		if(numberMember<=0){
+			return BaseResultVo.responseFail("删除会员积分失败");
+		}
+		//删除支付方式积分记录
+		String txserial=sales.getGwTxserial();
+		int numberSale= salesPaymenttenderServiceImpl.deleteByTxserial(txserial);
+		if(numberSale<=0){
+			return BaseResultVo.responseFail("删除支付方式积分记录失败");
+		}
+		GwMemberIntegralDetailModel integralDetai=new GwMemberIntegralDetailModel();
+		int integralNumner=-sales.getIntegralNumber();
+		integralDetai.setIntergralTime(DateUtil.getCurrentDatetime("-"));
+		integralDetai.setMemberCode(vipCode);
+		integralDetai.setIntergralNum(integralNumner);
+		integralDetai.setIntergralType(IntergralTypeEnum.SALESINTERGRAL.getValue());
+		integralDetai.setNote("销售数据积分(减少)");
+		int detatilNumber= memberIntegralDetailServiceImpl.insert(integralDetai);
+		if(detatilNumber<=0){
+			return BaseResultVo.responseFail("添加销售记录失败");
+		}
+//		Map<String, Object> params=new HashMap<>();
+//		params.put("vipCode", sales.getGwMembercode());
+//		params.put("createTime", sales.getCreateTime());
+//		int IntegralDetailNumber= memberIntegralDetailServiceImpl.deleteByCondition(params);
+//		if(IntegralDetailNumber<0){
+//			return BaseResultVo.responseFail("删除积分明细失败");
+//		}
+		//删除销售数据积分记录
+		int number= gwSalesServiceImpl.deleteById(id);
+		if(number>0){
+			return BaseResultVo.responseSuccess("操作成功");
+		}else{
+			return BaseResultVo.responseFail("删除销售数据积分失败");
+		}
+		
+	}
+	@RequestMapping("/getSalesById.do")
+	@ResponseBody
+	public BaseResultVo getSalesById(int id){
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		GwSalesModel sales = gwSalesServiceImpl.selectById(id);
+		if(sales==null){
+			return BaseResultVo.responseFail("获取信息失败");
+		}
+		BaseResultVo baseResultVo = BaseResultVo.responseSuccess("获取信息成功");
+		baseResultVo.setData(sales);
+		return baseResultVo;
+	}
+	
+}

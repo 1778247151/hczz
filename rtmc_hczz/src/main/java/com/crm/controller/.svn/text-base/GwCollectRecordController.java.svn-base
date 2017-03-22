@@ -1,0 +1,119 @@
+package com.crm.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.interceptor.BussAnnotation;
+import com.crm.pojo.GwCollectRecordModel;
+import com.crm.pojo.GwformatstreeModel;
+import com.crm.service.GwCollectRecordService;
+import com.crm.service.GwLoseMaintenanceService;
+import com.crm.service.GwPickupMaintenanceService;
+import com.crm.util.JsonMapper;
+
+/**
+ * 
+ * GwCollectRecordController:失物领取记录控制层
+ *
+ * @author chengpengfei
+ * @date 2016年6月24日
+ * @version jdk1.8
+ *
+ */
+@Controller
+@RequestMapping("collectRecord")
+public class GwCollectRecordController {
+	/**
+	 * 领取记录业务逻辑
+	 */
+	@Resource(name="gwCollectRecordServiceManage")
+	private GwCollectRecordService gwCollectRecordServiceImpl;
+	
+	/**
+	 * 报失维护业务逻辑 
+	 */
+	@Resource(name="gwLoseMaintenanceServiceManage")
+	private GwLoseMaintenanceService gwLoseMaintenanceServiceImpl;
+	
+	/**
+	 * 拾物维护业务逻辑 
+	 */
+	@Resource(name="gwPickupMaintenanceServiceManage")
+	private GwPickupMaintenanceService gwPickupMaintenanceServiceImpl;
+	
+	/**
+	 * 领取拾物
+	 * @param collectRecordList
+	 * @return
+	 */
+	@RequestMapping("/batchInsertCollectRecord.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="领取记录",option="领取拾物")
+	public BaseResultVo batchInsertCollectRecord(String collectRecordList,String loseMaintenanceCode){
+		if(collectRecordList==null){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		//把字符串转换为LIST对象
+		List<GwCollectRecordModel> collectRecord =JsonMapper.buildNonDefaultMapper().fromJsonToList(collectRecordList, GwCollectRecordModel.class);
+		//批量插入领取记录
+		int number = gwCollectRecordServiceImpl.bacthInsertCollectRecord(collectRecord);
+		if(number<0){
+			return BaseResultVo.responseFail("领取失败");
+		}
+		//通过编号修改报失维护状态(已领取)
+		Map<String,Object> params = new HashMap<>();
+		params.put("status",1);
+		params.put("code", loseMaintenanceCode);
+		int updateLose = gwLoseMaintenanceServiceImpl.updateLoseMaintenanceByCode(params);
+		if(updateLose<0){
+			return BaseResultVo.responseFail("修改报失维护状态失败");
+		}
+		//通过编号批量修改拾物维护状态(已领取)
+		List<Map<String,Object>> pickupMaintenanceList = new ArrayList<>();
+		for(GwCollectRecordModel Record : collectRecord){
+			Map<String,Object> map = new HashMap<>();
+			map.put("status",1);
+			map.put("code", Record.getPickupMaintenanceCode());
+			pickupMaintenanceList.add(map);
+		}
+		int updatePickupMaintenance = gwPickupMaintenanceServiceImpl.updatePickupMaintenanceStatusByCode(pickupMaintenanceList);
+		if(updatePickupMaintenance<0){
+			return BaseResultVo.responseFail("修改拾物维护状态失败");
+		}
+		return BaseResultVo.responseSuccess("领取成功");
+	}
+	
+	/**
+	 * 获取领取记录分页集合
+	 * @param currentPage
+	 * @param pageSize
+	 * @return
+	 */
+	@RequestMapping("/getCollectRecordByPageList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="领取记录",option="获取列表")
+	public LigerPageDataVo getCollectRecordByPageList(int pageSize,String code,int currentPage){
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("code", code);
+		BasePageResultVo baseResultVo=gwCollectRecordServiceImpl.selectPageList(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+}

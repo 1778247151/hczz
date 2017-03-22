@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.crm.dao.GwMenuTreeDao" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwMenuTreeModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="urladdress" property="urladdress" jdbcType="VARCHAR" />
+    <result column="fid" property="fid" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="VARCHAR" />
+    <result column="time" property="time" jdbcType="VARCHAR" />
+    <result column="order_num" property="orderNum" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
+    <result column="func" property="func" jdbcType="VARCHAR" />
+    <result column="style" property="style" jdbcType="VARCHAR" />
+    <result column="synchronize" property="synchronize" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, name, note, urladdress, fid, state, time, order_num,type,icon,func,style,synchronize
+  </sql>
+  
+  <!-- 根据父级菜单ID，获取下级菜单集合 -->
+  <select id="selectGwMenuTreeByParentId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+     select
+     <include refid="Base_Column_List"/>
+      from gw_menu_tree
+      where fid = #{fid} and state=1 
+      order by order_num
+  </select>
+  
+  <!--在是需要同步数据的条件下， 根据父级菜单ID，获取下级菜单集合 -->
+  <select id="selectSynMenuTreeByParentId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+     select  
+      <include refid="Base_Column_List"/>
+      from gw_menu_tree a where a.fid not IN(select b.id from gw_menu_tree b where b.id=#{fid} and b.synchronize=1) and a.fid=#{fid}
+      and state=1
+      order by order_num
+  </select>
+  
+  <!-- 获取所有菜单集合 -->
+  <select id="selectGwMenuTreeList" resultMap="BaseResultMap">
+     select
+     <include refid="Base_Column_List"/>
+      from gw_menu_tree
+      where state=1
+      order by order_num
+  </select>
+  
+  <!-- 根据条件获取菜单集合 -->
+  <select id="selectMenuTreeListBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+     select
+     <include refid="Base_Column_List"/>
+      from gw_menu_tree a
+      where a.state=1
+      <if  test="synchronizeFlag==1">
+         and a.fid NOT IN(select b.id from gw_menu_tree b where b.synchronize=1)
+      </if>
+      order by a.order_num
+  </select>
+
+  <!-- 根据父级菜单id和角色id，获取菜单信息集合 -->
+  <select id="getMenuTreeByPid_RoleId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    m.id, m.name, m.note, m.urladdress, m.fid, m.state, m.time, m.order_num,m.type,m.icon
+    from gw_menu_tree m,gw_role_group rg
+    where rg.gw_role_id = #{roleId,jdbcType=INTEGER} and rg.gw_menu_tree_id=m.id and m.fid=#{pid,jdbcType=INTEGER}
+    order by m.order_num,m.id
+  </select>
+  <!-- 根据主键ID，菜单信息 -->
+  <select id="selectGwMenuTreeById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_menu_tree
+    where id = #{id,jdbcType=INTEGER}
+    order by order_num
+  </select>
+  
+  <!-- 根据菜单id,删除菜单 -->
+  <delete id="deleteGwMenuTreeById" parameterType="java.lang.Integer" >
+    delete from gw_menu_tree
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 插入系统菜单 -->
+  <insert id="insertGwMenuTree" keyProperty="id" keyColumn="id" parameterType="com.crm.pojo.GwMenuTreeModel" >
+    insert into gw_menu_tree ( name, note, 
+      urladdress, fid, state, 
+      time, order_num,type,icon,func,style,synchronize)
+    values (#{name,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, 
+      #{urladdress,jdbcType=VARCHAR}, #{fid,jdbcType=INTEGER}, #{state,jdbcType=VARCHAR}, 
+      #{time,jdbcType=VARCHAR}, #{orderNum,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, #{func,jdbcType=VARCHAR}, #{style,jdbcType=VARCHAR}, #{synchronize,jdbcType=INTEGER})
+  </insert>
+  
+  <!-- 更新系统菜单 -->
+  <update id="updateGwMenuTree" parameterType="com.crm.pojo.GwMenuTreeModel" >
+    update gw_menu_tree
+    
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="urladdress != null" >
+        urladdress = #{urladdress,jdbcType=VARCHAR},
+      </if>
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        time = #{time,jdbcType=VARCHAR},
+      </if>
+     
+      <if test="orderNum != null" >
+        order_num = #{orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+       <if test="icon != null" >
+        icon = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="func != null" >
+        func = #{func,jdbcType=VARCHAR},
+      </if>
+      <if test="style != null" >
+        style = #{style,jdbcType=VARCHAR},
+      </if>
+      <if test="synchronize != null" >
+        synchronize = #{synchronize,jdbcType=INTEGER},
+      </if>
+      
+    </set>
+      where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据角色id，获取菜单信息集合 -->
+  <select id="selectMeneTreeListByRoleId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    m.id, m.name, m.note, m.urladdress, m.fid, m.state, m.time, m.order_num,m.type,m.icon
+    from gw_menu_tree m,gw_role_group rg
+    where 
+       rg.gw_role_id = #{roleId,jdbcType=INTEGER} 
+       and rg.gw_menu_tree_id=m.id
+    and m.state = 1  and m.type in('module','links')
+    order by m.fid,m.order_num
+  </select>
+  
+   
+</mapper>

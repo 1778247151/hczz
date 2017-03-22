@@ -1,0 +1,23 @@
+package com.crm.service.impl;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwMemberIntegralRecordDao;
+import com.crm.pojo.GwMemberIntegralRecordModel;
+import com.crm.service.GwMemberIntegralRecordService;
+
+@Service("GwMemberIntegralRecordServiceManage")
+public class GwMemberIntegralRecordServiceImpl
+		extends ServersManager<GwMemberIntegralRecordModel, GwMemberIntegralRecordDao>
+		implements GwMemberIntegralRecordService {
+
+	@Resource(name = "GwMemberIntegralRecordDaoManage")
+	public void setDao(GwMemberIntegralRecordDao dao) {
+		this.dao = dao;
+
+	}
+
+}

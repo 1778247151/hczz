@@ -1,0 +1,313 @@
+package com.crm.controller;
+
+import java.io.File;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.AdminUser;
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.QueryConditon;
+import com.crm.common.SecurityUtil;
+import com.crm.interceptor.BussAnnotation;
+import com.crm.pojo.GwLeaseGoodsModel;
+import com.crm.pojo.GwLeaseMaintenanceModel;
+import com.crm.service.GwLeaseGoodsService;
+import com.crm.service.GwLeaseMaintenanceService;
+import com.crm.util.BaseCodeUtil;
+import com.crm.util.DateUtil;
+import com.crm.util.QueryConditionUtil;
+import com.crm.common.ConstantUtils;
+
+/**
+ * 
+ * GwGoodsController:物品维护控制层
+ *
+ * @author chengpengfei
+ * @date 2016年6月23日
+ * @version jdk1.8
+ *
+ */
+@Controller
+@RequestMapping("gwLeaseGoods")
+public class GwLeaseGoodsController {
+
+	/**
+	 * 物品维护业务逻辑
+	 */
+	@Resource(name = "gwGoodsServiceManage")
+	private GwLeaseGoodsService gwGoodsServiceImpl;
+	
+	/**
+	 * 获取物品维护数据分页集合
+	 * 
+	 * @author chengpengfei
+	 * @param currentPage
+	 * @param pageSize
+	 * @return
+	 */
+	@RequestMapping("/getGoodsByPageList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "租借物品设置", option = "获取列表")
+	public LigerPageDataVo getGoodsByPageList(int currentPage, int pageSize, String code, String name) {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("code", code);
+		params.put("name", name);
+		BasePageResultVo baseResultVo = gwGoodsServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+
+	/**
+	 * 
+	 * 生成物品维护的编号
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getGoodsCode.do")
+	@ResponseBody
+	public String getGoodsCode() {
+		// 获取编号前缀
+		String frontCode = BaseCodeUtil.getBaseCode("WP");
+		// 获取当天时间
+		String time = DateUtil.getCurrentDate("");
+		String code = "";
+		// 根据当天时间查询最后一条记录
+		GwLeaseGoodsModel goodsModel = gwGoodsServiceImpl.getGoodsByLastOne(time);
+		if (goodsModel == null) {
+			code = frontCode + "0001";
+		} else {
+			String subString = goodsModel.getCode().substring(2);
+			long num = Long.parseLong(subString) + 1;
+			code = "WP" + String.valueOf(num);
+		}
+		return code;
+	}
+
+	/**
+	 * 添加物品
+	 * 
+	 * @param goods
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/addGoods.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "租借物品设置", option = "添加")
+	public BaseResultVo addGoods(GwLeaseGoodsModel goods, HttpServletRequest request) {
+		if (goods == null) {
+			return BaseResultVo.responseFail("实体类为空");
+		}
+		if (goods.getGoodsImage() != null && (!goods.getGoodsImage().equals(""))) {
+			// 文件根目录
+			String bootPath = request.getSession().getServletContext().getRealPath("/");
+			String pathName = goods.getGoodsImage();
+			String fileName = pathName.substring(6);
+			String newFliePath = bootPath + ConstantUtils.UPLOAD_IMAGE_PATH + "/" + fileName;
+			// 当前时间字符串
+			String time = new Date().getTime() + "";
+			time = time.substring(time.length() - 5);
+			// 判断是否有同名文件存在，如果存在则重命名，加上当前时间戳的后五位
+			File file = new File(newFliePath);
+			String newFileName = fileName;
+			if (file.exists()) {
+				String name1 = fileName.substring(0, fileName.lastIndexOf("."));
+				String name2 = fileName.substring(fileName.lastIndexOf("."));
+				newFileName = name1 + "_" + time + name2;
+			}
+			// 添加之前先删除文件并复制文件到新的目录
+			boolean flag = gwGoodsServiceImpl.deleteAndCopyFile(fileName, newFileName, request);
+			if (flag == false) {
+				return BaseResultVo.responseFail("删除或复制文件出错");
+			}
+
+			String newPathFlie = "/" + ConstantUtils.UPLOAD_IMAGE_PATH + "/" + fileName;
+			goods.setGoodsImage(newPathFlie);
+		}
+		// 创建时间
+		goods.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		goods.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		// 创建人
+		AdminUser adminUser = SecurityUtil.getAdminUser(request);
+		goods.setCreateUserId(adminUser.getUserId());
+		goods.setUpdateUserId(adminUser.getUserId());
+		// 存入数据
+		int number = gwGoodsServiceImpl.insert(goods);
+		if (number < 0) {
+			return BaseResultVo.responseFail("添加失败");
+		}
+		return BaseResultVo.responseSuccess("添加成功");
+	}
+
+	/**
+	 * 根据ID获取物品信息
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/getGoodsById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "租借物品设置", option = "根据ID获取信息")
+	public BaseResultVo getGoodsById(int id) {
+		if (id == 0) {
+			return BaseResultVo.responseFail("参数异常");
+		}
+		GwLeaseGoodsModel goods = gwGoodsServiceImpl.selectById(id);
+		if (goods == null) {
+			return BaseResultVo.responseFail("获取信息失败");
+		}
+		BaseResultVo baseResultVo = BaseResultVo.responseSuccess("获取信息成功");
+		baseResultVo.setData(goods);
+		return baseResultVo;
+	}
+
+	// @BussAnnotation(moduleName="租借物品设置",option="修改")
+	/**
+	 * 修改物品信息
+	 * 
+	 * @param goods
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/updateGoods.do")
+	@ResponseBody
+
+	public BaseResultVo updateGoods(GwLeaseGoodsModel goods, HttpServletRequest request) {
+		if (goods == null) {
+			return BaseResultVo.responseFail("实体类为空");
+		}
+		String pathImage = goods.getGoodsImage();
+		// 截取图片路径的第二位字符
+		String path = "";
+		if (pathImage != null && !("".equals(pathImage))) {
+			path = pathImage.substring(1, 2);
+
+			// 判断是否更改了图片
+			String isEditImage = ConstantUtils.UPLOAD_IMAGE_PATH.substring(0, 1);
+			if (!(isEditImage.equals(path))) {
+				// 文件根目录
+				String bootPath = request.getSession().getServletContext().getRealPath("/");
+				String pathName = goods.getGoodsImage();
+				String fileName = pathName.substring(6);
+				String newFliePath = bootPath + ConstantUtils.UPLOAD_IMAGE_PATH + "/" + fileName;
+				// 当前时间字符串
+				String time = new Date().getTime() + "";
+				time = time.substring(time.length() - 5);
+				// 判断是否有同名文件存在，如果存在则重命名，加上当前时间戳的后五位
+				File file = new File(newFliePath);
+				String newFileName = fileName;
+				if (file.exists()) {
+					String name1 = fileName.substring(0, fileName.lastIndexOf("."));
+					String name2 = fileName.substring(fileName.lastIndexOf("."));
+					newFileName = name1 + "_" + time + name2;
+				}
+				// 添加之前先删除文件并复制文件到新的目录
+				boolean flag = gwGoodsServiceImpl.deleteAndCopyFile(fileName, newFileName, request);
+				if (flag == false) {
+					return BaseResultVo.responseFail("删除或复制文件出错");
+				}
+
+				String newPathFlie = "/" + ConstantUtils.UPLOAD_IMAGE_PATH + "/" + fileName;
+				goods.setGoodsImage(newPathFlie);
+			}
+		}
+		// 修改时间
+		goods.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		// 修改人
+		AdminUser adminUser = SecurityUtil.getAdminUser(request);
+		goods.setUpdateUserId(adminUser.getUserId());
+		// 修改数据
+		int number = gwGoodsServiceImpl.update(goods);
+		if (number < 0) {
+			return BaseResultVo.responseFail("修改失败");
+		}
+		return BaseResultVo.responseSuccess("修改成功");
+	}
+
+	/**
+	 * 删除物品信息(真删除)
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/deleteGoodsById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "租借物品设置", option = "删除")
+	public BaseResultVo deleteGoodsById(int id, String goodsCode) {
+		if (id == 0) {
+			return BaseResultVo.responseFail("参数异常");
+		}
+		
+		int number = gwGoodsServiceImpl.deleteById(id);
+		if (number < 0) {
+			return BaseResultVo.responseFail("删除失败");
+		}
+		return BaseResultVo.responseSuccess("删除成功");
+	}
+
+	/**
+	 * 获取下拉列表所有分页List
+	 * 
+	 * @param queryCondition
+	 *            查询参数
+	 * @return
+	 */
+	@RequestMapping("/getGoodsByComBoBoxList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "租借物品设置", option = "获取下拉列表")
+	public LigerPageDataVo getGoodsByComBoBoxList(QueryConditon queryCondition) {
+		// 查询条件数组字符串（前端传递的字符串名称需和xml查询名称一致）
+		String[] queryParamArr = new String[] { "name" };
+		// 获取分页参数信息map
+		Map<String, Object> params = QueryConditionUtil.getParamsMap(queryParamArr, queryCondition);
+		params.put("goods", 1);
+		BasePageResultVo baseResultVo = gwGoodsServiceImpl.selectPageList(params);
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+
+	/**
+	 * 根据编号获取物品信息
+	 * 
+	 * @param code
+	 * @return
+	 */
+	@RequestMapping("/getGoodsByCode.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "租借物品设置", option = "根据编号获取信息")
+	public BaseResultVo getGoodsByCode(String code) {
+		if (code == null) {
+			return BaseResultVo.responseFail("参数异常");
+		}
+		Map<String, Object> params = new HashMap<>();
+
+		GwLeaseGoodsModel goods = gwGoodsServiceImpl.getGoodsByCode(code);
+		if (goods == null) {
+			return BaseResultVo.responseFail("获取信息失败");
+		}
+		BaseResultVo baseResultVo = BaseResultVo.responseSuccess("获取信息成功");
+		baseResultVo.setData(goods);
+		return baseResultVo;
+	}
+}

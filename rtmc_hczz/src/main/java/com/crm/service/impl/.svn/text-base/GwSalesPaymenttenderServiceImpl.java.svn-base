@@ -1,0 +1,35 @@
+package com.crm.service.impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwSalesPaymenttenderDao;
+import com.crm.pojo.GwSalesPaymenttenderModel;
+import com.crm.service.GwSalesPaymenttenderService;
+@Service("salesPaymenttenderServiceManage")
+public class GwSalesPaymenttenderServiceImpl extends ServersManager<GwSalesPaymenttenderModel,GwSalesPaymenttenderDao> implements GwSalesPaymenttenderService{
+
+	@Resource(name = "salesPaymenttenderDaoManage")
+	@Override
+	public void setDao(GwSalesPaymenttenderDao dao) {
+		this.dao = dao;
+		
+	}
+	@Override
+	public int batchInsert(List<GwSalesPaymenttenderModel> SalesPaymenttenderList) {
+		// TODO Auto-generated method stub
+		return dao.batchInsert(SalesPaymenttenderList);
+	}
+	@Override
+	public int deleteByTxserial(String txserial) {
+		// TODO Auto-generated method stub
+		return dao.deleteByTxserial(txserial);
+	}
+
+	
+
+}

@@ -1,0 +1,208 @@
+package com.crm.pojo;
+
+import com.crm.enums.PickupMaintenanceStatusEnum;
+import com.crm.enums.SexNameEnum;
+
+public class GwLoseMaintenanceModel {
+    private Integer id;
+
+    private String code;
+
+    private String cardCode;
+
+    private String loseUser;
+
+    private String phone;
+
+    private String idCard;
+
+    private Integer sex;
+
+    private String name;
+
+    private String loseAddress;
+
+    private String description;
+
+    private Integer status;
+
+    private Integer createUserId;
+
+    private String createTime;
+
+    private Integer updateUserId;
+
+    private String updateTime;
+    /**
+     * 创建人名称
+     */
+    private String createUserName;
+    
+    /**
+     * 修改人名称
+     */
+    private String updateUserName;
+    
+    /**
+     * 状态名称
+     */
+    private String statusName;
+    
+    /**
+     * 性别名称
+     */
+    private String sexName;
+    
+    
+    public String getCreateUserName() {
+		return createUserName;
+	}
+
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
+	}
+
+	public String getUpdateUserName() {
+		return updateUserName;
+	}
+
+	public void setUpdateUserName(String updateUserName) {
+		this.updateUserName = updateUserName;
+	}
+
+	public String getStatusName() {
+		return PickupMaintenanceStatusEnum.getDisplayName(getStatus());
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
+
+	public String getSexName() {
+		return SexNameEnum.getDisplayName(getSex());
+	}
+
+	public void setSexName(String sexName) {
+		this.sexName = sexName;
+	}
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code == null ? null : code.trim();
+    }
+
+    public String getCardCode() {
+        return cardCode;
+    }
+
+    public void setCardCode(String cardCode) {
+        this.cardCode = cardCode == null ? null : cardCode.trim();
+    }
+
+    public String getLoseUser() {
+        return loseUser;
+    }
+
+    public void setLoseUser(String loseUser) {
+        this.loseUser = loseUser == null ? null : loseUser.trim();
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone == null ? null : phone.trim();
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard == null ? null : idCard.trim();
+    }
+
+    public Integer getSex() {
+        return sex;
+    }
+
+    public void setSex(Integer sex) {
+        this.sex = sex;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
+
+    public String getLoseAddress() {
+        return loseAddress;
+    }
+
+    public void setLoseAddress(String loseAddress) {
+        this.loseAddress = loseAddress == null ? null : loseAddress.trim();
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description == null ? null : description.trim();
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime == null ? null : createTime.trim();
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime == null ? null : updateTime.trim();
+    }
+}

@@ -1,0 +1,297 @@
+package com.crm.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.AdminUser;
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.ResponseCode;
+import com.crm.common.SecurityUtil;
+import com.crm.common.Status;
+import com.crm.enums.CardStateEnum;
+import com.crm.interceptor.BussAnnotation;
+import com.crm.interceptor.exception.BaseException;
+import com.crm.pojo.GwMemberBindingCardModel;
+import com.crm.pojo.GwMemberCardModel;
+import com.crm.service.GwMemberBindingCardService;
+import com.crm.service.GwMemberCardService;
+import com.crm.util.DateUtil;
+
+/**
+ * 
+ * 
+ * GwMemberBindingCardController:会员绑卡管理控制层
+ *
+ * @author meishengjun
+ * @date 2016年11月3日
+ * @version jdk1.8
+ *
+ */
+
+@Controller
+@RequestMapping("/bindingCard")
+public class GwMemberBindingCardController extends BaseException {
+
+	// 日志
+	private Logger logger = LoggerFactory.getLogger(GwMemberBindingCardController.class);
+
+	/**
+	 * 会员绑卡管理业务逻辑
+	 */
+	@Resource(name = "gwMemberBindingCardServiceManage")
+	private GwMemberBindingCardService gwMemberBindingCardServiceImpl;
+
+	/**
+	 * 会员卡管理业务逻辑
+	 */
+	@Resource(name = "gwMemberCardServiceManage")
+	private GwMemberCardService gwMemberCardServiceImpl;
+
+	/**
+	 * 
+	 * getMemberCardList:获取会员卡列表（分页）
+	 *
+	 * @author meishengjun
+	 * @date 2016年11月3日
+	 *
+	 * @param currentPage
+	 *            当前页
+	 * @param pageSize
+	 *            每页记录数
+	 * @return
+	 */
+	@RequestMapping("/getMemberBingdingCardList.do")
+	@ResponseBody
+	public LigerPageDataVo getMemberBingdingCardList(int currentPage, int pageSize, HttpServletRequest request) {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+
+		BasePageResultVo baseResultVo = gwMemberBindingCardServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+
+	/**
+	 * 
+	 * bindCardCode:绑定卡号
+	 *
+	 * @author meishengjun
+	 * @date 2016年10月25日
+	 *
+	 * @param vipCode
+	 *            会员编号
+	 * @param account
+	 *            卡面编号
+	 * @return 返回：绑卡是否成功
+	 */
+	@RequestMapping("/bindCardCode.do")
+	@ResponseBody
+	public BaseResultVo bindCardCode(String memberCode, String cardCode, HttpServletRequest request) {
+		// 根据会员卡号获得会员绑定信息
+		GwMemberBindingCardModel gwMemberBindingCardModel = gwMemberBindingCardServiceImpl.selectByCardCode(cardCode);
+
+		if (memberCode == "" || memberCode == null) {
+			return BaseResultVo.responseFail("vip号不存在");
+		}
+
+		if (gwMemberBindingCardModel != null) {
+			return BaseResultVo.responseFail("会员号已绑定");
+
+		} else {
+			// 获取创建人信息
+			AdminUser adminUser = SecurityUtil.getAdminUser(request);
+			String username = adminUser.getUsername();
+
+			GwMemberBindingCardModel gwMemberBindingCard = new GwMemberBindingCardModel();
+			// 创建人
+			gwMemberBindingCard.setCreateUserId(adminUser.getUserId());
+			// 创建时间
+			gwMemberBindingCard.setCreateTime(DateUtil.getCurrentDatetime("-"));
+			// 绑卡时间
+			gwMemberBindingCard.setBindingDate(DateUtil.getCurrentDatetime("-"));
+			// 绑定卡号
+			gwMemberBindingCard.setCardCode(cardCode);
+			// vip号
+			gwMemberBindingCard.setMemberCode(memberCode);
+			// 保存一条绑卡记录
+
+			int num = gwMemberBindingCardServiceImpl.update(gwMemberBindingCard);
+			if (num < 0) {
+				return BaseResultVo.responseFail("会员绑卡失败");
+			}
+			// 查询会员卡信息
+			GwMemberCardModel gwemberCardModel = gwMemberCardServiceImpl.selectByCode(cardCode);
+			if (gwemberCardModel != null) {
+
+				gwemberCardModel.setStatus(CardStateEnum.PASSCONFIRM.getValue());
+				// 更新会员卡状态
+				gwMemberCardServiceImpl.update(gwemberCardModel);
+
+			}
+
+		}
+		return BaseResultVo.responseSuccess("会员绑卡成功");
+
+	}
+
+	/**
+	 * 
+	 * exchangeCarCode:更换卡号
+	 *
+	 * @author meishengjun
+	 * @date 2016年10月25日
+	 *
+	 *       卡面编号
+	 * @return 返回：换卡是否成功
+	 */
+	@RequestMapping("/exchangeCarCode.do")
+	@ResponseBody
+	public BaseResultVo exchangeCarCode(String memberCode, String cardCode, HttpServletRequest request) {
+
+		List<GwMemberBindingCardModel> gwMemberBindingCardModel_list = gwMemberBindingCardServiceImpl.getAllList();
+		for (GwMemberBindingCardModel gwMemberBindingCardModel : gwMemberBindingCardModel_list) {
+			if (gwMemberBindingCardModel.getCardCode().equals(cardCode)) {
+				return BaseResultVo.responseFail("已存在相同卡号");
+			}
+		}
+		// 根据会员vip号获得会员绑定信息
+		List<GwMemberBindingCardModel> gwMemberBindingCardlist = gwMemberBindingCardServiceImpl
+				.selectByMemberCode(memberCode);
+		for (GwMemberBindingCardModel gwMemberBindingCardModel : gwMemberBindingCardlist) {
+
+			if (gwMemberBindingCardModel != null) {
+				GwMemberCardModel gwemberCardModel = gwMemberCardServiceImpl
+						.selectByCode(gwMemberBindingCardModel.getCardCode());
+				if (gwemberCardModel != null) {
+					if (!gwemberCardModel.getStatus().equals(CardStateEnum.DELETE.getValue())) {
+						gwemberCardModel.setStatus(CardStateEnum.DELETE.getValue());
+						// 更新会员卡状态
+						gwMemberCardServiceImpl.update(gwemberCardModel);
+					}
+				}
+
+			}
+
+		}
+
+		GwMemberBindingCardModel GwMemberBindingCard = new GwMemberBindingCardModel();
+		// 获取创建人信息
+		AdminUser adminUser = SecurityUtil.getAdminUser(request);
+		String username = adminUser.getUsername();
+		// 更新人
+		GwMemberBindingCard.setUpdateUserId(adminUser.getUserId());
+		// 更新
+		GwMemberBindingCard.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		// 绑卡时间
+		GwMemberBindingCard.setBindingDate(DateUtil.getCurrentDatetime("-"));
+		// 绑定卡号
+		GwMemberBindingCard.setCardCode(cardCode);
+		// vip号
+		GwMemberBindingCard.setMemberCode(memberCode);
+		// 保存一条绑卡记录
+		int num = gwMemberBindingCardServiceImpl.insert(GwMemberBindingCard);
+		// 将会员卡的状态设置为正常使用
+		// 查询会员卡信息
+		GwMemberCardModel gwemberCardModel1 = gwMemberCardServiceImpl.selectByCode(cardCode);
+		if (gwemberCardModel1 != null) {
+			// 更新会员卡状态
+			gwemberCardModel1.setStatus(CardStateEnum.PASSCONFIRM.getValue());
+			gwMemberCardServiceImpl.update(gwemberCardModel1);
+
+			if (num > 0) {
+
+				return BaseResultVo.responseSuccess("更换卡号成功");
+			}
+		}
+
+		return BaseResultVo.responseSuccess("更换卡号失败");
+	}
+
+	/**
+	 * 
+	 * selectCarCodeById:根据会员id，获取会员信息
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/selectCarCodeById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员维护", option = "获取会员根据ID")
+	public BaseResultVo getMembersById(int id, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		if (id == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");// 提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		// 获取会员信息
+		GwMemberBindingCardModel gwMemberBindingCardModel = gwMemberBindingCardServiceImpl.selectById(id);
+		baseResultVo.setData(gwMemberBindingCardModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * getMembersListStatusUsing:获取启用的会员集合（分页）
+	 *
+	 * @date 2016年11月5日
+	 * @param page
+	 *            当前页码数
+	 * @param pagesize
+	 *            每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getMembersListStatusUsing.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "绑卡信息", option = "获取所有会员绑卡信息列表")
+	public LigerPageDataVo getMembersListStatusUsing(int currentPage, int pageSize, String cardCode, String memberCode,String startTime,String endTime,
+			HttpServletRequest request) {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+
+		params.put("cardCode", cardCode);
+		params.put("memberCode", memberCode);
+		params.put("startTime", startTime);
+		params.put("endTime", endTime);
+
+		BasePageResultVo baseResultVo = gwMemberBindingCardServiceImpl.selectPageList(params);
+
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+
+}

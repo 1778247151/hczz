@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="Gw.brandtree" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwbrandtreeModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="bm" property="bm" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="owned_company" property="ownedCompany" jdbcType="VARCHAR" />
+    <result column="person_in_charge" property="personInCharge" jdbcType="INTEGER" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="time" property="time" jdbcType="VARCHAR" />
+    <result column="forName" property="forName" jdbcType="VARCHAR" />
+    <result column="confirm_user_id" property="confirmUserId" jdbcType="INTEGER" />
+    <result column="confirm_time" property="confirmTime" jdbcType="VARCHAR" />
+    <result column="unconfirm_user_id" property="unconfirmUserId" jdbcType="INTEGER" />
+    <result column="unconfirm_time" property="unconfirmTime" jdbcType="VARCHAR" />
+    <result column="gw_formats_tree_id" property="gwFormatsTreeId" jdbcType="INTEGER" />
+   
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, bm, name, owned_company,person_in_charge,address,phone,state, time, gw_formats_tree_id,confirm_user_id,confirm_time,unconfirm_user_id,unconfirm_time
+  </sql>
+  
+  
+  <delete id="Gw.brandtree.deleteAll" parameterType="java.lang.Integer" >
+    delete from gw_brand_tree
+  </delete>
+   <!-- 批量插入 -->
+  <insert id="Gw.brandtree.batchinsert" parameterType="com.crm.pojo.GwbrandtreeModel" >
+    insert into gw_brand_tree (id, bm, name, owned_company,person_in_charge,address,phone,state, time, gw_formats_tree_id,confirm_user_id,confirm_time,unconfirm_user_id,unconfirm_time)
+    values 
+     <foreach collection="list" item="brandtreeList" index="index" separator="," >
+     (#{brandtreeList.id,jdbcType=INTEGER},
+      #{brandtreeList.bm,jdbcType=VARCHAR},
+      #{brandtreeList.name,jdbcType=VARCHAR}, 
+      #{brandtreeList.ownedCompany,jdbcType=VARCHAR},
+      #{brandtreeList.personInCharge,jdbcType=VARCHAR}, 
+      #{brandtreeList.address,jdbcType=VARCHAR}, 
+      #{brandtreeList.phone,jdbcType=VARCHAR},
+      #{brandtreeList.state,jdbcType=INTEGER}, 
+      #{brandtreeList.time,jdbcType=VARCHAR}, 
+      #{brandtreeList.gwFormatsTreeId,jdbcType=INTEGER}, 
+      #{brandtreeList.confirmUserId,jdbcType=INTEGER}, 
+      #{brandtreeList.confirmTime,jdbcType=VARCHAR}, 
+      #{brandtreeList.unconfirmUserId,jdbcType=INTEGER},
+      #{brandtreeList.unconfirmTime,jdbcType=VARCHAR})
+      </foreach>
+  </insert>
+  <!-- 批量更新数据 -->
+  <update id="Gw.brandtree.batchUpdateFormatstree"  parameterType="java.util.List">  
+    <foreach collection="list" item="brandtreeList" index="index" separator=";">
+        update gw_brand_tree
+        <set>
+	       bm=#{brandtreeList.bm,jdbcType=VARCHAR},
+	       name=#{brandtreeList.name,jdbcType=VARCHAR},
+	       owned_company=#{brandtreeList.ownedCompany,jdbcType=VARCHAR},
+	       person_in_charge= #{brandtreeList.personInCharge,jdbcType=VARCHAR},
+	       address=#{brandtreeList.address,jdbcType=VARCHAR}, 
+	       phone=#{brandtreeList.phone,jdbcType=VARCHAR},
+	       state=#{brandtreeList.state,jdbcType=INTEGER}, 
+	       time=#{brandtreeList.time,jdbcType=VARCHAR}, 
+	       gw_formats_tree_id=#{brandtreeList.gwFormatsTreeId,jdbcType=INTEGER}, 
+	       confirm_user_id=#{brandtreeList.confirmUserId,jdbcType=INTEGER}, 
+	       confirm_time= #{brandtreeList.confirmTime,jdbcType=VARCHAR}, 
+	       unconfirm_user_id=#{brandtreeList.unconfirmUserId,jdbcType=INTEGER},
+	       unconfirm_time=#{brandtreeList.unconfirmTime,jdbcType=VARCHAR}
+        </set>
+        where id = #{brandtreeList.id,jdbcType=INTEGER}
+    </foreach>      
+</update>
+
+<!-- 批量删除 -->
+<delete id="Gw.brandtree.batchDeleteById" parameterType="java.util.List">
+      delete from gw_brand_tree where id in
+      <foreach collection="list" index="index" item="item" open="(" separator="," close=")">   
+        #{item.id}   
+      </foreach>  
+ </delete>
+  
+  
+  <select id="Gw.brandtree.selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT
+	a.bm,
+	a. owned_company,
+	a. person_in_charge,
+	gw_formats_tree_id,
+	a. address,
+	a. phone,
+	(select b.`name` from gw_formats_tree b where b.id = a.gw_formats_tree_id)as forName,
+	a.id,
+	a.`name`,
+	a.state,
+	a.time,
+	unconfirm_user_id,
+	confirm_user_id,
+	(select u.`name` from gw_admin_users u where u.id = a.confirm_user_id)as confirmUserName,
+	a.confirm_time,
+	(select u.`name` from gw_admin_users u where u.id = a.unconfirm_user_id)as unconfirmUserName,
+	a.unconfirm_time
+FROM
+	gw_brand_tree a
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+    <!--  根据品牌编号bm获取已签约的品牌信息-->
+  <select id="Gw.brandtree.selectSignByBm" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	SELECT
+	a.bm,
+	a. owned_company,
+	a. person_in_charge,
+	a. address,
+	a. phone,
+	a.id,
+	a.`name`,
+	a.state,
+	a.time,
+	(select u.`name` from gw_admin_users u where u.id = a.confirm_user_id)as confirmUserName,
+	a.confirm_time,
+	(select u.`name` from gw_admin_users u where u.id = a.unconfirm_user_id)as unconfirmUserName,
+	a.unconfirm_time
+FROM
+	gw_brand_tree a  where 1=1
+	and a.bm=#{bm,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="Gw.brandtree.selectByIds" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gw_brand_tree
+    where id in 
+    <foreach item="ids" collection="array" open="(" separator="," close=")"> 
+          #{ids}
+     </foreach> 
+  </select>
+  <delete id="Gw.brandtree.deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from gw_brand_tree
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="Gw.brandtree.insert" parameterType="com.crm.pojo.GwbrandtreeModel" >
+    insert into gw_brand_tree (id, bm, name, owned_company,person_in_charge,address,phone,
+      state, time, gw_formats_tree_id,confirm_time,confirm_user_id,unconfirm_time,unconfirm_user_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{bm,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+      #{ownedCompany,jdbcType=VARCHAR},#{personInCharge,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},
+      #{state,jdbcType=INTEGER}, #{time,jdbcType=VARCHAR}, #{gwFormatsTreeId,jdbcType=INTEGER}, #{confirmUserId,jdbcType=INTEGER}, #{confirmTime,jdbcType=VARCHAR},
+      #{unconfirmUserId,jdbcType=INTEGER}, #{unconfirmTime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="Gw.brandtree.insertSelective" parameterType="com.crm.pojo.GwbrandtreeModel" >
+    insert into gw_brand_tree
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="bm != null" >
+        bm,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="ownedCompany != null" >
+        owned_company,
+      </if><if test="personInCharge != null" >
+        person_in_charge,
+      </if><if test="address != null" >
+        address,
+      </if><if test="phone != null" >
+        phone,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+      <if test="gwFormatsTreeId != null" >
+        gw_formats_tree_id,
+      </if>
+      <if test="confirmUserId != null" >
+        confirm_user_id,
+      </if>
+      <if test="confirmTime != null" >
+        confirm_time,
+      </if>
+      <if test="unconfirmUserId != null" >
+        unconfirm_user_id,
+      </if>
+      <if test="unconfirmTime != null" >
+        unconfirm_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="bm != null" >
+        #{bm,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="ownedCompany != null" >
+       #{ownedCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="personInCharge != null" >
+        #{personInCharge,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+         #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+		 #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=VARCHAR},
+      </if>
+      <if test="gwFormatsTreeId != null" >
+        #{gwFormatsTreeId,jdbcType=INTEGER},
+      </if>
+       <if test="confirmUserId != null" >
+        #{confirmUserId,jdbcType=INTEGER},
+      </if>
+       <if test="confirmTime != null" >
+        #{confirmTime,jdbcType=VARCHAR},
+      </if>
+      <if test="unconfirmUserId != null" >
+        #{unconfirmUserId,jdbcType=INTEGER},
+      </if>
+       <if test="unconfirmTime != null" >
+        #{unconfirmTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="Gw.brandtree.updateByPrimaryKeySelective" parameterType="com.crm.pojo.GwbrandtreeModel" >
+    update gw_brand_tree
+    <set >
+      <if test="bm != null" >
+        bm = #{bm,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="ownedCompany != null" >
+       owned_company=#{ownedCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="personInCharge != null" >
+        person_in_charge=#{personInCharge,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+         address=#{address,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+		 phone=#{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        time = #{time,jdbcType=VARCHAR},
+      </if>
+      <if test="gwFormatsTreeId != null" >
+        gw_formats_tree_id = #{gwFormatsTreeId,jdbcType=INTEGER},
+      </if>
+      <if test="confirmUserId != null" >
+        confirm_user_id = #{confirmUserId,jdbcType=INTEGER},
+      </if>
+      <if test="confirmTime != null" >
+        confirm_time = #{confirmTime,jdbcType=VARCHAR},
+      </if>
+      <if test="unconfirmUserId != null" >
+        unconfirm_user_id = #{unconfirmUserId,jdbcType=INTEGER},
+      </if>
+      <if test="unconfirmTime != null" >
+        unconfirm_time = #{unconfirmTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="Gw.brandtree.updateByPrimaryKey" parameterType="com.crm.pojo.GwbrandtreeModel" >
+    update gw_brand_tree
+    set bm = #{bm,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      owned_company = #{ownedCompany,jdbcType=VARCHAR},
+      person_in_charge = #{personInCharge,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      state = #{state,jdbcType=INTEGER},
+      time = #{time,jdbcType=VARCHAR},
+      gw_formats_tree_id = #{gwFormatsTreeId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="Gw.brandtree.selectLists" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gw_brand_tree
+  </select>
+  
+  <select id="Gw.brandtree.getAllStateNotZero" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gw_brand_tree where state!=0
+  </select>
+  <!-- 根据业态ID获取品牌LIST集合 -->
+  <select id="Gw.brandtree.selectListByFormatsId" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" />
+    from gw_brand_tree
+    where gw_formats_tree_id=#{gwFormatsTreeId,jdbcType=INTEGER}
+    and state!=0
+  </select>
+  <!-- 根据商户ID获取品牌名称集合 -->
+  <select id="Gw.brandtree.selectListBymerId" resultMap="BaseResultMap" parameterType="java.util.Map">
+    SELECT
+	mer.id as merid,brand.id,mer.gw_brand_tree_id,brand.name
+FROM
+	gw_brand_tree brand
+LEFT JOIN gw_merchants_info mer ON brand.id = mer.gw_brand_tree_id
+where mer.id = #{id,jdbcType=INTEGER}
+and brand.state !=0
+  </select>
+  <!-- 根据品牌编号获取品牌对象 -->
+  <select id="Gw.brandtree.selectByCode" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gw_brand_tree
+    where bm = #{code,jdbcType=VARCHAR}
+    and state!=0
+  </select>
+  
+  <!-- 根据条件，获取分页数据list集合 -->
+  <select id="Gw.brandtree.selectAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	SELECT
+	a.bm,
+	a. owned_company,
+	a. person_in_charge,
+	a. address,
+	a. phone,
+	(select b.`name` from gw_formats_tree b where b.id = a.gw_formats_tree_id)as forName,
+	a.id,
+	a.`name`,
+	a.state,
+	a.time,
+	a.gw_formats_tree_id,
+	(select u.`name` from gw_admin_users u where u.id = a.confirm_user_id)as confirmUserName,
+	a.confirm_time,
+	(select u.`name` from gw_admin_users u where u.id = a.unconfirm_user_id)as unconfirmUserName,
+	a.unconfirm_time
+FROM
+	gw_brand_tree a
+	<where>
+		<if test="brandName!=null and ''!=brandName">
+			and a.name LIKE CONCAT(CONCAT('%', #{brandName,jdbcType=VARCHAR}), '%')
+		</if>
+		<if test="formatsId!=null and ''!=formatsId">
+			and a.gw_formats_tree_id = #{formatsId}
+		</if>
+		<if test="brandCode!=null and ''!=brandCode">
+			and a.bm LIKE CONCAT(CONCAT('%', #{brandCode,jdbcType=VARCHAR}), '%')
+		</if>
+		<if test="state1!=null and ''!=state1 and state2!=null and ''!=state2">
+			and a.state in(#{state1,jdbcType=INTEGER},#{state2,jdbcType=INTEGER})	
+		</if>
+		<if test="state!=null and ''!=state">
+			and a.state = #{state,jdbcType=INTEGER}
+		</if>
+		<if test="state3!=null and ''!=state3">
+			and a.state != #{state3,jdbcType=INTEGER}
+		</if>
+	</where>
+	order by a.time desc
+    limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    
+  </select>
+  <select id="Gw.brandtree.selectCount" resultType="java.lang.Integer">
+   SELECT
+	COUNT(a.id)
+FROM
+	gw_brand_tree a
+	<where>
+		<if test="brandName!=null and ''!=brandName">
+			and a.name LIKE CONCAT(CONCAT('%', #{brandName,jdbcType=VARCHAR}), '%')
+		</if>
+		<if test="formatsId!=null and ''!=formatsId">
+			and a.gw_formats_tree_id = #{formatsId}
+		</if>
+		<if test="brandCode!=null and ''!=brandCode">
+			and a.bm LIKE CONCAT(CONCAT('%', #{brandCode,jdbcType=VARCHAR}), '%')
+		</if>
+		<if test="state1!=null and ''!=state1 and state2!=null and ''!=state2">
+			and a.state in(#{state1,jdbcType=INTEGER},#{state2,jdbcType=INTEGER})	
+		</if>
+		<if test="state!=null and ''!=state">
+			and a.state = #{state,jdbcType=INTEGER}
+		</if>
+		<if test="state3!=null and ''!=state3">
+			and a.state != #{state3,jdbcType=INTEGER}
+		</if>
+	</where>  
+  </select>
+  
+  <!-- 根据条件，获取分页数据list集合 -->
+  <select id="Gw.brandtree.getBrandTreeByCondition" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	SELECT
+	a.bm,
+	a. owned_company,
+	a. person_in_charge,
+	a. address,
+	a. phone,
+	(select b.`name` from gw_formats_tree b where b.id = a.gw_formats_tree_id)as forName,
+	a.id,
+	a.`name`,
+	a.state,
+	a.time,
+	(select u.`name` from gw_admin_users u where u.id = a.confirm_user_id)as confirmUserName,
+	a.confirm_time,
+	(select u.`name` from gw_admin_users u where u.id = a.unconfirm_user_id)as unconfirmUserName,
+	a.unconfirm_time
+FROM
+	gw_brand_tree a
+	<where>
+		<if test="state3!=null and ''!=state3">
+			and a.state != #{state3,jdbcType=INTEGER}
+		</if>
+		<if test="brandName!=null and ''!=brandName">
+			and a.name LIKE CONCAT(CONCAT('%', #{brandName,jdbcType=VARCHAR}), '%')
+		</if>
+		<if test="brandCode!=null and ''!=brandCode">
+			and a.bm LIKE CONCAT(CONCAT('%', #{brandCode,jdbcType=VARCHAR}), '%')
+		</if>
+	</where>  
+    limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    
+  </select>
+  
+  <!-- 根据条件，获取分页数据list集合 -->
+  <select id="Gw.brandtree.selectAllBySign" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	SELECT
+	a.bm,
+	a. owned_company,
+	a. person_in_charge,
+	a. address,
+	a. phone,
+	a.id,
+	a.`name`,
+	a.state,
+	a.time,
+	(select u.`name` from gw_admin_users u where u.id = a.confirm_user_id)as confirmUserName,
+	a.confirm_time,
+	(select u.`name` from gw_admin_users u where u.id = a.unconfirm_user_id)as unconfirmUserName,
+	a.unconfirm_time
+FROM
+	gw_brand_tree a where 1=1
+		<if test="brandName!=null and ''!=brandName">
+			and a.name LIKE CONCAT(CONCAT('%', #{brandName,jdbcType=VARCHAR}), '%')
+		</if>
+		<if test="brandCode!=null and ''!=brandCode">
+			and a.bm LIKE CONCAT(CONCAT('%', #{brandCode,jdbcType=VARCHAR}), '%')
+		</if>
+		<if test="formatsId!=null and ''!=formatsId">
+			and a.gw_formats_tree_id = #{formatsId}
+		</if>
+		GROUP BY a.bm
+    limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    
+  </select>
+  
+  <select id="Gw.brandtree.selectCountBySign" resultType="java.lang.Integer">
+   SELECT
+	COUNT(distinct a.bm)
+FROM
+	gw_brand_tree a  b where a.id = b.gw_brand_tree_id and b.state in (3,5)
+		<if test="brandName!=null and ''!=brandName">
+			and a.name LIKE CONCAT(CONCAT('%', #{brandName,jdbcType=VARCHAR}), '%')
+		</if>
+		<if test="brandCode!=null and ''!=brandCode">
+			and a.bm LIKE CONCAT(CONCAT('%', #{brandCode,jdbcType=VARCHAR}), '%')
+		</if>
+		<if test="formatsId!=null and ''!=formatsId">
+			and a.gw_formats_tree_id = #{formatsId}
+		</if>
+  </select>
+  
+   <select id="Gw.brandtree.selectSignByCode" resultMap="BaseResultMap" >
+   SELECT
+	*
+FROM
+	gw_brand_tree a  where 1=1
+	and a.bm=#{code,jdbcType=VARCHAR}
+	group by a.bm	
+  </select>
+</mapper>

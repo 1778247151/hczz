@@ -1,0 +1,44 @@
+package com.crm.service.impl;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwGoodsInStoreDao;
+import com.crm.pojo.GwGoodsInStoreModel;
+import com.crm.service.GwGoodsInStoreService;
+
+/**
+ * 
+ * GwGoodsInStoreServiceImpl:物品入库维护业务逻辑层实现
+ *
+ * @author chengpengfei
+ * @date  2016年6月23日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwGoodsInStoreServiceManage")
+public class GwGoodsInStoreServiceImpl extends ServersManager<GwGoodsInStoreModel, GwGoodsInStoreDao> implements GwGoodsInStoreService{
+	
+	@Resource(name="gwGoodsInStoreDaoManage")
+	@Override
+	public void setDao(GwGoodsInStoreDao dao) {
+		// TODO Auto-generated method stub
+		this.dao = dao;
+		
+	}
+
+	@Override
+	public GwGoodsInStoreModel getGoodsInStoreByLastOne(String time) {
+		// TODO Auto-generated method stub
+		return dao.getGoodsInStoreByLastOne(time);
+	}
+
+	@Override
+	public int deleteGoodsInStoreByCode(String code) {
+		// TODO Auto-generated method stub
+		return dao.deleteGoodsInStoreByCode(code);
+	}
+
+}

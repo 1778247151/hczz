@@ -1,0 +1,8 @@
+eclipse.preferences.version=1
+encoding//src/main/java/com/crm=UTF-8
+encoding//src/main/java/com/crm/util=UTF-8
+encoding//src/main/java/com/crm/util/JsonMapper.java=UTF-8
+encoding//src/main/resources/base_info_config.properties=UTF-8
+encoding//src/main/resources/gw_base_data_config.properties=UTF-8
+encoding//src/main/resources/jdbc.properties=UTF-8
+encoding//src/main/resources/system-config.properties=UTF-8

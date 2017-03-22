@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.typeTree" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwTypeTreeModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="p_id" property="pId" jdbcType="INTEGER" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="order_num" property="orderNum" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, code, name, p_id, description,type, create_user_id, create_time, update_user_id, update_time, 
+    order_num, status
+  </sql>
+  
+  <delete id="gw.typeTree.deleteById" parameterType="java.lang.Integer" >
+	    delete from gw_type_tree
+	    where id = #{id,jdbcType=INTEGER}
+  </delete>
+<!-- 查询所有节点 -->
+  <select id="gw.typeTree.selectAllNode" resultType="com.crm.pojo.GwTypeTreeModel">
+   	select 
+	id, code, name, p_id pId, description, 
+	(select u.name from gw_admin_users u where u.id = d.create_user_id) as createUser
+	, create_time createTime, 
+	(select u.name from gw_admin_users u where u.id = d.update_user_id) as updateUser
+	, update_time updateTime,order_num orderNum, status
+	from gw_type_tree d
+	where status = 1
+  </select>
+  <!-- 根据父节点查询子节点 -->
+  <select id="gw.typeTree.selectByPid" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+   	select 
+   	id, code, name, p_id pId, description,
+	(select u.name from gw_admin_users u where u.id = d.create_user_id) as createUser
+	, create_time createTime, 
+	(select u.name from gw_admin_users u where u.id = d.update_user_id) as updateUser
+	, update_time updateTime,order_num orderNum, status
+	from gw_type_tree d
+	where status = 1 and p_Id = #{pId}
+  </select>
+  
+  <!-- 根据父节点code查询子节点 -->
+  <select id="gw.typeTree.selectByPcode" resultMap="BaseResultMap" parameterType="java.lang.String">
+   	select 
+   	id, code, name, p_id pId, description,
+	(select u.name from gw_admin_users u where u.id = d.create_user_id) as createUser
+	, create_time createTime, 
+	(select u.name from gw_admin_users u where u.id = d.update_user_id) as updateUser
+	, update_time updateTime,order_num orderNum, status
+	from gw_type_tree d
+	where status = 1 and p_Id = (select id from gw_type_tree where code=#{code})
+  </select>
+  
+  <select id="gw.typeTree.selectByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    id, code, name, p_id pId, description,
+	(select u.name from gw_admin_users u where u.id = d.create_user_id) as createUser
+	, create_time createTime, 
+	(select u.name from gw_admin_users u where u.id = d.update_user_id) as updateUser
+	, update_time updateTime,order_num orderNum, status
+    from gw_type_tree d
+    where code = #{code,jdbcType=VARCHAR}
+    and status = 1
+  </select>
+  
+  <select id="gw.typeTree.getTypeTreeByName" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    id, code, name, p_id pId, description,
+	(select u.name from gw_admin_users u where u.id = d.create_user_id) as createUser
+	, create_time createTime, 
+	(select u.name from gw_admin_users u where u.id = d.update_user_id) as updateUser
+	, update_time updateTime,order_num orderNum, status
+    from gw_type_tree d where status = 1
+    <if test="name != null and '' != name">  
+          and d.name = #{name,jdbcType=VARCHAR} 
+    </if>
+    <if test="type != null and '' != type">  
+          and d.type = #{type,jdbcType=VARCHAR} 
+    </if>
+  </select>
+  
+  <select id="gw.typeTree.selectByType" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    id, code, name, p_id pId, description,
+	(select u.name from gw_admin_users u where u.id = d.create_user_id) as createUser
+	, create_time createTime, 
+	(select u.name from gw_admin_users u where u.id = d.update_user_id) as updateUser
+	, update_time updateTime,order_num orderNum, status
+    from gw_type_tree d
+    where type=#{type,jdbcType=VARCHAR}
+    order by code asc
+  </select>
+  
+  <select id="gw.typeTree.selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_type_tree
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from gw_type_tree
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.typeTree.insert" parameterType="com.crm.pojo.GwTypeTreeModel" >
+    insert into gw_type_tree
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="pId != null" >
+        p_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="orderNum != null" >
+        order_num,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pId != null" >
+        #{pId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNum != null" >
+        #{orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.typeTree.update" parameterType="com.crm.pojo.GwTypeTreeModel" >
+    update gw_type_tree
+    <set >
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pId != null" >
+        p_id = #{pId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNum != null" >
+        order_num = #{orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据条件，获取分页LIST集合 -->
+  <select id="gw.typeTree.selectStoreHouseByPageList" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	select 
+   	id, code, name, p_id pId, description,
+	(select u.name from gw_admin_users u where u.id = d.create_user_id) as createUser
+	, create_time createTime, 
+	(select u.name from gw_admin_users u where u.id = d.update_user_id) as updateUser
+	, update_time updateTime,order_num orderNum, status
+	from gw_type_tree d
+	where status = 1 and type = '06'
+	<if test="name != null and '' != name">  
+          and d.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}), '%')         
+    </if>
+ 	limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER} 
+  </select>
+  
+  <!-- 根据条件，获取分页LIST总数 -->
+  <select id="gw.typeTree.selectStoreHouseByPageCount" resultType="java.lang.Integer"  parameterType="java.util.Map">
+ select
+  	count(d.id)	
+FROM
+	gw_type_tree d
+	where d.status = 1 and d.p_Id = 32
+	<if test="name != null and '' != name">  
+          and d.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}), '%')         
+    </if>
+  </select>
+</mapper>

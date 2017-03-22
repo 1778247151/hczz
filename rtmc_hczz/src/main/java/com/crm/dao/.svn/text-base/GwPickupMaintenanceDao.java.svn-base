@@ -1,0 +1,33 @@
+package com.crm.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwPickupMaintenanceModel;
+
+/**
+ * 
+ * GwPickupMaintenanceDao:拾物维护数据访问层接口
+ *
+ * @author chengpengfei
+ * @date  2016年6月23日
+ * @version  jdk1.8
+ *
+ */
+public interface GwPickupMaintenanceDao extends DaoManager<GwPickupMaintenanceModel>{
+
+	/**
+	 * 通过编号批量修改拾物维护状态
+	 * @param list
+	 * @return
+	 */
+	public int updatePickupMaintenanceStatusByCode(List<Map<String,Object>> list);
+	
+	/**
+	 * 根据编号模糊查询当天最后一条数据
+	 * @param code
+	 * @return
+	 */
+	public GwPickupMaintenanceModel getPickupMaintenanceByLaseOne(String time);
+}

@@ -1,0 +1,61 @@
+package com.crm.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwActivityDao;
+import com.crm.pojo.GwActivityModel;
+import com.crm.service.GwActivityService;
+
+/**
+ * 
+ * GwActivityServiceImpl:活动业务逻辑层实现
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwActivityServiceManage")
+public class GwActivityServiceImpl extends ServersManager<GwActivityModel, GwActivityDao> implements GwActivityService{
+	
+	@Resource(name = "gwActivityDaoManage")
+	@Override
+	public void setDao(GwActivityDao gwActivityDao) {
+		this.dao = gwActivityDao;
+	}
+
+	@Override
+	public GwActivityModel getActivityByCode(String code) {
+		return dao.getActivityByCode(code);
+	}
+
+	@Override
+	public GwActivityModel getActivityByLastOne(String time) {
+		// TODO Auto-generated method stub
+		return dao.getActivityByLastOne(time);
+	}
+
+	@Override
+	public int updateStatus(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.updateStatus(params);
+	}
+
+	@Override
+	public List<GwActivityModel> selectActivityListByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectActivityListByCondition(params);
+	}
+
+	@Override
+	public int updateStatusByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.updateStatusByCondition(params);
+	}
+	
+}

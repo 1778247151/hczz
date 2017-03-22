@@ -1,0 +1,104 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwActivityDao;
+import com.crm.pojo.GwActivityModel;
+
+@Repository("gwActivityDaoManage")
+public class GwActivityDaoImpl implements GwActivityDao{
+	@Resource
+	private BaseDao dao;
+	
+	@Override
+	public int insert(GwActivityModel e) {
+		return dao.insert("gw.activity.insert",e);
+	}
+
+	@Override
+	public int delete(GwActivityModel e) {
+		return dao.delete("gw.activity.deleteById",e.getId());
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwActivityModel e) {
+		return dao.update("gw.activity.update",e);
+	}
+
+	@Override
+	public GwActivityModel selectOne(GwActivityModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwActivityModel> selectList(GwActivityModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.activity.deleteByPrimaryKey", id);
+	}
+
+	@Override
+	public GwActivityModel selectById(int id) {
+		return (GwActivityModel) dao.selectOne("gw.activity.selectByPrimaryKey",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		return dao.selectPageList("gw.activity.selectPageList", "gw.activity.selectCount", params);
+	}
+
+	@Override
+	public List<GwActivityModel> getAllList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public GwActivityModel getActivityByCode(String code) {
+		return (GwActivityModel) dao.selectOne("gw.activity.selectByCode", code);
+	}
+
+	@Override
+	public GwActivityModel getActivityByLastOne(String time) {
+		// TODO Auto-generated method stub
+		return (GwActivityModel) dao.selectOne("gw.activity.selectByLastOne",time);
+	}
+
+	@Override
+	public int updateStatus(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.activity.updateStatus",params);
+	}
+
+	@Override
+	public List<GwActivityModel> selectActivityListByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.activity.selectActivityListByCondition", params);
+	}
+
+	@Override
+	public int updateStatusByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.activity.updateStatusByCondition", params);
+	}
+
+}

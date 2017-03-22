@@ -1,0 +1,63 @@
+package com.crm.dao;
+
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwApiAccountModel;
+/**
+ * 
+ * GwApiAccountDao:CRM系统对外接口账号认证数据访问层
+ *
+ * @author hemingjun
+ * @date  2016年9月19日
+ * @version  jdk1.8
+ *
+ */
+public interface GwApiAccountDao extends DaoManager<GwApiAccountModel>{
+	/**
+	 * 
+	 * getApiAccountById:通过id得到对象
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月19日
+	 * @param account
+	 * @return
+	 */
+     public GwApiAccountModel getApiAccountById(int id);
+     
+     /**
+      * 
+      * updateApiAccountToken:根据认证账号，更新认证账号的token
+      *
+      * @author   yumaochun
+      * @date     2016年9月19日
+      *
+      * @param    apiAccount   认证账号信息
+      * @return    
+      */
+     public int  updateApiAccountToken(GwApiAccountModel apiAccount);
+     
+     
+     /**
+      * 
+      * updateApiAccount:更新认证账号信息
+      *
+      * @author   hemingjun
+      * @date     2016年9月19日
+      *
+      * @param    apiAccount   认证账号信息
+      * @return    
+      */
+     public int updateApiAccount(GwApiAccountModel apiAccount);
+     
+     /**
+  	 * 
+  	 * getApiAccountByAccount:通过账号得到对象
+  	 *
+  	 * @author yumaochun
+  	 * @date 2016年9月18日
+  	 * @param account
+  	 * @return
+  	 */
+      public GwApiAccountModel getApiAccountByAccount(String account);
+
+}

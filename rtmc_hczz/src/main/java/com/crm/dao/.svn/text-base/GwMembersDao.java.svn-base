@@ -1,0 +1,169 @@
+package com.crm.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwMembersModel;
+/**
+ * 
+ * GwMembersDao:会员数据访问层接口
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+public interface GwMembersDao extends DaoManager<GwMembersModel>{
+	GwMembersModel getMembersByCode(String code);
+	
+	/**
+	 * 查询所有会员基本信息接口List(可条件查询)
+	 * @param params 条件查询参数
+	 * @return
+	 */
+	public List<GwMembersModel> getMemberAllListApi(Map<String,Object> params);
+	
+	/**
+	 * 
+	 * updateByVipCode:通过vip号编辑会员资料
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月19日
+	 * @param e
+	 * @return
+	 */
+	public int updateByVipCode(GwMembersModel e);
+	
+	/**
+	 * 
+	 * getMemberByCondition:通过条件查询会员对象
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月21日
+	 * @param param
+	 * @return
+	 */
+	public GwMembersModel getMemberByCondition(Map<String, Object> param);
+	
+	/**
+	 * 
+	 * getCountByType:通过会员来源类型得到会员个数
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月21日
+	 * @param number
+	 * @return
+	 */
+	public int getCountByType(int number);
+	/**
+	 * 
+	 * getList:获取全部会员信息
+	 *
+	 * @author hemingjun
+	 * @date 2016年10月8日
+	 * @return
+	 */
+	public List<GwMembersModel> getList();
+
+	/**
+	 * 
+	 * selectByVipCode:通过vip会员号查询会员信息
+	 *
+	 * @author hemingjun
+	 * @date 2016年10月26日
+	 * @return
+	 */
+	public GwMembersModel selectByVipCode(String vipCode);
+	
+	/**
+	 * 
+	 * selectPageListByCondtion:通过条件分页查询状态为1的会员信息集合
+	 *
+	 * @author hemingjun
+	 * @date 2016年10月30日
+	 * @param params
+	 * @return
+	 */
+	public BasePageResultVo selectPageListByCondtion(Map<String, Object> params);
+
+	/**
+	 * 
+	 * getAllNameAndPhone:获得所有生效会员的姓名和号码
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年11月3日
+	 *
+	 * @return
+	 */
+	public List<GwMembersModel> getAllNameAndPhone();
+
+	/**
+	 * 
+	 * getNumberByGrade:根据会员等级获得所有生效会员的姓名和号码
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年11月3日
+	 *
+	 * @param grades
+	 * @return
+	 */
+	public List<GwMembersModel> getNumberByGrade(String[] grades);
+
+	/**
+	 * 
+	 * insertMemberSynchronize:注册会员(同步)
+	 *
+	 * @author hemingjun
+	 * @date 2016年11月2日
+	 * @param e
+	 * @return
+	 */
+	
+	
+	public int insertMemberSynchronize(GwMembersModel e);
+	
+	/**
+	 * 
+	 * getAllEmail:查询所有生效会员的邮箱
+	 *
+	 * @author   meishengjun
+	 * @date     2016年11月17日
+	 *
+	 * @return
+	 */
+	public List<GwMembersModel> getAllEmail();
+	
+	/**
+	 * 查询当日会员vipCode集合
+	 * selectMemberVipCode:
+	 *
+	 * @author hemingjun
+	 * @date 2016年11月3日
+	 * @return
+	 */
+	public List<GwMembersModel> selectMemberVipCode();
+	
+	/**
+	 * 
+	 * updateJoinActivityMemberIntergral:更新参加活动会员的积分
+	 *
+	 * @author hemingjing
+	 * @date 2016年11月10日
+	 * @param params
+	 * @return
+	 */
+	public int updateJoinActivityMemberIntergral(Map<String, Object> params);
+	
+	/**
+	 * 
+	 * selectPageListByBindingMessage:通过条件分页查询会员的所有绑定信息
+	 *
+	 * @author meishengjun
+	 * @date 2016年11月10日
+	 * @param params
+	 * @return
+	 */
+	public BasePageResultVo selectPageListByBindingMessage(Map<String, Object> params);
+}

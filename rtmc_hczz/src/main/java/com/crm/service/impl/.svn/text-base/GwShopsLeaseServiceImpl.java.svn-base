@@ -1,0 +1,78 @@
+package com.crm.service.impl;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.http.client.ClientProtocolException;
+import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
+import com.crm.bean.ShopFormatsInfo;
+import com.crm.common.BasePageResultVo;
+import com.crm.core.ServersManager;
+import com.crm.dao.GwShopsLeaseDao;
+import com.crm.pojo.GwShopsLeaseModel;
+import com.crm.service.GwShopsLeaseService;
+import com.crm.util.HttpClientUtil;
+import com.crm.util.JsonMapper;
+
+/**
+ * 
+ * GwShopsLeaseServiceImpl:店铺管理业务逻辑层实现
+ *
+ * @author chengpengfei
+ * @date  2016年5月16日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwShopsLeaseServiceManage")
+public class GwShopsLeaseServiceImpl extends ServersManager<GwShopsLeaseModel,GwShopsLeaseDao> implements GwShopsLeaseService{
+
+	@Resource(name="gwShopsLeaseDaoManage")
+	@Override
+	public void setDao(GwShopsLeaseDao dao) {
+		this.dao = dao;
+		
+	}
+
+	@Override
+	public boolean insertMisBrandDataForShopsLease(String url,Map<String, Object> map) throws ClientProtocolException, IOException {
+		//拉取之前先清空原有的数据
+		int deleteAll = dao.deleteAll();
+		if(deleteAll<0){
+			return false;
+		}
+		//从MIS端获取数据
+		String body = HttpClientUtil.httpPost(url, map);
+		if(body==null){
+			return false;
+		}
+		String string = JSON.parseObject(body).getString("rows");
+		List<GwShopsLeaseModel> shopsLeaseList =JsonMapper.buildNonDefaultMapper().fromJsonToList(string, GwShopsLeaseModel.class);
+		//批量插入品牌数据
+		int batchInsert = dao.batchInsertShopsLease(shopsLeaseList);
+		if(batchInsert<0){
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public GwShopsLeaseModel getShopsLeaseByCode(String code) {
+		// TODO Auto-generated method stub
+		return dao.getShopsLeaseByCode(code);
+	}
+
+	@Override
+	public BasePageResultVo getShopsLeaseListByCoufirm(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getShopsLeaseListByCoufirm(params);
+	}
+	@Override
+	public ShopFormatsInfo getShopformatsInfoByShopCode(Map<String, Object> paramMap) {
+        return dao.getShopformatsInfoByShopCode(paramMap);
+    }
+}

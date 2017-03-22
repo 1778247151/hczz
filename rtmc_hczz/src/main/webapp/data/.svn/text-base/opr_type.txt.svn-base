@@ -1,0 +1,11 @@
+[
+    { "id": "save", "text": "保存|添加(save|add)"},
+    { "id": "update", "text": "编辑|修改(edit|update)"},
+    { "id": "delete", "text": "删除(delete)"},
+    { "id": "search", "text": "搜索(search)"},
+    { "id": "look", "text": "查阅(look)"},
+    { "id": "export", "text": "导出(export)"},
+    { "id": "setup", "text": "设置(setup)"},
+    { "id": "print", "text": "打印(print)"},
+    { "id": "confirm", "text": "确认(confirm)"}
+]

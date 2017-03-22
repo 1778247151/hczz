@@ -1,0 +1,89 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwRepeatVisitDetailDao;
+import com.crm.pojo.GwRepeatVisitDetailModel;
+
+@Repository("gwRepeatVisitDetailDaoManage")
+public class GwRepeatVisitDetailDaoImpl implements GwRepeatVisitDetailDao{
+	@Resource
+	private BaseDao dao;
+
+	@Override
+	public int insert(GwRepeatVisitDetailModel e) {
+		return dao.insert("gw.repeat.visit.detail.insert",e);
+	}
+
+	@Override
+	public int delete(GwRepeatVisitDetailModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwRepeatVisitDetailModel e) {
+		return dao.update("gw.repeat.visit.detail.update",e);
+	}
+
+	@Override
+	public GwRepeatVisitDetailModel selectOne(GwRepeatVisitDetailModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwRepeatVisitDetailModel> selectList(GwRepeatVisitDetailModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		return dao.delete("gw.repeat.visit.detail.deleteByPrimaryKey", id);
+	}
+
+	@Override
+	public GwRepeatVisitDetailModel selectById(int id) {
+		return (GwRepeatVisitDetailModel) dao.selectOne("gw.repeat.visit.detail.selectByPrimaryKey",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		return dao.selectPageList("gw.repeat.visit.detail.selectPageList", "gw.repeat.visit.detail.selectCount", params);
+	}
+
+	@Override
+	public List<GwRepeatVisitDetailModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.repeat.visit.detail.getAllList");
+	}
+
+	@Override
+	public List<GwRepeatVisitDetailModel> selectDetailVisitByCode(String code) {
+		return dao.selectList("gw.repeat.visit.detail.selectListByCode", code);
+	}
+
+	@Override
+	public int insetDetailBatch(List<GwRepeatVisitDetailModel> list) {
+		return dao.insert("gw.repeat.visit.detail.insertBatch",list);
+	}
+
+	@Override
+	public List<GwRepeatVisitDetailModel> getRepeatVisitDetailByCode(String code) {
+		return dao.selectList("gw.repeat.visit.detail.selectListByCode", code);
+	}
+}

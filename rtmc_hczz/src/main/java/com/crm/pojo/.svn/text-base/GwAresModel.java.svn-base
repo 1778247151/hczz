@@ -1,0 +1,118 @@
+package com.crm.pojo;
+
+import java.io.Serializable;
+
+import com.crm.enums.ActivityStatusEnum;
+
+/**
+ * 
+ * GwAresModel:购物中心区域实体类
+ *
+ * @author yumaochun
+ * @date 2016年3月10日
+ * @version jdk1.8
+ *
+ */
+public class GwAresModel implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5767812912926003420L;
+
+	private Integer id;
+
+	private String bm;
+
+	private String cnName;
+
+	private String enName;
+
+	private Integer state;
+
+	private String stateName;
+
+	private String time;
+
+	private Integer gwMallInfoId;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getBm() {
+		return bm;
+	}
+
+	public void setBm(String bm) {
+		this.bm = bm == null ? null : bm.trim();
+	}
+
+	public String getCnName() {
+		return cnName;
+	}
+
+	public void setCnName(String cnName) {
+		this.cnName = cnName == null ? null : cnName.trim();
+	}
+
+	public String getEnName() {
+		return enName;
+	}
+
+	public void setEnName(String enName) {
+		this.enName = enName == null ? null : enName.trim();
+	}
+
+	public Integer getState() {
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
+	}
+
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time == null ? null : time.trim();
+	}
+
+	public String getStateName() {
+		return ActivityStatusEnum.getDisplayName(getState());
+	}
+
+	public void setStateName(String stateName) {
+		this.stateName = stateName;
+	}
+
+	public Integer getGwMallInfoId() {
+		return gwMallInfoId;
+	}
+
+	public void setGwMallInfoId(Integer gwMallInfoId) {
+		this.gwMallInfoId = gwMallInfoId;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof GwAresModel)) {
+			return false;
+		}
+		GwAresModel ares = (GwAresModel) obj;
+		if (ares.getId().equals(this.getId()) && ares.getCnName().equals(this.cnName)
+				&& ares.getEnName().equals(this.enName) && ares.getBm().equals(this.bm)
+				&& ares.getState().equals(this.state) && ares.getTime().equals(this.time)
+				&& ares.getGwMallInfoId().equals(this.gwMallInfoId)) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+}

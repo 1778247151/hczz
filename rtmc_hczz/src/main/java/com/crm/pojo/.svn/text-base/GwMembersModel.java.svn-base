@@ -1,0 +1,456 @@
+package com.crm.pojo;
+
+import java.math.BigDecimal;
+
+import com.crm.enums.ActivityStatusEnum;
+import com.crm.enums.CardStateEnum;
+import com.crm.enums.MembersCardTypeEnum;
+import com.crm.enums.MembersResourceTypeEnum;
+import com.crm.enums.SexNameEnum;
+
+/**
+ * @author Administrator
+ *
+ */
+public class GwMembersModel {
+	private Integer id;
+
+	private String cardCode;
+
+	private Integer cardType;
+
+	private String vipCode;
+
+	private String grade;
+
+	private Integer credit;
+
+	private Integer status;
+
+	private String mallInfoCode;
+
+	private String mallInfoName;
+
+	private String userName;
+
+	private String password;
+
+	private Integer sex;
+
+	private String phone;
+
+	private String tell;
+
+	private String email;
+
+	private String birthTime;
+
+	private String idCard;
+
+	private String postCode;
+
+	private Integer province;
+
+	private Integer city;
+
+	private Integer county;
+
+	private String address;
+
+	private String description;
+
+	private String effectiveTime;
+
+	private String expiryTime;
+
+	private Integer createUserId;
+
+	private String createTime;
+
+	private Integer updateUserId;
+
+	private String updateTime;
+
+	private String statusName;
+
+	private String sexName;
+
+	private String createUserName;
+
+	private String updateUserName;
+
+	private String provinceName;
+
+	private String cityName;
+
+	private String countyName;
+
+	private String gradeName;
+
+	private String cardTypeName;
+	// 会员来源,只是一个描述
+	private String resource;
+	// 会员来源类型 1-购物中心 2-猫酷
+	private String type;
+	// 注册时间
+	private String registerTime;
+	// 收入
+	private BigDecimal income;
+	// 学历
+	private String degress;
+	// 车牌号
+	private String carNumber;
+
+
+	public BigDecimal getIncome() {
+		return income;
+	}
+
+	public void setIncome(BigDecimal income) {
+		this.income = income;
+	}
+
+	public String getDegress() {
+		return degress;
+	}
+
+	public void setDegress(String degress) {
+		this.degress = degress;
+	}
+
+	public String getCarNumber() {
+		return carNumber;
+	}
+
+	public void setCarNumber(String carNumber) {
+		this.carNumber = carNumber;
+	}
+
+	public String getRegisterTime() {
+		return registerTime;
+	}
+
+	public void setRegisterTime(String registerTime) {
+		this.registerTime = registerTime;
+	}
+	public String getResource() {
+		return resource;
+	}
+
+	public void setResource(String resource) {
+		this.resource = resource;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getCardTypeName() {
+		return MembersCardTypeEnum.getDisplayName(getCardType());
+	}
+
+	public void setCardTypeName(String cardTypeName) {
+		this.cardTypeName = cardTypeName;
+	}
+
+	public String getMallInfoName() {
+		return mallInfoName;
+	}
+
+	public void setMallInfoName(String mallInfoName) {
+		this.mallInfoName = mallInfoName;
+	}
+
+	public String getGradeName() {
+		return gradeName;
+	}
+
+	public void setGradeName(String gradeName) {
+		this.gradeName = gradeName;
+	}
+
+	public String getProvinceName() {
+		return provinceName;
+	}
+
+	public void setProvinceName(String provinceName) {
+		this.provinceName = provinceName;
+	}
+
+	public String getCityName() {
+		return cityName;
+	}
+
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+
+	public String getCountyName() {
+		return countyName;
+	}
+
+	public void setCountyName(String countyName) {
+		this.countyName = countyName;
+	}
+
+	public String getCreateUserName() {
+		return createUserName;
+	}
+
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
+	}
+
+	public String getUpdateUserName() {
+		return updateUserName;
+	}
+
+	public void setUpdateUserName(String updateUserName) {
+		this.updateUserName = updateUserName;
+	}
+
+	public String getSexName() {
+		return SexNameEnum.getDisplayName(getSex());
+	}
+
+	public void setSexName(String sexName) {
+		this.sexName = sexName;
+	}
+
+	public String getStatusName() {
+		return ActivityStatusEnum.getDisplayName(getStatus());
+	//return	CardStateEnum.getDisplayName(status);
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getCardCode() {
+		return cardCode;
+	}
+
+	public void setCardCode(String cardCode) {
+		this.cardCode = cardCode == null ? null : cardCode.trim();
+	}
+
+	public Integer getCardType() {
+		return cardType;
+	}
+
+	public void setCardType(Integer cardType) {
+		this.cardType = cardType;
+	}
+
+	public String getVipCode() {
+		return vipCode;
+	}
+
+	public void setVipCode(String vipCode) {
+		this.vipCode = vipCode == null ? null : vipCode.trim();
+	}
+
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
+
+	public Integer getCredit() {
+		return credit;
+	}
+
+	public void setCredit(Integer credit) {
+		this.credit = credit;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public String getMallInfoCode() {
+		return mallInfoCode;
+	}
+
+	public void setMallInfoCode(String mallInfoCode) {
+		this.mallInfoCode = mallInfoCode == null ? null : mallInfoCode.trim();
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName == null ? null : userName.trim();
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password == null ? null : password.trim();
+	}
+
+	public Integer getSex() {
+		return sex;
+	}
+
+	public void setSex(Integer sex) {
+		this.sex = sex;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone == null ? null : phone.trim();
+	}
+
+	public String getTell() {
+		return tell;
+	}
+
+	public void setTell(String tell) {
+		this.tell = tell == null ? null : tell.trim();
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email == null ? null : email.trim();
+	}
+
+	public String getBirthTime() {
+		return birthTime;
+	}
+
+	public void setBirthTime(String birthTime) {
+		this.birthTime = birthTime == null ? null : birthTime.trim();
+	}
+
+	public String getIdCard() {
+		return idCard;
+	}
+
+	public void setIdCard(String idCard) {
+		this.idCard = idCard == null ? null : idCard.trim();
+	}
+
+	public String getPostCode() {
+		return postCode;
+	}
+
+	public void setPostCode(String postCode) {
+		this.postCode = postCode == null ? null : postCode.trim();
+	}
+
+	public Integer getProvince() {
+		return province;
+	}
+
+	public void setProvince(Integer province) {
+		this.province = province;
+	}
+
+	public Integer getCity() {
+		return city;
+	}
+
+	public void setCity(Integer city) {
+		this.city = city;
+	}
+
+	public Integer getCounty() {
+		return county;
+	}
+
+	public void setCounty(Integer county) {
+		this.county = county;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address == null ? null : address.trim();
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description == null ? null : description.trim();
+	}
+
+	public String getEffectiveTime() {
+		return effectiveTime;
+	}
+
+	public void setEffectiveTime(String effectiveTime) {
+		this.effectiveTime = effectiveTime == null ? null : effectiveTime.trim();
+	}
+
+	public String getExpiryTime() {
+		return expiryTime;
+	}
+
+	public void setExpiryTime(String expiryTime) {
+		this.expiryTime = expiryTime == null ? null : expiryTime.trim();
+	}
+
+	public Integer getCreateUserId() {
+		return createUserId;
+	}
+
+	public void setCreateUserId(Integer createUserId) {
+		this.createUserId = createUserId;
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime == null ? null : createTime.trim();
+	}
+
+	public Integer getUpdateUserId() {
+		return updateUserId;
+	}
+
+	public void setUpdateUserId(Integer updateUserId) {
+		this.updateUserId = updateUserId;
+	}
+
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime == null ? null : updateTime.trim();
+	}
+}

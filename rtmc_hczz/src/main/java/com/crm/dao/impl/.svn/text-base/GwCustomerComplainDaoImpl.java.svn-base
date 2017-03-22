@@ -1,0 +1,88 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwCustomerComplainDao;
+import com.crm.dao.GwDepartmentDao;
+import com.crm.pojo.GwCustomerComplainModel;
+import com.crm.pojo.GwDepartmentModel;
+
+@Repository("gwCustomerComplainDaoManage")
+public class GwCustomerComplainDaoImpl implements GwCustomerComplainDao{
+
+	@Resource
+	private BaseDao dao;
+	
+	@Override
+	public int insert(GwCustomerComplainModel e) {
+		return dao.insert("gw.customer.complain.insert",e);
+	}
+
+	@Override
+	public int delete(GwCustomerComplainModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwCustomerComplainModel e) {
+		return dao.update("gw.customer.complain.update",e);
+	}
+
+	@Override
+	public GwCustomerComplainModel selectOne(GwCustomerComplainModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwCustomerComplainModel> selectList(GwCustomerComplainModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		return dao.delete("gw.customer.complain.deleteById", id);
+	}
+
+	@Override
+	public GwCustomerComplainModel selectById(int id) {
+		return (GwCustomerComplainModel) dao.selectOne("gw.customer.complain.selectByPrimaryKey", id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		return dao.selectPageList("gw.customer.complain.selectPageList", "gw.customer.complain.selectCount", params);
+	}
+
+	@Override
+	public List<GwCustomerComplainModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.customer.complain.getAllList");
+	}
+
+	@Override
+	public GwCustomerComplainModel getCustomerComplainByCode(String code) {
+		return (GwCustomerComplainModel) dao.selectOne("gw.customer.complain.selectByCode", code);
+	}
+
+	@Override
+	public GwCustomerComplainModel getCusomerComplainByLastOne(String time) {
+		return (GwCustomerComplainModel) dao.selectOne("gw.customer.complain.selectByLastOne",time);
+	}
+	
+}

@@ -1,0 +1,118 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwStoreGoodsDao;
+import com.crm.pojo.GwStoreGoodsModel;
+
+/**
+ * GwStoreGoodsDaoImpl:物品与仓库管理表数据访问层实现
+ *
+ * @author chengpengfei
+ * @date  2016年6月27日
+ * @version  jdk1.8
+ *
+ */
+@Repository("gwStoreGoodsDaoManage")
+public class GwStoreGoodsDaoImpl implements GwStoreGoodsDao{
+
+	@Resource
+	private BaseDao dao;
+	@Override
+	public int insert(GwStoreGoodsModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.storeGoods.insertOne",e);
+	}
+
+	@Override
+	public int delete(GwStoreGoodsModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwStoreGoodsModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.storeGoods.update",e);
+	}
+
+	@Override
+	public GwStoreGoodsModel selectOne(GwStoreGoodsModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwStoreGoodsModel> selectList(GwStoreGoodsModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.storeGoods.deleteById",id);
+	}
+
+	@Override
+	public GwStoreGoodsModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwStoreGoodsModel) dao.selectOne("gw.storeGoods.selectById",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.storeGoods.selectByPageList", "gw.storeGoods.selectByPageCount", params);
+	}
+
+	@Override
+	public List<GwStoreGoodsModel> getAllList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int updateStoreGoodsNumber(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.storeGoods.updateNumber",params);
+	}
+
+	@Override
+	public GwStoreGoodsModel getStoreGoodsByGoodsCode(Map<String,Object> params) {
+		// TODO Auto-generated method stub
+		return (GwStoreGoodsModel) dao.selectOne("gw.storeGoods.selectByGoodsCode",params);
+	}
+
+	@Override
+	public List<GwStoreGoodsModel> getStoreGoodsListByGoodsCode(String goodsCode) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.storeGoods.selectListByGoodsCode",goodsCode);
+	}
+
+	@Override
+	public BasePageResultVo getStoreGoodsByCount(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.storeGoods.selectListByPageCount", "gw.storeGoods.selectListByCount", params);
+	}
+
+	@Override
+	public BasePageResultVo getStoreGoodsCombox(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.storeGoods.getStoreGoodsCombox", "gw.storeGoods.getStoreGoodsComboxCount", params);
+	}
+
+}

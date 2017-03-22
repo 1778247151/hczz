@@ -1,0 +1,200 @@
+package com.crm.pojo;
+
+import java.math.BigDecimal;
+
+public class GwSalesModel {
+    private Integer id;
+
+    private String gwTxserial;
+
+    private Integer gwSalesnumber;
+
+    private BigDecimal gwSalesamount;
+
+    private String gwTxdate;
+
+    private String gwTxtime;
+
+    private String gwTillid;
+
+    private String shopCode;
+
+    private String gwPaymenttendercode;
+
+    private String gwMembercode;
+
+    private Integer integralNumber;
+
+    private String createTime;
+    
+    private String shopName;
+    
+    private String mermberName;
+    
+    private String gwPaymenttendercode1;
+    private BigDecimal payMoney1;
+    private String gwPaymenttendercode2;
+    private BigDecimal payMoney2;
+    private String gwPaymenttendercode3;
+    private BigDecimal payMoney3;
+    
+    public String getGwPaymenttendercode1() {
+		return gwPaymenttendercode1;
+	}
+
+	public void setGwPaymenttendercode1(String gwPaymenttendercode1) {
+		this.gwPaymenttendercode1 = gwPaymenttendercode1;
+	}
+
+	public BigDecimal getPayMoney1() {
+		return payMoney1;
+	}
+
+	public void setPayMoney1(BigDecimal payMoney1) {
+		this.payMoney1 = payMoney1;
+	}
+
+	public String getGwPaymenttendercode2() {
+		return gwPaymenttendercode2;
+	}
+
+	public void setGwPaymenttendercode2(String gwPaymenttendercode2) {
+		this.gwPaymenttendercode2 = gwPaymenttendercode2;
+	}
+
+	public BigDecimal getPayMoney2() {
+		return payMoney2;
+	}
+
+	public void setPayMoney2(BigDecimal payMoney2) {
+		this.payMoney2 = payMoney2;
+	}
+
+	public String getGwPaymenttendercode3() {
+		return gwPaymenttendercode3;
+	}
+
+	public void setGwPaymenttendercode3(String gwPaymenttendercode3) {
+		this.gwPaymenttendercode3 = gwPaymenttendercode3;
+	}
+
+	public BigDecimal getPayMoney3() {
+		return payMoney3;
+	}
+
+	public void setPayMoney3(BigDecimal payMoney3) {
+		this.payMoney3 = payMoney3;
+	}
+
+	public String getShopName() {
+		return shopName;
+	}
+
+	public void setShopName(String shopName) {
+		this.shopName = shopName;
+	}
+
+	public String getMermberName() {
+		return mermberName;
+	}
+
+	public void setMermberName(String mermberName) {
+		this.mermberName = mermberName;
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getGwTxserial() {
+        return gwTxserial;
+    }
+
+    public void setGwTxserial(String gwTxserial) {
+        this.gwTxserial = gwTxserial == null ? null : gwTxserial.trim();
+    }
+
+    public Integer getGwSalesnumber() {
+        return gwSalesnumber;
+    }
+
+    public void setGwSalesnumber(Integer gwSalesnumber) {
+        this.gwSalesnumber = gwSalesnumber;
+    }
+
+    public BigDecimal getGwSalesamount() {
+        return gwSalesamount;
+    }
+
+    public void setGwSalesamount(BigDecimal gwSalesamount) {
+        this.gwSalesamount = gwSalesamount;
+    }
+
+    public String getGwTxdate() {
+        return gwTxdate;
+    }
+
+    public void setGwTxdate(String gwTxdate) {
+        this.gwTxdate = gwTxdate == null ? null : gwTxdate.trim();
+    }
+
+    public String getGwTxtime() {
+        return gwTxtime;
+    }
+
+    public void setGwTxtime(String gwTxtime) {
+        this.gwTxtime = gwTxtime == null ? null : gwTxtime.trim();
+    }
+
+    public String getGwTillid() {
+        return gwTillid;
+    }
+
+    public void setGwTillid(String gwTillid) {
+        this.gwTillid = gwTillid == null ? null : gwTillid.trim();
+    }
+
+    public String getShopCode() {
+        return shopCode;
+    }
+
+    public void setShopCode(String shopCode) {
+        this.shopCode = shopCode == null ? null : shopCode.trim();
+    }
+
+    public String getGwPaymenttendercode() {
+        return gwPaymenttendercode;
+    }
+
+    public void setGwPaymenttendercode(String gwPaymenttendercode) {
+        this.gwPaymenttendercode = gwPaymenttendercode == null ? null : gwPaymenttendercode.trim();
+    }
+
+    public String getGwMembercode() {
+        return gwMembercode;
+    }
+
+    public void setGwMembercode(String gwMembercode) {
+        this.gwMembercode = gwMembercode == null ? null : gwMembercode.trim();
+    }
+
+    public Integer getIntegralNumber() {
+        return integralNumber;
+    }
+
+    public void setIntegralNumber(Integer integralNumber) {
+        this.integralNumber = integralNumber;
+    }
+}

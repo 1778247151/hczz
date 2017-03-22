@@ -1,0 +1,676 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="Gw.merchantsinfo" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwmerchantsinfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="gw_mall_info_id" property="gwMallInfoId" jdbcType="INTEGER" />
+    <result column="gw_brand_tree_id" property="gwBrandTreeId" jdbcType="VARCHAR" />
+    <result column="bm" property="bm" jdbcType="VARCHAR" />
+    <result column="cn_name" property="cnName" jdbcType="VARCHAR" />
+    <result column="en_name" property="enName" jdbcType="VARCHAR" />
+    <result column="gw_property_attribute_id" property="gwPropertyAttributeId" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="z_type" property="zType" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="time" property="time" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="fax" property="fax" jdbcType="VARCHAR" />
+    <result column="mallName" property="mallName" jdbcType="VARCHAR" />
+    <result column="brandName" property="brandName" jdbcType="VARCHAR" />
+    <result column="proName" property="proName" jdbcType="VARCHAR" />
+    <result column="forName" property="forName" jdbcType="VARCHAR" />
+    <result column="confirm_user_id" property="confirmUserId" jdbcType="INTEGER" />
+    <result column="confirm_time" property="confirmTime" jdbcType="VARCHAR" />
+     <result column="unconfirm_user_id" property="unconfirmUserId" jdbcType="INTEGER" />
+    <result column="unconfirm_time" property="unconfirmTime" jdbcType="VARCHAR" />
+    <result column="gw_formats_tree_id" property="gwFormatsTreeId" jdbcType="INTEGER" />
+    <result column="company" property="company" jdbcType="VARCHAR" />
+    <result column="person_in_charge" property="personInCharge" jdbcType="VARCHAR" />
+    <result column="person_in_charge_two" property="personInChargeTwo" jdbcType="VARCHAR" />
+    <result column="person_in_charge_three" property="personInChargeThree" jdbcType="VARCHAR" />
+    <result column="phone_two" property="phoneTwo" jdbcType="VARCHAR" />
+    <result column="phone_three" property="phoneThree" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, gw_mall_info_id, gw_brand_tree_id, bm, cn_name, en_name, company,person_in_charge,gw_property_attribute_id, 
+    type, z_type, state, time, gw_formats_tree_id,address,phone,fax,unconfirm_user_id,confirm_user_id,confirm_time,unconfirm_time,
+    person_in_charge_two,person_in_charge_three,phone_two,phone_three
+  </sql>
+  
+ 
+  <!-- 删除所有数据 -->
+  <delete id="Gw.merchantsinfo.deleteAll" parameterType="java.lang.Integer" >
+    delete from gw_merchants_info
+  </delete>
+  <!-- 批量插入 -->
+	<insert id="Gw.merchantsinfo.batchInsert" parameterType="com.crm.pojo.GwmerchantsinfoModel">
+		insert into gw_merchants_info (
+		id,
+		gw_mall_info_id,
+		gw_brand_tree_id,
+		bm,
+		cn_name,
+		en_name,
+		gw_property_attribute_id,
+		type,
+		z_type,
+		company,
+		person_in_charge,
+		person_in_charge_two,
+		person_in_charge_three,
+		state,
+		time,
+		gw_formats_tree_id,
+		phone,
+		phone_two,
+		phone_three,
+		fax,
+		address,
+		confirm_user_id,
+		confirm_time,
+		unconfirm_user_id,
+		unconfirm_time
+		)
+		values
+		<foreach collection="list" item="merchantsInfoList" index="index"
+			separator=",">
+			(
+			#{merchantsInfoList.id,jdbcType=INTEGER},
+			#{merchantsInfoList.gwMallInfoId,jdbcType=INTEGER},
+			#{merchantsInfoList.gwBrandTreeId,jdbcType=VARCHAR},
+			#{merchantsInfoList.bm,jdbcType=VARCHAR},
+			#{merchantsInfoList.cnName,jdbcType=VARCHAR},
+			#{merchantsInfoList.enName,jdbcType=INTEGER},
+			#{merchantsInfoList.gwPropertyAttributeId,jdbcType=VARCHAR},
+			#{merchantsInfoList.type,jdbcType=VARCHAR},
+			#{merchantsInfoList.zType,jdbcType=VARCHAR},
+			#{merchantsInfoList.company,jdbcType=DECIMAL},
+			#{merchantsInfoList.personInCharge,jdbcType=DECIMAL},
+			#{merchantsInfoList.personInChargeTwo,jdbcType=DECIMAL},
+			#{merchantsInfoList.personInChargeThree,jdbcType=DECIMAL},
+			#{merchantsInfoList.state,jdbcType=INTEGER},
+			#{merchantsInfoList.time,jdbcType=VARCHAR},
+			#{merchantsInfoList.gwFormatsTreeId,jdbcType=INTEGER},
+			#{merchantsInfoList.phone,jdbcType=INTEGER},
+			#{merchantsInfoList.phoneTwo,jdbcType=INTEGER},
+			#{merchantsInfoList.phoneThree,jdbcType=VARCHAR},
+			#{merchantsInfoList.fax,jdbcType=INTEGER},
+			#{merchantsInfoList.address,jdbcType=VARCHAR},
+			#{merchantsInfoList.confirmUserId,jdbcType=VARCHAR},
+			#{merchantsInfoList.confirmTime,jdbcType=INTEGER},
+			#{merchantsInfoList.unconfirmUserId,jdbcType=VARCHAR},
+			#{merchantsInfoList.unconfirmTime,jdbcType=INTEGER}
+			)
+		</foreach>
+	</insert>
+	<!-- 批量更新数据 -->
+	<update id="Gw.merchantsinfo.batchUpdate" parameterType="java.util.List">
+		<foreach collection="list" item="merchantsInfoList" index="index"
+			separator=";">
+			update gw_merchants_info
+			<set>
+				id=#{merchantsInfoList.id,jdbcType=INTEGER},
+				gw_mall_info_id=#{merchantsInfoList.gwMallInfoId,jdbcType=INTEGER},
+				gw_brand_tree_id=#{merchantsInfoList.gwBrandTreeId,jdbcType=VARCHAR},
+				bm=#{merchantsInfoList.bm,jdbcType=VARCHAR},
+				cn_name=#{merchantsInfoList.cnName,jdbcType=VARCHAR},
+				en_name=#{merchantsInfoList.enName,jdbcType=VARCHAR},
+				gw_property_attribute_id=#{merchantsInfoList.gwPropertyAttributeId,jdbcType=INTEGER},
+				type=#{merchantsInfoList.type,jdbcType=INTEGER},
+				z_type=#{merchantsInfoList.zType,jdbcType=INTEGER},
+				company=#{merchantsInfoList.company,jdbcType=VARCHAR},
+				person_in_charge=#{merchantsInfoList.personInCharge,jdbcType=VARCHAR},
+				person_in_charge_two=#{merchantsInfoList.personInChargeTwo,jdbcType=VARCHAR},
+				person_in_charge_three=#{merchantsInfoList.personInChargeThree,jdbcType=VARCHAR},
+				state=#{merchantsInfoList.state,jdbcType=INTEGER},
+				time=#{merchantsInfoList.time,jdbcType=VARCHAR},
+				gw_formats_tree_id=#{merchantsInfoList.gwFormatsTreeId,jdbcType=INTEGER},
+				phone=#{merchantsInfoList.phone,jdbcType=VARCHAR},
+				phone_two=#{merchantsInfoList.phoneTwo,jdbcType=VARCHAR},
+				phone_three=#{merchantsInfoList.phoneThree,jdbcType=VARCHAR},
+				fax=#{merchantsInfoList.fax,jdbcType=VARCHAR},
+				address=#{merchantsInfoList.address,jdbcType=VARCHAR},
+				confirm_user_id=#{merchantsInfoList.confirmUserId,jdbcType=INTEGER},
+				confirm_time=#{merchantsInfoList.confirmTime,jdbcType=VARCHAR},
+				unconfirm_user_id=#{merchantsInfoList.unconfirmUserId,jdbcType=INTEGER},
+				unconfirm_time=#{merchantsInfoList.unconfirmTime,jdbcType=VARCHAR}
+			</set>
+				where id = #{merchantsInfoList.id,jdbcType=INTEGER}
+		</foreach>
+	</update>
+
+	<!-- 批量删除 -->
+	<delete id="Gw.merchantsinfo.batchDelete" parameterType="java.util.List">
+		delete from gw_merchants_info where id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item.id}
+		</foreach>
+	</delete>
+  
+  <select id="Gw.merchantsinfo.selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_merchants_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="Gw.merchantsinfo.deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from gw_merchants_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="Gw.merchantsinfo.insert" parameterType="com.crm.pojo.GwmerchantsinfoModel" >
+    insert into gw_merchants_info (id, gw_mall_info_id, gw_brand_tree_id, 
+      bm, cn_name, en_name, 
+      gw_property_attribute_id, type, z_type,company,person_in_charge, 
+      state, time, gw_formats_tree_id,address,phone,fax,unconfirm_user_id,confirm_user_id,unconfirm_time,confirm_time,
+      person_in_charge_two,person_in_charge_three,phone_two,phone_three
+      )
+    values (#{id,jdbcType=INTEGER}, #{gwMallInfoId,jdbcType=INTEGER}, #{gwBrandTreeId,jdbcType=VARCHAR}, 
+      #{bm,jdbcType=VARCHAR}, #{cnName,jdbcType=VARCHAR}, #{enName,jdbcType=VARCHAR}, 
+      #{gwPropertyAttributeId,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{zType,jdbcType=INTEGER}, #{company,jdbcType=VARCHAR},#{personInCharge,jdbcType=VARCHAR},
+      #{state,jdbcType=INTEGER}, #{time,jdbcType=VARCHAR}, #{gwFormatsTreeId,jdbcType=INTEGER},#{address,jdbcType=VARCHAR},
+      #{phone,jdbcType=VARCHAR}, #{fax,jdbcType=VARCHAR}, #{unconfirmUserId,jdbcType=INTEGER}, #{confirmUserId,jdbcType=INTEGER}, #{unconfirmTime,jdbcType=VARCHAR}, #{confirmTime,jdbcType=VARCHAR},
+      #{personInChargeTwo,jdbcType=VARCHAR},#{personInChargeThree,jdbcType=VARCHAR},#{phoneTwo,jdbcType=VARCHAR},#{phoneThree,jdbcType=VARCHAR}
+     
+      )
+  </insert>
+  <insert id="Gw.merchantsinfo.insertSelective" parameterType="com.crm.pojo.GwmerchantsinfoModel" >
+    insert into gw_merchants_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="gwMallInfoId != null" >
+        gw_mall_info_id,
+      </if>
+      <if test="gwBrandTreeId != null" >
+        gw_brand_tree_id,
+      </if>
+      <if test="bm != null" >
+        bm,
+      </if>
+      <if test="cnName != null" >
+        cn_name,
+      </if>
+      <if test="enName != null" >
+        en_name,
+      </if>
+      <if test="gwPropertyAttributeId != null" >
+        gw_property_attribute_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="zType != null" >
+        z_type,
+      </if>
+      <if test="company != null" >
+        company,
+      </if>
+      <if test="personInCharge != null" >
+        person_in_charge,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+      <if test="gwFormatsTreeId != null" >
+        gw_formats_tree_id,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="fax != null" >
+        fax,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="confirmUserId != null" >
+        confirm_user_id,
+      </if>
+      <if test="confirmTime != null" >
+        confirm_time,
+      </if>
+      <if test="unconfirmUserId != null" >
+        unconfirm_user_id,
+      </if>
+      <if test="unconfirmTime != null" >
+        unconfirm_time,
+      </if>
+      <if test="personInChargeTwo != null" >
+        person_in_charge_two,
+      </if>
+      <if test="personInChargeThree != null" >
+        person_in_charge_three,
+      </if>
+      <if test="phoneTwo != null" >
+        phone_two,
+      </if>
+      <if test="phoneThree != null" >
+        phone_three,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="gwMallInfoId != null" >
+        #{gwMallInfoId,jdbcType=INTEGER},
+      </if>
+      <if test="gwBrandTreeId != null" >
+        #{gwBrandTreeId,jdbcType=VARCHAR},
+      </if>
+      <if test="bm != null" >
+        #{bm,jdbcType=VARCHAR},
+      </if>
+      <if test="cnName != null" >
+        #{cnName,jdbcType=VARCHAR},
+      </if>
+      <if test="enName != null" >
+        #{enName,jdbcType=VARCHAR},
+      </if>
+      <if test="gwPropertyAttributeId != null" >
+        #{gwPropertyAttributeId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="zType != null" >
+        #{zType,jdbcType=INTEGER},
+      </if>
+       <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="personInCharge != null" >
+        #{personInCharge,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=VARCHAR},
+      </if>
+      <if test="gwFormatsTreeId != null" >
+        #{gwFormatsTreeId,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=INTEGER},
+      </if>
+      <if test="fax != null" >
+        #{fax,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=INTEGER},
+      </if>
+      <if test="confirmUserId != null" >
+        #{confirmUserId,jdbcType=INTEGER},
+      </if>
+      <if test="confirmTime != null" >
+        #{confirmTime,jdbcType=VARCHAR},
+      </if>
+      <if test="unconfirmUserId != null" >
+        #{unconfirmUserId,jdbcType=INTEGER},
+      </if>
+      <if test="unconfirmTime != null" >
+        #{unconfirmTime,jdbcType=VARCHAR},
+      </if>
+      <if test="personInChargeTwo != null" >
+        #{personInChargeTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="personInChargeThree != null" >
+        #{personInChargeThree,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneTwo != null" >
+       #{phoneTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneThree != null" >
+       #{phoneThree,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="Gw.merchantsinfo.updateByPrimaryKeySelective" parameterType="com.crm.pojo.GwmerchantsinfoModel" >
+    update gw_merchants_info
+    <set >
+      <if test="gwMallInfoId != null" >
+        gw_mall_info_id = #{gwMallInfoId,jdbcType=INTEGER},
+      </if>
+      <if test="gwBrandTreeId != null" >
+        gw_brand_tree_id = #{gwBrandTreeId,jdbcType=VARCHAR},
+      </if>
+      <if test="bm != null" >
+        bm = #{bm,jdbcType=VARCHAR},
+      </if>
+      <if test="cnName != null" >
+        cn_name = #{cnName,jdbcType=VARCHAR},
+      </if>
+      <if test="enName != null" >
+        en_name = #{enName,jdbcType=VARCHAR},
+      </if>
+      <if test="gwPropertyAttributeId != null" >
+        gw_property_attribute_id = #{gwPropertyAttributeId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="zType != null" >
+        z_type = #{zType,jdbcType=INTEGER},
+      </if>
+      <if test="company != null" >
+        company = #{company,jdbcType=INTEGER},
+      </if>
+      <if test="personInCharge != null" >
+        person_in_charge = #{personInCharge,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        time = #{time,jdbcType=VARCHAR},
+      </if>
+      <if test="gwFormatsTreeId != null" >
+        gw_formats_tree_id = #{gwFormatsTreeId,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=INTEGER},
+      </if>
+      <if test="fax != null" >
+        fax = #{fax,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=INTEGER},
+      </if>
+      <if test="confirmUserId != null" >
+        confirm_user_id = #{confirmUserId,jdbcType=INTEGER},
+      </if>
+      <if test="confirmTime != null" >
+        confirm_time = #{confirmTime,jdbcType=VARCHAR},
+      </if>
+      <if test="unconfirmUserId != null" >
+        unconfirm_user_id = #{unconfirmUserId,jdbcType=INTEGER},
+      </if>
+      <if test="unconfirmTime != null" >
+        unconfirm_time = #{unconfirmTime,jdbcType=INTEGER},
+      </if>
+      <if test="personInChargeTwo != null" >
+       person_in_charge_two =  #{personInChargeTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="personInChargeThree != null" >
+       person_in_charge_three =  #{personInChargeThree,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneTwo != null" >
+       phone_two = #{phoneTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneThree != null" >
+       phone_three = #{phoneThree,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据条件，获取分页数据list集合 -->
+  <select id="Gw.merchantsinfo.selectAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	SELECT mer.cn_name, mer.bm, mer.en_name, mer.gw_brand_tree_id, mer.gw_formats_tree_id, mer.gw_mall_info_id,
+	mer.gw_property_attribute_id,
+	mer.id,
+	mer.state,
+	mer.time,
+	mer.type,
+	mer.z_type,
+	company,
+	person_in_charge,
+	mer.address,
+	mer.phone,
+	mer.fax,
+	mer.person_in_charge_two,
+	mer.person_in_charge_three,
+	mer.phone_two,
+	mer.phone_three,
+   (select m.name from gw_mall_info m where m.id=mer.gw_mall_info_id) as mallName,
+   (select b.name from gw_brand_tree b where b.id=mer.gw_brand_tree_id) as brandName,
+   (select p.name from gw_property_attribute p where p.id=mer.gw_property_attribute_id) as proName,
+   (select f.name from gw_formats_tree f where f.id=mer.gw_formats_tree_id) as forName,
+   (select u.`name` from gw_admin_users u where u.id = mer.confirm_user_id)as confirmUserName,
+	(select u.`name` from gw_admin_users u where u.id = mer.unconfirm_user_id)as unconfirmUserName,
+	mer.confirm_time,
+	mer.unconfirm_time
+	from
+	gw_merchants_info mer
+	<where>
+		<if test="formatsId!=null and ''!=formatsId">
+			and mer.gw_formats_tree_id = #{formatsId}
+		</if>
+		<if test="merchantsInfoName!=null and ''!=merchantsInfoName">
+			and mer.cn_name LIKE CONCAT(CONCAT('%', #{merchantsInfoName,jdbcType=VARCHAR}), '%')
+		</if>
+		<if test="merchantsInfoCode!=null and ''!=merchantsInfoCode">
+			and mer.bm LIKE CONCAT(CONCAT('%', #{merchantsInfoCode,jdbcType=VARCHAR}), '%')
+		</if>
+		<if test="state!=null and ''!=state">
+			and mer.state = #{state,jdbcType=INTEGER}
+		</if>
+		<if test="state1!=null and ''!=state1 and state2!=null and ''!=state3">
+			and mer.state in(#{state1,jdbcType=INTEGER},#{state2,jdbcType=INTEGER})
+		</if>
+		<if test="state3!=null and ''!=state3">
+			and mer.state != #{state3,jdbcType=INTEGER}
+		</if>
+		and mer.state!=0
+	</where>
+	order by mer.time DESC
+	
+	limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+  <select id="Gw.merchantsinfo.selectCount" resultType="java.lang.Integer">
+   SELECT
+	count(mer.id)
+	from
+	gw_merchants_info mer
+	<where>
+		<if test="formatsId!=null and ''!=formatsId">
+			and mer.gw_formats_tree_id = #{formatsId}
+		</if>
+		<if test="merchantsInfoName!=null and ''!=merchantsInfoName">
+			and mer.cn_name LIKE CONCAT(CONCAT('%', #{merchantsInfoName,jdbcType=VARCHAR}), '%')
+		</if>
+		<if test="merchantsInfoCode!=null and ''!=merchantsInfoCode">
+			and mer.bm LIKE CONCAT(CONCAT('%', #{merchantsInfoCode,jdbcType=VARCHAR}), '%')
+		</if>
+		<if test="state!=null and ''!=state">
+			and mer.state = #{state,jdbcType=INTEGER}
+		</if>
+		<if test="state1!=null and ''!=state1 and state2!=null and ''!=state3">
+			and mer.state in(#{state1,jdbcType=INTEGER},#{state2,jdbcType=INTEGER})
+		</if>
+		<if test="state3!=null and ''!=state3">
+			and mer.state != #{state3,jdbcType=INTEGER}
+		</if>
+		and mer.state!=0
+	</where>
+  </select>
+  
+  <!-- 获取所有list集合 -->
+  <select id="Gw.merchantsinfo.selectLists" resultMap="BaseResultMap">
+   	select 
+    <include refid="Base_Column_List" />
+    from gw_merchants_info
+  </select>
+  <!-- 获取所有list集合 -->
+  <select id="Gw.merchantsinfo.selectListByMallid" resultMap="BaseResultMap" parameterType="java.util.Map">
+    SELECT
+	mer.cn_name,
+	mer.bm,
+	mer.en_name,
+	mer.gw_brand_tree_id,
+	mer.gw_formats_tree_id,
+	mer.person_in_charge_two,
+	mer.person_in_charge_three,
+	mer.phone_two,
+	mer.phone_three,
+	(select a.`name` from gw_mall_info a where a.id = mer.gw_mall_info_id)as mallName,
+	mer.gw_property_attribute_id,
+	mer.id,
+	mer.state,
+	mer.time,
+	mer.type,
+	mer.z_type,
+	company,
+	person_in_charge,
+	mer.address,
+	mer.phone,
+	mer.fax,
+	(select u.`name` from gw_admin_users u where u.id = mer.confirm_user_id)as confirmUserName,
+	(select u.`name` from gw_admin_users u where u.id = mer.unconfirm_user_id)as unconfirmUserName,
+	mer.confirm_time,
+	mer.unconfirm_time
+FROM
+	gw_merchants_info mer
+	<where>
+	<!-- 商户名称 -->
+   	<if test="cnName != null and '' != cnName">  
+         and mer.cn_name LIKE CONCAT(CONCAT('%', #{cnName,jdbcType=VARCHAR}), '%')
+     </if>
+     <if test="state != null and '' != state">  
+          and mer.state = #{state,jdbcType=INTEGER}    
+    </if>
+     	and mer.state !=0
+     </where>
+     
+     order by mer.time DESC
+     limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+  
+  <select id="Gw.merchantsinfo.selectListByMallidCount" resultType="java.lang.Integer">
+    SELECT
+	count(mer.id)
+FROM
+	gw_merchants_info mer
+	<where>
+	<!-- 商户名称 -->
+   	<if test="cnName != null and '' != cnName">  
+         and mer.cn_name LIKE CONCAT(CONCAT('%', #{cnName,jdbcType=VARCHAR}), '%')
+     </if>
+     <if test="state != null and '' != state">  
+          and mer.state = #{state,jdbcType=INTEGER}    
+    </if>
+     	and mer.state!=0
+     </where>
+  </select>
+  
+  <!-- 根据编号获取商户信息 -->
+  <select id="Gw.merchantsinfo.selectByCode" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_merchants_info
+    where bm = #{code,jdbcType=VARCHAR}
+    and state !=0
+  </select>
+  
+  
+  <select id="Gw.merchantsinfo.selectAllBySign" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	SELECT mer.cn_name, mer.bm, mer.en_name, mer.gw_brand_tree_id, mer.gw_formats_tree_id, mer.gw_mall_info_id,
+	mer.gw_property_attribute_id,
+	mer.id,
+	mer.state,
+	mer.time,
+	mer.type,
+	mer.z_type,
+	mer.person_in_charge_two,
+	mer.person_in_charge_three,
+	mer.phone_two,
+	mer.phone_three,
+	company,
+	person_in_charge,
+	mer.address,
+	mer.phone,
+	mer.fax,
+   (select m.name from gw_mall_info m where m.id=mer.gw_mall_info_id) as mallName,
+   (select b.name from gw_brand_tree b where b.id=mer.gw_brand_tree_id) as brandName,
+   (select p.name from gw_property_attribute p where p.id=mer.gw_property_attribute_id) as proName,
+   (select f.name from gw_formats_tree f where f.id=mer.gw_formats_tree_id) as forName,
+   (select u.`name` from gw_admin_users u where u.id = mer.confirm_user_id)as confirmUserName,
+	(select u.`name` from gw_admin_users u where u.id = mer.unconfirm_user_id)as unconfirmUserName,
+	mer.confirm_time,
+	mer.unconfirm_time
+	from
+	gw_merchants_info mer where 1=1
+		<if test="formatsId!=null and ''!=formatsId">
+			and mer.gw_formats_tree_id = #{formatsId}
+		</if>
+		<if test="merchantsInfoName!=null and ''!=merchantsInfoName">
+			and mer.cn_name LIKE CONCAT(CONCAT('%', #{merchantsInfoName,jdbcType=VARCHAR}), '%')
+		</if>
+		<if test="merchantsInfoCode!=null and ''!=merchantsInfoCode">
+			and mer.bm LIKE CONCAT(CONCAT('%', #{merchantsInfoCode,jdbcType=VARCHAR}), '%')
+		</if>
+		GROUP BY mer.bm
+	order by mer.time DESC
+	
+	limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+  
+  <select id="Gw.merchantsinfo.selectCountBySign" resultType="java.lang.Integer">
+   SELECT
+	count(distinct mer.bm)
+	from
+	gw_merchants_info mer   where 1=1
+		<if test="formatsId!=null and ''!=formatsId">
+			and mer.gw_formats_tree_id = #{formatsId}
+		</if>
+		<if test="merchantsInfoName!=null and ''!=merchantsInfoName">
+			and mer.cn_name LIKE CONCAT(CONCAT('%', #{merchantsInfoName,jdbcType=VARCHAR}), '%')
+		</if>
+		<if test="merchantsInfoCode!=null and ''!=merchantsInfoCode">
+			and mer.bm LIKE CONCAT(CONCAT('%', #{merchantsInfoCode,jdbcType=VARCHAR}), '%')
+		</if>
+  </select>
+  
+   <select id="Gw.merchantsinfo.selectSignByCode" resultMap="BaseResultMap" >
+   SELECT
+	*
+	from
+	gw_merchants_info mer where 1=1
+and mer.bm = #{code,jdbcType=VARCHAR}
+GROUP BY mer.bm
+  </select>
+
+  
+
+  <!-- 根据条件，获取分页数据list集合 -->
+  <select id="Gw.merchantsinfo.getMerchanInfoAllById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+  	SELECT mer.cn_name, mer.bm, mer.en_name, mer.gw_brand_tree_id, mer.gw_formats_tree_id, mer.gw_mall_info_id,
+	mer.gw_property_attribute_id,
+	mer.id,
+	mer.state,
+	mer.time,
+	mer.type,
+	mer.z_type,
+	company,
+	person_in_charge,
+	mer.address,
+	mer.phone,
+	mer.person_in_charge_two,
+	mer.person_in_charge_three,
+	mer.phone_two,
+	mer.phone_three,
+	mer.fax,
+   (select m.name from gw_mall_info m where m.id=mer.gw_mall_info_id) as mallName,
+   (select b.name from gw_brand_tree b where b.id=mer.gw_brand_tree_id) as brandName,
+   (select p.name from gw_property_attribute p where p.id=mer.gw_property_attribute_id) as proName,
+   (select f.name from gw_formats_tree f where f.id=mer.gw_formats_tree_id) as forName,
+   (select u.`name` from gw_admin_users u where u.id = mer.confirm_user_id)as confirmUserName,
+	(select u.`name` from gw_admin_users u where u.id = mer.unconfirm_user_id)as unconfirmUserName,
+	mer.confirm_time,
+	mer.unconfirm_time
+	from
+	gw_merchants_info mer
+	where mer.state!=0
+	<if test="_parameter != null and '' != _parameter">  
+         and mer.id=#{_parameter,jdbcType=VARCHAR}
+    </if>
+  </select>
+</mapper>
+

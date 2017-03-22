@@ -1,0 +1,313 @@
+package com.crm.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.AdminUser;
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.ResponseCode;
+import com.crm.common.SecurityUtil;
+import com.crm.common.Status;
+import com.crm.interceptor.BussAnnotation;
+import com.crm.interceptor.exception.BaseException;
+import com.crm.pojo.GwGoodsInStoreModel;
+import com.crm.pojo.GwLeaseMaintenanceModel;
+import com.crm.pojo.GwLockerModel;
+import com.crm.pojo.GwLockerRentalModel;
+import com.crm.service.GwLockerRentalService;
+import com.crm.service.GwLockerService;
+import com.crm.util.BaseCodeUtil;
+import com.crm.util.DateUtil;
+import com.crm.util.ExcelUtil;
+
+/**
+ * 
+ * GwLockerRentalController:储物柜控制层
+ *
+ * @author hanzhiqiang
+ * @date 2016年11月9日
+ * @version jdk.8
+ *
+ */
+@Controller
+@RequestMapping("/lockerRental")
+public class GwLockerRentalController  extends BaseException  {
+	// 日志
+	private Logger logger = LoggerFactory.getLogger(GwLockerRentalController.class);
+	/**
+	 * 管理业务逻辑
+	 */
+	@Resource(name = "gwLockerRentalServiceManage")
+	private GwLockerRentalService gwLockerRentalServiceImpl;
+	
+	@Resource(name = "gwLockerServiceManage")
+	private GwLockerService gwLockerServiceImpl;
+	
+	/**
+	 * 
+	 * 生成租借单号
+	 *
+	 * @date 2016年11月10日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getLockerRentalZjCode.do")
+	@ResponseBody
+	public String getLockerRentalZjCode() {
+		//获取编号前缀
+		String frontCode = BaseCodeUtil.getBaseCode("ZJ");
+		//获取当天时间
+		String time = DateUtil.getCurrentDate("");
+		String zjcode = "";
+		//根据当天时间查询最后一条记录
+		GwLockerRentalModel gwLockerRentalModel = gwLockerRentalServiceImpl.getLockerRentalByLastOne(time);
+		if(gwLockerRentalModel==null){
+			zjcode = frontCode+"0001";
+		}else{
+			String subString = gwLockerRentalModel.getZjcode().substring(2);
+			long num = Long.parseLong(subString)+1;
+			zjcode = "ZJ"+String.valueOf(num);
+		}
+		return zjcode;
+	}	
+	
+		/**
+		 *
+		 * getLockerRentalList:获取信息列表（分页）
+		 *
+		 * @author   hanzhiqiang
+		 * @date     2016年11月10日
+		 *
+		 * @param currentPage  
+		 * 					当前页
+		 * @param pageSize  
+		 * 				每页记录数
+		 * @return
+		 */
+		@RequestMapping("/getLockerRentalList.do")
+		@ResponseBody
+		public LigerPageDataVo getLockerRentalList(String lockerCode,String status,int currentPage,
+				int pageSize,String vipCode,String cardCode, HttpServletRequest request) {
+			// 条件参数
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("currentPage", currentPage);
+			params.put("pageSize", pageSize);
+			params.put("lockerCode", lockerCode);
+			params.put("vipCode", vipCode);
+			params.put("cardCode", cardCode);
+			params.put("status", status);
+			BasePageResultVo baseResultVo = gwLockerRentalServiceImpl.selectPageList(params);
+			// liger ui 分页格式数据
+			LigerPageDataVo data = new LigerPageDataVo();
+			data.setRows(baseResultVo.getRows());
+			data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+			return data;
+		}
+		
+		/**
+		 *
+		 * addLockerRental:添加
+		 *
+		 * @author   hanzhiqiang
+		 * @date     2016年11月8日
+		 *
+		 * @param currentPage  
+		 * 					当前页
+		 * @param pageSize  
+		 * 				每页记录数
+		 * @return
+		 */
+		@RequestMapping("/addLockerRental.do")
+		@ResponseBody
+		public BaseResultVo addLockerRental(String lockerCode,GwLockerRentalModel gwLockerRentalModel,HttpServletRequest request) {
+			
+			BaseResultVo baseResultVo = new BaseResultVo();
+			Status status = new Status();
+			status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+			status.setMsg("操作成功");// 提示信息
+			status.setDebugMsg("");// bug信息
+			status.setUrl("");// url
+			baseResultVo.setStatus(status);
+			//获取创建人信息
+			AdminUser adminUser=SecurityUtil.getAdminUser(request);
+			String username = adminUser.getUsername();
+
+			//创建人
+			gwLockerRentalModel.setCreateUserId(adminUser.getUserId());
+			//创建时间
+			gwLockerRentalModel.setCreateTime(DateUtil.getCurrentDatetime("-"));
+			//状态
+			gwLockerRentalModel.setStatus(1);
+			//租借时间
+			gwLockerRentalModel.setRentalTime(DateUtil.getCurrentDatetime("-"));
+			//修改储物柜状态
+			gwLockerServiceImpl.updateByCode(lockerCode);
+			//插入一条记录
+			gwLockerRentalServiceImpl.insert(gwLockerRentalModel);
+			logger.info(username+"新增了一条Id为"+gwLockerRentalModel.getId()+"的记录");
+			return baseResultVo;
+		}
+		/**
+		 * 
+		 * getLockerRentalById:根据id，获取信息
+		 *
+		 * @author   hanzhiqiang
+		 * @date     2016年11月9日
+		 * @param id
+		 * @param request
+		 * @return
+		 */
+		@RequestMapping("/getLockerRentalById.do")
+		@ResponseBody
+		public BaseResultVo getLockerRentalById(int id, HttpServletRequest request) {
+			//获取信息
+			GwLockerRentalModel LockerRental=gwLockerRentalServiceImpl.selectById(id);
+			if(LockerRental==null){
+				return BaseResultVo.responseFail("获取信息失败");
+			}
+			BaseResultVo baseResultVo=BaseResultVo.responseSuccess("获取信息成功");
+			baseResultVo.setData(LockerRental);
+			return baseResultVo;
+		}
+		/**
+		 * 
+		 * deleteLockerRentalById:根据id，删除信息
+		 *
+		 * @author   hanzhiqiang
+		 * @date     2016年11月9日
+		 *
+		 * @param id
+		 * @param request
+		 * @return
+		 */
+		@RequestMapping("/deleteLockerRentalById.do")
+		@ResponseBody
+		public BaseResultVo deleteLockerRentalById(String date,int id, HttpServletRequest request) {
+			
+			BaseResultVo baseResultVo = new BaseResultVo();
+			Status status = new Status();
+			status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+			status.setMsg("操作成功");// 提示信息
+			status.setDebugMsg("");// bug信息
+			status.setUrl("");// url
+			String username = SecurityUtil.getAdminUser(request).getUsername();
+			if (id == 0 || date!=null) {
+				status.setCode(ResponseCode.OPR_FAIL);
+				status.setMsg("数据异常");// 提示信息
+				baseResultVo.setStatus(status);
+				return baseResultVo;
+			}
+			int result=	gwLockerRentalServiceImpl.deleteLockerRentalById(id);
+			if(result<0) System.out.print("删除失败");
+			logger.info(username+"删除了Id为"+id+"的信息");
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+		
+		/**
+		 * 
+		 * updateLockerRental:更新信息
+		 *
+		 * @author   hanzhiqiang
+		 * @date     2016年11月9日
+		 *
+		 * @return
+		 */
+		@RequestMapping("/updateLockerRental.do")
+		@ResponseBody
+		public BaseResultVo updateLockerRental(GwLockerRentalModel gwLockerRentalModel,HttpServletRequest request) {
+			BaseResultVo baseResultVo = new BaseResultVo();
+			Status status = new Status();
+			status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+			status.setMsg("操作成功");// 提示信息
+			status.setDebugMsg("");// bug信息
+			status.setUrl("");// url
+			if (gwLockerRentalModel.getId() == 0) {
+				status.setCode(ResponseCode.OPR_FAIL);
+				status.setMsg("数据异常");// 提示信息
+				baseResultVo.setStatus(status);
+				return baseResultVo;
+			}
+			
+			//得到修改人信息
+			AdminUser adminUser=SecurityUtil.getAdminUser(request);
+			String username = adminUser.getUsername();
+
+			//修改人
+			gwLockerRentalModel.setUpdateUserId(adminUser.getUserId());
+			//更新时间
+			gwLockerRentalModel.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+			//更新信息
+			gwLockerRentalServiceImpl.update(gwLockerRentalModel);
+			logger.info(username+"更新了Id为"+gwLockerRentalModel.getId()+"的信息");
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+		
+		/**
+		 * 归还保存
+		 * @param returnLockerRental
+		 * @return
+		 */
+		@RequestMapping("/returnLockerRental.do")
+		@ResponseBody
+		@BussAnnotation(moduleName="租借维护",option="归还保存")
+		public BaseResultVo returnLockerRental(String lockerCode,GwLockerRentalModel gwLockerRentalModel){
+			
+			if(gwLockerRentalModel==null){
+				return BaseResultVo.responseFail("实体类为空");
+			}
+			gwLockerRentalModel.setStatus(0);
+			int number = gwLockerRentalServiceImpl.update(gwLockerRentalModel);
+			if(number<0){
+				return BaseResultVo.responseFail("保存失败");
+			}
+			//修改储物柜状态
+			gwLockerServiceImpl.updateReturnByCode(lockerCode);
+			return BaseResultVo.responseSuccess("保存成功");
+		}
+		
+		/**
+		 * 
+		 * getExcelLockerRentalList:导出
+		 *
+		 * @author   hanzhiqiang
+		 * @date     2016年11月15日
+		 * @param id
+		 * @param request
+		 * @return
+		 */
+		@RequestMapping("/getExcelLockerRentalList.do")
+		@ResponseBody
+		public void getExcelLockerRentalList(String lockerCode,String vipCode,String cardCode,String status ,HttpServletRequest request,HttpServletResponse response) throws Exception{
+			
+				Map<String, Object> params = new HashMap<String, Object>();
+				params.put("lockerCode", lockerCode);
+				params.put("vipCode", vipCode);
+				params.put("cardCode", cardCode);
+				params.put("status", status);
+				String sheetName="储物柜租借统计";
+				List<GwLockerModel> locker = gwLockerRentalServiceImpl.getExportList(params);
+				
+				String[] headerAtrr={"租借单号","储物柜编号","会员vip号","卡面编号","开始时间","结束时间","金额","积分数","最长租借天数","创建人","创建时间","更新人","更新时间"};
+				String[] columnArr={"zjcode","lockerCode","vipCode","cardCode","startTime","endTime",
+						"money","integralNum","rentalDay","createUserName","createTime","updateUserName","updateTime"};
+				int[] colWidthArr={20,20,20,30,30,20,20,20,20,20,30,20,20};
+				boolean number= ExcelUtil.exportExcel(sheetName, locker, columnArr, headerAtrr, colWidthArr, request, response);
+		}
+}

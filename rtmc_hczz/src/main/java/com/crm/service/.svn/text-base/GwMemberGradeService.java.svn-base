@@ -1,0 +1,46 @@
+package com.crm.service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwMemberGradeDetailModel;
+import com.crm.pojo.GwMemberGradeModel;
+
+/**
+ * 
+ * GwMemberGradeService:会员等级业务逻辑层接口
+ *
+ * @author chengpengfei
+ * @date  2016年6月23日
+ * @version  jdk1.8
+ *
+ */
+public interface GwMemberGradeService extends Services<GwMemberGradeModel>{
+
+	/**
+	 * 根据当天时间模糊查询当天最后一条数据
+	 * @param time
+	 * @return
+	 */
+	public String getMemberGradeByLaseOne(String time);
+	/**
+	 * 
+	 * getMemberGradeByCode:
+	 * 通过会员等级编号查询等级积分信息
+	 * @author hemingjun
+	 * @date 2016年9月6日
+	 * @param code
+	 * @return
+	 */
+	public List<GwMemberGradeModel> getMemberGradeByGradeCode(String code);
+	/**
+	 * 通过条件得到会员等级积分信息
+	 * getMemberGradeIntegralByCondition:
+	 *
+	 * @author hemingjun
+	 * @date 2016年11月4日
+	 * @return
+	 */
+	public List<GwMemberGradeModel> getMemberGradeIntegralByCondition(Map<String,Object> params);
+}

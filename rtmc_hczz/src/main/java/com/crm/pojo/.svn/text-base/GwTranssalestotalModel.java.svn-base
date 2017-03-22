@@ -1,0 +1,404 @@
+package com.crm.pojo;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+
+import com.crm.enums.transsalestotalStateEnum;
+
+/**
+ * 
+ * GwTranssalestotalModel:商铺销售记录汇总实体类
+ *
+ * @author yumaochun
+ * @date 2016年4月7日
+ * @version jdk1.8
+ *
+ */
+public class GwTranssalestotalModel implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6897995864848307061L;
+
+	private Integer id;
+
+	private Integer gwMerchantsInfoId;
+
+	private Integer gwShopsLeaseId;
+
+	private String gwShopsLeaseCode;
+
+	private String gwContractAContractcode;
+
+	private String gwGoodsInfoCode;
+
+	private String gwTillid;
+
+	private String gwTxdate;
+
+	private String gwTxtime;
+
+	private String gwTxserial;
+
+
+	private Integer gwSalesnumber;
+
+	private BigDecimal gwSalesamount;
+	private BigDecimal gwTaxSaleamount;
+
+	private Integer gwState;
+
+	private String gwMemberNumber;
+	/**
+	 * 货品大类名称
+	 */
+	private String goodsName;
+	/**
+	 * 货品小类名称
+	 */
+	private String goodName;
+	/**
+	 * 商户名称
+	 */
+	private String merchansInfoName;
+	/**
+	 * 商铺名称
+	 */
+	private String shopsLeaseName;
+	/**
+	 * 日销售总额
+	 */
+	private BigDecimal totalsalesamount;
+	/**
+	 * 日销售总数
+	 */
+	private Integer totalsalesanumber;
+	/**
+	 * 月销售总额
+	 */
+	private BigDecimal totalsalesamountByMonth;
+	/**
+	 * 月销售总数
+	 */
+	private Integer totalsalesanumberByMonth;
+	/**
+	 * 交易年月
+	 */
+	private String txYearMonth;
+
+	/**
+	 * 十天的销售额
+	 */
+	private BigDecimal countTenDayMount;
+
+	/**
+	 * 最近七天的销售额总计
+	 */
+	private BigDecimal countMount;
+
+	/**
+	 * 支付方式编号
+	 */
+	private String gwPaymentTenderCode;
+
+	/**
+	 * 支付方式名称
+	 */
+	private String paymentTenderName;
+
+	/**
+	 * 状态名称
+	 */
+	private String stateName;
+	/**
+	 * 业态编码
+	 */
+	private String formatsBm;
+	/**
+	 * 业态名称
+	 */
+	private String formatsName;
+	/**
+	 * 店铺面积
+	 */
+	private String shopArea;
+
+	public BigDecimal getGwTaxSaleamount() {
+		return gwTaxSaleamount;
+	}
+
+	public void setGwTaxSaleamount(BigDecimal gwTaxSaleamount) {
+		this.gwTaxSaleamount = gwTaxSaleamount;
+	}
+
+	public String getShopArea() {
+		return shopArea;
+	}
+
+	public void setShopArea(String shopArea) {
+		this.shopArea = shopArea;
+	}
+
+	public String getFormatsBm() {
+		return formatsBm;
+	}
+
+	public void setFormatsBm(String formatsBm) {
+		this.formatsBm = formatsBm;
+	}
+
+	public String getFormatsName() {
+		return formatsName;
+	}
+
+	public void setFormatsName(String formatsName) {
+		this.formatsName = formatsName;
+	}
+
+	public String getStateName() {
+		return transsalestotalStateEnum.getDisplayName(getGwState());
+	}
+
+	public void setStateName(String stateName) {
+		this.stateName = stateName;
+	}
+
+	public String getPaymentTenderName() {
+		return paymentTenderName;
+	}
+
+	public void setPaymentTenderName(String paymentTenderName) {
+		this.paymentTenderName = paymentTenderName;
+	}
+
+	public String getGwPaymentTenderCode() {
+		return gwPaymentTenderCode;
+	}
+
+	public void setGwPaymentTenderCode(String gwPaymentTenderCode) {
+		this.gwPaymentTenderCode = gwPaymentTenderCode;
+	}
+
+	public String getGwMemberNumber() {
+		return gwMemberNumber;
+	}
+
+	public void setGwMemberNumber(String gwMemberNumber) {
+		this.gwMemberNumber = gwMemberNumber;
+	}
+
+	public String getGwGoodsInfoCode() {
+		return gwGoodsInfoCode;
+	}
+
+	public void setGwGoodsInfoCode(String gwGoodsInfoCode) {
+		this.gwGoodsInfoCode = gwGoodsInfoCode;
+	}
+
+	public String getGwShopsLeaseCode() {
+		return gwShopsLeaseCode;
+	}
+
+	public void setGwShopsLeaseCode(String gwShopsLeaseCode) {
+		this.gwShopsLeaseCode = gwShopsLeaseCode;
+	}
+
+	public BigDecimal getCountMount() {
+		return countMount;
+	}
+
+	public void setCountMount(BigDecimal countMount) {
+		this.countMount = countMount;
+	}
+
+	public BigDecimal getCountTenDayMount() {
+		return countTenDayMount;
+	}
+
+	public void setCountTenDayMount(BigDecimal countTenDayMount) {
+		this.countTenDayMount = countTenDayMount;
+	}
+
+	public Integer getGwShopsLeaseId() {
+		return gwShopsLeaseId;
+	}
+
+	public void setGwShopsLeaseId(Integer gwShopsLeaseId) {
+		this.gwShopsLeaseId = gwShopsLeaseId;
+	}
+
+	public BigDecimal getTotalsalesamountByMonth() {
+		return totalsalesamountByMonth;
+	}
+
+	public void setTotalsalesamountByMonth(BigDecimal totalsalesamountByMonth) {
+		this.totalsalesamountByMonth = totalsalesamountByMonth;
+	}
+
+	public Integer getTotalsalesanumberByMonth() {
+		return totalsalesanumberByMonth;
+	}
+
+	public void setTotalsalesanumberByMonth(Integer totalsalesanumberByMonth) {
+		this.totalsalesanumberByMonth = totalsalesanumberByMonth;
+	}
+
+	public String getTxYearMonth() {
+		return txYearMonth;
+	}
+
+	public void setTxYearMonth(String txYearMonth) {
+		this.txYearMonth = txYearMonth;
+	}
+
+	public BigDecimal getTotalsalesamount() {
+		return totalsalesamount;
+	}
+
+	public void setTotalsalesamount(BigDecimal totalsalesamount) {
+		this.totalsalesamount = totalsalesamount;
+	}
+
+	public Integer getTotalsalesanumber() {
+		return totalsalesanumber;
+	}
+
+	public void setTotalsalesanumber(Integer totalsalesanumber) {
+		this.totalsalesanumber = totalsalesanumber;
+	}
+
+	public String getGoodsName() {
+		return goodsName;
+	}
+
+	public void setGoodsName(String goodsName) {
+		this.goodsName = goodsName;
+	}
+
+	public String getGoodName() {
+		return goodName;
+	}
+
+	public void setGoodName(String goodName) {
+		this.goodName = goodName;
+	}
+
+	public String getMerchansInfoName() {
+		return merchansInfoName;
+	}
+
+	public void setMerchansInfoName(String merchansInfoName) {
+		this.merchansInfoName = merchansInfoName;
+	}
+
+	public String getShopsLeaseName() {
+		return shopsLeaseName;
+	}
+
+	public void setShopsLeaseName(String shopsLeaseName) {
+		this.shopsLeaseName = shopsLeaseName;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getGwMerchantsInfoId() {
+		return gwMerchantsInfoId;
+	}
+
+	public void setGwMerchantsInfoId(Integer gwMerchantsInfoId) {
+		this.gwMerchantsInfoId = gwMerchantsInfoId;
+	}
+
+	public String getGwContractAContractcode() {
+		return gwContractAContractcode;
+	}
+
+	public void setGwContractAContractcode(String gwContractAContractcode) {
+		this.gwContractAContractcode = gwContractAContractcode == null ? null : gwContractAContractcode.trim();
+	}
+
+	public String getGwTillid() {
+		return gwTillid;
+	}
+
+	public void setGwTillid(String gwTillid) {
+		this.gwTillid = gwTillid == null ? null : gwTillid.trim();
+	}
+
+	public String getGwTxdate() {
+		return gwTxdate;
+	}
+
+	public void setGwTxdate(String gwTxdate) {
+		this.gwTxdate = gwTxdate == null ? null : gwTxdate.trim();
+	}
+
+	public String getGwTxtime() {
+		return gwTxtime;
+	}
+
+	public void setGwTxtime(String gwTxtime) {
+		this.gwTxtime = gwTxtime == null ? null : gwTxtime.trim();
+	}
+
+	public String getGwTxserial() {
+		return gwTxserial;
+	}
+
+	public void setGwTxserial(String gwTxserial) {
+		this.gwTxserial = gwTxserial == null ? null : gwTxserial.trim();
+	}
+	public Integer getGwSalesnumber() {
+		return gwSalesnumber;
+	}
+
+	public void setGwSalesnumber(Integer gwSalesnumber) {
+		this.gwSalesnumber = gwSalesnumber;
+	}
+
+	public BigDecimal getGwSalesamount() {
+		return gwSalesamount;
+	}
+
+	public void setGwSalesamount(BigDecimal gwSalesamount) {
+		this.gwSalesamount = gwSalesamount;
+	}
+
+	public Integer getGwState() {
+		return gwState;
+	}
+
+	public void setGwState(Integer gwState) {
+		this.gwState = gwState;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof GwTranssalestotalModel)) {
+			return false;
+		}
+		GwTranssalestotalModel transsales = (GwTranssalestotalModel) obj;
+		if (transsales.getId().equals(this.id) && transsales.getGwShopsLeaseCode().equals(this.gwShopsLeaseCode)
+				&& transsales.getGwTillid().equals(this.gwTillid) && transsales.getGwTxdate().equals(this.gwTxdate)
+				&& transsales.getGwTxtime().equals(this.gwTxtime) && transsales.getGwTxserial().equals(this.gwTxserial)
+				&& transsales.getGwGoodsInfoCode().equals(this.gwGoodsInfoCode)
+				&& transsales.getGwPaymentTenderCode().equals(this.gwPaymentTenderCode)
+				&& transsales.getGwSalesnumber().equals(this.gwSalesnumber)
+				&& transsales.getGwMemberNumber().equals(this.gwMemberNumber)
+				&& transsales.getGwSalesamount().equals(this.gwSalesamount)
+				&& transsales.getGwTaxSaleamount().equals(this.gwTaxSaleamount)
+				&& transsales.getGwState().equals(this.gwState)) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+}

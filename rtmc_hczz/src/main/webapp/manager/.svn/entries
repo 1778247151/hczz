@@ -1,0 +1,205 @@
+10
+
+dir
+532
+https://273644.cicp.net:8442/svn/gw_crm/gdws_crm/src/main/webapp/manager
+https://273644.cicp.net:8442/svn/gw_crm
+
+
+
+2016-11-18T09:44:32.541664Z
+532
+meishengjun
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+70a9cc5e-a689-714b-9a76-a64e30f81e45
+
+gw_mis_base
+dir
+
+gw_customer_complain
+dir
+
+gw_locker_rental
+dir
+
+gw_lease_goods
+dir
+
+gw_club
+dir
+
+gw_goods_info
+dir
+
+gw_lease
+dir
+
+gw_goods_tree
+dir
+
+gw_ares
+dir
+
+gw_formats_tree
+dir
+
+gw_members
+dir
+
+gw_lease_maintenance
+dir
+
+gw_present_info
+dir
+
+gw_repeatVisit
+dir
+
+gw_address_book
+dir
+
+gw_merchants_info
+dir
+
+gw_typeTree
+dir
+
+gw_role
+dir
+
+gw_integralexchange_goods
+dir
+
+gw_shops_info
+dir
+
+gw_sales
+dir
+
+gw_club_detail
+dir
+
+gw_building_tree
+dir
+
+gw_goods_in_store
+dir
+
+gw_sysLogger
+dir
+
+gw_synchronizeMisData
+dir
+
+gw_payment_tender
+dir
+
+gw_member_integral_detail
+dir
+
+gw_goods_out_store
+dir
+
+gw_locker
+dir
+
+gw_stock_check
+dir
+
+gw_transsalestotal
+dir
+
+gw_lockerRental
+dir
+
+gwMenuTree
+dir
+
+gw_api_account
+dir
+
+gw_department_position
+dir
+
+gw_mispayment_tender
+dir
+
+gw_store_goods
+dir
+
+gw_menber_binding_card
+dir
+
+gw_activity
+dir
+
+gw_store
+dir
+
+gw_pickup_maintenance
+dir
+
+gw_sendMessage
+dir
+
+gw_base_integral
+dir
+
+gw_member_card
+dir
+
+gw_mall_info
+dir
+
+gw_sms_record
+dir
+
+gw_department
+dir
+
+gw_lose_maintenance
+dir
+
+gw_brand_tree
+dir
+
+gw_shops_lease
+dir
+
+gw_group_info
+dir
+
+gw_property_attribute
+dir
+
+gw_admin_users
+dir
+
+gw_member_grade
+dir
+
+gw_goods
+dir
+
+gw_promotion_integral
+dir
+
+gw_mail_record
+dir
+
+gw_notice
+dir
+

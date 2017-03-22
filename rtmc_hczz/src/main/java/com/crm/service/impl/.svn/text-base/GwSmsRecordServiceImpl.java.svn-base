@@ -1,0 +1,31 @@
+package com.crm.service.impl;
+
+import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
+import com.crm.core.ServersManager;
+import com.crm.dao.GwSmsRecordDao;
+import com.crm.pojo.GwSmsRecordModel;
+import com.crm.service.GwSmsRecordService;
+
+/**
+ * 
+ * 
+ * GwSmsRecordServiceImpl:短信发送记录管理业务逻辑层实现
+ *
+ * @author  shengjinpeng
+ * @date    2016年11月7日
+ * @version jdk1.8
+ *
+ */
+@Service("gwSmsRecordServiceManage")
+public class GwSmsRecordServiceImpl extends ServersManager<GwSmsRecordModel, GwSmsRecordDao> implements GwSmsRecordService{
+	
+	@Resource(name = "gwSmsRecordDaoManage")
+	@Override
+	public void setDao(GwSmsRecordDao gwSmsRecordDao) {
+		// TODO Auto-generated method stub
+		this.dao = gwSmsRecordDao;
+	}
+	
+	
+}

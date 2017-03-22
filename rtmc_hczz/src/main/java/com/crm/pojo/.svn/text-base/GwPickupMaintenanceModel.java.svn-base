@@ -1,0 +1,178 @@
+package com.crm.pojo;
+
+import com.crm.enums.PickupMaintenanceStatusEnum;
+import com.crm.enums.ShopsLeaseStateEnum;
+
+public class GwPickupMaintenanceModel {
+    private Integer id;
+
+    private String code;
+
+    private String name;
+
+    private String pickupUser;
+
+    private String pickupTime;
+
+    private String phone;
+
+    private String pickupImg;
+
+    private Integer status;
+
+    private Integer createUserId;
+
+    private String createTime;
+
+    private Integer updateUserId;
+
+    private String updateTime;
+
+    /**
+     * 领取记录拾物编号
+     */
+    private String pickupMaintenanceCode;
+    /**
+     * 创建人名称
+     */
+    private String createUserName;
+    
+    /**
+     * 修改人名称
+     */
+    private String updateUserName;
+    
+    /**
+     * 状态名称
+     */
+    private String statusName;
+    
+    
+    public String getPickupMaintenanceCode() {
+		return pickupMaintenanceCode;
+	}
+
+	public void setPickupMaintenanceCode(String pickupMaintenanceCode) {
+		this.pickupMaintenanceCode = pickupMaintenanceCode;
+	}
+
+	public String getStatusName() {
+    	return PickupMaintenanceStatusEnum.getDisplayName(getStatus());
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
+
+	public String getCreateUserName() {
+		return createUserName;
+	}
+
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
+	}
+
+	public String getUpdateUserName() {
+		return updateUserName;
+	}
+
+	public void setUpdateUserName(String updateUserName) {
+		this.updateUserName = updateUserName;
+	}
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code == null ? null : code.trim();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
+
+    public String getPickupUser() {
+        return pickupUser;
+    }
+
+    public void setPickupUser(String pickupUser) {
+        this.pickupUser = pickupUser == null ? null : pickupUser.trim();
+    }
+
+    public String getPickupTime() {
+        return pickupTime;
+    }
+
+    public void setPickupTime(String pickupTime) {
+        this.pickupTime = pickupTime == null ? null : pickupTime.trim();
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone == null ? null : phone.trim();
+    }
+
+    public String getPickupImg() {
+        return pickupImg;
+    }
+
+    public void setPickupImg(String pickupImg) {
+        this.pickupImg = pickupImg == null ? null : pickupImg.trim();
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime == null ? null : createTime.trim();
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime == null ? null : updateTime.trim();
+    }
+}

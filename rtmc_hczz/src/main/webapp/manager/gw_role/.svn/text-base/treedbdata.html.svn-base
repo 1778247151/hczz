@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="/lib/jquery/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <link href="/lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <script src="/lib/ligerUI/js/core/base.js" type="text/javascript"></script>
+    <script src="/lib/ligerUI/js/plugins/ligerTree.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/js/action/sys.common.js"></script>
+    <script type="text/javascript">
+        $(function ()
+        {   
+            var data = [{"isExpand":true,"pid":0,"ischecked":false,"id":1,"text":"系统管理"},{"isExpand":true,"pid":1,"ischecked":false,"id":3,"text":"菜单管理"},{"isExpand":true,"pid":1,"ischecked":false,"id":4,"text":"权限管理"},{"isExpand":true,"pid":1,"ischecked":false,"id":5,"text":"角色管理"},{"isExpand":true,"pid":0,"ischecked":false,"id":9,"text":"用户系统"},{"isExpand":true,"pid":9,"ischecked":false,"id":10,"text":"用户管理"},{"isExpand":true,"pid":0,"ischecked":false,"id":17,"text":"基础设置"},{"isExpand":true,"pid":17,"ischecked":false,"id":18,"text":"租赁类型管理"},{"isExpand":true,"pid":17,"ischecked":false,"id":19,"text":"结算组别管理"}];
+
+            $("#tree1").ligerTree({  
+            data:data, 
+            idFieldName :'id',
+            parentIDFieldName :'pid'
+            }
+            );
+        });
+    </script>
+</head>
+<body style="padding:10px">   
+    <div style="width:200px; height:300px; margin:10px; float:left; border:1px solid #ccc; overflow:auto;  ">
+    <ul id="tree1"></ul>
+    </div> 
+ 
+        <div style="display:none">
+    <!--  数据统计代码 --> 
+    </div>
+</body>
+</html>

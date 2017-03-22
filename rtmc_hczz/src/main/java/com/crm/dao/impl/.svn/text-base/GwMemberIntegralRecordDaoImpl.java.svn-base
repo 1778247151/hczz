@@ -1,0 +1,79 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwMemberIntegralRecordDao;
+import com.crm.pojo.GwMemberIntegralRecordModel;
+
+@Repository("GwMemberIntegralRecordDaoManage")
+public class GwMemberIntegralRecordDaoImpl implements GwMemberIntegralRecordDao {
+	@Autowired
+	BaseDao dao;
+
+	@Override
+	public int insert(GwMemberIntegralRecordModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.memberIntegralRecord.insert", e);
+	}
+
+	@Override
+	public int delete(GwMemberIntegralRecordModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwMemberIntegralRecordModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public GwMemberIntegralRecordModel selectOne(GwMemberIntegralRecordModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwMemberIntegralRecordModel> selectList(GwMemberIntegralRecordModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public GwMemberIntegralRecordModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwMemberIntegralRecordModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.memberIntegralRecord.selectList");
+	}
+
+}

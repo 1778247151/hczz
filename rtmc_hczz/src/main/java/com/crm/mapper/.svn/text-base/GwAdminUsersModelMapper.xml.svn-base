@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.adminUsers" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwAdminUsersModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="dtime" property="dtime" jdbcType="VARCHAR" />
+    <result column="gw_role_id" property="gwRoleId" jdbcType="INTEGER" />
+    <result column="gwRoleName" property="gwRoleName" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="sfz" property="sfz" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="createUserName" property="createUserName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="updateUserName" property="updateUserName" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="qq" property="qq" jdbcType="VARCHAR" />
+    <result column="positions" property="positions" jdbcType="VARCHAR" />
+    <result column="positionName" property="departmentPositionName" jdbcType="VARCHAR" />
+    <result column="gw_department_code" property="departmentCode" jdbcType="INTEGER" />
+    <result column="departmentName" property="departmentName" jdbcType="VARCHAR" />
+   
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, username, password, name, dtime, gw_role_id, phone, sfz, address, state ,qq ,sex ,email ,positions,
+    create_user_id, create_time, update_user_id, update_time,gw_department_code
+  </sql>
+  
+  <!-- 删除所有数据 -->
+  <delete id="gw.adminUsers.deleteAll" parameterType="java.lang.Integer" >
+    delete from gw_admin_users
+  </delete>
+  <!-- 批量插入 -->
+	<insert id="gw.adminUsers.batchinsert" parameterType="com.crm.pojo.GwAdminUsersModel">
+		insert into gw_admin_users (
+		id,
+		username,
+		password,
+		name,
+		dtime,
+		gw_role_id,
+		phone,
+		sfz,
+		address,
+		state,
+		sex,
+		gw_department_code,
+		positions,
+		email,
+		qq,
+		create_user_id,
+		create_time,
+		update_user_id,
+		update_time
+		)
+		values
+		<foreach collection="list" item="adminUsersList" index="index"
+			separator=",">
+			(
+			#{adminUsersList.id,jdbcType=INTEGER},
+			#{adminUsersList.username,jdbcType=VARCHAR},
+			#{adminUsersList.password,jdbcType=VARCHAR},
+			#{adminUsersList.name,jdbcType=VARCHAR},
+			#{adminUsersList.dtime,jdbcType=VARCHAR},
+			#{adminUsersList.gwRoleId,jdbcType=INTEGER},
+			#{adminUsersList.phone,jdbcType=VARCHAR},
+			#{adminUsersList.sfz,jdbcType=VARCHAR},
+			#{adminUsersList.address,jdbcType=VARCHAR},
+			#{adminUsersList.state,jdbcType=INTEGER},
+			#{adminUsersList.sex,jdbcType=INTEGER},
+			#{adminUsersList.departmentCode,jdbcType=VARCHAR},
+			#{adminUsersList.positions,jdbcType=VARCHAR},
+			#{adminUsersList.email,jdbcType=VARCHAR},
+			#{adminUsersList.qq,jdbcType=VARCHAR},
+			#{adminUsersList.createUserId,jdbcType=INTEGER},
+			#{adminUsersList.createTime,jdbcType=VARCHAR},
+			#{adminUsersList.updateUserId,jdbcType=INTEGER},
+			#{adminUsersList.updateTime,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
+	<!-- 批量更新数据 -->
+	<update id="gw.adminUsers.batchUpdate" parameterType="java.util.List">
+		<foreach collection="list" item="adminUsersList" index="index"
+			separator=";">
+			update gw_admin_users
+			<set>
+				id=#{adminUsersList.id,jdbcType=INTEGER},
+				username=#{adminUsersList.username,jdbcType=VARCHAR},
+				password=#{adminUsersList.password,jdbcType=VARCHAR},
+				name=#{adminUsersList.name,jdbcType=VARCHAR},
+				dtime=#{adminUsersList.dtime,jdbcType=VARCHAR},
+				gw_role_id=#{adminUsersList.gwRoleId,jdbcType=INTEGER},
+				phone=#{adminUsersList.phone,jdbcType=VARCHAR},
+				sfz=#{adminUsersList.sfz,jdbcType=VARCHAR},
+				address=#{adminUsersList.address,jdbcType=VARCHAR},
+				state=#{adminUsersList.state,jdbcType=INTEGER},
+				sex=#{adminUsersList.sex,jdbcType=INTEGER},
+				gw_department_code=#{adminUsersList.departmentCode,jdbcType=VARCHAR},
+				positions=#{adminUsersList.positions,jdbcType=VARCHAR},
+				email=#{adminUsersList.email,jdbcType=VARCHAR},
+				qq=#{adminUsersList.qq,jdbcType=VARCHAR},
+				create_user_id=#{adminUsersList.createUserId,jdbcType=INTEGER},
+				create_time=#{adminUsersList.createTime,jdbcType=VARCHAR},
+				update_user_id=#{adminUsersList.updateUserId,jdbcType=INTEGER},
+				update_time=#{adminUsersList.updateTime,jdbcType=VARCHAR}
+			</set>
+				where id = #{adminUsersList.id,jdbcType=INTEGER}
+		</foreach>
+	</update>
+
+	<!-- 批量删除 -->
+	<delete id="gw.adminUsers.batchDelete" parameterType="java.util.List">
+		delete from gw_admin_users where id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item.id}
+		</foreach>
+	</delete>
+  
+  
+  
+  
+    <select id="gw.adminUsers.selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    u.id, u.username, u.password, u.name, u.dtime, u.gw_role_id, u.phone, u.sfz, u.address, u.state,
+    (select uu.cn_name from gw_role uu where uu.id = u.gw_role_id) as gwRoleName,
+    u.qq,u.sex,u.email,u.positions,u.create_user_id, u.create_time, u.update_user_id, u.update_time,gw_department_code,
+    (select uu.name from gw_admin_users uu where uu.id = u.create_user_id) as createUserName,
+    (select uu.name from gw_admin_users uu where uu.id = u.update_user_id) as updateUserName,
+    (select p.cn_name from gw_department_positions p where u.positions = p.code ) as positionName,
+    (select d.cn_name from gw_department d where u.gw_department_code = d.code ) as departmentName
+    from gw_admin_users u
+    where u.id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+  <delete id="gw.adminUsers.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_admin_users
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="gw.adminUsers.insert" parameterType="com.crm.pojo.GwAdminUsersModel" >
+    insert into gw_admin_users
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="dtime != null" >
+        dtime,
+      </if>
+      <if test="gwRoleId != null" >
+        gw_role_id,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="sfz != null" >
+        sfz,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="departmentCode != null" >
+        gw_department_code,
+      </if>
+      <if test="positions != null" >
+        positions,
+      </if>
+      <if test="qq != null" >
+        qq,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="dtime != null" >
+        #{dtime,jdbcType=VARCHAR},
+      </if>
+      <if test="gwRoleId != null" >
+        #{gwRoleId,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="sfz != null" >
+        #{sfz,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="departmentCode != null" >
+        #{departmentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="positions != null" >
+        #{positions,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+         #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.adminUsers.update" parameterType="com.crm.pojo.GwAdminUsersModel" >
+    update gw_admin_users
+    <set >
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="dtime != null" >
+        dtime = #{dtime,jdbcType=VARCHAR},
+      </if>
+      <if test="gwRoleId != null" >
+        gw_role_id = #{gwRoleId,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="sfz != null" >
+        sfz = #{sfz,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="departmentCode != null" >
+        gw_department_code = #{departmentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="positions != null" >
+        positions = #{positions,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        qq = #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+   <!-- 根据条件，获取分页数据list集合 -->
+  <select id="gw.adminUsers.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    u.id, u.username, u.password, u.name, u.dtime, u.gw_role_id, u.phone, u.sfz, u.address, u.state,r.cn_name as gwRoleName,
+    u.qq,u.sex,u.email,u.positions,u.create_user_id, u.create_time, u.update_user_id, u.update_time,gw_department_code,
+    (select uu.name from gw_admin_users uu where uu.id = u.create_user_id) as createUserName,
+    (select uu.name from gw_admin_users uu where uu.id = u.update_user_id) as updateUserName,
+	(select p.cn_name from gw_department_positions p where u.positions = p.code ) as positionName,
+	(select d.cn_name from gw_department d where u.gw_department_code = d.code ) as departmentName
+    from gw_admin_users u,gw_role r
+    where u.gw_role_id=r.id
+    and u.state &lt;&gt; -1
+    limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  <!-- 根据条件查询用户，获取分页数据list集合 -->
+  <select id="gw.adminUsers.selectByCondition" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    u.id, u.username, u.password, u.name, u.dtime, u.gw_role_id, u.phone, u.sfz, u.address, u.state,r.cn_name as gwRoleName,
+    u.qq,u.sex,u.email,u.positions,u.create_user_id, u.create_time, u.update_user_id, u.update_time,gw_department_code,
+    (select uu.name from gw_admin_users uu where uu.id = u.create_user_id) as createUserName,
+    (select uu.name from gw_admin_users uu where uu.id = u.update_user_id) as updateUserName,
+	(select p.cn_name from gw_department_positions p where u.positions = p.code ) as positionName,
+	(select d.cn_name from gw_department d where u.gw_department_code = d.code ) as departmentName
+    from gw_admin_users u,gw_role r
+    where u.gw_role_id=r.id 
+    and u.state &lt;&gt; -1
+    <if test="username!=null and username!=''">  
+        and u.username like '%${username}%'  
+    </if>  
+    <if test="name!=null and name!=''">  
+        and u.name like '%${name}%'  
+    </if>  
+    <if test="sfz!=null and sfz!=''">  
+        and u.sfz = #{sfz}  
+    </if>  
+    <if test="state!=null">  
+        and u.state = #{state}  
+    </if>  
+    limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  <!-- 根据条件查询符合的总记录数 -->
+  <select id="gw.adminUsers.selectCountByCondition" resultType="java.lang.Integer" parameterType="java.util.Map">
+    select 
+	    count(u.id) 
+	from gw_admin_users u,gw_role r
+    where u.gw_role_id=r.id
+    and u.state &lt;&gt; -1
+    <if test="username!=null and username!=''">  
+        and u.username like '%${username}%'  
+    </if>  
+    <if test="name!=null and name!=''">  
+        and u.name like '%${name}%'  
+    </if>  
+    <if test="sfz!=null and sfz!=''">  
+        and u.sfz = #{sfz}  
+    </if>  
+    <if test="state!=null">  
+        and u.state = #{state}  
+    </if> 
+  </select>
+  <!-- 根据条件，总记录数 -->
+  <select id="gw.adminUsers.selectCount" resultType="java.lang.Integer">
+   select 
+      count(u.id)
+    from gw_admin_users u,gw_role r
+    where u.gw_role_id=r.id
+    and u.state &lt;&gt; -1
+  </select>
+  <!-- 根据账号，查询用户是否存在 -->
+  <select id="gw.adminUsers.getAdminUsersByUsername" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select 
+    u.id, u.username, u.password, u.name, u.dtime, u.gw_role_id, u.phone, u.sfz, u.address, u.state,r.cn_name as gwRoleName,
+    u.create_user_id, u.create_time, u.update_user_id, u.update_time,gw_department_code
+    from gw_admin_users u,gw_role r
+    where u.username=#{username,jdbcType=VARCHAR} and u.gw_role_id=r.id
+    and u.state = 1
+  </select>
+  <!-- 获取所有list集合 -->
+  <select id="gw.adminUsers.selectLists" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gw_admin_users
+  </select>
+  <!-- 获取部门编号获得用户集合 -->
+  <select id="gw.adminUsers.selectListsByPositionCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select 
+    <include refid="Base_Column_List" />
+    from gw_admin_users
+    where gw_department_code = #{positionCode}
+  </select>
+</mapper>

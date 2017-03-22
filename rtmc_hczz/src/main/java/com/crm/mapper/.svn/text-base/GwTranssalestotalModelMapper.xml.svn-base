@@ -1,0 +1,674 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.transsalestotal">
+	<resultMap id="BaseResultMap" type="com.crm.pojo.GwTranssalestotalModel">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="gw_merchants_info_id" property="gwMerchantsInfoId"
+			jdbcType="INTEGER" />
+		<result column="gw_shops_lease_id" property="gwShopsLeaseId"
+			jdbcType="INTEGER" />
+		<result column="gw_tillid" property="gwTillid" jdbcType="VARCHAR" />
+		<result column="gw_txdate" property="gwTxdate" jdbcType="VARCHAR" />
+		<result column="gw_txtime" property="gwTxtime" jdbcType="VARCHAR" />
+		<result column="gw_txserial" property="gwTxserial" jdbcType="VARCHAR" />
+		<result column="gw_salesnumber" property="gwSalesnumber"
+			jdbcType="INTEGER" />
+		<result column="gw_salesamount" property="gwSalesamount"
+			jdbcType="DECIMAL" />
+		<result column="gw_tax_saleamount" property="gwTaxSaleamount"
+			jdbcType="DECIMAL" />
+		<result column="countMount" property="countMount" jdbcType="DECIMAL" />
+		<result column="gw_state" property="gwState" jdbcType="INTEGER" />
+		<result column="goodsName" property="goodsName" jdbcType="VARCHAR" />
+		<result column="gw_member_number" property="gwMemberNumber"
+			jdbcType="VARCHAR" />
+		<result column="goodName" property="goodName" jdbcType="VARCHAR" />
+		<result column="merchansInfoName" property="merchansInfoName"
+			jdbcType="VARCHAR" />
+		<result column="shopsLeaseName" property="shopsLeaseName"
+			jdbcType="VARCHAR" />
+		<result column="totalsalesamount" property="totalsalesamount"
+			jdbcType="DECIMAL" />
+		<result column="countTenDayMount" property="countTenDayMount"
+			jdbcType="DECIMAL" />
+		<result column="totalsalesanumber" property="totalsalesanumber"
+			jdbcType="INTEGER" />
+		<result column="totalsalesanumberByMonth" property="totalsalesanumberByMonth"
+			jdbcType="INTEGER" />
+		<result column="totalsalesamountByMonth" property="totalsalesamountByMonth"
+			jdbcType="DECIMAL" />
+		<result column="txYearMonth" property="txYearMonth" jdbcType="VARCHAR" />
+		<result column="shopsLeaseCode" property="shopsLeaseCode"
+			jdbcType="VARCHAR" />
+		<result column="gw_shops_lease_code" property="gwShopsLeaseCode"
+			jdbcType="VARCHAR" />
+		<result column="gw_goods_info_code" property="gwGoodsInfoCode"
+			jdbcType="VARCHAR" />
+		<result column="gw_paymenttender_code" property="gwPaymentTenderCode"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, gw_merchants_info_id, gw_shops_lease_id, gw_tillid,
+		gw_txdate, gw_txtime, gw_txserial,
+		gw_shops_lease_code,gw_goods_info_code,
+		gw_salesnumber,
+		gw_salesamount,gw_state,gw_member_number,gw_paymenttender_code
+	</sql>
+
+	<!-- 批量插入 -->
+	<insert id="gw.transsalestotal.batchInsert" parameterType="com.crm.pojo.GwTranssalestotalModel">
+		insert into gw_transsalestotal (
+		id,
+		gw_shops_lease_code,
+		gw_tillid,
+		gw_txdate,
+		gw_txtime,
+		gw_txserial,
+		gw_goods_info_code,
+		gw_paymenttender_code,
+		gw_salesnumber,
+		gw_member_number,
+		gw_salesamount,
+		gw_tax_saleamount,
+		gw_state)
+		values
+		<foreach collection="list" item="transsalesleList" index="index"
+			separator=",">
+			(
+			#{transsalesleList.id,jdbcType=INTEGER},
+			#{transsalesleList.gwShopsLeaseCode,jdbcType=VARCHAR},
+			#{transsalesleList.gwTillid,jdbcType=VARCHAR},
+			#{transsalesleList.gwTxdate,jdbcType=VARCHAR},
+			#{transsalesleList.gwTxtime,jdbcType=VARCHAR},
+			#{transsalesleList.gwTxserial,jdbcType=VARCHAR},
+			#{transsalesleList.gwGoodsInfoCode,jdbcType=VARCHAR},
+			#{transsalesleList.gwPaymentTenderCode,jdbcType=VARCHAR},
+			#{transsalesleList.gwSalesnumber,jdbcType=INTEGER},
+			#{transsalesleList.gwMemberNumber,jdbcType=VARCHAR},
+			#{transsalesleList.gwSalesamount,jdbcType=DECIMAL},
+			#{transsalesleList.gwTaxSaleamount,jdbcType=DECIMAL},
+			#{transsalesleList.gwState,jdbcType=INTEGER}
+			)
+		</foreach>
+	</insert>
+	<!-- 批量更新数据 -->
+	<update id="gw.transsalestotal.batchUpdate" parameterType="java.util.List">
+		<foreach collection="list" item="transsalesleList" index="index"
+			separator=";">
+			update gw_transsalestotal
+			<set>
+				id=#{transsalesleList.id,jdbcType=INTEGER},
+				gw_shops_lease_code=#{transsalesleList.gwShopsLeaseCode,jdbcType=VARCHAR},
+				gw_tillid=#{transsalesleList.gwTillid,jdbcType=VARCHAR},
+				gw_txdate=#{transsalesleList.gwTxdate,jdbcType=VARCHAR},
+				gw_txtime=#{transsalesleList.gwTxtime,jdbcType=VARCHAR},
+				gw_txserial=#{transsalesleList.gwTxserial,jdbcType=VARCHAR},
+				gw_goods_info_code=#{transsalesleList.gwGoodsInfoCode,jdbcType=VARCHAR},
+				gw_paymenttender_code=#{transsalesleList.gwPaymentTenderCode,jdbcType=VARCHAR},
+				gw_salesnumber=#{transsalesleList.gwSalesnumber,jdbcType=INTEGER},
+				gw_member_number=#{transsalesleList.gwMemberNumber,jdbcType=VARCHAR},
+				gw_salesamount=#{transsalesleList.gwSalesamount,jdbcType=DECIMAL},
+				gw_tax_saleamount=#{transsalesleList.gwTaxSaleamount,jdbcType=DECIMAL},
+				gw_state=#{transsalesleList.gwState,jdbcType=INTEGER}
+			</set>
+			where id = #{transsalesleList.id,jdbcType=INTEGER}
+		</foreach>
+	</update>
+
+	<!-- 批量删除 -->
+	<delete id="gw.transsalestotal.batchDelete" parameterType="java.util.List">
+		delete from gw_transsalestotal where id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item.id}
+		</foreach>
+	</delete>
+	<!-- 根据销售id，获取销售信息 -->
+	<select id="gw.transsalestotal.selectById" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from gw_transsalestotal
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<!-- 根据销售id，删除销售信息 -->
+	<delete id="gw.transsalestotal.deleteById" parameterType="java.lang.Integer">
+		delete
+		from gw_transsalestotal
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="gw.transsalestotal.insert" parameterType="com.crm.pojo.GwTranssalestotalModel">
+		insert into gw_transsalestotal
+		(gw_shops_lease_code,
+		gw_goods_info_code,
+		gw_tillid,gw_txdate,gw_txtime,
+		gw_txserial,gw_salesnumber,gw_member_number,gw_paymenttender_code,
+		gw_salesamount,gw_state)
+		values
+		<foreach collection="list" item="transsalestotalList" index="index"
+			separator=",">
+			(#{transsalestotalList.gwShopsLeaseCode,jdbcType=VARCHAR},
+			#{transsalestotalList.gwGoodsInfoCode,jdbcType=VARCHAR},
+			#{transsalestotalList.gwTillid,jdbcType=VARCHAR},
+			#{transsalestotalList.gwTxdate,jdbcType=VARCHAR},
+			#{transsalestotalList.gwTxtime,jdbcType=VARCHAR},
+			#{transsalestotalList.gwTxserial,jdbcType=VARCHAR},
+			#{transsalestotalList.gwSalesnumber,jdbcType=INTEGER},
+			#{transsalestotalList.gwMemberNumber,jdbcType=VARCHAR},
+			#{transsalestotalList.gwPaymentTenderCode,jdbcType=VARCHAR},
+			#{transsalestotalList.gwSalesamount,jdbcType=DECIMAL},
+			#{transsalestotalList.gwState,jdbcType=INTEGER})
+		</foreach>
+	</insert>
+	<insert id="gw.transsalestotal.insertone" parameterType="com.crm.pojo.GwTranssalestotalModel">
+		insert into gw_transsalestotal
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="gwShopsLeaseCode != null">
+				gw_shops_lease_code,
+			</if>
+			<if test="gwTillid != null">
+				gw_tillid,
+			</if>
+			<if test="gwTxdate != null">
+				gw_txdate,
+			</if>
+			<if test="gwTxtime != null">
+				gw_txtime,
+			</if>
+			<if test="gwTxserial != null">
+				gw_txserial,
+			</if>
+			<if test="gwSalesnumber != null">
+				gw_salesnumber,
+			</if>
+			<if test="gwMemberNumber != null">
+				gw_member_number,
+			</if>
+			<if test="gwPaymentTenderCode != null">
+				gw_paymenttender_code,
+			</if>
+			<if test="gwSalesamount != null">
+				gw_salesamount,
+			</if>
+			<if test="gwTaxSaleamount != null">
+				gw_tax_saleamount,
+			</if>
+			<if test="gwState != null">
+				gw_state,
+			</if>
+			<if test="gwGoodsInfoCode != null">
+				gw_goods_info_code,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="gwShopsLeaseCode != null">
+				#{gwShopsLeaseCode,jdbcType=VARCHAR},
+			</if>
+			<if test="gwTillid!= null">
+				#{gwTillid,jdbcType=VARCHAR},
+			</if>
+			<if test="gwTxdate != null">
+				#{gwTxdate,jdbcType=VARCHAR},
+			</if>
+			<if test="gwTxtime != null">
+				#{gwTxtime,jdbcType=VARCHAR},
+			</if>
+			<if test="gwTxserial != null">
+				#{gwTxserial,jdbcType=VARCHAR},
+			</if>
+			<if test="gwSalesnumber != null">
+				#{gwSalesnumber,jdbcType=INTEGER},
+			</if>
+			<if test="gwMemberNumber != null">
+				#{gwMemberNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="gwPaymentTenderCode != null">
+				#{gwPaymentTenderCode,jdbcType=INTEGER},
+			</if>
+			<if test="gwSalesamount != null">
+				#{gwSalesamount,jdbcType=DECIMAL},
+			</if>
+			<if test="gwTaxSaleamount != null">
+				#{gwTaxSaleamount,jdbcType=DECIMAL},
+			</if>
+			<if test="gwState != null">
+				#{gwState,jdbcType=INTEGER},
+			</if>
+			<if test="gwGoodsInfoCode != null">
+				#{gwGoodsInfoCode,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.crm.pojo.GwTranssalestotalModel">
+		update gw_transsalestotal
+		<set>
+			<if test="gwMerchantsInfoId != null">
+				gw_merchants_info_id =
+				#{gwMerchantsInfoId,jdbcType=INTEGER},
+			</if>
+			<if test="gwShopsLeaseId != null">
+				gw_shops_lease_id = #{gwShopsLeaseId,jdbcType=INTEGER},
+			</if>
+			<if test="gwTillid != null">
+				gw_tillid = #{gwTillid,jdbcType=VARCHAR},
+			</if>
+			<if test="gwTxdate != null">
+				gw_txdate = #{gwTxdate,jdbcType=VARCHAR},
+			</if>
+			<if test="gwTxtime != null">
+				gw_txtime = #{gwTxtime,jdbcType=VARCHAR},
+			</if>
+			<if test="gwTxserial != null">
+				gw_txserial = #{gwTxserial,jdbcType=VARCHAR},
+			</if>
+			<if test="gwGoodsTreeFid != null">
+				gw_goods_tree_fid = #{gwGoodsTreeFid,jdbcType=INTEGER},
+			</if>
+			<if test="gwGoodsTreeId != null">
+				gw_goods_tree_id = #{gwGoodsTreeId,jdbcType=INTEGER},
+			</if>
+			<if test="gwSalesnumber != null">
+				gw_salesnumber = #{gwSalesnumber,jdbcType=INTEGER},
+			</if>
+			<if test="gwSalesamount != null">
+				gw_salesamount = #{gwSalesamount,jdbcType=DECIMAL},
+			</if>
+			<if test="gwState != null">
+				gw_state = #{gwState,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 根据条件查询销售数据,不分页 -->
+	<select id="gw.transsalestotal.selectListExport" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		SELECT
+		(select g.`name` from gw_goods_tree g where g.id =
+		h.goods_tree_id)as
+		goodName,
+		(select g.`name` from gw_goods_tree g where
+		g.id = h.goods_tree_fid)as
+		goodsName,
+		b.`name` as shopsLeaseName,
+		a.gw_salesamount,
+		a.gw_salesnumber,
+		a.gw_state,
+		a.gw_tillid,
+		a.gw_txdate,
+		a.gw_txserial,
+		a.gw_txtime,
+		a.id,
+		a.gw_member_number,
+		a.gw_paymenttender_code,
+		(select d.paymentname from
+		gw_settlement_paymenttender d where d.code =
+		a.gw_paymenttender_code)as paymentTenderName
+		FROM
+		gw_transsalestotal a,
+		gw_shops_lease b,
+		gw_goods_info h
+		WHERE
+		a.gw_shops_lease_code = b.`code`
+		AND a.gw_goods_info_code = h.`code`
+
+		<if test="startTime != null and '' != startTime">
+			and a.gw_txdate &gt;=#{startTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and '' != endTime">
+			and a.gw_txdate &lt;=#{endTime,jdbcType=VARCHAR}
+
+		</if>
+		<if
+			test="startTime != null and '' != startTime and endTime !=null and ''!=endTime">
+			and a.gw_txdate &gt;=#{startTime,jdbcType=INTEGER} and
+			a.gw_txdate
+			&lt;=#{endTime,jdbcType=VARCHAR}
+		</if>
+
+		<if test="shopsInfoId != null and '' != shopsInfoId">
+			and b.id =#{shopsInfoId,jdbcType=INTEGER}
+		</if>
+		<if test="goodstreeId != null and '' != goodstreeId">
+			and h.goods_tree_id =#{goodstreeId,jdbcType=INTEGER}
+		</if>
+		<if test="status != null and '' != status">
+			and a.gw_state =#{status,jdbcType=INTEGER}
+		</if>
+
+		order by a.gw_txdate DESC
+	</select>
+
+	<!-- 根据条件查询销售数据分页 -->
+	<select id="gw.transsalestotal.selectPageList" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		SELECT
+		(select g.`name` from gw_goods_tree g where g.id =
+		h.goods_tree_id)as
+		goodName,
+		(select g.`name` from gw_goods_tree g where
+		g.id = h.goods_tree_fid)as
+		goodsName,
+		b.`name` as shopsLeaseName,
+		a.gw_salesamount,
+		a.gw_salesnumber,
+		a.gw_state,
+		a.gw_tillid,
+		a.gw_txdate,
+		a.gw_txserial,
+		a.gw_txtime,
+		a.id,
+		a.gw_member_number,
+		a.gw_paymenttender_code,
+		(select d.paymentname from
+		gw_settlement_paymenttender d where d.code =
+		a.gw_paymenttender_code)as paymentTenderName
+		FROM
+		gw_transsalestotal a,
+		gw_shops_lease b,
+		gw_goods_info h
+		WHERE
+		a.gw_shops_lease_code = b.`code`
+		AND a.gw_goods_info_code = h.`code`
+
+		<if test="startTime != null and '' != startTime">
+			and a.gw_txdate &gt;=#{startTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and '' != endTime">
+			and a.gw_txdate &lt;=#{endTime,jdbcType=VARCHAR}
+
+		</if>
+		<if
+			test="startTime != null and '' != startTime and endTime !=null and ''!=endTime">
+			and a.gw_txdate &gt;=#{startTime,jdbcType=INTEGER} and
+			a.gw_txdate
+			&lt;=#{endTime,jdbcType=VARCHAR}
+		</if>
+
+		<if test="shopsInfoId != null and '' != shopsInfoId">
+			and b.id =#{shopsInfoId,jdbcType=INTEGER}
+		</if>
+		<if test="goodstreeId != null and '' != goodstreeId">
+			and h.goods_tree_id =#{goodstreeId,jdbcType=INTEGER}
+		</if>
+		<if test="status != null and '' != status">
+			and a.gw_state =#{status,jdbcType=INTEGER}
+		</if>
+		order by a.gw_txdate DESC
+		limit #{offset,jdbcType=INTEGER} ,
+		#{pageSize,jdbcType=INTEGER}
+	</select>
+	<!-- 根据条件查询销售数据 -->
+	<select id="gw.transsalestotal.selectcount" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		SELECT
+		count(a.id)
+		FROM
+		gw_transsalestotal a,
+		gw_shops_lease b,
+		gw_goods_info h
+		WHERE
+		a.gw_shops_lease_code = b.`code`
+		AND
+		a.gw_goods_info_code = h.`code`
+
+		<if test="startTime != null and '' != startTime">
+			and a.gw_txdate &gt;=#{startTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and '' != endTime">
+			and a.gw_txdate &lt;=#{endTime,jdbcType=VARCHAR}
+
+		</if>
+		<if
+			test="startTime != null and '' != startTime and endTime !=null and ''!=endTime">
+			and a.gw_txdate &gt;=#{startTime,jdbcType=INTEGER} and
+			a.gw_txdate
+			&lt;=#{endTime,jdbcType=VARCHAR}
+		</if>
+
+		<if test="shopsInfoId != null and '' != shopsInfoId">
+			and b.id =#{shopsInfoId,jdbcType=INTEGER}
+		</if>
+		<if test="goodstreeId != null and '' != goodstreeId">
+			and h.goods_tree_id =#{goodstreeId,jdbcType=INTEGER}
+		</if>
+		<if test="status != null and '' != status">
+			and a.gw_state =#{status,jdbcType=INTEGER}
+		</if>
+
+	</select>
+	<!-- 根据条件查询日销售数据统计 -->
+	<select id="gw.transsalestotal.selectListDay" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		SELECT
+		c.contractcode as gwContractAContractcode,
+		(select g.`name` from
+		gw_goods_tree g where g.id = h.goods_tree_id)as
+		goodName,
+		(select
+		g.`name` from gw_goods_tree g where g.id = h.goods_tree_fid)as
+		goodsName,
+		b.`name` as shopsLeaseName,
+		a.gw_salesamount,
+		a.gw_salesnumber,
+		a.gw_state,
+		a.gw_tillid,
+		a.gw_txdate,
+		a.gw_txserial,
+		a.gw_txtime,
+		a.id,
+		a.gw_paymenttender_code,
+		(select
+		d.paymentname from gw_settlement_paymenttender d where d.code =
+		a.gw_paymenttender_code)as paymentTenderName,
+		date_format(a.gw_txdate,
+		'%Y-%m') AS txYearMonth,
+		sum(a.gw_salesamount)as totalsalesamount,
+		SUM(a.gw_salesnumber)as totalsalesanumber
+		FROM
+		gw_transsalestotal a,
+		gw_shops_lease b,
+		gw_goods_info h
+		WHERE
+		a.gw_shops_lease_code = b.`code`
+		AND a.gw_goods_info_code = h.`code`
+		<if test="startTime != null and '' != startTime">
+			and a.gw_txdate &gt;=#{startTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and '' != endTime">
+			and a.gw_txdate &lt;=#{endTime,jdbcType=VARCHAR}
+
+		</if>
+		<if
+			test="startTime != null and '' != startTime and endTime !=null and ''!=endTime">
+			and a.gw_txdate &gt;=#{startTime,jdbcType=INTEGER} and
+			a.gw_txdate
+			&lt;=#{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="goodstreeId != null and '' != goodstreeId">
+			and h.goods_tree_id = #{goodstreeId,jdbcType=INTEGER}
+		</if>
+
+		GROUP BY a.gw_txdate,h.goods_tree_id order by a.gw_txdate
+	</select>
+	<!-- 根据条件查询月销售数据统计 -->
+	<select id="gw.transsalestotal.selectListMonth" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		SELECT
+		c.contractcode as gwContractAContractcode,
+		(select g.`name` from
+		gw_goods_tree g where g.id = h.goods_tree_id)as
+		goodName,
+		(select
+		g.`name` from gw_goods_tree g where g.id = h.goods_tree_fid)as
+		goodsName,
+		b.`name` as shopsLeaseName,
+		a.gw_salesamount,
+		a.gw_salesnumber,
+		a.gw_state,
+		a.gw_tillid,
+		a.gw_txdate,
+		a.gw_txserial,
+		a.gw_txtime,
+		a.id,
+		a.gw_paymenttender_code,
+		(select
+		d.paymentname from gw_settlement_paymenttender d where d.code =
+		a.gw_paymenttender_code)as paymentTenderName,
+		date_format(a.gw_txdate,
+		'%Y-%m') AS txYearMonth,
+		sum(a.gw_salesamount)as
+		totalsalesamountByMonth,
+		SUM(a.gw_salesnumber)as
+		totalsalesanumberByMonth
+		FROM
+		gw_transsalestotal a,
+		gw_shops_lease b,
+		gw_goods_info h
+		WHERE
+		a.gw_shops_lease_code = b.`code`
+		AND
+		a.gw_goods_info_code = h.`code`
+		<if test="startTime != null and '' != startTime">
+			and date_format(a.gw_txdate,'%Y-%m')
+			&gt;=#{startTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and '' != endTime">
+			and date_format(a.gw_txdate,'%Y-%m')
+			&lt;=#{endTime,jdbcType=VARCHAR}
+
+		</if>
+		<if
+			test="startTime != null and '' != startTime and endTime !=null and ''!=endTime">
+			and date_format(a.gw_txdate,'%Y-%m')
+			&gt;=#{startTime,jdbcType=INTEGER}
+			and
+			date_format(a.gw_txdate,'%Y-%m') &lt;=#{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="goodstreeId != null and '' != goodstreeId">
+			and h.goods_tree_id = #{goodstreeId,jdbcType=INTEGER}
+		</if>
+
+		group by txYearMonth,h.goods_tree_fid order by a.gw_txdate
+	</select>
+
+	<select id="gw.transsalestotal.getTranssalestotalByCount"
+		resultMap="BaseResultMap">
+		SELECT
+		(select g.`name` from gw_goods_tree g where g.id =
+		h.goods_tree_id)as
+		goodName,
+		SUM(a.gw_salesamount)as countMount
+		FROM
+		gw_transsalestotal a,
+		gw_shops_lease b,
+		gw_goods_info h
+		WHERE
+		a.gw_shops_lease_code = b.`code`
+		AND b.id = c.gw_shops_lease_id
+		AND
+		a.gw_goods_info_code = h.`code`
+		and a.gw_txdate
+		&gt;=#{startTime,jdbcType=INTEGER} and a.gw_txdate
+		&lt;=#{endTime,jdbcType=VARCHAR}
+		group by h.goods_tree_id
+	</select>
+
+	<select id="gw.transsalestotal.getTranssalestotalByTenDay"
+		resultMap="BaseResultMap">
+		SELECT
+		a.gw_txdate,
+		(select g.`name` from gw_goods_tree g
+		where g.id = h.goods_tree_id)as
+		goodName,
+		SUM(a.gw_salesamount)as
+		countTenDayMount
+		FROM
+		gw_transsalestotal a,
+		gw_shops_lease b,
+		gw_goods_info h
+		WHERE
+		a.gw_shops_lease_code = b.`code`
+		AND
+		a.gw_goods_info_code = h.`code`
+		and date_sub(curdate(), INTERVAL 10
+		DAY) &lt;= date(a.gw_txdate) and
+		date_sub(curdate(), INTERVAL 0 DAY)
+		&gt;= date(a.gw_txdate)
+		GROUP BY a.gw_txdate,h.goods_tree_id
+	</select>
+
+	<select id="gw.transsalestotal.getAllList" resultMap="BaseResultMap">
+		SELECT
+		(select g.`name` from
+		gw_goods_tree g where g.id = h.goods_tree_id)as
+		goodName,
+		(select
+		g.`name` from gw_goods_tree g where g.id = h.goods_tree_fid)as
+		goodsName,
+		b.`name` as shopsLeaseName,
+		a.gw_salesamount,
+		a.gw_salesnumber,
+		a.gw_state,
+		a.gw_tillid,
+		a.gw_txserial,
+		a.gw_txtime,
+		a.id,
+		a.gw_member_number,
+		a.gw_paymenttender_code,
+		a.gw_shops_lease_code,
+		a.gw_goods_info_code,
+		(select d.paymentname from gw_settlement_paymenttender d where d.code=a.gw_paymenttender_code)as paymentTenderName
+		FROM
+		gw_transsalestotal a,
+		gw_shops_lease b,
+		gw_goods_info h
+		WHERE
+		a.gw_shops_lease_code = b.`code`
+		AND a.gw_goods_info_code = h.`code`
+	</select>
+
+	<select id="gw.transsalestotal.selectListGroupBy" resultMap="BaseResultMap">
+		SELECT
+		(select g.`name` from gw_goods_tree g where g.id =
+		h.goods_tree_id)as
+		goodName
+		FROM
+		gw_transsalestotal a,
+		gw_shops_lease b,
+		gw_goods_info h
+		WHERE
+		a.gw_shops_lease_code = b.`code`
+		AND b.id =
+		c.gw_shops_lease_id
+		AND a.gw_goods_info_code = h.`code`
+		GROUP BY
+		h.goods_tree_id
+
+	</select>
+
+	<!-- 根据店铺编号，获取业态信息 -->
+	<select id="gw.transsalestotal.getFormatsByShopCode" resultType="com.crm.bean.ShopFormatsInfo"
+		parameterType="java.util.Map">
+		select 
+			b.gw_formats_tree_id,
+			a.code as shopCode,
+			a.name shopName,
+			c.name as
+			formatsName,
+			c.bm as formatsCode 
+	    from gw_shops_lease a,
+			gw_merchants_info b,
+			gw_formats_tree c 
+		where a.code=#{shopCode} 
+			and a.gw_merchants_info_id=b.id 
+			and c.id=b.gw_formats_tree_id
+	</select>
+</mapper>

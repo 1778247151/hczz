@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.memberGradeDetail" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwMemberGradeDetailModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="member_grade_integral_code" property="memberGradeCode" jdbcType="VARCHAR" />
+    <result column="type_code" property="typeCode" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="discount" property="discount" jdbcType="INTEGER" />
+    <result column="integral_number" property="integralNumber" jdbcType="INTEGER" />
+    <result column="exchange_money" property="exchangeMoney" jdbcType="DECIMAL" />
+    <result column="positive" property="positive" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, member_grade_integral_code, type_code, type, discount, integral_number, exchange_money,positive
+  </sql>
+  <select id="gw.memberGradeDetail.selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+     SELECT
+	a.discount,
+	a.exchange_money,
+	a.id,
+	a.integral_number,
+	a.member_grade_integral_code,
+	(select b.description from gw_member_grade_integral b where b.`code` = a.member_grade_integral_code)as memberGradeName,
+	a.type,
+	a.type_code,
+	(select c.`name` from gw_formats_tree c where c.bm = a.type_code)as formatsTreeName,
+	(select d.`name` from gw_shops_lease d where d.`code` = a.type_code)as shopsLeaseName
+	
+FROM
+	gw_member_grade_integral_detail a
+    where a.id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.memberGradeDetail.deleteId" parameterType="java.lang.Integer" >
+    delete from gw_member_grade_integral_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.memberGradeDetail.batchInsert" parameterType="com.crm.pojo.GwMemberGradeDetailModel" >
+    insert into gw_member_grade_integral_detail (member_grade_integral_code, type_code, 
+      type, discount, integral_number, 
+      exchange_money)
+    values 
+     <foreach collection="list" item="gradeDetailList" index="index" separator="," >
+      (
+      #{gradeDetailList.memberGradeCode,jdbcType=VARCHAR}, 
+      #{gradeDetailList.typeCode,jdbcType=VARCHAR}, 
+      #{gradeDetailList.type,jdbcType=INTEGER}, 
+      #{gradeDetailList.discount,jdbcType=INTEGER}, 
+      #{gradeDetailList.integralNumber,jdbcType=INTEGER}, 
+      #{gradeDetailList.exchangeMoney,jdbcType=DECIMAL})
+      </foreach>
+  </insert>
+  <insert id="gw.memberGradeDetail.insert" parameterType="com.crm.pojo.GwMemberGradeDetailModel" >
+    insert into gw_member_grade_integral_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberGradeCode != null" >
+        member_grade_integral_code,
+      </if>
+      <if test="typeCode != null" >
+        type_code,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="discount != null" >
+        discount,
+      </if>
+      <if test="integralNumber != null" >
+        integral_number,
+      </if>
+      <if test="exchangeMoney != null" >
+        exchange_money,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="memberGradeCode != null" >
+        #{memberGradeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="typeCode != null" >
+        #{typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="discount != null" >
+        #{discount,jdbcType=INTEGER},
+      </if>
+      <if test="integralNumber != null" >
+        #{integralNumber,jdbcType=INTEGER},
+      </if>
+      <if test="exchangeMoney != null" >
+        #{exchangeMoney,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 通过编号更新数据 -->
+  <update id="gw.memberGradeDetail.updateByCode"  parameterType="java.util.Map">  
+        update gw_member_grade_integral_detail
+        <set>
+	      member_grade_integral_code=#{code,jdbcType=VARCHAR},
+	      positive=1
+        </set>
+        where member_grade_integral_code = #{oldCode,jdbcType=VARCHAR}    
+</update>
+  <update id="gw.memberGradeDetail.update" parameterType="com.crm.pojo.GwMemberGradeDetailModel" >
+    update gw_member_grade_integral_detail
+    <set >
+      <if test="memberGradeCode != null" >
+        member_grade_integral_code = #{memberGradeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="typeCode != null" >
+        type_code = #{typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="discount != null" >
+        discount = #{discount,jdbcType=INTEGER},
+      </if>
+      <if test="integralNumber != null" >
+        integral_number = #{integralNumber,jdbcType=INTEGER},
+      </if>
+      <if test="exchangeMoney != null" >
+        exchange_money = #{exchangeMoney,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+ <!-- 根据条件，获取分页LIST集合 -->
+  <select id="gw.memberGradeDetail.selectByPageList" resultMap="BaseResultMap" parameterType="java.util.Map">
+  SELECT
+	a.discount,
+	a.exchange_money,
+	a.id,
+	a.integral_number,
+	a.member_grade_integral_code,
+	(select b.description from gw_member_grade_integral b where b.`code` = a.member_grade_integral_code)as memberGradeName,
+	a.type,
+	a.type_code,
+	(select c.`name` from gw_formats_tree c where c.bm = a.type_code)as formatsTreeName,
+	(select d.`name` from gw_shops_lease d where d.`code` = a.type_code)as shopsLeaseName
+	
+FROM
+	gw_member_grade_integral_detail a
+	<where>
+		<if test="gradeCode!=null and ''!=gradeCode">
+			and a.member_grade_integral_code = #{gradeCode,jdbcType=VARCHAR}
+		</if>
+		<if test="type!=null and ''!=type">
+			and a.type = #{type,jdbcType=VARCHAR}
+		</if>
+		<if test="type1!=null and ''!=type1">
+			and a.type = #{type1,jdbcType=VARCHAR}
+		</if>
+	</where>
+limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER} 
+  </select>
+  
+   <!-- 根据条件，获取分页LIST总数 -->
+  <select id="gw.memberGradeDetail.selectByPageCount" resultType="java.lang.Integer"  parameterType="java.util.Map">
+   select
+  	count(a.id)	
+FROM
+	gw_member_grade_integral_detail a
+	<where>
+		<if test="gradeCode!=null and ''!=gradeCode">
+			and a.member_grade_integral_code = #{gradeCode,jdbcType=VARCHAR}
+		</if>
+		<if test="type!=null and ''!=type">
+			and a.type = #{type,jdbcType=VARCHAR}
+		</if>
+		<if test="type1!=null and ''!=type1">
+			and a.type = #{type1,jdbcType=VARCHAR}
+		</if>
+	</where>
+  </select>
+  
+  <select id="gw.memberGradeDetail.selectByCodeAndType" resultMap="BaseResultMap" parameterType="java.util.Map">
+   select 
+    a.discount,
+	a.exchange_money,
+	a.id,
+	a.integral_number,
+	a.member_grade_integral_code,
+	(select b.description from gw_member_grade_integral b where b.`code` = a.member_grade_integral_code)as memberGradeName,
+	a.type,
+	a.type_code,
+	(select c.`name` from gw_formats_tree c where c.bm = a.type_code)as formatsTreeName,
+	(select d.`name` from gw_shops_lease d where d.`code` = a.type_code)as shopsLeaseName
+    from gw_member_grade_integral_detail a
+    <where>
+    	<if test="type!=null and ''!=type">
+    		and type = #{type,jdbcType=VARCHAR}
+    	</if>
+    	<if test="code!=null and ''!=code">
+    		and member_grade_integral_code = #{code,jdbcType=VARCHAR}
+    	</if>
+    </where>
+  </select>
+  
+  
+  <select id="gw.memberGradeDetail.getMemberIntegralDetatilByCondition" resultMap="BaseResultMap" parameterType="java.util.Map">
+  SELECT
+	a.discount,
+	a.exchange_money,
+	a.id,
+	a.integral_number,
+	a.member_grade_integral_code,
+	(select b.description from gw_member_grade_integral b where b.`code` = a.member_grade_integral_code)as memberGradeName,
+	a.type,
+	a.type_code,
+	(select c.`name` from gw_formats_tree c where c.bm = a.type_code)as formatsTreeName,
+	(select d.`name` from gw_shops_lease d where d.`code` = a.type_code)as shopsLeaseName
+	
+FROM
+	gw_member_grade_integral_detail a,
+	gw_member_grade_integral mg,
+	gw_members m
+	
+	WHERE
+	mg.`code` = a.member_grade_integral_code
+	AND a.type = #{type,jdbcType=INTEGER}
+	AND a.type_code = #{typeCode,jdbcType=VARCHAR} 
+	AND mg.member_grade_code = m.grade
+	AND m.vip_code = #{vipCode,jdbcType=VARCHAR} 
+	and (mg.is_forever=1 or (mg.is_forever=0 and mg.expiry_time &gt;=#{saleDate} and mg.effective_time &lt;=#{saleDate}))
+  </select>
+</mapper>

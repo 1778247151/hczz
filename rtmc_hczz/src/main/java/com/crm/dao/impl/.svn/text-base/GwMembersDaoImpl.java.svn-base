@@ -1,0 +1,160 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwMembersDao;
+import com.crm.pojo.GwMembersModel;
+
+@Repository("gwMembersDaoManage")
+public class GwMembersDaoImpl implements GwMembersDao{
+	@Resource
+	private BaseDao dao;
+	
+	@Override
+	public int insert(GwMembersModel e) {
+		return dao.insert("gw.members.insert",e);
+	}
+
+	@Override
+	public int delete(GwMembersModel e) {
+		return dao.delete("gw.members.deleteById",e.getId());
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwMembersModel e) {
+		return dao.update("gw.members.update",e);
+	}
+
+	@Override
+	public GwMembersModel selectOne(GwMembersModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwMembersModel> selectList(GwMembersModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.members.deleteById", id);
+	}
+
+	@Override
+	public GwMembersModel selectById(int id) {
+		return (GwMembersModel) dao.selectOne("gw.members.selectByPrimaryKey",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		return dao.selectPageList("gw.members.selectPageList", "gw.members.selectCount", params);
+	}
+	
+	
+	@Override
+	public int updateByVipCode(GwMembersModel e) {
+		return dao.update("gw.members.updateByVipCode",e);
+	}
+	@Override
+	public List<GwMembersModel> getAllList() {
+		return dao.selectList("gw.members.selectList");
+	}
+	
+	@Override
+	public GwMembersModel getMembersByCode(String code) {
+		return (GwMembersModel) dao.selectOne("gw.members.selectByCode", code);
+	}
+
+	@Override
+	public List<GwMembersModel> getMemberAllListApi(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.members.selectListApi",params);
+	}
+
+	@Override
+	public GwMembersModel getMemberByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return (GwMembersModel) dao.selectOne("gw.members.getMemberByCondition", params);
+	}
+
+	@Override
+	public int getCountByType(int type) {
+		// TODO Auto-generated method stub
+		return dao.getCount("gw.members.getCountByType", type);
+	}
+	
+	@Override
+	public List<GwMembersModel> getList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.members.getList");
+	}
+
+	@Override
+	public GwMembersModel selectByVipCode(String vipCode) {
+		return (GwMembersModel) dao.selectOne("gw.members.selectByVipCode", vipCode);
+	}
+
+	@Override
+	public BasePageResultVo selectPageListByCondtion(Map<String, Object> params) {
+		return dao.selectPageList("gw.members.selectPageListByCondtion", "gw.members.selectCountByCondtion", params);
+	}
+
+	@Override
+	public List<GwMembersModel> getAllNameAndPhone() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.members.selectAllNameAndPhone");
+	}
+
+	@Override
+	public List<GwMembersModel> getNumberByGrade(String[] grades) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.members.selectNumberByGrade",grades);
+	}
+
+	@Override
+	public int insertMemberSynchronize(GwMembersModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.members.insertMemberSynchronize", e);
+	}
+	
+	@Override
+	public List<GwMembersModel> selectMemberVipCode() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.members.selectMemberVipCode");
+	}
+
+	@Override
+	public int updateJoinActivityMemberIntergral(Map<String, Object> params) {
+		return dao.update("gw.members.updateJoinActivityMemberIntergral", params);
+	}
+
+	@Override
+	public BasePageResultVo selectPageListByBindingMessage(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.members.selectPageListByBingdingMessage", "gw.members.selectCountByBindingMessage", params);
+
+	}
+
+	@Override
+	public List<GwMembersModel> getAllEmail() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.members.selectAllEmail");
+	}
+	
+}

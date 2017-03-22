@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.integralExchangeGoods" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwIntegralExchangeGoodsModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
+    <result column="goods_number" property="goodsNumber" jdbcType="INTEGER" />
+    <result column="exchange_goods_number" property="exchangeGoodsNumber" jdbcType="INTEGER" />
+    <result column="integral_number" property="integralNumber" jdbcType="INTEGER" />
+    <result column="start_time" property="startTime" jdbcType="VARCHAR" />
+    <result column="end_time" property="endTime" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="exchage_member_num" property="exchageMemberNum" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, goods_code, goods_number,exchange_goods_number, integral_number, start_time, end_time, status, create_user_id, 
+    create_time, update_user_id, update_time,exchage_member_num,code,title
+  </sql>
+  <select id="gw.integralExchangeGoods.selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT
+	a.create_time,
+	a.create_user_id,
+	(select b.`name` from gw_admin_users b where b.id = a.create_user_id)as createUserName,
+	a.end_time,
+	a.goods_code,
+	(select c.`name` from gw_present_info c where c.`code` = a.goods_code)as goodsName,
+	a.goods_number,
+	a.id,
+	a.exchage_member_num,a.code,a.title,
+	a.integral_number,
+	a.start_time,
+	a.`status`,
+	a.update_time,
+	a.update_user_id,
+	a.exchange_goods_number,
+	(select b.`name` from gw_admin_users b where b.id = a.update_user_id)as updateUserName
+FROM
+	gw_integral_exchange_goods a
+    where a.id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="gw.integralExchangeGoods.selectExchangeNumberByGroupGoodsCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT
+	a.create_time,
+	a.create_user_id,
+	(select b.`name` from gw_admin_users b where b.id = a.create_user_id)as createUserName,
+	a.end_time,
+	a.goods_code,
+	(select c.`name` from gw_present_info c where c.`code` = a.goods_code)as goodsName,
+	a.goods_number,
+	a.id,
+	a.exchage_member_num,a.code,a.title,
+	a.integral_number,
+	a.start_time,
+	a.`status`,
+	a.update_time,
+	a.update_user_id,
+	SUM(a.exchage_member_num) as exchage_member_num,
+	(select b.`name` from gw_admin_users b where b.id = a.update_user_id)as updateUserName
+FROM
+	gw_integral_exchange_goods a
+    where a.goods_code = #{goodsCode,jdbcType=VARCHAR} group by a.goods_code
+  </select>
+  
+  <delete id="gw.integralExchangeGoods.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_integral_exchange_goods
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <select id="gw.integralExchangeGoods.selectByLastOne" resultMap="BaseResultMap">
+   		SELECT
+			*
+		FROM
+			gw_integral_exchange_goods a
+		WHERE
+			a.code LIKE CONCAT(CONCAT('%', #{time,jdbcType=VARCHAR}), '%') 
+		ORDER BY
+			a.id DESC
+		LIMIT 1
+  </select>
+  
+  <insert id="gw.integralExchangeGoods.batchInsert" parameterType="com.crm.pojo.GwIntegralExchangeGoodsModel" >
+    insert into gw_integral_exchange_goods (id, goods_code, goods_number, 
+      integral_number, start_time, end_time, 
+      status, create_user_id, create_time,
+      exchage_member_num,code,title, 
+      update_user_id, update_time)
+    values (#{id,jdbcType=INTEGER}, #{goodsCode,jdbcType=VARCHAR}, #{goodsNumber,jdbcType=INTEGER}, 
+      #{integralNumber,jdbcType=INTEGER}, #{startTime,jdbcType=VARCHAR}, #{endTime,jdbcType=VARCHAR},
+      #{status,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR}, 
+      #{exchageMemberNum,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},
+      #{updateUserId,jdbcType=INTEGER}, #{updateTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="gw.integralExchangeGoods.insert" parameterType="com.crm.pojo.GwIntegralExchangeGoodsModel" >
+    insert into gw_integral_exchange_goods
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="goodsCode != null" >
+        goods_code,
+      </if>
+      <if test="goodsNumber != null" >
+        goods_number,
+      </if>
+      <if test="exchangeGoodsNumber != null" >
+        exchange_goods_number,
+      </if>
+      <if test="integralNumber != null" >
+        integral_number,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      exchage_member_num,code,title,
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="goodsCode != null" >
+        #{goodsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsNumber != null" >
+        #{goodsNumber,jdbcType=INTEGER},
+      </if>
+      <if test="exchangeGoodsNumber != null" >
+        #{exchangeGoodsNumber,jdbcType=INTEGER},
+      </if>
+      <if test="integralNumber != null" >
+        #{integralNumber,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      #{exchageMemberNum,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.integralExchangeGoods.update" parameterType="com.crm.pojo.GwIntegralExchangeGoodsModel" >
+    update gw_integral_exchange_goods
+    <set >
+      <if test="goodsCode != null" >
+        goods_code = #{goodsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsNumber != null" >
+        goods_number = #{goodsNumber,jdbcType=INTEGER},
+      </if>
+      <if test="exchangeGoodsNumber != null" >
+        exchange_goods_number = #{exchangeGoodsNumber,jdbcType=INTEGER},
+      </if>
+      <if test="integralNumber != null" >
+        integral_number = #{integralNumber,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="exchageMemberNum != null" >
+        exchage_member_num = #{exchageMemberNum,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+ 
+  
+  <!-- 根据条件，获取分页LIST集合 -->
+  <select id="gw.integralExchangeGoods.selectByPageList" resultMap="BaseResultMap" parameterType="java.util.Map">
+	SELECT
+	a.create_time,
+	a.create_user_id,
+	(select b.`name` from gw_admin_users b where b.id = a.create_user_id)as createUserName,
+	a.end_time,
+	a.goods_code,
+	(select c.`name` from gw_present_info c where c.`code` = a.goods_code)as goodsName,
+	a.goods_number,
+	a.id,
+	a.integral_number,
+	a.start_time,
+	a.`status`,
+	a.update_time,
+	a.update_user_id,
+	a.exchange_goods_number,
+	a.exchage_member_num,a.code,a.title,
+	(select b.`name` from gw_admin_users b where b.id = a.update_user_id)as updateUserName
+FROM
+	gw_integral_exchange_goods a
+	<where>
+		<if test="status!=null and status!=''">
+			and a.status = #{status,jdbcType=INTEGER}
+		</if>
+		<if test="goodsCode!=null and goodsCode!=''">
+			and a.goods_code like CONCAT('%',CONCAT(#{goodsCode,jdbcType=VARCHAR}), '%')  
+		</if>
+		<if test="startTime != null and '' != startTime">
+			and a.start_time &gt;=#{startTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and '' != endTime"> 
+			and a.end_time &lt;=#{endTime,jdbcType=VARCHAR}
+		</if>
+    	<if test="startTime != null and '' != startTime and endTime !=null and ''!=endTime">  
+	          and a.start_time &gt;=#{startTime,jdbcType=VARCHAR} and a.end_time &lt;=#{endTime,jdbcType=VARCHAR}
+	    </if>
+	</where>
+	order by a.create_time desc
+limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 根据条件，获取分页LIST集合总数 -->
+  <select id="gw.integralExchangeGoods.selectByPageCount" resultType="java.lang.Integer"  parameterType="java.util.Map">
+  	select 
+      count(a.id)
+    from gw_integral_exchange_goods a 
+    <where>
+		<if test="status!=null and ''!=status">
+			and a.status = #{status,jdbcType=INTEGER}
+		</if>
+		<if test="goodsCode!=null and ''!=goodsCode">
+			and a.goods_code LIKE CONCAT(CONCAT('%', #{goodsCode,jdbcType=VARCHAR}), '%')  
+		</if>
+		<if test="startTime!=null and ''!=startTime and endTime==null and ''==endTime">
+			and a.start_time &gt;= #{startTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime!=null and ''!=endTime and startTime==null and ''==startTime">
+			and a.end_time &lt;= #{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="startTime!=null and ''!=startTime and endTime!=null and ''!=endTime">
+			and a.start_time &gt;= #{startTime,jdbcType=VARCHAR} and a.end_time &lt;= #{endTime,jdbcType=VARCHAR}
+		</if>
+	</where>
+  </select>
+  
+  <update id="gw.integralExchangeGoods.updateById" parameterType="java.util.Map">
+  	update gw_integral_exchange_goods
+  		<set>
+  			<if test="disableStatus!=null and '' !=disableStatus">
+  				status = #{disableStatus,jdbcType=INTEGER}
+  			</if>
+  			<if test="startStatus!=null and ''!=startStatus">
+  				status = #{startStatus,jdbcType=INTEGER}
+  			</if>
+  			<if test="stopStatus!=null and ''!=stopStatus">
+  				status = #{stopStatus,jdbcType=INTEGER}
+  			</if>
+  			<if test="enableStatus!=null and ''!=enableStatus">
+  				status = #{enableStatus,jdbcType=INTEGER}
+  			</if>
+  		</set>
+  		where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据条件查询集合 -->
+  <select id="gw.integralExchangeGoods.selectAllListByCondition" resultMap="BaseResultMap" parameterType="java.util.Map">
+  SELECT
+	a.create_time,
+	a.create_user_id,
+	(select b.`name` from gw_admin_users b where b.id = a.create_user_id)as createUserName,
+	a.end_time,
+	a.goods_code,
+	(select c.`name` from gw_present_info c where c.`code` = a.goods_code)as goodsName,
+	a.goods_number,
+	a.id,
+	a.integral_number,
+	a.start_time,
+	a.`status`,
+	a.update_time,
+	a.update_user_id,
+	a.exchange_goods_number,
+	a.exchage_member_num,a.code,a.title,
+	(select b.`name` from gw_admin_users b where b.id = a.update_user_id)as updateUserName
+FROM
+	gw_integral_exchange_goods a   
+	<where>
+		<if test="oneStatus!=null and ''!=oneStatus and twoStatus!=null and ''!=twoStatus">
+			a.status in(#{oneStatus,jdbcType=INTEGER},#{twoStatus,jdbcType=INTEGER})
+		</if>
+		<if test="status!=null and ''!=status">
+			a.status = #{status,jdbcType=INTEGER}
+		</if>
+		<if test="goodsCode!=null and ''!=goodsCode">
+			a.goods_code = #{goodsCode,jdbcType=VARCHAR}
+		</if>
+	</where>
+  </select>
+</mapper>

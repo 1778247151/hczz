@@ -1,0 +1,37 @@
+package com.crm.service;
+
+import java.util.List;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwDepartmentModel;
+import com.crm.pojo.GwRepeatVisitDetailModel;
+import com.crm.pojo.GwRepeatVisitModel;
+import com.crm.pojo.GwSysLoggerModel;
+/**
+ * 
+ * GwRepeatVisitDetailService:回访业务逻辑层接口
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+public interface GwRepeatVisitDetailService extends Services<GwRepeatVisitDetailModel>{
+	List<GwRepeatVisitDetailModel> selectDetailVisitByCode(String code);
+	
+	/**
+	 * 
+	 * 批量添加回访详细记录
+	 * @param list
+	 * @return
+	 */
+	int insetDetailBatch(List<GwRepeatVisitDetailModel> list) ;
+	
+	/**
+	 * 根据回访code获取list集合
+	 * 
+	 * @param code
+	 * @return
+	 */
+	List<GwRepeatVisitDetailModel> getRepeatVisitDetailByCode(String code);
+}

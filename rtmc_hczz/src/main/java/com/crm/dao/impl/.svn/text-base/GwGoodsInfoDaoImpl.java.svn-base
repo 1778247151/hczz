@@ -1,0 +1,112 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import org.springframework.stereotype.Repository;
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+
+import com.crm.dao.GwGoodsInfoDao;
+import com.crm.pojo.GwGoodsInfoModel;
+
+/**
+ * GwGoodsInfoDaoImpl:货物管理实现
+ * 
+ * @author xiangtao
+ * @date 2016年5月18日
+ */
+@Repository("gwGoodsInfoDaoManage")
+public class GwGoodsInfoDaoImpl implements GwGoodsInfoDao {
+	@Resource
+	private BaseDao dao;
+
+	@Override
+	public int insert(GwGoodsInfoModel e) {
+		return dao.insert("gw.goodsInfo.insert", e);
+	}
+
+	@Override
+	public int delete(GwGoodsInfoModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwGoodsInfoModel e) {
+		return dao.update("gw.goodsInfo.update", e);
+	}
+
+	@Override
+	public GwGoodsInfoModel selectOne(GwGoodsInfoModel e) {
+		return null;
+	}
+
+	@Override
+	public List<GwGoodsInfoModel> selectList(GwGoodsInfoModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		return dao.delete("gw.goodsInfo.deleteByPrimaryKey", id);
+	}
+
+	@Override
+	public GwGoodsInfoModel selectById(int id) {
+		return (GwGoodsInfoModel) dao.selectOne("gw.goodsInfo.selectByPrimaryKey", id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		return dao.selectPageList("gw.goodsInfo.selectPageList", "gw.goodsInfo.selectCount", params);
+	}
+
+	@Override
+	public List<GwGoodsInfoModel> getAllList() {
+		return dao.selectList("gw.goodsInfo.selectList");
+	}
+
+	@Override
+	public GwGoodsInfoModel getGoodsInfoByCode(String code) {
+		return (GwGoodsInfoModel) dao.selectOne("gw.goodsInfo.selectBycode", code);
+	}
+
+	@Override
+	public List<GwGoodsInfoModel> getGoodsInfoByShopsLeaseCodeApi(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.goodsInfo.getGoodsInfoByShopsLeaseCodeApi", params);
+	}
+
+	@Override
+	public int deleteAllForGoodsInfo() {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.goodsInfo.deleteAll");
+	}
+
+	@Override
+	public int batchInsert(List<GwGoodsInfoModel> list) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.goodsInfo.batchinsert", list);
+	}
+
+	@Override
+	public int batchUpdate(List<GwGoodsInfoModel> list) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.goodsInfo.batchUpdate", list);
+	}
+
+	@Override
+	public int batchDelete(List<GwGoodsInfoModel> list) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.goodsInfo.batchDelete", list);
+	}
+
+}

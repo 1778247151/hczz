@@ -1,0 +1,142 @@
+package com.crm.dao;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwShopsInfoModel;
+/**
+ * 
+ * GwShopsInfoDao:商铺信息数据访问层接口的定义
+ *
+ * @author yumaochun
+ * @date  2016年3月11日
+ * @version  jdk1.8
+ *
+ */
+public interface GwShopsInfoDao extends DaoManager<GwShopsInfoModel>{
+	GwShopsInfoModel getShopsByUnitId(String unId);
+
+	
+	/**
+	 * 根据楼宇ID获取对应的单元信息
+	 * @param params
+	 * @return
+	 */
+	BasePageResultVo getAllUnitInfoBybuildId(Map<String,Object> params);
+	
+	
+	/**
+	 * 根据编号获取商铺信息的接口
+	 * @param code
+	 * @return
+	 */
+	public GwShopsInfoModel getShopsInfoByCode(String code);
+
+	/**
+	 * 批量更新商铺出租状态
+	 * @param list
+	 * @return
+	 */
+	public int batchUpdateShopsInfoList(List<HashMap<String,Object>> list);
+	
+	/**
+	 * 根据ID 查询多个商铺集合
+	 * @param list
+	 * @return
+	 */
+	public List<GwShopsInfoModel> getShopsInfoListById(List<HashMap<String,Object>> list);
+	
+	/**
+	 * 获取所有未出租的单元信息集合分页（用户单元管理）
+	 * @param params
+	 * @return
+	 */
+	public BasePageResultVo getNotLeaseShopsList(Map<String,Object> params);
+	
+	/**
+	 * 根据店铺ID获取对应的单元信息
+	 * @param params
+	 * @return
+	 */
+	public List<GwShopsInfoModel> getShopsInfoByShopsLeaseId(Map<String,Object> params);
+	
+	
+	/**
+	 * 根据ID数组查询单元信息
+	 * @param params
+	 * @return
+	 */
+	public BasePageResultVo getShopsInfoByIds(Map<String,Object> params);
+	
+	/**
+	 * 根据ID数组批量修改单元信息
+	 * @param params
+	 * @return
+	 */
+	public int updateByUnitNumbers(Map<String,Object> params);
+	
+	/**
+	 * 批量添加单元信息
+	 * @param shopsInfoList
+	 * @return
+	 */
+	public int batchInsertShopsInfo(List<GwShopsInfoModel> shopsInfoList);
+	
+	/**
+	 * 根据单元号修改单元信息
+	 * @param params
+	 * @return
+	 */
+	public int updateByUnitNumber(Map<String,Object> params);
+	
+	/**
+	 * 
+	 * getShopsInfoByCondition:根据条件获取单元集合
+	 *
+	 * @param params
+	 * @return
+	 */
+	public List<GwShopsInfoModel> getShopsInfoByCondition(Map params);
+	
+	/**
+	 * 批量插入
+	 * 
+	 * @param list
+	 * @return
+	 */
+	public int batchInsert(List<GwShopsInfoModel> list);
+
+	/**
+	 * 
+	 * batchUpdate:批量更新
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param list
+	 * @return
+	 */
+	public int batchUpdate(List<GwShopsInfoModel> list);
+
+	/**
+	 * 
+	 * batchDelete:批量删除
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月12日
+	 * @param list
+	 * @return
+	 */
+	public int batchDelete(List<GwShopsInfoModel> list);
+	/**
+	 * 
+	 * deleteAll:删除全部信息
+	 *
+	 * @author hemingjun
+	 * @date 2016年10月19日
+	 * @return
+	 */
+	public int deleteAll();
+}

@@ -1,0 +1,97 @@
+package com.crm.service;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwLockerModel;
+
+/**
+ * 
+ * GwLockerService:储物柜业务逻辑层接口
+ *
+ * @author hanzhiqiang
+ * @date  2016年11月9日
+ * @version  jdk1.8
+ *
+ */
+public interface GwLockerService extends Services<GwLockerModel>{
+	/**
+	 * 
+	 * getLockerById:根据编号，获得信息
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 * @param id
+	 * @return
+	 */
+	public GwLockerModel getLockerById(Integer id);
+	
+	/**
+	 * 
+	 * getListsApi:获取所有集合接口
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 * @return
+	 */
+	public List<GwLockerModel> getListsApi();
+	/**
+	 * 
+	 * getLockerListByCondition:根据条件获取集合
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 * @param params
+	 * @return
+	 */
+	public List<GwLockerModel> getLockerListByCondition(Map<String, Object> params);
+
+	/**
+	 * 
+	 * addLocker:添加
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 */
+	public int addLocker(GwLockerModel gwLockerModel);
+	
+	/**
+	 * 
+	 * updateLocker:修改
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 * @return
+	 */
+	public int updateLocker(GwLockerModel gwLockerModel);
+	
+	/**
+	 * 
+	 * deleteLockerById:删除
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 * @param id
+	 * @return
+	 */
+	public int deleteLockerById(int id);
+	/**
+	 * 根据编号查询当天最后一条记录
+	 * @param time
+	 * @return
+	 */
+	public GwLockerModel getLockerByLastOne(String time);
+
+	public int updateByCode(String lockerCode);
+
+	public int updateReturnByCode(String lockerCode);
+}

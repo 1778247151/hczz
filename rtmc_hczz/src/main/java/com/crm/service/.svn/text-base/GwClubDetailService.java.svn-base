@@ -1,0 +1,99 @@
+package com.crm.service;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwClubDetailModel;
+
+/**
+ * 
+ * GwClubDetailService:俱乐部业务逻辑层接口
+ *
+ * @author hanzhiqiang
+ * @date  2016年11月11日
+ * @version  jdk1.8
+ *
+ */
+public interface GwClubDetailService extends Services<GwClubDetailModel>{
+	/**
+	 * 
+	 * getClubDetailById:根据编号，获得信息
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 * @param id
+	 * @return
+	 */
+	public GwClubDetailModel getClubDetailById(Integer id);
+	
+	/**
+	 * 
+	 * getListsApi:获取所有集合接口
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 * @return
+	 */
+	public List<GwClubDetailModel> getListsApi();
+	/**
+	 * 
+	 * getClubDetailListByCondition:根据条件获取集合
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 * @param params
+	 * @return
+	 */
+	public List<GwClubDetailModel> getClubDetailListByCondition(Map<String, Object> params);
+
+	/**
+	 * 
+	 * addClubDetail:添加
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 */
+	public int addClubDetail(GwClubDetailModel gwClubDetailModel);
+	
+	/**
+	 * 
+	 * updateClubDetail:修改
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 * @return
+	 */
+	public int updateClubDetail(GwClubDetailModel gwClubDetailModel);
+	
+	/**
+	 * 
+	 * deleteClubDetailById:删除
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 * @param id
+	 * @return
+	 */
+	public int deleteClubDetailById(int id);
+	/**
+	 * 根据编号查询当天最后一条记录
+	 * @param time
+	 * @return
+	 */
+	public GwClubDetailModel getClubDetailByLastOne(String time);
+	/**
+	 * 批量插入适用范围
+	 * @param clubDetailList
+	 * @return
+	 */
+	public int batchInsertClubDetail(List<GwClubDetailModel> clubDetailList);
+}

@@ -1,0 +1,470 @@
+package com.crm.pojo;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import com.crm.common.CustomBigdecimalSerializer;
+import com.crm.enums.ActivityStatusEnum;
+import com.crm.enums.ShopsStateEnum;
+import com.crm.enums.ShopsTypeEnum;
+/**
+ * 
+ * GwShopsInfoModel:单元信息实体类
+ *
+ * @author yumaochun
+ * @date  2016年3月15日
+ * @version  jdk1.8
+ *
+ */
+public class GwShopsInfoModel implements Serializable{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6877530739655170048L;
+
+	private Integer id;
+
+    private Integer gwBuildingTreeId;
+
+    private Integer gwMallInfoId;
+
+    private String unitNumber;
+
+    private String unitInfo;
+
+    private Integer gwPropertyAttributeId;
+
+    private String area;
+
+    private Integer gwFormatsTreeId;
+
+    private Integer state;
+   
+    private String createTime;
+    
+    private Integer createUser;
+    
+    private String updateTime;
+    
+    private Integer updateUser;
+    
+    private Integer gwShopsInfoId;
+    /**
+     * 创建人名称
+     */
+    private String createUserName;
+    
+    /**
+     * 修改人名称
+     */
+    private String updateUserName;
+    /**
+     * 购物中心名称
+     */
+    private String mallInfoName;
+    /**
+     * 楼宇名称
+     */
+    private String buildingTreeName;
+    /**
+     * 商品业态
+     */
+    private String formatsTreeName;
+    /**
+     * 物业性质名称
+     */
+    private String propertyAttributeName;
+    
+    /**
+     * 类型名称
+     */
+    private String stateName;
+    
+    /**
+     * 合同号
+     */
+    private String contractCode; 
+
+    private Integer confirmUserId;
+    
+    private String confirmUserName;
+    
+    private String confirmTime;
+    
+    private Integer unconfirmUserId;
+    
+    private String unconfirmTime;
+    
+    private String unconfirmUserName;
+    
+    private Integer type;
+    
+    private String typeName;
+    
+    private String unitSplit;
+    
+    private BigDecimal realArea;
+    
+    private BigDecimal buildArea;
+    
+    private BigDecimal benchmarkDayRent;
+    
+    private BigDecimal benckmarkMonthRent;
+    
+    private BigDecimal reserveDayRent;
+    
+    private BigDecimal reserveMonthRent;
+    
+    @JsonSerialize(using = CustomBigdecimalSerializer.class) 
+	public BigDecimal getRealArea() {
+		return realArea;
+	}
+
+
+	public void setRealArea(BigDecimal realArea) {
+		this.realArea = realArea;
+	}
+
+	@JsonSerialize(using = CustomBigdecimalSerializer.class) 
+	public BigDecimal getBuildArea() {
+		return buildArea;
+	}
+
+
+	public void setBuildArea(BigDecimal buildArea) {
+		this.buildArea = buildArea;
+	}
+
+
+	public String getUnitSplit() {
+		return unitSplit;
+	}
+
+
+	public void setUnitSplit(String unitSplit) {
+		this.unitSplit = unitSplit;
+	}
+
+
+	public Integer getType() {
+		return type;
+	}
+
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+
+	public String getTypeName() {
+		return ShopsTypeEnum.getDisplayName(getType());
+	}
+
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
+	}
+
+
+	public Integer getConfirmUserId() {
+		return confirmUserId;
+	}
+
+
+	public void setConfirmUserId(Integer confirmUserId) {
+		this.confirmUserId = confirmUserId;
+	}
+
+
+	public String getConfirmUserName() {
+		return confirmUserName;
+	}
+
+
+	public void setConfirmUserName(String confirmUserName) {
+		this.confirmUserName = confirmUserName;
+	}
+
+
+	public String getConfirmTime() {
+		return confirmTime;
+	}
+
+
+	public void setConfirmTime(String confirmTime) {
+		this.confirmTime = confirmTime;
+	}
+
+
+	public Integer getUnconfirmUserId() {
+		return unconfirmUserId;
+	}
+
+
+	public void setUnconfirmUserId(Integer unconfirmUserId) {
+		this.unconfirmUserId = unconfirmUserId;
+	}
+
+
+	public String getUnconfirmTime() {
+		return unconfirmTime;
+	}
+
+
+	public void setUnconfirmTime(String unconfirmTime) {
+		this.unconfirmTime = unconfirmTime;
+	}
+
+
+	public String getUnconfirmUserName() {
+		return unconfirmUserName;
+	}
+
+
+	public void setUnconfirmUserName(String unconfirmUserName) {
+		this.unconfirmUserName = unconfirmUserName;
+	}
+
+
+	public Integer getGwShopsInfoId() {
+		return gwShopsInfoId;
+	}
+
+
+	public void setGwShopsInfoId(Integer gwShopsInfoId) {
+		this.gwShopsInfoId = gwShopsInfoId;
+	}
+
+
+	public String getContractCode() {
+		return contractCode;
+	}
+
+
+	public void setContractCode(String contractCode) {
+		this.contractCode = contractCode;
+	}
+
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+
+	public Integer getCreateUser() {
+		return createUser;
+	}
+
+
+	public void setCreateUser(Integer createUser) {
+		this.createUser = createUser;
+	}
+
+
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
+
+
+
+
+	public Integer getUpdateUser() {
+		return updateUser;
+	}
+
+
+	public void setUpdateUser(Integer updateUser) {
+		this.updateUser = updateUser;
+	}
+
+
+	public String getCreateUserName() {
+		return createUserName;
+	}
+
+
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
+	}
+
+
+	public String getUpdateUserName() {
+		return updateUserName;
+	}
+
+
+	public void setUpdateUserName(String updateUserName) {
+		this.updateUserName = updateUserName;
+	}
+
+
+	public String getStateName() {
+    	return ShopsStateEnum.getDisplayName(getState());
+	}
+ 
+
+	public void setStateName(String stateName) {
+		this.stateName = stateName;
+	}
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getGwBuildingTreeId() {
+        return gwBuildingTreeId;
+    }
+
+    public void setGwBuildingTreeId(Integer gwBuildingTreeId) {
+        this.gwBuildingTreeId = gwBuildingTreeId;
+    }
+
+    public Integer getGwMallInfoId() {
+        return gwMallInfoId;
+    }
+
+    public void setGwMallInfoId(Integer gwMallInfoId) {
+        this.gwMallInfoId = gwMallInfoId;
+    }
+
+    public String getUnitNumber() {
+        return unitNumber;
+    }
+
+    public void setUnitNumber(String unitNumber) {
+        this.unitNumber = unitNumber == null ? null : unitNumber.trim();
+    }
+
+    public String getUnitInfo() {
+        return unitInfo;
+    }
+
+    public void setUnitInfo(String unitInfo) {
+        this.unitInfo = unitInfo == null ? null : unitInfo.trim();
+    }
+
+    public Integer getGwPropertyAttributeId() {
+        return gwPropertyAttributeId;
+    }
+
+    public void setGwPropertyAttributeId(Integer gwPropertyAttributeId) {
+        this.gwPropertyAttributeId = gwPropertyAttributeId;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area == null ? null : area.trim();
+    }
+
+    public Integer getGwFormatsTreeId() {
+        return gwFormatsTreeId;
+    }
+
+    public void setGwFormatsTreeId(Integer gwFormatsTreeId) {
+        this.gwFormatsTreeId = gwFormatsTreeId;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+  
+
+	public String getMallInfoName() {
+		return mallInfoName;
+	}
+
+	public void setMallInfoName(String mallInfoName) {
+		this.mallInfoName = mallInfoName;
+	}
+
+	public String getBuildingTreeName() {
+		return buildingTreeName;
+	}
+
+	public void setBuildingTreeName(String buildingTreeName) {
+		this.buildingTreeName = buildingTreeName;
+	}
+
+	public String getFormatsTreeName() {
+		return formatsTreeName;
+	}
+	
+
+	public String getPropertyAttributeName() {
+		return propertyAttributeName;
+	}
+
+	public void setPropertyAttributeName(String propertyAttributeName) {
+		this.propertyAttributeName = propertyAttributeName;
+	}
+
+	public void setFormatsTreeName(String formatsTreeName) {
+		this.formatsTreeName = formatsTreeName;
+	}
+
+
+	public BigDecimal getBenchmarkDayRent() {
+		return benchmarkDayRent;
+	}
+
+
+	public void setBenchmarkDayRent(BigDecimal benchmarkDayRent) {
+		this.benchmarkDayRent = benchmarkDayRent;
+	}
+
+
+	public BigDecimal getBenckmarkMonthRent() {
+		return benckmarkMonthRent;
+	}
+
+
+	public void setBenckmarkMonthRent(BigDecimal benckmarkMonthRent) {
+		this.benckmarkMonthRent = benckmarkMonthRent;
+	}
+
+
+	public BigDecimal getReserveDayRent() {
+		return reserveDayRent;
+	}
+
+
+	public void setReserveDayRent(BigDecimal reserveDayRent) {
+		this.reserveDayRent = reserveDayRent;
+	}
+
+
+	public BigDecimal getReserveMonthRent() {
+		return reserveMonthRent;
+	}
+
+
+	public void setReserveMonthRent(BigDecimal reserveMonthRent) {
+		this.reserveMonthRent = reserveMonthRent;
+	}
+	
+    
+}

@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>#</title>
+<link href="/js/ligerui/lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <script src="/js/ligerui/lib/jquery/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/core/base.js" type="text/javascript"></script>
+    <link type="text/css" rel="stylesheet" href="/css/base.css" />
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerForm.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerTree.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerDateEditor.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerComboBox.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerCheckBox.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerButton.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerRadio.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerTextBox.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerTip.js" type="text/javascript"></script>
+     <script type="text/javascript" src="/js/action/sys.common.js"></script>
+    <!-- validate验证框架 -->
+    <script src="/js/ligerui/lib/jquery-validation/jquery.validate.min.js" type="text/javascript"></script> 
+    <script src="/js/ligerui/lib/jquery-validation/jquery.metadata.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/jquery-validation/messages_cn.js" type="text/javascript"></script>
+    <script src="/js/validate.util.js" type="text/javascript"></script>
+<style>
+	.l-form ul{ clear:both; margin-top:2px; margin-bottom:2px;padding-top:10px}
+</style>
+    <script type="text/javascript">
+    var id=$.fsh.requestParam("id");
+    var form;
+         $(function ()
+         { 
+             //创建表单结构 
+             form = $("#gwRoleForm").ligerForm({
+                 inputWidth: 260, labelWidth:120, space: 40,labelAlign:'right',
+ 				validate : true,
+                 fields: [
+ 				{ display: "中文名称", name: "cnName", newline: true, type: "text",validate:{required:true}},
+ 				{ display: "英文名称", name: "enName", newline: true, type: "text",validate:{required:true}},
+ 				{ display: "描述", name: "note", newline: true, type: "text",validate:{required:true}},
+ 				{ display: "状态", name: "state", newline: true, type: "select" ,options: { valueFieldID: "state" ,url:"/data/state.txt" },validate:{required:true}},
+ 				{ display: "排序", name: "orderNum", newline: true, type: "text" ,validate:{required:true}},
+                 ]
+             }); 
+             getGwRoleById(id);
+         });
+         
+         //获取角色信息
+         function getGwRoleById(id){
+         	$.ajax({
+         		url:'/role/getRoleById.do?id='+id,
+         		method:'POST',
+         		dataType:'json',
+         		success:function(data){
+         			if(data.status.code=="10000"){
+      				  var form2 = new liger.get("gwRoleForm");
+      				form2.setData(data.data);
+      			  }else{
+      				 $.ligerDialog.alert(data.status.msg, "提示信息", "error");
+      			 }
+         		}
+         	});
+         }
+        //保存角色
+        function saveGwRole(){
+        	if(!$("#gwRoleForm").valid()){
+        		return;
+        	}
+        	$.ajax({
+        		url:'/role/updateRole.do?id='+id,
+        		method:'POST',
+        		dataType:'json',
+        		data:$("#gwRoleForm").serialize(),
+        		success:function(data){
+        			if(data.status.code=="10000"){
+        				$.ligerDialog.alert(data.status.msg, "提示信息", "success",function(){
+        					  parent.reflushData();
+        			          parent.closeDialog();
+        			       });
+        			}else{
+        				$.ligerDialog.alert(data.status.msg, "提示信息", "error");
+        				parent.closeDialog();
+        			}
+        		},
+        		error:function(data){
+        			alert();
+        			$.ligerDialog.alert(data.msg, "提示信息", "error");
+        			//Role
+        		}
+        		
+        	});
+        }
+    </script>
+</head>
+<body>
+
+   <form id="gwRoleForm" style="margin-top:30px;margin-left:90px;">
+     
+    </form>  
+    
+    <div class="btn" style="margin-left:265px;margin-top:30px;">
+           <a class="update" href="javascript:saveGwRole()">保存</a>
+     </div> 
+</body>
+</html>

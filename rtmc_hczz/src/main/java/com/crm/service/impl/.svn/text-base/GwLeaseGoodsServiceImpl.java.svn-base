@@ -1,0 +1,76 @@
+package com.crm.service.impl;
+
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwLeaseGoodsDao;
+import com.crm.pojo.GwLeaseGoodsModel;
+import com.crm.service.GwLeaseGoodsService;
+import com.crm.common.ConstantUtils;
+import com.crm.util.FileUtil;
+
+/**
+ * 
+ * GwGoodsServiceImpl:物品维护业务逻辑层实现
+ *
+ * @author chengpengfei
+ * @date  2016年6月23日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwGoodsServiceManage")
+public class GwLeaseGoodsServiceImpl extends ServersManager<GwLeaseGoodsModel, GwLeaseGoodsDao> implements GwLeaseGoodsService{
+
+	@Resource(name="gwGoodsDaoManage")
+	@Override
+	public void setDao(GwLeaseGoodsDao dao) {
+		// TODO Auto-generated method stub
+		this.dao = dao;
+	}
+
+	@Override
+	public GwLeaseGoodsModel getGoodsByCode(String code) {
+		// TODO Auto-generated method stub
+		return dao.getGoodsByCode(code);
+	}
+
+	@Override
+	public GwLeaseGoodsModel getGoodsByLastOne(String time) {
+		// TODO Auto-generated method stub
+		return dao.getGoodsByLastOne(time);
+	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public boolean deleteAndCopyFile(String filePathAndName, String fileName,HttpServletRequest request) {
+		// TODO Auto-generated method stub
+		//文件根目录
+		 String bootPath= request.getSession().getServletContext().getRealPath("/");
+		 String relFpath = bootPath+ConstantUtils.TEMP_PATH+"/"+filePathAndName;
+		 //新的文件路径
+		 String newPathFlie = bootPath+ConstantUtils.UPLOAD_IMAGE_PATH+"/"+fileName;
+		//复制文件
+		FileUtil.copyFile(relFpath, newPathFlie);
+		
+		//删除文件
+		boolean flag = FileUtil.delFile(relFpath);
+		if(flag ==true){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	@Override
+	public int updateGoodsNumber(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.updateGoodsNumber(map);
+	}
+	
+}

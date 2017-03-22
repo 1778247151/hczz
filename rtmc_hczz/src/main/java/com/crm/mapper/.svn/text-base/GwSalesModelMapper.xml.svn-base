@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.sales">
+	<resultMap id="BaseResultMap" type="com.crm.pojo.GwSalesModel">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="gw_txserial" property="gwTxserial" jdbcType="VARCHAR" />
+		<result column="gw_salesnumber" property="gwSalesnumber"
+			jdbcType="INTEGER" />
+		<result column="gw_salesamount" property="gwSalesamount"
+			jdbcType="DECIMAL" />
+		<result column="gw_txdate" property="gwTxdate" jdbcType="VARCHAR" />
+		<result column="gw_txtime" property="gwTxtime" jdbcType="VARCHAR" />
+		<result column="gw_tillid" property="gwTillid" jdbcType="VARCHAR" />
+		<result column="shop_code" property="shopCode" jdbcType="VARCHAR" />
+		<result column="gw_paymenttenderCode" property="gwPaymenttendercode"
+			jdbcType="VARCHAR" />
+		<result column="gw_memberCode" property="gwMembercode"
+			jdbcType="VARCHAR" />
+		<result column="integral_number" property="integralNumber"
+			jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, gw_txserial, gw_salesnumber, gw_salesamount, gw_txdate,
+		gw_txtime,
+		gw_tillid,
+		shop_code, gw_paymenttenderCode, gw_memberCode,
+		integral_number,create_time
+	</sql>
+	
+	<select id="gw.sales.selectSalesByTxserial" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from gw_sales
+		where gw_txserial = #{txserial,jdbcType=VARCHAR}
+	</select>
+	<select id="gw.sales.selectById" resultMap="BaseResultMap"  parameterType="java.lang.Integer">
+		
+		SELECT
+		id,
+		gw_txserial,
+		gw_salesnumber,
+		gw_salesamount,
+		gw_memberCode,
+		gw_txdate,
+		gw_txtime,
+		gw_tillid,
+		(SELECT s.`name` FROM gw_shops_lease s WHERE s.`code` = shop_code) as shopName,
+		(SELECT c.paymentname FROM `gw_settlement_paymenttender` c where `code`=gw_paymenttenderCode) as gwPaymenttenderCode,
+		(select m.user_name from gw_members m where m.vip_code=gw_memberCode) as mermberName,
+		integral_number,
+		create_time
+		from gw_sales
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="gw.sales.deleteById" parameterType="java.lang.Integer">
+		delete from
+		gw_sales
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="gw.sales.insert" parameterType="com.crm.pojo.GwSalesModel">
+		insert into gw_sales
+		(id, gw_txserial, gw_salesnumber,
+		gw_salesamount, gw_txdate, gw_txtime,
+		gw_tillid, shop_code, gw_paymenttenderCode,
+		gw_memberCode,
+		integral_number,create_time)
+		values (#{id,jdbcType=INTEGER},
+		#{gwTxserial,jdbcType=VARCHAR},
+		#{gwSalesnumber,jdbcType=INTEGER},
+		#{gwSalesamount,jdbcType=DECIMAL}, #{gwTxdate,jdbcType=VARCHAR},
+		#{gwTxtime,jdbcType=VARCHAR},
+		#{gwTillid,jdbcType=VARCHAR},
+		#{shopCode,jdbcType=VARCHAR},
+		#{gwPaymenttendercode,jdbcType=VARCHAR},
+		#{gwMembercode,jdbcType=VARCHAR}, #{integralNumber,jdbcType=INTEGER},
+		#{createTime,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.crm.pojo.GwSalesModel">
+		insert into gw_sales
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="gwTxserial != null">
+				gw_txserial,
+			</if>
+			<if test="gwSalesnumber != null">
+				gw_salesnumber,
+			</if>
+			<if test="gwSalesamount != null">
+				gw_salesamount,
+			</if>
+			<if test="gwTxdate != null">
+				gw_txdate,
+			</if>
+			<if test="gwTxtime != null">
+				gw_txtime,
+			</if>
+			<if test="gwTillid != null">
+				gw_tillid,
+			</if>
+			<if test="shopCode != null">
+				shop_code,
+			</if>
+			<if test="gwPaymenttendercode != null">
+				gw_paymenttenderCode,
+			</if>
+			<if test="gwMembercode != null">
+				gw_memberCode,
+			</if>
+			<if test="integralNumber != null">
+				integral_number,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="gwTxserial != null">
+				#{gwTxserial,jdbcType=VARCHAR},
+			</if>
+			<if test="gwSalesnumber != null">
+				#{gwSalesnumber,jdbcType=INTEGER},
+			</if>
+			<if test="gwSalesamount != null">
+				#{gwSalesamount,jdbcType=DECIMAL},
+			</if>
+			<if test="gwTxdate != null">
+				#{gwTxdate,jdbcType=VARCHAR},
+			</if>
+			<if test="gwTxtime != null">
+				#{gwTxtime,jdbcType=VARCHAR},
+			</if>
+			<if test="gwTillid != null">
+				#{gwTillid,jdbcType=VARCHAR},
+			</if>
+			<if test="shopCode != null">
+				#{shopCode,jdbcType=VARCHAR},
+			</if>
+			<if test="gwPaymenttendercode != null">
+				#{gwPaymenttendercode,jdbcType=VARCHAR},
+			</if>
+			<if test="gwMembercode != null">
+				#{gwMembercode,jdbcType=VARCHAR},
+			</if>
+			<if test="integralNumber != null">
+				#{integralNumber,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.crm.pojo.GwSalesModel">
+		update gw_sales
+		<set>
+			<if test="gwTxserial != null">
+				gw_txserial = #{gwTxserial,jdbcType=VARCHAR},
+			</if>
+			<if test="gwSalesnumber != null">
+				gw_salesnumber = #{gwSalesnumber,jdbcType=INTEGER},
+			</if>
+			<if test="gwSalesamount != null">
+				gw_salesamount = #{gwSalesamount,jdbcType=DECIMAL},
+			</if>
+			<if test="gwTxdate != null">
+				gw_txdate = #{gwTxdate,jdbcType=VARCHAR},
+			</if>
+			<if test="gwTxtime != null">
+				gw_txtime = #{gwTxtime,jdbcType=VARCHAR},
+			</if>
+			<if test="gwTillid != null">
+				gw_tillid = #{gwTillid,jdbcType=VARCHAR},
+			</if>
+			<if test="shopCode != null">
+				shop_code = #{shopCode,jdbcType=VARCHAR},
+			</if>
+			<if test="gwPaymenttendercode != null">
+				gw_paymenttenderCode =
+				#{gwPaymenttendercode,jdbcType=VARCHAR},
+			</if>
+			<if test="gwMembercode != null">
+				gw_memberCode = #{gwMembercode,jdbcType=VARCHAR},
+			</if>
+			<if test="integralNumber != null">
+				integral_number = #{integralNumber,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.crm.pojo.GwSalesModel">
+		update gw_sales
+		set gw_txserial = #{gwTxserial,jdbcType=VARCHAR},
+		gw_salesnumber =
+		#{gwSalesnumber,jdbcType=INTEGER},
+		gw_salesamount =
+		#{gwSalesamount,jdbcType=DECIMAL},
+		gw_txdate =
+		#{gwTxdate,jdbcType=VARCHAR},
+		gw_txtime = #{gwTxtime,jdbcType=VARCHAR},
+		gw_tillid = #{gwTillid,jdbcType=VARCHAR},
+		shop_code =
+		#{shopCode,jdbcType=VARCHAR},
+		gw_paymenttenderCode =
+		#{gwPaymenttendercode,jdbcType=VARCHAR},
+		gw_memberCode =
+		#{gwMembercode,jdbcType=VARCHAR},
+		integral_number =
+		#{integralNumber,jdbcType=INTEGER},
+		create_time=#{crateTime,jdbcType=VARCHAR}
+		where id =
+		#{id,jdbcType=INTEGER}
+	</update>
+	
+	<select id="gw.sales.getAllList" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from gw_sales
+	</select>
+	
+	<!-- 根据条件查询销售数据 -->
+	<select id="gw.sales.getListByMemberCode" resultMap="BaseResultMap"
+	parameterType="java.lang.String">
+	SELECT
+	gw_txserial,
+	gw_salesamount,
+	gw_txdate,
+	gw_txtime,
+	gw_tillid,
+	(SELECT s.`name` FROM gw_shops_lease s WHERE s.`code` = shop_code) as shopName,
+	(select m.user_name from gw_members m where m.vip_code=gw_memberCode) as mermberName,
+	integral_number
+	FROM
+	gw_sales where 1=1
+		<if test="_parameter != null and '' != _parameter"> 
+			and gw_memberCode=#{_parameter,jdbcType=VARCHAR}
+		</if>
+		order by integral_number desc
+	</select>
+	
+	
+	<!-- 根据条件查询销售数据分页 -->
+	<select id="gw.sales.selectPageList" resultMap="BaseResultMap"
+	parameterType="java.util.Map">
+	SELECT
+	id,
+	gw_txserial,
+	gw_salesnumber,
+	gw_salesamount,
+	gw_txdate,
+	gw_txtime,
+	gw_tillid,
+	(SELECT s.`name` FROM gw_shops_lease s WHERE s.`code` = shop_code) as shopName,
+	(SELECT c.paymentname FROM `gw_settlement_paymenttender` c where `code`=gw_paymenttenderCode) as gwPaymenttenderCode,
+	(select m.user_name from gw_members m where m.vip_code=gw_memberCode) as mermberName,
+	integral_number,
+	create_time
+	FROM
+	gw_sales where 1=1
+		<if test="startTime != null and '' != startTime">
+			and gw_txdate &gt;=#{startTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and '' != endTime"> 
+			and gw_txdate &lt;=#{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="shopCode != null and '' != shopCode"> 
+			and shop_code=#{shopCode,jdbcType=VARCHAR}
+		</if>
+		<if test="startTime != null and '' != startTime and endTime !=null and ''!=endTime">
+			and gw_txdate &gt;=#{startTime,jdbcType=INTEGER} and
+			gw_txdate &lt;=#{endTime,jdbcType=VARCHAR}
+		</if>
+		order by create_time DESC limit #{offset,jdbcType=INTEGER} ,#{pageSize,jdbcType=INTEGER}
+	</select>
+	
+	 <!-- 根据条件查询销售数据 -->
+  <select id="gw.sales.selectcount" resultType="java.lang.Integer" parameterType="java.util.Map">
+	    SELECT
+		count(id)
+		FROM
+		gw_sales
+		WHERE 1=1
+	  	 <if test="startTime != null and '' != startTime">  
+	          and gw_txdate &gt;=#{startTime,jdbcType=VARCHAR}     
+	     </if> 
+	     <if test="endTime != null and '' != endTime">  
+	          and gw_txdate &lt;=#{endTime,jdbcType=VARCHAR}
+	         
+	     </if>   
+	     <if test="shopCode != null and '' != shopCode"> 
+			and shop_code=#{shopCode,jdbcType=VARCHAR}
+		</if>
+	     <if test="startTime != null and '' != startTime and endTime !=null and ''!=endTime">  
+	          and gw_txdate &gt;=#{startTime,jdbcType=INTEGER} and gw_txdate &lt;=#{endTime,jdbcType=VARCHAR}
+	     </if> 
+  </select> 
+</mapper>

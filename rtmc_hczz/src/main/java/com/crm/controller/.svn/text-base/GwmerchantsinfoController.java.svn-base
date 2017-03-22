@@ -1,0 +1,548 @@
+package com.crm.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.AdminUser;
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.QueryConditon;
+import com.crm.common.ResponseCode;
+import com.crm.common.SecurityUtil;
+import com.crm.common.Status;
+import com.crm.enums.MerchantsInfoStateEnum;
+import com.crm.pojo.GwbrandtreeModel;
+import com.crm.pojo.GwmerchantsinfoModel;
+import com.crm.service.GwbrandtreeService;
+import com.crm.service.GwmerchantsinfoService;
+import com.crm.util.DateUtil;
+import com.crm.util.QueryConditionUtil;
+import com.crm.util.ValidateUtil;
+
+/**
+ * 
+ * GwmerchantsinfoController:商户信息访问控制层
+ *
+ * @author chengpengfei
+ * @date  2016年3月11日
+ * @version  jdk1.8
+ *
+ */
+@Controller
+@RequestMapping("/merchaninfo")
+public class GwmerchantsinfoController {
+	@Resource(name="gwMerchaninfoService")
+	private GwmerchantsinfoService gwmerchantsinfoService;
+	@Resource(name="gwbrandtreeService")
+	private GwbrandtreeService gwbrandtreeService;
+	/**
+	 * 
+	 * getMerchanInfo:获取商户信息集合（分页）
+	 *
+	 * @date 2016年3月11日
+	 * @param page   当前页码数
+	 * @param pagesize      每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getMerchanInfo.do")
+	@ResponseBody
+	public LigerPageDataVo getMerchanInfo(int currentPage,int pageSize,String merchantsInfoName,String merchantsInfoCode,Integer formatsId,HttpServletRequest request){
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("merchantsInfoName", merchantsInfoName);
+		params.put("merchantsInfoCode", merchantsInfoCode);
+		params.put("formatsId", formatsId);
+		params.put("state3", MerchantsInfoStateEnum.DELETE.getValue());
+		BasePageResultVo baseResultVo=gwmerchantsinfoService.selectPageList(params);
+		
+		List<GwmerchantsinfoModel> list = (List<GwmerchantsinfoModel>) baseResultVo.getRows();
+		for(GwmerchantsinfoModel merchants : list){
+			//品牌ID字符串
+			String brandTreeIds = merchants.getGwBrandTreeId();
+			String[] ids = brandTreeIds.split(";");
+			//根据品牌ID字符串查询品牌集合
+			List<GwbrandtreeModel> brandList = gwbrandtreeService.getBrandByIds(ids);
+			String brandNames = "";
+			int i = 1;
+			for(GwbrandtreeModel brand : brandList){
+				if(brandList.size()>i)
+				{
+					brandNames += brand.getName()+"、";
+				}else{
+					brandNames += brand.getName();
+				}
+				i++;
+			}
+			merchants.setBrandName(brandNames);
+		}
+		
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	
+	/**
+	 * 
+	 * getConfirmMerchanInfo:获取待确认商户信息集合（分页）
+	 *
+	 * @date 2016年3月11日
+	 * @param page   当前页码数
+	 * @param pagesize      每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getConfirmMerchanInfo.do")
+	@ResponseBody
+	public LigerPageDataVo getConfirmMerchanInfo(int currentPage,int pageSize,String merchantsInfoName,String merchantsInfoCode,Integer formatsId,HttpServletRequest request){
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("merchantsInfoName", merchantsInfoName);
+		params.put("merchantsInfoCode", merchantsInfoCode);
+		params.put("formatsId", formatsId);
+		params.put("state1", MerchantsInfoStateEnum.CONFIRM.getValue());
+		params.put("state2", MerchantsInfoStateEnum.UNCONFIRM.getValue());
+		BasePageResultVo baseResultVo=gwmerchantsinfoService.selectPageList(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 
+	 * getUnConfirmMerchanInfo:获取待取消确认商户信息集合（分页）
+	 *
+	 * @date 2016年3月11日
+	 * @param page   当前页码数
+	 * @param pagesize      每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getUnConfirmMerchanInfo.do")
+	@ResponseBody
+	public LigerPageDataVo getUnConfirmMerchanInfo(int currentPage,int pageSize,String merchantsInfoName,String merchantsInfoCode,Integer formatsId,HttpServletRequest request){
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("merchantsInfoName", merchantsInfoName);
+		params.put("merchantsInfoCode", merchantsInfoCode);
+		params.put("formatsId", formatsId);
+		params.put("state", MerchantsInfoStateEnum.PASSCONFIRM.getValue());
+		BasePageResultVo baseResultVo=gwmerchantsinfoService.selectPageList(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 
+	 * getMerchanInfoBySign:获取已签约商户信息集合（分页）
+	 *
+	 * @date 2016年3月11日
+	 * @param page   当前页码数
+	 * @param pagesize      每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getMerchanInfoBySign.do")
+	@ResponseBody
+	public LigerPageDataVo getMerchanInfoBySign(int currentPage,int pageSize,String merchantsInfoName,String merchantsInfoCode,Integer formatsId,HttpServletRequest request){
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("merchantsInfoName", merchantsInfoName);
+		params.put("merchantsInfoCode", merchantsInfoCode);
+		params.put("formatsId", formatsId);
+		params.put("state3", MerchantsInfoStateEnum.DELETE.getValue());
+		BasePageResultVo baseResultVo=gwmerchantsinfoService.getMerchantsInfoBySign(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 
+	 * addMerchanInfo:添加商户信息数据
+	 *
+	 * @date 2016年3月10日
+	 * @param GwmerchantsinfoModel
+	 * @return
+	 */
+	@RequestMapping("/addMerchanInfo.do")
+	@ResponseBody
+	public BaseResultVo addMerchanInfo(GwmerchantsinfoModel gwmerchantsinfoModel,HttpServletResponse response){
+		
+		if(!ValidateUtil.isAvailableLength(gwmerchantsinfoModel.getBm(), 4, 10)){
+			return BaseResultVo.responseFail("商户编号为4-10位的字符字符");
+		}
+		GwmerchantsinfoModel merchanInfo = gwmerchantsinfoService.getMerchansInfoByCode(gwmerchantsinfoModel.getBm());		
+		if(merchanInfo!=null){
+			return BaseResultVo.responseFail("商户编号已存在");
+		}
+
+		BaseResultVo baseResultVo=new BaseResultVo();
+		Status status=new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);//提示代码
+		status.setMsg("操作成功");//提示信息
+		status.setDebugMsg("");//bug信息
+		status.setUrl("");//url
+		baseResultVo.setStatus(status);
+		/*//密码加密
+		gwAdminUsersModel.setPassword(MD5.getMD5(gwAdminUsersModel.getPassword()));*/
+		
+		//更新时间
+		gwmerchantsinfoModel.setTime(DateUtil.getCurrentDatetime("-"));
+		gwmerchantsinfoService.insert(gwmerchantsinfoModel);
+		return baseResultVo;
+	}
+	/**
+	 * 
+	 * deleMerchanInfo:删除商户信息数据
+	 *
+	 * @date 2016年3月10日
+	 * @param GwmerchantsinfoModel      商户管理对象
+	 * @return
+	 */
+	@RequestMapping("/deleMerchanInfo.do")
+	@ResponseBody
+	public BaseResultVo deleMerchanInfo(int id,HttpServletRequest request){
+		BaseResultVo baseResultVo=new BaseResultVo();
+		Status status=new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);//提示代码
+		status.setMsg("操作成功");//提示信息
+		status.setDebugMsg("");//bug信息
+		status.setUrl("");//url
+		
+		if(id==0){
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");//提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+		//新建一个商户对象
+		GwmerchantsinfoModel merchantsinfo = new GwmerchantsinfoModel();
+		merchantsinfo.setId(id);
+		merchantsinfo.setState(0);
+		int num=gwmerchantsinfoService.update(merchantsinfo);
+		if(num<0){
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("操作失败");//提示信息
+		}
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+	
+	/**
+	 * 通过id得到商户的全部信息
+	 * getMerchanInfoAllById:
+	 *
+	 * @author hemingjun
+	 * @date 2016年8月10日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getMerchanInfoAllById.do")
+	@ResponseBody
+	public BaseResultVo getMerchanInfoAllById(int id,HttpServletRequest request){
+		BaseResultVo baseResultVo=new BaseResultVo();
+		Status status=new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);//提示代码
+		status.setMsg("操作成功");//提示信息
+		status.setDebugMsg("");//bug信息
+		status.setUrl("");//url
+		
+		if(id==0){
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");//提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+		//获取商户管理数据
+		GwmerchantsinfoModel gwmerchantsinfoModel=gwmerchantsinfoService.getMerchanInfoAllById(id);
+		baseResultVo.setData(gwmerchantsinfoModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+	/**
+	 * 
+	 * getMerchanInfoById:根据商户管理ID，获取商户管理信息
+	 *
+	 * @date 2016年3月10日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getMerchanInfoById.do")
+	@ResponseBody
+	public BaseResultVo getMerchanInfoById(int id,HttpServletRequest request){
+		BaseResultVo baseResultVo=new BaseResultVo();
+		Status status=new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);//提示代码
+		status.setMsg("操作成功");//提示信息
+		status.setDebugMsg("");//bug信息
+		status.setUrl("");//url
+		
+		if(id==0){
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");//提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+		
+		//获取商户管理数据
+		GwmerchantsinfoModel gwmerchantsinfoModel=gwmerchantsinfoService.selectById(id);
+		baseResultVo.setData(gwmerchantsinfoModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+	/**
+	 * 
+	 * updateMerchanInfo:更新商户信息数据
+	 *
+	 * @date 2016年3月10日
+	 * @param GwmerchantsinfoModel       商户信息对象
+	 * @return
+	 */
+	@RequestMapping("/updateMerchanInfo.do")
+	@ResponseBody
+	public BaseResultVo updateMerchanInfo(GwmerchantsinfoModel gwmerchantsinfoModel){
+		BaseResultVo baseResultVo=new BaseResultVo();
+		Status status=new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);//提示代码
+		status.setMsg("操作成功");//提示信息
+		status.setDebugMsg("");//bug信息
+		status.setUrl("");//url
+		if(!ValidateUtil.isAvailableLength(gwmerchantsinfoModel.getBm(), 4, 10)){
+			return BaseResultVo.responseFail("商户编号为4-10位的字符字符");
+		}
+		//验证主键是否为空
+		if(gwmerchantsinfoModel.getId()==0){
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+		
+		//更新时间
+		gwmerchantsinfoModel.setTime(DateUtil.getCurrentDatetime("-"));
+		GwmerchantsinfoModel gwmerchantsinfo=gwmerchantsinfoService.selectById(gwmerchantsinfoModel.getId());
+		GwmerchantsinfoModel merchanInfo = gwmerchantsinfoService.getMerchansInfoByCode(gwmerchantsinfoModel.getBm());		
+		if(!gwmerchantsinfo.getBm().equals(gwmerchantsinfoModel.getBm())&&merchanInfo!=null){
+			return BaseResultVo.responseFail("商户编号已存在");
+		}
+		//更新商户管理信息
+		gwmerchantsinfoService.update(gwmerchantsinfoModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+	@ResponseBody
+	@RequestMapping("/getMerchantsinfoL.do")
+	public Object getAllGroupInfos(){
+		//获取所有商户名称
+		List<GwmerchantsinfoModel> MallInfoList=gwmerchantsinfoService.getAllList();
+		List<HashMap<String,Object>> list=new ArrayList<HashMap<String,Object>>();
+		for (GwmerchantsinfoModel mallInfo : MallInfoList) {
+			HashMap<String,Object> map=new HashMap<String,Object>();
+			map.put("id", mallInfo.getId());
+			map.put("text", mallInfo.getCnName());
+			list.add(map);
+		}
+		return list;
+	}
+	@ResponseBody
+	@RequestMapping("/getMerchantsinfoLi.do")
+	public Object getAllGroupInfosi(){
+		//获取所有商户名称
+		List<GwmerchantsinfoModel> MallInfoList=gwmerchantsinfoService.getAllList();
+		List<HashMap<String,Object>> list=new ArrayList<HashMap<String,Object>>();
+		for (GwmerchantsinfoModel mallInfo : MallInfoList) {
+			HashMap<String,Object> map=new HashMap<String,Object>();
+			map.put("id", mallInfo.getId());
+			map.put("text", mallInfo.getBrandName());
+			list.add(map);
+		}
+		return list;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/getAllGroupInfoByBm.do")
+	public Object getAllGroupInfoByBm(){
+		//获取所有商户名称
+		List<GwmerchantsinfoModel> MallInfoList=gwmerchantsinfoService.getAllList();
+		List<HashMap<String,Object>> list=new ArrayList<HashMap<String,Object>>();
+		for (GwmerchantsinfoModel mallInfo : MallInfoList) {
+			HashMap<String,Object> map=new HashMap<String,Object>();
+			map.put("id", mallInfo.getBm());
+			map.put("text", mallInfo.getCnName());
+			list.add(map);
+		}
+		return list;
+	}
+	/**
+	 * 
+	 * getBrandNameById:根据商户ID获取品牌名称集合
+	 *
+	 * @date 2016年3月16日
+	 * @param id       商户id
+	 * @return
+	 */
+	@RequestMapping("/getBrandNameById.do")
+	@ResponseBody
+	public Object getBrandNameById(int id){
+		if(id==0){
+			return null;
+		}
+		List<GwbrandtreeModel> formatsTreeList=gwbrandtreeService.getBrandNameById(id);
+		List<HashMap<String, Object>> list=new ArrayList<HashMap<String, Object>>();
+		for (GwbrandtreeModel formats : formatsTreeList) {
+			HashMap<String, Object> map=new HashMap<String, Object>();
+			map.put("id", formats.getId());
+			map.put("text", formats.getName());
+			list.add(map);
+		}
+		return list;
+	}
+	/**
+	 * 
+	 * getmerListBymallId:根据购物中心ID获取商户名称集合
+	 *
+	 * @date 2016年3月16日
+	 * @param mallid       购物中心id
+	 * @return
+	 */
+	@RequestMapping("/getmerListBymallId.do")
+	@ResponseBody
+	public LigerPageDataVo getmerListBymallId(QueryConditon queryCondition,Integer mallid){
+		//查询条件数组字符串（前端传递的字符串名称需和xml查询名称一致）
+		String[] queryParamArr=new String[]{"cnName"};
+		//获取分页参数信息map
+		Map<String, Object> params=QueryConditionUtil.getParamsMap(queryParamArr, queryCondition);
+		params.put("state", MerchantsInfoStateEnum.PASSCONFIRM.getValue());
+		BasePageResultVo baseResultVo=gwmerchantsinfoService.getMerNameByMallId(params);
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 获取所有商户集合（分页）带查询
+	 * @param queryCondition 查询参数
+	 * @return
+	 */
+	@RequestMapping("/getmerchantsListByPage.do")
+	@ResponseBody
+	public LigerPageDataVo getmerchantsListByPage(QueryConditon queryCondition){
+		//查询条件数组字符串（前端传递的字符串名称需和xml查询名称一致）
+		String[] queryParamArr=new String[]{"merchantsInfoName"};
+		//获取分页参数信息map
+		Map<String, Object> params=QueryConditionUtil.getParamsMap(queryParamArr, queryCondition);
+		params.put("state", MerchantsInfoStateEnum.PASSCONFIRM.getValue());
+		BasePageResultVo baseResultVo=gwmerchantsinfoService.selectPageList(params);
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 获取已签约商户集合（分页）带查询
+	 * @param queryCondition 查询参数
+	 * @return
+	 */
+	@RequestMapping("/getmerchantsListSignByPage.do")
+	@ResponseBody
+	public LigerPageDataVo getmerchantsListSignByPage(QueryConditon queryCondition){
+		//查询条件数组字符串（前端传递的字符串名称需和xml查询名称一致）
+		String[] queryParamArr=new String[]{"merchantsInfoName"};
+		//获取分页参数信息map
+		Map<String, Object> params=QueryConditionUtil.getParamsMap(queryParamArr, queryCondition);
+		BasePageResultVo baseResultVo=gwmerchantsinfoService.getMerchantsInfoBySign(params);
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 确认商户
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/confirmMerchantsInfo.do")
+	@ResponseBody
+	public BaseResultVo confirmMerchantsInfo(Integer id,HttpServletRequest request){
+		if(id==0){
+			return BaseResultVo.responseFail("主键为空");
+		}
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		GwmerchantsinfoModel merchatns = new GwmerchantsinfoModel();
+		merchatns.setId(id);
+		merchatns.setConfirmUserId(adminUser.getUserId());
+		merchatns.setState(2);
+		merchatns.setConfirmTime(DateUtil.getCurrentDatetime("-"));
+		int number = gwmerchantsinfoService.update(merchatns);
+		if(number<0){
+			return BaseResultVo.responseFail("确认失败");
+		}
+		return BaseResultVo.responseSuccess("确认成功");
+	}
+	
+
+	/**
+	 * 取消确认商户
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/unConfirmMerchantsInfo.do")
+	@ResponseBody
+	public BaseResultVo unConfirmMerchantsInfo(Integer id,HttpServletRequest request,String code){
+		if(id==0){
+			return BaseResultVo.responseFail("主键为空");
+		}
+		GwmerchantsinfoModel merchants = gwmerchantsinfoService.getMerchantsInfoSingByCode(code);
+		if(merchants!=null){
+			return BaseResultVo.responseFail("该商户已签约,不能取消确认");
+		}
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		GwmerchantsinfoModel merchantsInfo = new GwmerchantsinfoModel();
+		merchantsInfo.setId(id);
+		merchantsInfo.setUnconfirmUserId(adminUser.getUserId());
+		merchantsInfo.setState(3);
+		merchantsInfo.setUnconfirmTime(DateUtil.getCurrentDatetime("-"));
+		int number = gwmerchantsinfoService.update(merchantsInfo);
+		if(number<0){
+			return BaseResultVo.responseFail("取消确认失败");
+		}
+		return BaseResultVo.responseSuccess("取消确认成功");
+	}
+}

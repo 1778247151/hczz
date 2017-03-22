@@ -1,0 +1,79 @@
+package com.crm.service.impl;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.http.client.ClientProtocolException;
+import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
+import com.crm.core.ServersManager;
+import com.crm.dao.GwBuildingTreeDao;
+import com.crm.pojo.GwAresModel;
+import com.crm.pojo.GwBuildingTreeModel;
+import com.crm.service.GwBuildingTreeService;
+import com.crm.util.HttpClientUtil;
+import com.crm.util.JsonMapper;
+/**
+ * 
+ * GwBuildingTreeServiceImpl:楼宇树形菜单  业务逻辑层实现
+ *
+ * @author yumaochun
+ * @date  2016年3月10日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwBuildingTreeServiceManage")
+public class GwBuildingTreeServiceImpl extends ServersManager<GwBuildingTreeModel, GwBuildingTreeDao> implements GwBuildingTreeService{
+
+	@Resource(name="gwBuildingTreeDaoManage")
+	public void setDao(GwBuildingTreeDao dao) {
+		this.dao=dao;
+	}
+
+	public List<GwBuildingTreeModel> getBuildingTreeListByMallInfoId(Map<String, Object> params) {
+		return dao.getBuildingTreeListByMallInfoId(params);
+	}
+
+	@Override
+	public GwBuildingTreeModel getBuildingTreeByCode(String code) {
+		// TODO Auto-generated method stub
+		return dao.getBuildingTreeByCode(code);
+	}
+
+	@Override
+	public boolean insertMisDataForBuildingList() throws ClientProtocolException, IOException {
+		//拉取之前先清空原有的数据
+		int deleteAll = dao.deleteAll();
+		if(deleteAll<0){
+			return false;
+		}
+		//从MIS端获取数据
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("YHBS", "E84E7273764D2D77E9FC4E9C521E8C3750");
+		map.put("XTLB", "2");
+		map.put("DYLX", "WEB_BUILDING_LIST");
+		String url = "http://192.168.1.58:3388/webapi.do";
+		String body = HttpClientUtil.httpPost(url, map);
+		if(body==null){
+			return false;
+		}
+		
+		String string = JSON.parseObject(body).getString("rows");
+		if(!string.startsWith("[") && !string.endsWith("]")){
+			string = "["+string+"]";
+		}
+		List<GwBuildingTreeModel> buildingList =JsonMapper.buildNonDefaultMapper().fromJsonToList(string, GwBuildingTreeModel.class);
+		//批量插入商户数据
+		int batchInsert = dao.batchInsertForBuildingList(buildingList);
+		if(batchInsert<0){
+			return false;
+		}
+		return true;
+	}
+
+}

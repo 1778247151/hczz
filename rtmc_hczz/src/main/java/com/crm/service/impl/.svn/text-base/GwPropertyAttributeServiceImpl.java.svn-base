@@ -1,0 +1,78 @@
+package com.crm.service.impl;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.http.client.ClientProtocolException;
+import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
+import com.crm.core.ServersManager;
+import com.crm.dao.GwPropertyAttributeDao;
+import com.crm.pojo.GwPropertyAttributeModel;
+import com.crm.pojo.GwmerchantsinfoModel;
+import com.crm.service.GwPropertyAttributeService;
+import com.crm.util.HttpClientUtil;
+import com.crm.util.JsonMapper;
+
+/**
+ * 
+ * GwPropertyAttributeServiceImpl:物业性质业务逻辑层实现
+ *
+ * @author chengpengfei
+ * @date  2016年3月10日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwPropertyAttributeService")
+public class GwPropertyAttributeServiceImpl extends ServersManager<GwPropertyAttributeModel,GwPropertyAttributeDao>implements GwPropertyAttributeService{
+	@Resource(name = "gwPropertyAttributeManage")
+	@Override
+	public void setDao(GwPropertyAttributeDao prodao) {
+		// TODO Auto-generated method stub
+		this.dao = prodao;
+		
+	}
+
+	@Override
+	public GwPropertyAttributeModel getPropertyAttributeByCode(String code) {
+		// TODO Auto-generated method stub
+		return dao.getPropertyAttributeByCode(code);
+	}
+
+	@Override
+	public boolean insertMisDataForProperty() throws ClientProtocolException, IOException {
+		//拉取之前先清空原有的数据
+		int deleteAll = dao.deleteAll();
+		if(deleteAll<0){
+			return false;
+		}
+		//从MIS端获取数据
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("YHBS", "E84E7273764D2D77E9FC4E9C521E8C3750");
+		map.put("XTLB", "2");
+		map.put("DYLX", "WEB_PROPERTY_LIST");
+		String url = "http://192.168.1.58:3388/webapi.do";
+		String body = HttpClientUtil.httpPost(url, map);
+		if(body==null){
+			return false;
+		}
+		
+		String string = JSON.parseObject(body).getString("rows");
+		if(!string.startsWith("[") && !string.endsWith("]")){
+			string = "["+string+"]";
+		}
+		List<GwPropertyAttributeModel> propertyList =JsonMapper.buildNonDefaultMapper().fromJsonToList(string, GwPropertyAttributeModel.class);
+		//批量插入物业性质数据
+		int batchInsert = dao.batchInsertForPropertyList(propertyList);
+		if(batchInsert<0){
+			return false;
+		}
+		return true;
+	}
+
+}

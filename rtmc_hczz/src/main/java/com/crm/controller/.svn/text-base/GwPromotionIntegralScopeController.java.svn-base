@@ -1,0 +1,312 @@
+package com.crm.controller;
+
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.ResponseCode;
+import com.crm.common.SecurityUtil;
+import com.crm.common.Status;
+import com.crm.interceptor.BussAnnotation;
+import com.crm.interceptor.exception.BaseException;
+import com.crm.pojo.GwPromotionIntegralModel;
+import com.crm.pojo.GwPromotionIntegralScopeModel;
+import com.crm.pojo.GwformatstreeModel;
+import com.crm.service.GwPromotionIntegralScopeService;
+import com.crm.service.GwformatstreeService;
+import com.crm.util.BaseCodeUtil;
+import com.crm.util.DateUtil;
+
+/**
+ * 
+ * GwPromotionIntegralScopeController:促销积分规则适用范围访问控制层
+ *
+ * @author xiangtao
+ * @date 2016年6月20日
+ * @version jdk.8
+ *
+ */
+@Controller
+@RequestMapping("/promotionIntegralScope")
+public class GwPromotionIntegralScopeController extends BaseException {
+
+	// 日志
+	private Logger logger = LoggerFactory.getLogger(GwPromotionIntegralScopeController.class);
+
+	/**
+	 * 促销积分规则适用范围业务逻辑
+	 */
+	@Resource(name = "gwPromotionIntegralScopeServiceManage")
+	private GwPromotionIntegralScopeService gwPromotionIntegralScopeServiceImpl;
+
+	/**
+	 * 业态业务逻辑层
+	 */
+	@Resource(name="gwformatstreeService")
+	private GwformatstreeService gwformatstreeService;
+	
+	/**
+	 * 
+	 * getScopeByCode:根据规则编号获取适用范围
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getScopeByCode.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "促销积分规则适用范围维护", option = "获取信息通过编号")
+	public BaseResultVo getScopeByCode(String code, String scopetype) {
+		BaseResultVo baseResultVo=new BaseResultVo();
+		List<GwPromotionIntegralScopeModel> newList = new ArrayList<GwPromotionIntegralScopeModel>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		if ("1".equals(code)) {
+			String resultCode = uuidCode(scopetype);
+			Status status=new Status();
+			status.setCode(resultCode);
+			baseResultVo.setStatus(status);
+		} else {
+			map.put("code", code);
+			map.put("Type", scopetype);
+			List<GwPromotionIntegralScopeModel> list = gwPromotionIntegralScopeServiceImpl.getListByCode(map);
+			for (GwPromotionIntegralScopeModel p : list) {
+				BigDecimal money = p.getExchangeMoney();
+				Integer integral = p.getIntegralNumber();
+				p.setProportion(money + "元 兑换 " + integral + "分");
+				newList.add(p);
+			}
+			baseResultVo.setData(newList);
+		}
+		return baseResultVo;
+	}
+
+	// 生成临时唯一规则范围编号
+	public String uuidCode(String scopetype) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		String uuid = UUID.randomUUID().toString();
+		String result = uuid.replace("-", "");
+		String res = result.substring(0, 14);
+		map.put("code", res);
+		map.put("Type", scopetype);
+		List<GwPromotionIntegralScopeModel> list = gwPromotionIntegralScopeServiceImpl.getListByCode(map);
+		if (list.size() > 0) {
+			uuidCode(scopetype);
+		}
+		return res;
+	}
+
+	/**
+	 * 
+	 * deleteByCode:删除适用范围通过规则编号
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/deleteByCode.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "促销积分规则适用范围维护", option = "通过code删除")
+	public BaseResultVo deleteByCode(String code) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		int num = gwPromotionIntegralScopeServiceImpl.deleteByCode(code);
+		if (num <= 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("没有数据可以删除");// 提示信息
+		}
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * getPromotionIntegralScopeById:根据促销积分规则适用范围id，获取促销积分规则适用范围信息
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getPromotionIntegralScopeById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "促销积分规则适用范围维护", option = "获取信息通过ID")
+	public BaseResultVo getPromotionIntegralScopeById(int id, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		if (id == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");// 提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		// 获取促销积分规则适用范围信息
+		GwPromotionIntegralScopeModel gwPromotionIntegralScopeModel = gwPromotionIntegralScopeServiceImpl
+				.selectById(id);
+		baseResultVo.setData(gwPromotionIntegralScopeModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * addPromotionIntegralScope 添加促销积分规则适用范围
+	 * 
+	 * @date 2016年6月20日
+	 * @param
+	 * @return
+	 */
+	@RequestMapping("/addPromotionIntegralScope.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "促销积分规则适用范围维护", option = "添加")
+	public BaseResultVo addPromotionIntegralScope(GwPromotionIntegralScopeModel gwPromotionIntegralScopeModel,
+			HttpServletRequest request) {
+		String typeCode = gwPromotionIntegralScopeModel.getTypeCode();
+		if (typeCode == null || typeCode.trim().equals("")) {
+			return BaseResultVo.responseFail("没有选择业态或者店铺");
+		}
+		String[] array = typeCode.split(";");
+		List<GwPromotionIntegralScopeModel> list = new ArrayList<GwPromotionIntegralScopeModel>();
+		
+		if(gwPromotionIntegralScopeModel.getType()==0){
+			for (int i = 0; i < array.length; i++) {
+				GwPromotionIntegralScopeModel gims = null;
+				try {
+					gims = gwPromotionIntegralScopeModel.clone();
+				} catch (CloneNotSupportedException e) {
+					return BaseResultVo.responseFail("克隆失败");
+				}
+				List<GwformatstreeModel> allFormatList= gwformatstreeService.getAllList();
+				for (GwformatstreeModel model : allFormatList) {
+					if(model.getId()==Integer.parseInt(array[i])){
+						gims.setTypeCode(model.getBm());
+					}
+				}
+				list.add(gims);
+			}
+
+		}else{
+			for (int i = 0; i < array.length; i++) {
+				GwPromotionIntegralScopeModel gims = null;
+				try {
+					gims = gwPromotionIntegralScopeModel.clone();
+				} catch (CloneNotSupportedException e) {
+					return BaseResultVo.responseFail("克隆失败");
+				}
+				gims.setTypeCode(array[i]);
+				list.add(gims);
+			}
+		}
+		gwPromotionIntegralScopeServiceImpl.insertBatch(list);
+
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * delPromotionIntegralScopeById:根据促销积分规则适用范围id，删除促销积分规则适用范围
+	 *
+	 * @date 2016年6月20日
+	 * @param id
+	 *            促销积分规则适用范围id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/delPromotionIntegralScope.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "促销积分规则适用范围维护", option = "删除")
+	public BaseResultVo delPromotionIntegralScopeById(int id, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		if (id == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");// 提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		int num = gwPromotionIntegralScopeServiceImpl.deleteById(id);
+
+		if (num < 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("操作失败");// 提示信息
+		}
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * updatePromotionIntegralScope:更新促销积分规则适用范围
+	 *
+	 * @date 2016年6月20日
+	 * @param gwPromotionIntegralScopeModel
+	 *            促销积分规则适用范围信息对象
+	 * @return
+	 */
+	@RequestMapping("/updatePromotionIntegralScope.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "促销积分规则适用范围维护", option = "修改")
+	public BaseResultVo updatePromotionIntegralScope(GwPromotionIntegralScopeModel gwPromotionIntegralScopeModel,
+			HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		// 验证主键是否为空
+		if (gwPromotionIntegralScopeModel.getId() == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+		// 更新促销积分规则适用范围信息
+		gwPromotionIntegralScopeServiceImpl.update(gwPromotionIntegralScopeModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+}

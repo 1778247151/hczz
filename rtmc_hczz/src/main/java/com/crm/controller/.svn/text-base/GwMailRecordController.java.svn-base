@@ -1,0 +1,264 @@
+package com.crm.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.AdminUser;
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.ResponseCode;
+import com.crm.common.SecurityUtil;
+import com.crm.common.Status;
+import com.crm.enums.MailTypeEnum;
+import com.crm.interceptor.BussAnnotation;
+import com.crm.interceptor.exception.BaseException;
+import com.crm.pojo.GwMailRecordModel;
+import com.crm.pojo.GwMembersModel;
+import com.crm.service.GwMailRecordService;
+import com.crm.service.GwMembersService;
+import com.crm.service.GwgoodstreeService;
+import com.crm.util.CharacterUtil;
+import com.crm.util.DateUtil;
+
+/**
+ * 
+ * 
+ * GwMailRecordController:邮件发送控制层
+ *
+ * @author meishengjun
+ * @date 2016年11月16日
+ * @version jdk1.8
+ *
+ */
+
+@Controller
+@RequestMapping("/mailRecord")
+public class GwMailRecordController extends BaseException {
+
+	// 日志
+	private Logger logger = LoggerFactory.getLogger(GwMailRecordController.class);
+
+	/**
+	 *邮件发送业务逻辑
+	 */
+	@Resource(name = "gwMailRecordServiceManage")
+	private GwMailRecordService gwMailRecordServiceImpl;
+	
+
+	/**
+	 * 会员业务逻辑
+	 */
+	@Resource(name = "gwMembersServiceManage")
+	private GwMembersService gwMembersServiceImpl;
+	
+
+	/**
+	 * 货品组别业务逻辑
+	 */
+	@Resource(name = "gwgoodstreeService")
+	private GwgoodstreeService gwGoodsTreeServiceImpl;
+	
+	
+	@RequestMapping("/addMailRecord.do")
+	@ResponseBody
+	public BaseResultVo addMailRecord(GwMailRecordModel gwMailRecordModel, HttpServletResponse response,HttpServletRequest request) {
+		
+
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("发送成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+		baseResultVo.setStatus(status);
+		//收件人
+		List<String> toList = CharacterUtil.getSplitedList(gwMailRecordModel.getAddressee(), ";"); // 收件人
+	
+		Set<String> toSet = new HashSet<String>(toList); // 去除收件人的重复
+		
+		//获取创建人信息
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		String username = adminUser.getUsername();
+		//设置发送方式
+		gwMailRecordModel.setType(MailTypeEnum.HAND.getValue());
+		//设置发送时间
+		gwMailRecordModel.setSendTime(DateUtil.getCurrentDatetime("-"));
+		//备注
+		gwMailRecordModel.setNote("手动方式发送");
+		//发送人
+		gwMailRecordModel.setSendUser(username);
+		
+		int num=gwMailRecordServiceImpl.insert(gwMailRecordModel);
+		if(num>0) {
+			return baseResultVo;
+		}else {
+			return BaseResultVo.responseFail("邮件发送失败");
+		}	
+	}
+/**
+ * 
+ * 
+ * @param gwMailRecordModel
+ * @param response
+ * @param request
+ * @return
+ */
+	@RequestMapping("/addMailRecordDraft.do")
+	@ResponseBody
+	public BaseResultVo addMailRecordDraft(GwMailRecordModel gwMailRecordModel, HttpServletResponse response,HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status=new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("发送成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+		baseResultVo.setStatus(status);
+		//获取创建人信息
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		String username = adminUser.getUsername();
+		//设置发送方式
+		gwMailRecordModel.setType(MailTypeEnum.HAND.getValue());
+		//设置发送时间
+		gwMailRecordModel.setSendTime(DateUtil.getCurrentDatetime("-"));
+		//备注
+		gwMailRecordModel.setNote("手动方式发送");
+		//发送人
+		gwMailRecordModel.setSendUser(username);
+		
+		int num=gwMailRecordServiceImpl.insert(gwMailRecordModel);
+		if(num>0) {
+			return baseResultVo;
+		}else {
+			return BaseResultVo.responseFail("邮件保存失败");
+		}	
+	}
+/**
+ * 
+ * 
+ * @param currentPage
+ * @param pageSize
+ * @param type
+ * @param status
+ * @param sendUser
+ * @param request
+ * @return
+ */
+	@RequestMapping("/getMailRecordList.do")
+	@ResponseBody
+	public LigerPageDataVo getSmsRecordList(int currentPage, int pageSize,String type,String status,String sendUser, HttpServletRequest request) {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("type", type);
+		params.put("send_user", sendUser);
+		params.put("status", status);
+		
+		
+		BasePageResultVo baseResultVo = gwMailRecordServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+/**
+ * 
+ * 	
+ * @return
+ */
+@RequestMapping("/getAllEmail.do")
+@ResponseBody
+
+public  BaseResultVo getAllEmail(){
+	List<HashMap<String, Object>> treeList = new ArrayList<HashMap<String, Object>>();
+	List<GwMembersModel> list=gwMembersServiceImpl.getAllEmail();
+	for (GwMembersModel gwMembersModel : list) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("id", 1);// 菜单id
+		map.put("pid", gwMembersModel.getId());// 父级菜单id
+		map.put("text", gwMembersModel.getEmail() + "【" + gwMembersModel.getUserName() + "】");// 菜单名称
+		map.put("isExpand", true);
+		treeList.add(map);
+		
+	}
+	
+	BaseResultVo baseResultVo = BaseResultVo.responseSuccess("获取所有会员邮箱用户");
+	baseResultVo.setData(treeList);
+	return baseResultVo;
+	
+}
+
+/**
+ * 
+ * 根据id查询邮箱记录
+ * @param id
+ * @return
+ */
+
+@RequestMapping("/getMailRecordById.do")
+@ResponseBody
+@BussAnnotation(moduleName="邮件记录",option="根据id查询信息")
+public BaseResultVo getMailRecordById(int id){
+	
+	 GwMailRecordModel  gwMailRecordModel=gwMailRecordServiceImpl.selectById(id);
+	 if(gwMailRecordModel==null){
+	
+		 BaseResultVo.responseFail("获取信息失败");
+		
+	 }
+	 BaseResultVo baseResultVo = BaseResultVo.responseSuccess("获取信息成功");
+	 baseResultVo.setData(gwMailRecordModel);
+	return baseResultVo;
+	
+}
+@RequestMapping("deleteMailRecordByid.do")
+@ResponseBody()
+@BussAnnotation(moduleName="邮件记录",option="根据id删除邮箱信息")
+public BaseResultVo deleteMailRecordByid(int id,HttpServletRequest request){
+	BaseResultVo baseResultVo = new BaseResultVo();
+	Status status=new Status();
+	status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+	
+	status.setMsg("操作成功");// 提示信息
+	status.setDebugMsg("");// bug信息
+	status.setUrl("");// url
+	baseResultVo.setStatus(status);
+	String username = SecurityUtil.getAdminUser(request).getUsername();
+	if(id==0){
+		status.setCode(ResponseCode.OPR_FAIL);
+		status.setMsg("数据异常");// 提示信息
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+		
+	}
+	int  num=	gwMailRecordServiceImpl.deleteById(id);
+	if(num<0){
+		
+		baseResultVo.responseFail("删除邮箱记录失败");
+	}
+	logger.info(username+"删除了id为"+id+"的邮箱记录");
+
+	return baseResultVo;
+	
+}
+
+
+}

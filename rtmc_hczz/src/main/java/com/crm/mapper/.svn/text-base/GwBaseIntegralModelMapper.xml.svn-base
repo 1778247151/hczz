@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.base.integral" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwBaseIntegralModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="member_grade_code" property="memberGradeCode" jdbcType="VARCHAR" />
+    <result column="shops_code" property="shopsCode" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="lowest_money" property="lowestMoney" jdbcType="DECIMAL" />
+    <result column="sale_money" property="saleMoney" jdbcType="DECIMAL" />
+    <result column="integral_number" property="integralNumber" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, member_grade_code, shops_code, description,lowest_money,sale_money, integral_number, create_user_id, 
+    update_user_id, create_time, update_time
+  </sql>
+  <select id="gw.base.integral.getAllList" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gw_base_integral d
+  </select>
+   <!-- 根据条件，获取分页数据list集合 -->
+  <select id="gw.base.integral.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    id, 
+    (select a.name from gw_type_tree a where member_grade_code = a.code) as memberGradeCode, 
+    shops_code, 
+    description,lowest_money lowestMoney, sale_money saleMoney, integral_number integralNumber,CONCAT(sale_money,"元兑换",integral_number,"积分") as proportion,
+	(select u.name from gw_admin_users u where u.id = d.create_user_id) as createUserName, d.create_time createTime, 
+    (select u.name from gw_admin_users u where u.id = d.update_user_id) as updateUserName, d.update_time updateTime
+    from gw_base_integral d 
+    <where>
+		<if test="description!=null and ''!=description">
+			and description like CONCAT('%', CONCAT(#{description,jdbcType=VARCHAR}), '%')
+		</if>
+    	 <if test="memberGradeCode!= null and ''!=memberGradeCode" >
+        	 and member_grade_code = #{memberGradeCode,jdbcType=VARCHAR}
+     	 </if>
+    	 <if test="shopsCode!= null and ''!=shopsCode" >
+        	 and shops_code = #{shopsCode,jdbcType=VARCHAR}
+     	 </if>
+    </where>
+    limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  
+  
+   <!-- 根据条件，获取所有数据list集合 -->
+  <select id="gw.base.integral.selectByConditionList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    id, 
+    (select a.name from gw_type_tree a where member_grade_code = a.code) as memberGradeCode, 
+    shops_code, 
+    description,lowest_money lowestMoney, sale_money saleMoney, integral_number integralNumber,CONCAT(sale_money,"元兑换",integral_number,"积分") as proportion,
+	(select u.name from gw_admin_users u where u.id = d.create_user_id) as createUserName, d.create_time createTime, 
+    (select u.name from gw_admin_users u where u.id = d.update_user_id) as updateUserName, d.update_time updateTime
+    from gw_base_integral d 
+    <where>
+		<if test="description!=null and ''!=description">
+			and description LIKE CONCAT(CONCAT('%', #{description,jdbcType=VARCHAR}), '%')
+		</if>
+    	 <if test="memberGradeCode != null and ''!=memberGradeCode" >
+        	 and member_grade_code = #{memberGradeCode,jdbcType=VARCHAR}
+     	 </if>
+    	 <if test="shopsCode != null and ''!=shopsCode" >
+        	 and shops_code LIKE CONCAT(CONCAT('%', #{shopsCode,jdbcType=VARCHAR}), '%')
+     	 </if>
+    </where>
+  </select>
+  
+  <!-- 根据条件，总记录数 -->
+  <select id="gw.base.integral.selectCount" resultType="java.lang.Integer">
+   	select count(id) from gw_base_integral
+  </select>
+  
+  <select id="gw.base.integral.selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_base_integral
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.base.integral.deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from gw_base_integral
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.base.integral.insert" parameterType="com.crm.pojo.GwBaseIntegralModel" >
+    insert into gw_base_integral
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberGradeCode != null" >
+        member_grade_code,
+      </if>
+      <if test="shopsCode != null" >
+        shops_code,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="lowestMoney != null" >
+        lowest_money,
+      </if>
+      <if test="saleMoney != null" >
+        sale_money,
+      </if>
+      <if test="integralNumber != null" >
+        integral_number,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="memberGradeCode != null" >
+        #{memberGradeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shopsCode != null" >
+        #{shopsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="lowestMoney != null" >
+        #{lowestMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="saleMoney != null" >
+        #{saleMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="integralNumber != null" >
+        #{integralNumber,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.base.integral.update" parameterType="com.crm.pojo.GwBaseIntegralModel" >
+    update gw_base_integral
+    <set >
+      <if test="memberGradeCode != null" >
+        member_grade_code = #{memberGradeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shopsCode != null" >
+        shops_code = #{shopsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="lowestMoney != null" >
+        lowest_money = #{lowestMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="saleMoney != null" >
+        sale_money = #{saleMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="integralNumber != null" >
+        integral_number = #{integralNumber,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 根据会员等级编号和店铺编号，获取基础积分信息 -->
+  <select id="gw.base.integral.selectBaseIntegralBy" resultMap="BaseResultMap">
+       select 
+       		a.* 
+       from 
+       		gw_base_integral a 
+       where 
+       		a.member_grade_code=#{memberGradeCode} 
+       		and a.shops_code=#{shopCode}
+  </select>
+  
+</mapper>

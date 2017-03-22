@@ -1,0 +1,82 @@
+package com.crm.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwClubDetailDao;
+import com.crm.pojo.GwClubDetailModel;
+import com.crm.service.GwClubDetailService;
+
+/**
+ * 
+ * GwClubDetailServiceImpl:业务逻辑层实现
+ *
+ * @author hanzhiqiang
+ * @date  2016年11月10日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwClubDetailServiceManage")
+public class GwClubDetailServiceImpl extends ServersManager<GwClubDetailModel, GwClubDetailDao> implements GwClubDetailService{
+
+	@Resource(name = "gwClubDetailDaoManage")
+	@Override
+	public void setDao(GwClubDetailDao gwClubDetailDao) {
+		// TODO Auto-generated method stub
+		this.dao = gwClubDetailDao;
+	}
+
+	@Override
+	public GwClubDetailModel getClubDetailById(Integer id) {
+		// TODO Auto-generated method stub
+		return dao.getClubDetailById(id);
+	}
+
+	@Override
+	public List<GwClubDetailModel> getListsApi() {
+		// TODO Auto-generated method stub
+		return dao.getListsApi();
+	}
+
+	@Override
+	public List<GwClubDetailModel> getClubDetailListByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getClubDetailListByCondition(params);
+	}
+
+	@Override
+	public int addClubDetail(GwClubDetailModel gwClubDetailModel) {
+		// TODO Auto-generated method stub
+		return dao.insert(gwClubDetailModel);
+	}
+
+	@Override
+	public int updateClubDetail(GwClubDetailModel gwClubDetailModel) {
+		// TODO Auto-generated method stub
+		return dao.update(gwClubDetailModel);
+	}
+
+	@Override
+	public int deleteClubDetailById(int id) {
+		// TODO Auto-generated method stub
+		return dao.deleteClubDetailById(id);
+	}
+
+	@Override
+	public GwClubDetailModel getClubDetailByLastOne(String time) {
+		// TODO Auto-generated method stub
+		return dao.getClubDetailByLastOne(time);
+	}
+
+	@Override
+	public int batchInsertClubDetail(List<GwClubDetailModel> clubDetailList) {
+		// TODO Auto-generated method stub
+		return dao.batchInsertClubDetail(clubDetailList);
+	}
+
+}

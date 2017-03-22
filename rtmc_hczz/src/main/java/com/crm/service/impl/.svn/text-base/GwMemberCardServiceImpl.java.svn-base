@@ -1,0 +1,87 @@
+package com.crm.service.impl;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwMemberCardDao;
+import com.crm.pojo.GwMemberCardModel;
+import com.crm.service.GwMemberCardService;
+
+/**
+ * 
+ * 
+ * GwMemberCardServiceImpl:会员卡管理业务逻辑层实现
+ *
+ * @author  shengjinpeng
+ * @date    2016年11月2日
+ * @version jdk1.8
+ *
+ */
+@Service("gwMemberCardServiceManage")
+public class GwMemberCardServiceImpl extends ServersManager<GwMemberCardModel, GwMemberCardDao> implements GwMemberCardService{
+	
+	@Resource(name = "gwMemberCardDaoManage")
+	@Override
+	public void setDao(GwMemberCardDao gwMemberCardDao) {
+		// TODO Auto-generated method stub
+		this.dao = gwMemberCardDao;
+	}
+	
+
+	@Override
+	public int insertList(GwMemberCardModel gwMemberCardModel, String startCardCode, String endCardCode) {
+		List<GwMemberCardModel> list = new ArrayList<>();
+		Map<String,String> params = new HashMap<>();
+		params.put("startCardCode", startCardCode);
+		params.put("endCardCode", endCardCode);
+		
+		//查询该区间是否存在会员卡号
+		int number = dao.selectListByCode(params);
+		if(number!=0) {
+			return -1;
+		}
+		//设置会员卡信息
+		for(int i=Integer.valueOf(startCardCode);i<=Integer.valueOf(endCardCode);i++) {
+			GwMemberCardModel cardModel = new GwMemberCardModel();
+			cardModel.setCardCode(i+"");
+			cardModel.setCardType(gwMemberCardModel.getCardType());
+			cardModel.setGrade(gwMemberCardModel.getGrade());
+			cardModel.setOpenDate(gwMemberCardModel.getOpenDate());
+			cardModel.setStatus(gwMemberCardModel.getStatus());
+			cardModel.setCreateUserId(gwMemberCardModel.getCreateUserId());
+			cardModel.setCreateTime(gwMemberCardModel.getCreateTime());
+			
+			list.add(cardModel);
+		}
+		
+		dao.insertList(list);
+		
+		return 1;
+	}
+
+	@Override
+	public List<GwMemberCardModel> getAllNormalUseCardCode() {
+		// TODO Auto-generated method stub
+		return dao.getAllNormalUseCardCode();
+	}
+
+	@Override
+	public GwMemberCardModel selectByCode(String CardCode) {
+		// TODO Auto-generated method stub
+		return dao.selectByCode(CardCode);
+	}
+
+	@Override
+	public GwMemberCardModel getMemberCardByCode(String code) {
+		// TODO Auto-generated method stub
+ 	return dao.getMemberCardByCode(code);
+	}
+	
+}

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.memberCard" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwMemberCardModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="card_code" property="cardCode" jdbcType="VARCHAR" />
+    <result column="card_type" property="cardType" jdbcType="INTEGER" />
+    <result column="grade" property="grade" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="open_date" property="openDate" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="createUserName" property="createUserName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, card_code, card_type, grade, status, open_date, create_user_id, create_time
+  </sql>
+  <select id="gw.memberCard.selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_member_card
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.memberCard.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_member_card
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.memberCard.insert" parameterType="com.crm.pojo.GwMemberCardModel" >
+    insert into gw_member_card
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="cardCode != null" >
+        card_code,
+      </if>
+      <if test="cardType != null" >
+        card_type,
+      </if>
+      <if test="grade != null" >
+        grade,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="openDate != null" >
+        open_date,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="cardCode != null" >
+        #{cardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cardType != null" >
+        #{cardType,jdbcType=INTEGER},
+      </if>
+      <if test="grade != null" >
+        #{grade,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="openDate != null" >
+        #{openDate,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.memberCard.update" parameterType="com.crm.pojo.GwMemberCardModel" >
+    update gw_member_card
+    <set >
+      <if test="cardCode != null" >
+        card_code = #{cardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cardType != null" >
+        card_type = #{cardType,jdbcType=INTEGER},
+      </if>
+      <if test="grade != null" >
+        grade = #{grade,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="openDate != null" >
+        open_date = #{openDate,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 根据条件，获取分页数据list集合 -->
+  <select id="gw.memberCard.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    	c.id, c.card_code, c.card_type, c.grade, c.status, c.open_date, c.create_user_id, c.create_time,
+    	(select u.name from gw_admin_users u where u.id = c.create_user_id) as createUserName,
+    	(select t.name from gw_type_tree t where t.code=c.grade) as gradeName
+    from gw_member_card c
+    <where>
+
+    	<if test="cardCode!=null and cardCode!=''">
+    		c.card_code like CONCAT('%',CONCAT(#{cardCode,jdbcType=VARCHAR}),'%')
+    	</if>
+     	<if test="grade!=null and grade!=''">
+    		c.grade like CONCAT('%',CONCAT(#{grade,jdbcType=VARCHAR}),'%')
+    	</if>
+	<if test="startTime != null and '' != startTime">
+			 c.open_date &gt;=#{startTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and '' != endTime"> 
+			and c.open_date &lt;=#{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="startTime != null and '' != startTime and endTime !=null and ''!=endTime">
+			and c.open_date &gt;=#{startTime,jdbcType=INTEGER} and
+			 c.open_date &lt;=#{endTime,jdbcType=VARCHAR}
+		</if>
+
+    	<if test="status!=null">
+    	 	c.status = #{status}
+    	</if>
+    </where>
+   order by c.open_date desc
+	limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  
+
+  <!-- 根据条件，获得总记录数 -->
+  <select id="gw.memberCard.selectCount" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select 
+    	count(id)
+    from gw_member_card  c
+    <where>
+    		<if test="cardCode!=null and cardCode!=''">
+    		c.card_code like CONCAT('%',CONCAT(#{cardCode,jdbcType=VARCHAR}),'%')
+    	</if>
+     	<if test="grade!=null and grade!=''">
+    		c.grade like CONCAT('%',CONCAT(#{grade,jdbcType=VARCHAR}),'%')
+    	</if>
+		<if test="startTime != null and '' != startTime">
+			 c.open_date &gt;=#{startTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and '' != endTime"> 
+			and c.open_date &lt;=#{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="startTime != null and '' != startTime and endTime !=null and ''!=endTime">
+			and c.open_date &gt;=#{startTime,jdbcType=INTEGER} and
+			 c.open_date &lt;=#{endTime,jdbcType=VARCHAR}
+		</if>
+
+    	<if test="status!=null">
+    	 	c.status = #{status}
+    	</if>
+    	
+    </where>
+  </select>
+  <!-- 获得所有会员卡号 -->
+  <select id="gw.memberCard.selectAllList" resultMap="BaseResultMap" >
+       select 
+    	c.id, c.card_code, c.card_type, c.grade, c.status, c.open_date, c.create_user_id, c.create_time,
+    	(select u.name from gw_admin_users u where u.id = c.create_user_id) as createUserName,
+    	(select t.name from gw_type_tree t where t.code=c.grade) as gradeName
+    from gw_member_card c
+  </select>
+  <!-- 根据会员卡号获得会员卡信息 -->
+  <select id="gw.memberCard.selectByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_member_card
+    where card_code = #{code,jdbcType=VARCHAR}
+  </select>
+  <!-- 批量插入 -->
+  <insert id="gw.memberCard.insertList" parameterType="com.crm.pojo.GwMemberCardModel" >
+    insert into gw_member_card (
+    	card_code, card_type, grade, status, open_date, create_user_id, create_time
+    )
+    values
+    <foreach collection="list" item="memberCardModel" index="index" separator=",">
+    (
+    	#{memberCardModel.cardCode,jdbcType=VARCHAR},
+        #{memberCardModel.cardType,jdbcType=INTEGER},
+        #{memberCardModel.grade,jdbcType=VARCHAR},
+        #{memberCardModel.status,jdbcType=INTEGER},
+        #{memberCardModel.openDate,jdbcType=VARCHAR},
+        #{memberCardModel.createUserId,jdbcType=INTEGER},
+        #{memberCardModel.createTime,jdbcType=VARCHAR}
+    )
+    </foreach>
+   </insert>
+   <!-- 查询该卡号段是否存在会员卡记录 -->
+   <select id="gw.memberCard.selectListByCode" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select 
+   	 	count(id)
+    from gw_member_card
+    where card_code &gt;= #{startCardCode,jdbcType=VARCHAR}
+    and card_code &lt;= #{endCardCode,jdbcType=VARCHAR}
+  <!-- 获取所有正在使用的卡号 -->
+  </select>
+      <select id="gw.memberCard.getAllNormalUseCardCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    	c.id, c.card_code, c.card_type, c.grade, c.status, c.open_date, c.create_user_id, c.create_time,
+    	(select u.name from gw_admin_users u where u.id = c.create_user_id) as createUserName,
+    	(select t.name from gw_type_tree t where t.code=c.grade) as gradeName
+    from gw_member_card c where c.status=1
+  </select>
+  
+</mapper>

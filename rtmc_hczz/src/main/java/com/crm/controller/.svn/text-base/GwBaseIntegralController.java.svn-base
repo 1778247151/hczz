@@ -1,0 +1,298 @@
+package com.crm.controller;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.http.client.ClientProtocolException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.api.CallParameters;
+import com.crm.bean.TMonPopManagerBean;
+import com.crm.common.AdminUser;
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.MD5;
+import com.crm.common.ResponseCode;
+import com.crm.common.SecurityUtil;
+import com.crm.common.Status;
+import com.crm.interceptor.BussAnnotation;
+import com.crm.interceptor.exception.BaseException;
+import com.crm.pojo.GwAdminUsersModel;
+import com.crm.pojo.GwBaseIntegralModel;
+import com.crm.pojo.GwShopsLeaseModel;
+import com.crm.service.GwAdminUsersService;
+import com.crm.service.GwBaseIntegralService;
+import com.crm.service.GwShopsLeaseService;
+import com.crm.util.AdminUtil;
+import com.crm.util.Certification;
+import com.crm.util.DateUtil;
+import com.crm.util.HttpClientUtil;
+import com.crm.util.ValidateUtil;
+
+import net.sf.json.JSONObject;
+
+/**
+ * 
+ * GwBaseIntegralController:基础积分规则访问控制层
+ *
+ * @author xiangtao
+ * @date 2016年6月20日
+ * @version jdk.8
+ *
+ */
+@Controller
+@RequestMapping("/baseIntegral")
+public class GwBaseIntegralController extends BaseException {
+
+	@RequestMapping("/testInterface.do")
+	@ResponseBody
+	public String testInterface() {
+		String YHBS = "E84E7273764D2D77E9FC4E9C521E8C3750";
+		String XTLB = "abc";
+		String DYLX = CallParameters.WEB_TRANSSALE_INTEGRATION;
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("gwPaymentTenderCode", "CH01");
+		map.put("gwMemberCode", "6666");
+		map.put("gwShopsLeaseCode", "NIKE002");
+		JSONObject json = JSONObject.fromObject(map);
+		String DATA = json.toString();
+
+		Map<String, Object> map1 = new HashMap<>();
+		map1.put("YHBS", YHBS);
+		map1.put("XTLB", XTLB);
+		map1.put("DYLX", DYLX);
+		map1.put("DATA", DATA);
+
+		String url = "//crmApi.do";
+
+		try {
+			String a = HttpClientUtil.httpPost(url, map1);
+			System.out.println("a:" + a);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
+	// 日志
+	private Logger logger = LoggerFactory.getLogger(GwBaseIntegralController.class);
+
+	/**
+	 * 基础积分规则业务逻辑
+	 */
+	@Resource(name = "gwBaseIntegralServiceManage")
+	private GwBaseIntegralService gwBaseIntegralServiceImpl;
+
+	/**
+	 * 店铺业务逻辑
+	 */
+	@Resource(name = "gwShopsLeaseServiceManage")
+	private GwShopsLeaseService gwShopsLeaseServiceImpl;
+
+	/**
+	 * 
+	 * getBaseIntegralById:根据基础积分规则id，获取基础积分规则信息
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getBaseIntegralById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "基础积分规则维护", option = "获取规则通过ID")
+	public BaseResultVo getBaseIntegralById(int id, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		if (id == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");// 提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		// 获取基础积分规则信息
+		GwBaseIntegralModel gwBaseIntegralModel = gwBaseIntegralServiceImpl.selectById(id);
+		baseResultVo.setData(gwBaseIntegralModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * addBaseIntegral 添加基础积分规则
+	 * 
+	 * @date 2016年6月20日
+	 * @param
+	 * @return
+	 */
+	@RequestMapping("/addBaseIntegral.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "基础积分规则维护", option = "添加规则")
+	public BaseResultVo addBaseIntegral(GwBaseIntegralModel gwBaseIntegralModel, HttpServletRequest request) {
+		Integer userid = SecurityUtil.getAdminUser(request).getUserId();
+		gwBaseIntegralModel.setCreateUserId(userid);
+		gwBaseIntegralModel.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		gwBaseIntegralModel.setUpdateUserId(userid);
+		gwBaseIntegralModel.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		gwBaseIntegralServiceImpl.insert(gwBaseIntegralModel);
+
+		BaseResultVo baseResultVo = new BaseResultVo();
+
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * delBaseIntegralById:根据基础积分规则id，删除基础积分规则
+	 *
+	 * @date 2016年6月20日
+	 * @param id
+	 *            基础积分规则id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/delBaseIntegral.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "基础积分规则维护", option = "删除规则")
+	public BaseResultVo delBaseIntegralById(int id, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		if (id == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");// 提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		int num = gwBaseIntegralServiceImpl.deleteById(id);
+
+		if (num < 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("操作失败");// 提示信息
+		}
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * updateBaseIntegral:更新基础积分规则
+	 *
+	 * @date 2016年6月20日
+	 * @param gwBaseIntegralModel
+	 *            基础积分规则信息对象
+	 * @return
+	 */
+	@RequestMapping("/updateBaseIntegral.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "基础积分规则维护", option = "更新规则")
+	public BaseResultVo updateBaseIntegral(GwBaseIntegralModel gwBaseIntegralModel, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		// 验证主键是否为空
+		if (gwBaseIntegralModel.getId() == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		// 更新时间
+		gwBaseIntegralModel.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		int userid = SecurityUtil.getAdminUser(request).getUserId();
+		gwBaseIntegralModel.setUpdateUserId(userid);
+
+		// 更新基础积分规则信息
+		gwBaseIntegralServiceImpl.update(gwBaseIntegralModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * getBaseIntegralList:获取基础积分规则集合（分页）
+	 *
+	 * @date 2016年6月20日
+	 * @param page
+	 *            当前页码数
+	 * @param pagesize
+	 *            每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getBaseIntegralList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "基础积分规则维护", option = "获取规则集合")
+	public LigerPageDataVo getBaseIntegralList(int currentPage, int pageSize, String shopsCode, String memberGradeCode,
+			String description, HttpServletRequest request) {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+
+		params.put("shopsCode", shopsCode);
+		params.put("memberGradeCode", memberGradeCode);
+		params.put("description", description);
+		List<GwBaseIntegralModel> gwBaseIntegralList = gwBaseIntegralServiceImpl.selectByConditionList(params);
+		List<GwShopsLeaseModel> gwShopsLeaseList = gwShopsLeaseServiceImpl.getAllList();
+		for (GwBaseIntegralModel gwBaseIntegralModel : gwBaseIntegralList) {
+			String codes = gwBaseIntegralModel.getShopsCode();
+			String str[] = codes.split(";");
+			for(int i=0;i<str.length;i++){
+				for (GwShopsLeaseModel gwShopsLease : gwShopsLeaseList) {
+					if (str[i].equals(gwShopsLease.getCode())) {
+						str[i] = gwShopsLease.getName();
+					}
+				}
+			}
+			
+			String shopsName= String.join(";", str);
+			gwBaseIntegralModel.setShopsName(shopsName);
+		}
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		// data.setRows(baseResultVo.getRows());
+		// data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		data.setRows(gwBaseIntegralList);
+		data.setTotal(gwBaseIntegralList.size());
+		return data;
+	}
+}

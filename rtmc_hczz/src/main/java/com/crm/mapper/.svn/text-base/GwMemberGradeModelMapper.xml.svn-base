@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.memberGrade" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwMemberGradeModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="member_grade_code" property="memberGradeCode" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="is_forever" property="isForever" jdbcType="INTEGER" />
+    <result column="effective_time" property="effectiveTime" jdbcType="VARCHAR" />
+    <result column="expiry_time" property="expiryTime" jdbcType="VARCHAR" />
+    <result column="order_num" property="orderNum" jdbcType="INTEGER" />
+    <result column="discount" property="discount" jdbcType="INTEGER" />
+    <result column="exchange_money" property="exchangeMoney" jdbcType="DECIMAL" />
+    <result column="exchage_integral" property="exchageIntegral" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, code,member_grade_code, description, is_forever, effective_time, expiry_time, order_num, discount, 
+    exchange_money, exchage_integral, create_user_id, create_time, update_user_id, update_time
+  </sql>
+  <select id="gw.memberGrade.selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_member_grade_integral
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="gw.memberGrade.selectByGradeCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_member_grade_integral
+    where member_grade_code = #{code,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="gw.memberGrade.selectAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_member_grade_integral
+  </select>
+  
+  <delete id="gw.memberGrade.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_member_grade_integral
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.memberGrade.batchInsert" parameterType="com.crm.pojo.GwMemberGradeModel" >
+    insert into gw_member_grade_integral (id,code,member_grade_code, description, 
+      is_forever, effective_time, expiry_time, 
+      order_num, discount, exchange_money, 
+      exchage_integral, create_user_id, create_time, 
+      update_user_id, update_time)
+    values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR},#{memberGradeCode,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{isForever,jdbcType=INTEGER}, #{effectiveTime,jdbcType=VARCHAR}, #{expiryTime,jdbcType=VARCHAR}, 
+      #{orderNum,jdbcType=INTEGER}, #{discount,jdbcType=INTEGER}, #{exchangeMoney,jdbcType=DECIMAL}, 
+      #{exchageIntegral,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR}, 
+      #{updateUserId,jdbcType=INTEGER}, #{updateTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="gw.memberGrade.insert" parameterType="com.crm.pojo.GwMemberGradeModel" >
+    insert into gw_member_grade_integral
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="memberGradeCode != null" >
+        member_grade_code,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="isForever != null" >
+        is_forever,
+      </if>
+      <if test="effectiveTime != null" >
+        effective_time,
+      </if>
+      <if test="expiryTime != null" >
+        expiry_time,
+      </if>
+      <if test="orderNum != null" >
+        order_num,
+      </if>
+      <if test="discount != null" >
+        discount,
+      </if>
+      <if test="exchangeMoney != null" >
+        exchange_money,
+      </if>
+      <if test="exchageIntegral != null" >
+        exchage_integral,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="memberGradeCode != null" >
+        #{memberGradeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="isForever != null" >
+        #{isForever,jdbcType=INTEGER},
+      </if>
+      <if test="effectiveTime != null" >
+        #{effectiveTime,jdbcType=VARCHAR},
+      </if>
+      <if test="expiryTime != null" >
+        #{expiryTime,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNum != null" >
+        #{orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="discount != null" >
+        #{discount,jdbcType=INTEGER},
+      </if>
+      <if test="exchangeMoney != null" >
+        #{exchangeMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="exchageIntegral != null" >
+        #{exchageIntegral,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.memberGrade.updateById" parameterType="com.crm.pojo.GwMemberGradeModel" >
+    update gw_member_grade_integral
+    <set >
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="memberGradeCode != null" >
+        member_grade_code=#{memberGradeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="isForever != null" >
+        is_forever = #{isForever,jdbcType=INTEGER},
+      </if>
+      <if test="effectiveTime != null" >
+        effective_time = #{effectiveTime,jdbcType=VARCHAR},
+      </if>
+      <if test="expiryTime != null" >
+        expiry_time = #{expiryTime,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNum != null" >
+        order_num = #{orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="discount != null" >
+        discount = #{discount,jdbcType=INTEGER},
+      </if>
+      <if test="exchangeMoney != null" >
+        exchange_money = #{exchangeMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="exchageIntegral != null" >
+        exchage_integral = #{exchageIntegral,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据条件，获取分页LIST集合 -->
+  <select id="gw.memberGrade.selectByPageList" resultMap="BaseResultMap" parameterType="java.util.Map">
+ 	SELECT
+	a.`code`,
+	(select t.name from gw_type_tree t where t.code=member_grade_code) as memberGradeName,
+	a.member_grade_code,
+	a.create_time,
+	a.create_user_id,
+	a.description,
+	a.discount,
+	a.effective_time,
+	a.exchage_integral,
+	a.exchange_money,
+	a.expiry_time,
+	a.id,
+	a.is_forever,
+	a.order_num,
+	a.update_time,
+	a.update_user_id,
+	(select b.`name` from gw_admin_users b where b.id = a.create_user_id)as createUserName,
+	(select b.`name` from gw_admin_users b where b.id = a.update_user_id)as updateUserName
+FROM
+	gw_member_grade_integral a
+	<where>
+		<if test="isFovever!=null and ''!=isFovever">
+			and a.is_forever = #{isFovever,jdbcType=VARCHAR}
+		</if>
+		<if test="code!=null and ''!=code">
+			and a.code LIKE CONCAT(CONCAT('%', #{code,jdbcType=VARCHAR}), '%')  
+		</if>
+		<if test="startTime!=null and ''!=startTime">
+			and a.effective_time &gt;= #{startTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime!=null and ''!=endTime">
+			and a.expiry_time &lt;= #{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="startTime!=null and ''!=startTime and endTime!=null and ''!=endTime">
+			and a.effective_time &gt;= #{startTime,jdbcType=VARCHAR} and a.expiry_time &lt;= #{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="description!=null and ''!=description">
+			and a.description LIKE CONCAT(CONCAT('%', #{description,jdbcType=VARCHAR}), '%')  
+		</if>
+	</where>
+	order by a.create_time desc
+ limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER} 
+  </select>
+  
+  <select id="gw.memberGrade.selectByPageCount" resultType="java.lang.Integer"  parameterType="java.util.Map">
+  	select
+  	count(a.id)	
+FROM
+	gw_member_grade_integral a
+	<where>
+		<if test="isFovever!=null and ''!=isFovever">
+			and a.is_forever = #{isFovever,jdbcType=VARCHAR}
+		</if>
+		<if test="code!=null and ''!=code">
+			and a.code LIKE CONCAT(CONCAT('%', #{code,jdbcType=VARCHAR}), '%')  
+		</if>
+		<if test="startTime!=null and ''!=startTime">
+			and a.effective_time &gt;= #{startTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime!=null and ''!=endTime">
+			and a.expiry_time &lt;= #{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="startTime!=null and ''!=startTime and endTime!=null and ''!=endTime">
+			and a.effective_time &gt;= #{startTime,jdbcType=VARCHAR} and a.expiry_time &lt;= #{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="description!=null and ''!=description">
+			and a.description LIKE CONCAT(CONCAT('%', #{description,jdbcType=VARCHAR}), '%')  
+		</if>
+	</where>
+  </select>
+  
+   <select id="gw.memberGrade.selectByLastOne" resultMap="BaseResultMap" >
+		SELECT
+			*
+		FROM
+			gw_member_grade_integral a
+		WHERE
+			a.code LIKE CONCAT(CONCAT('%', #{time,jdbcType=VARCHAR}), '%') 
+		ORDER BY
+			a.id DESC
+		LIMIT 1
+	</select>
+	
+	<select id="gw.memberGrade.getMemberGradeIntegralByCondition" resultMap="BaseResultMap" parameterType="java.util.Map">
+ 	SELECT
+	a.`code`,
+	(select t.name from gw_type_tree t where t.code=member_grade_code) as memberGradeName,
+	a.member_grade_code,
+	a.create_time,
+	a.create_user_id,
+	a.description,
+	a.discount,
+	a.effective_time,
+	a.exchage_integral,
+	a.exchange_money,
+	a.expiry_time,
+	a.id,
+	a.is_forever,
+	a.order_num,
+	a.update_time,
+	a.update_user_id,
+	(select b.`name` from gw_admin_users b where b.id = a.create_user_id)as createUserName,
+	(select b.`name` from gw_admin_users b where b.id = a.update_user_id)as updateUserName
+	FROM
+	gw_member_grade_integral a,
+	gw_members m
+	where a.member_grade_code=m.grade 
+	and  m.vip_code=#{vipCode,jdbcType=VARCHAR} 
+	and (a.is_forever=1 or (a.is_forever=0 and a.expiry_time &gt;=#{saleDate} and a.effective_time &lt;=#{saleDate}))
+		<!-- <if test="isFovever!=null and ''!=isFovever">
+			and a.is_forever = #{isFovever,jdbcType=VARCHAR}
+		</if>
+		<if test="code!=null and ''!=code">
+			and a.code LIKE CONCAT(CONCAT('%', #{code,jdbcType=VARCHAR}), '%')  
+		</if>
+		<if test="startTime!=null and ''!=startTime">
+			and a.effective_time &gt;= #{startTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime!=null and ''!=endTime">
+			and a.expiry_time &lt;= #{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="startTime!=null and ''!=startTime and endTime!=null and ''!=endTime">
+			and a.effective_time &gt;= #{startTime,jdbcType=VARCHAR} and a.expiry_time &lt;= #{endTime,jdbcType=VARCHAR}
+		</if> -->
+  </select>
+</mapper>

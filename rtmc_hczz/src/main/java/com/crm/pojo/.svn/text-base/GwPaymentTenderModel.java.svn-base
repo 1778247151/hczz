@@ -1,0 +1,105 @@
+package com.crm.pojo;
+
+import com.crm.enums.ConfirmEnum;
+
+public class GwPaymentTenderModel {
+    private Integer id;
+
+	private String paymentTenderCode;
+
+	private Integer whetherIntegral;
+
+	private Integer createUserId;
+
+	private Integer updateUserId;
+
+	private String createTime;
+
+	private String updateTime;
+	
+	private String createUserName;
+	
+	private String updateUserName;
+	
+	private String whetherIntegralName;
+
+	public String getWhetherIntegralName() {
+		return ConfirmEnum.getDisplayName(getWhetherIntegral());
+	}
+
+	public void setWhetherIntegralName(String whetherIntegralName) {
+		this.whetherIntegralName = whetherIntegralName;
+	}
+
+	public String getCreateUserName() {
+		return createUserName;
+	}
+
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
+	}
+
+	public String getUpdateUserName() {
+		return updateUserName;
+	}
+
+	public void setUpdateUserName(String updateUserName) {
+		this.updateUserName = updateUserName;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getPaymentTenderCode() {
+		return paymentTenderCode;
+	}
+
+	public void setPaymentTenderCode(String paymentTenderCode) {
+		this.paymentTenderCode = paymentTenderCode == null ? null : paymentTenderCode.trim();
+	}
+
+	public Integer getWhetherIntegral() {
+		return whetherIntegral;
+	}
+
+	public void setWhetherIntegral(Integer whetherIntegral) {
+		this.whetherIntegral = whetherIntegral;
+	}
+
+	public Integer getCreateUserId() {
+		return createUserId;
+	}
+
+	public void setCreateUserId(Integer createUserId) {
+		this.createUserId = createUserId;
+	}
+
+	public Integer getUpdateUserId() {
+		return updateUserId;
+	}
+
+	public void setUpdateUserId(Integer updateUserId) {
+		this.updateUserId = updateUserId;
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime == null ? null : createTime.trim();
+	}
+
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime == null ? null : updateTime.trim();
+	}
+}

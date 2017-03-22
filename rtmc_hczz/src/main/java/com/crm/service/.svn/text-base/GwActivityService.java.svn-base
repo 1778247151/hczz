@@ -1,0 +1,57 @@
+package com.crm.service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwActivityModel;
+/**
+ * 
+ * GwActivityService:活动业务逻辑层接口
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+public interface GwActivityService extends Services<GwActivityModel>{
+	/**
+	 * 根据编号获取活动
+	 * @param code
+	 * @return
+	 */
+	GwActivityModel getActivityByCode(String code);
+	
+	/**
+	 * 根据编号查询当天最后一条记录
+	 * @param time
+	 * @return
+	 */
+	public GwActivityModel getActivityByLastOne(String time);
+	
+	/**
+	 * 根据ID修改状态
+	 * @param params
+	 * @return
+	 */
+	public int updateStatus(Map<String,Object> params);
+	/**
+	 * 
+	 * selectActivityListByCondition:通过条件查询活动集合
+	 *
+	 * @author hemingjun
+	 * @date 2016年11月9日
+	 * @return
+	 */
+	public List<GwActivityModel> selectActivityListByCondition(Map<String, Object> params);
+	
+	/**
+	 * 
+	 * updateStatusByCondition:通过状态更新活动状态
+	 *
+	 * @author hemingjun
+	 * @date 2016年11月9日
+	 * @return
+	 */
+	public int updateStatusByCondition(Map<String, Object> params);
+}

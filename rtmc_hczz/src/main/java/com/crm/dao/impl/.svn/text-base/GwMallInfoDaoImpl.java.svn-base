@@ -1,0 +1,129 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+
+import com.crm.dao.GwMallInfoDao;
+import com.crm.pojo.GwMallInfoModel;
+/**
+ * 
+ * GwMallInfoDaoImpl:购物中心 数据访问层实现
+ *
+ * @author yumaochun
+ * @date  2016年3月10日
+ * @version  jdk1.8
+ *
+ */
+@Repository("gwMallInfoDaoManage")
+public class GwMallInfoDaoImpl implements GwMallInfoDao{
+	
+	@Resource
+	private BaseDao dao;
+
+	@Override
+	public int insert(GwMallInfoModel e) {
+		return dao.insert("gw.mallInfo.insert", e);
+	}
+
+	@Override
+	public int delete(GwMallInfoModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwMallInfoModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.mallInfo.update", e);
+	}
+
+	@Override
+	public GwMallInfoModel selectOne(GwMallInfoModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public List<GwMallInfoModel> selectList(GwMallInfoModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.mallInfo.deleteById", id);
+	}
+
+	@Override
+	public GwMallInfoModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwMallInfoModel) dao.selectOne("gw.mallInfo.selectById", id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.mallInfo.selectPageList", "gw.mallInfo.selectCount", params);
+	}
+
+	@Override
+	public List<GwMallInfoModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.mallInfo.selectList");
+	}
+
+	@Override
+	public GwMallInfoModel getGwMallInfoByCode(String code) {
+		// TODO Auto-generated method stub
+		return (GwMallInfoModel)dao.selectOne("gw.mallInfo.selectByCode",code);
+	}
+
+	@Override
+	public GwMallInfoModel getMallInfoListApi() {
+		// TODO Auto-generated method stub
+		return (GwMallInfoModel) dao.selectOne("gw.mallInfo.selectListApi");
+	}
+
+	@Override
+	public int deleteAllForMallInfo() {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.mallInfo.deleteAll");
+	}
+
+	@Override
+	public int batchInsert(List<GwMallInfoModel> list) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.mallInfo.batchinsert", list);
+	}
+
+	@Override
+	public int batchUpdate(List<GwMallInfoModel> list) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.mallInfo.batchUpdate", list);
+	}
+
+	@Override
+	public int batchDelete(List<GwMallInfoModel> list) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.mallInfo.batchDelete", list);
+	}
+
+	
+
+}

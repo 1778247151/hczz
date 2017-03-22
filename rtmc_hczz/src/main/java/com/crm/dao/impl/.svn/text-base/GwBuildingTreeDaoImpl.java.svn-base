@@ -1,0 +1,129 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwBuildingTreeDao;
+import com.crm.pojo.GwBuildingTreeModel;
+/**
+ * 
+ * GwBuildingTreeDaoImpl:购物中心楼宇树形菜单 数据访问层实现
+ *
+ * @author yumaochun
+ * @date  2016年3月10日
+ * @version  jdk1.8
+ *
+ */
+@Repository("gwBuildingTreeDaoManage")
+public class GwBuildingTreeDaoImpl implements GwBuildingTreeDao{
+	
+	@Autowired
+	private BaseDao dao;
+
+	@Override
+	public int insert(GwBuildingTreeModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.buildingTree.insert", e);
+	}
+
+	@Override
+	public int delete(GwBuildingTreeModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwBuildingTreeModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.buildingTree.update", e);
+	}
+
+	@Override
+	public GwBuildingTreeModel selectOne(GwBuildingTreeModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwBuildingTreeModel> selectList(GwBuildingTreeModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.buildingTree.deleteById", id);
+	}
+
+	@Override
+	public GwBuildingTreeModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwBuildingTreeModel) dao.selectOne("gw.buildingTree.selectById", id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwBuildingTreeModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.buildingTree.selectList");
+	}
+
+	@Override
+	public List<GwBuildingTreeModel> getBuildingTreeListByMallInfoId(Map<String,Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.buildingTree.selectListByMallInfoId", params);
+	}
+
+	@Override
+	public GwBuildingTreeModel getBuildingTreeByCode(String code) {
+		// TODO Auto-generated method stub
+		return (GwBuildingTreeModel)dao.selectOne("gw.buildingTree.selectByCode",code);
+	}
+
+	@Override
+	public int deleteAll() {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.buildingTree.deleteAll");
+	}
+
+	@Override
+	public int batchInsertForBuildingList(List<GwBuildingTreeModel> buildingList) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.buildingTree.batchInsert",buildingList);
+	}
+	@Override
+	public int batchInsert(List<GwBuildingTreeModel> list) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.buildingTree.batchInsert", list);
+	}
+
+	@Override
+	public int batchUpdate(List<GwBuildingTreeModel> list) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.buildingTree.batchUpdate", list);
+	}
+
+	@Override
+	public int batchDelete(List<GwBuildingTreeModel> list) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.buildingTree.batchDelete", list);
+	}
+}

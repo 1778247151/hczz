@@ -1,0 +1,121 @@
+package com.crm.pojo;
+
+import java.math.BigDecimal;
+
+public class GwMemberGradeDetailModel implements Cloneable{
+    private Integer id;
+
+    private String memberGradeCode;
+
+    private String typeCode;
+
+    private Integer type;
+
+    private Integer discount;
+
+    private Integer integralNumber;
+
+    private BigDecimal exchangeMoney;
+
+    private String memberGradeName;
+    
+    private String formatsTreeName;
+    
+    private String shopsLeaseName;
+    
+    private Integer positive;
+    
+    
+    public Integer getPositive() {
+		return positive;
+	}
+
+	public void setPositive(Integer positive) {
+		this.positive = positive;
+	}
+
+	public String getMemberGradeName() {
+		return memberGradeName;
+	}
+
+	public void setMemberGradeName(String memberGradeName) {
+		this.memberGradeName = memberGradeName;
+	}
+
+	public String getFormatsTreeName() {
+		return formatsTreeName;
+	}
+
+	public void setFormatsTreeName(String formatsTreeName) {
+		this.formatsTreeName = formatsTreeName;
+	}
+
+	public String getShopsLeaseName() {
+		return shopsLeaseName;
+	}
+
+	public void setShopsLeaseName(String shopsLeaseName) {
+		this.shopsLeaseName = shopsLeaseName;
+	}
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getMemberGradeCode() {
+        return memberGradeCode;
+    }
+
+    public void setMemberGradeCode(String memberGradeCode) {
+        this.memberGradeCode = memberGradeCode == null ? null : memberGradeCode.trim();
+    }
+
+    public String getTypeCode() {
+        return typeCode;
+    }
+
+    public void setTypeCode(String typeCode) {
+        this.typeCode = typeCode == null ? null : typeCode.trim();
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public Integer getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
+    }
+
+    public Integer getIntegralNumber() {
+        return integralNumber;
+    }
+
+    public void setIntegralNumber(Integer integralNumber) {
+        this.integralNumber = integralNumber;
+    }
+
+    public BigDecimal getExchangeMoney() {
+        return exchangeMoney;
+    }
+
+    public void setExchangeMoney(BigDecimal exchangeMoney) {
+        this.exchangeMoney = exchangeMoney;
+    }
+    
+    @Override
+	public GwMemberGradeDetailModel clone() throws CloneNotSupportedException {
+		return (GwMemberGradeDetailModel) super.clone();
+	}
+}

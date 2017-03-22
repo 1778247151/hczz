@@ -1,0 +1,90 @@
+﻿********************************开发代码规范**********************************
+
+Mapper里面sqlId命名规范：
+  例：对于角色功能【gw_role】相关命名
+  插入：gw.role.insert或gw.role.add
+  批量插入：gw.role.batchInsert
+  删除：gw.role.deleteById
+  批量删除：gw.role.batchDelete
+  更新：gw.role.update
+  批量更新：gw.role.batchUpdate
+  分页总记录数：gw.role.selectCount
+  分页记录数集合：gw.role.selectPageList
+  所有记录：gw.role.selectList
+  根据id，获取记录：gw.role.selectById或gw.role.getById
+  
+  对于加条件的以by方式：**ByName
+  
+  注：特殊的根据实际情况命名规范（一定要满足可读性）
+  
+dao,service,controller命名规范：
+   例：对于角色功能【gw_role】相关命名
+   
+   dao:GwRoleDao.java,GwRoleDaoImpl.java                     数据访问层
+   service:GwRoleService.java,GwRoleServiceImpl.java         业务逻辑层
+   controller:GwRoleController.java                          访问控制层
+   
+   插入：insertRole,insert,addRole,add
+   批量插入：batchInsertRole,batchInsert,batchAddRole,batchAdd
+   删除：deleteById,deleteRoleById
+   批量删除：batchDelete,batchDeleteRole
+   更新：update,updateRole
+   批量更新：batchUpdateRole,batchUpdate
+   分页总记录数：selectCount
+   分页记录数集合：selectPageList
+   所有记录：selectList或selectRoles,selectRolesLit,getRoles,getRoleList
+   根据id，获取记录：selectById或getRoleById
+   
+controller访问地址命名规范：
+   例：对于角色功能【gw_role】相关命名
+   类的命名：/role     @RequestMapping("/role")
+   类的方法请求地址：/insertRole.do     @RequestMapping("/insertRole.do")   最好和方法名一直
+   注：增，删，改，查等类似以上命名
+   
+   
+前端页面命名：
+    如：角色管理
+    每个功能菜单对应一个目录：webapp/manager/gw_role/
+	目录中对应相应的操作页面：gw_role_list.html,gw_role_add.html,gw_role_insert.html,gw_role_edit.html
+	webapp/manager/gw_role/gw_role_list.html,gw_role_add.html,gw_role_insert.html,gw_role_edit.html
+	
+	js目录:webapp/js/manage/
+	js文件:gw.**.list.js,gw.**.add.js,gw.**.edit.js    如：gw.role.list.js，gw.role.add.js,gw.role.edit.js
+	css目录：webapp/css/
+	css文件：webapp/css/**.css  （针对特殊的功能页面才单独写css文件）  如：登录  webapp/css/login.css
+	
+	
+	图片存放位置：webapp/images     （图片名称以实际含义而命名）增加可读性，特殊功能可增加对应的目录存放
+	
+	静态数据字典：webapp/data       （将一些下拉框数据等静态数据以文本存储方式命名存储，建静态资源文件）
+	webapp/data/role.txt        角色状态数据字典
+
+    插件目录：webapp/plugins    存储相关插件	
+	
+
+
+代码注释规范：	（前端和后台）
+
+    /* 
+	 * 描述：
+	 *
+	 * @author   yumaochun
+	 * @date     2016年6月20日
+	 * @version  jdk 1.8
+	 * @param    param1    参数1
+	 * @param    param2    参数2
+	 *
+	 * @return   返回数据：
+	 */
+
+     //对于代码中的字段属性也需要加入注释
+	 //对于特殊的代码功能性也需加入注释，标注代码所实现的功能操作
+  
+日志规范：
+   private Logger logger = LoggerFactory.getLogger(GwRoleController.class); 
+   
+   logger.info("操作成功！");
+   logger.info("操作失败！");
+  
+
+  

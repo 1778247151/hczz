@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.notice" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwNoticeModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="send_status" property="sendStatus" jdbcType="INTEGER" />
+    <result column="send_user_id" property="sendUserId" jdbcType="INTEGER" />
+    <result column="send_time" property="sendTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.crm.pojo.GwNoticeModelWithBLOBs" extends="BaseResultMap" >
+    <result column="receiver" property="receiver" jdbcType="LONGVARCHAR" />
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, title, create_user_id, create_time, update_user_id, update_time, status, send_status, 
+    send_user_id, send_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    receiver, content
+  </sql>
+  
+  <!-- 根据条件，获取分页数据list集合 -->
+  <select id="gw.notice.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    n.id, n.title, n.receiver, n.content, (select u.name from gw_admin_users u where u.id = n.create_user_id) as createUser, n.create_time createTime, 
+    (select u.name from gw_admin_users u where u.id = n.update_user_id) as updateUser, n.update_time updateTime,
+    (select u.name from gw_admin_users u where u.id = n.send_user_id) as sendUser, n.send_time sendTime,
+    n.send_status, n.status
+    from gw_notice n 
+    <where> 
+    <if test="title != null and '' != title">  
+          n.title LIKE CONCAT(CONCAT('%', #{title,jdbcType=VARCHAR}), '%')         
+    </if>
+    <if test="content != null and '' != content">  
+          n.content LIKE CONCAT(CONCAT('%', #{content,jdbcType=VARCHAR}), '%')         
+    </if>
+    <if test="startDate != null and '' != startDate">  
+          and str_to_date(n.create_time, '%Y-%m-%d') &gt;= str_to_date(#{startDate,jdbcType=VARCHAR}, '%Y-%m-%d')
+    </if>
+    <if test="endDate != null and '' != endDate">  
+          and str_to_date(n.create_time, '%Y-%m-%d') &lt;= str_to_date(#{endDate,jdbcType=VARCHAR}, '%Y-%m-%d')
+    </if>
+    and n.status = 1
+	</where> 
+    limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  <!-- 根据条件，总记录数 -->
+  <select id="gw.notice.selectCount" resultType="java.lang.Integer">
+   	select count(id) from gw_notice where status = 1
+  </select>
+  
+  <select id="gw.notice.selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from gw_notice
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.notice.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_notice
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.notice.insert" parameterType="com.crm.pojo.GwNoticeModelWithBLOBs" >
+    insert into gw_notice
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="sendStatus != null" >
+        send_status,
+      </if>
+      <if test="sendUserId != null" >
+        send_user_id,
+      </if>
+      <if test="sendTime != null" >
+        send_time,
+      </if>
+      <if test="receiver != null" >
+        receiver,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="sendStatus != null" >
+        #{sendStatus,jdbcType=INTEGER},
+      </if>
+      <if test="sendUserId != null" >
+        #{sendUserId,jdbcType=INTEGER},
+      </if>
+      <if test="sendTime != null" >
+        #{sendTime,jdbcType=VARCHAR},
+      </if>
+      <if test="receiver != null" >
+        #{receiver,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.notice.update" parameterType="com.crm.pojo.GwNoticeModelWithBLOBs" >
+    update gw_notice
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="sendStatus != null" >
+        send_status = #{sendStatus,jdbcType=INTEGER},
+      </if>
+      <if test="sendUserId != null" >
+        send_user_id = #{sendUserId,jdbcType=INTEGER},
+      </if>
+      <if test="sendTime != null" >
+        send_time = #{sendTime,jdbcType=VARCHAR},
+      </if>
+      <if test="receiver != null" >
+        receiver = #{receiver,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.crm.pojo.GwNoticeModel" >
+    update gw_notice
+    set title = #{title,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=VARCHAR},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      send_status = #{sendStatus,jdbcType=INTEGER},
+      send_user_id = #{sendUserId,jdbcType=INTEGER},
+      send_time = #{sendTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

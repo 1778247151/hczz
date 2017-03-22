@@ -1,0 +1,96 @@
+package com.crm.service;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwLockerModel;
+import com.crm.pojo.GwLockerRentalModel;
+
+/**
+ * 
+ * GwLockerRentalService:储物柜出租业务逻辑层接口
+ *
+ * @author hanzhiqiang
+ * @date  2016年11月9日
+ * @version  jdk1.8
+ *
+ */
+public interface GwLockerRentalService extends Services<GwLockerRentalModel>{
+	/**
+	 * 
+	 * getLockerRentalById:根据编号，获得信息
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 * @param id
+	 * @return
+	 */
+	public GwLockerRentalModel getLockerRentalById(Integer id);
+	
+	/**
+	 * 
+	 * getListsApi:获取所有集合接口
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 * @return
+	 */
+	public List<GwLockerRentalModel> getListsApi();
+	/**
+	 * 
+	 * getLockerRentalListByCondition:根据条件获取集合
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 * @param params
+	 * @return
+	 */
+	public List<GwLockerRentalModel> getLockerRentalListByCondition(Map<String, Object> params);
+
+	/**
+	 * 
+	 * addLockerRental:添加
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 */
+	public int addLockerRental(GwLockerRentalModel gwLockerRentalModel);
+	
+	/**
+	 * 
+	 * updateLockerRental:修改
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 * @return
+	 */
+	public int updateLockerRental(GwLockerRentalModel gwLockerRentalModel);
+	
+	/**
+	 * 
+	 * deleteLockerRentalById:删除
+	 *
+	 * @author   hanzhiqiang
+	 * @date     2016年11月8日
+	 *
+	 * @param id
+	 * @return
+	 */
+	public int deleteLockerRentalById(int id);
+	/**
+	 * 根据编号查询当天最后一条记录
+	 * @param time
+	 * @return
+	 */
+	public GwLockerRentalModel getLockerRentalByLastOne(String time);
+
+	public List<GwLockerModel> getExportList(Map<String, Object> params);
+}

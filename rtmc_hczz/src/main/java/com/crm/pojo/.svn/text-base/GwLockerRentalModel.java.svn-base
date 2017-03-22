@@ -1,0 +1,231 @@
+package com.crm.pojo;
+
+import java.math.BigDecimal;
+
+import com.crm.enums.LockerEnum;
+import com.crm.enums.LockerRentalEnum;
+import com.crm.enums.LockerRentalMethodEnum;
+import com.crm.enums.LockerRentalPaymentMethodEnum;
+
+public class GwLockerRentalModel {
+    private Integer id;
+
+    private String lockerCode;
+
+    private String vipCode;
+
+    private String zjcode;
+    
+	private String cardCode;
+
+    private Integer rentalMethod;
+
+    private String startTime;
+
+    private String endTime;
+
+    private Integer paymentMethod;
+
+    private BigDecimal money;
+
+    private BigDecimal integralNum;
+
+    private Integer rentalDay;
+
+    private Integer status;
+
+    private String rentalTime;
+
+    private String returnTime;
+
+    private Integer createUserId;
+
+    private String createTime;
+
+    private Integer updateUserId;
+
+    private String updateTime;
+
+    private String statusName;
+    
+    private String rentalMethodName;
+    
+    private String paymentMethodName;
+    
+    public String getZjcode() {
+        return zjcode;
+    }
+
+    public void setZjcode(String zjcode) {
+        this.zjcode = zjcode == null ? null : zjcode.trim();
+    }
+  
+    
+    public String getRentalMethodName() {
+		return LockerRentalMethodEnum.getDisplayName(getRentalMethod());
+	}
+
+	public void setRentalMethodName(String rentalMethodName) {
+		this.rentalMethodName = rentalMethodName;
+	}
+
+	public String getPaymentMethodName() {
+		return LockerRentalPaymentMethodEnum.getDisplayName(getPaymentMethod());
+	}
+
+	public void setPaymentMethodName(String paymentMethodName) {
+		this.paymentMethodName = paymentMethodName;
+	}
+
+	public String getStatusName() {
+		return LockerRentalEnum.getDisplayName(getStatus());
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
+    
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getLockerCode() {
+        return lockerCode;
+    }
+
+    public void setLockerCode(String lockerCode) {
+        this.lockerCode = lockerCode == null ? null : lockerCode.trim();
+    }
+
+    public String getVipCode() {
+        return vipCode;
+    }
+
+    public void setVipCode(String vipCode) {
+        this.vipCode = vipCode == null ? null : vipCode.trim();
+    }
+
+    public String getCardCode() {
+        return cardCode;
+    }
+
+    public void setCardCode(String cardCode) {
+        this.cardCode = cardCode == null ? null : cardCode.trim();
+    }
+
+    public Integer getRentalMethod() {
+        return rentalMethod;
+    }
+
+    public void setRentalMethod(Integer rentalMethod) {
+        this.rentalMethod = rentalMethod;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime == null ? null : startTime.trim();
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime == null ? null : endTime.trim();
+    }
+
+    public Integer getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(Integer paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public BigDecimal getMoney() {
+        return money;
+    }
+
+    public void setMoney(BigDecimal money) {
+        this.money = money;
+    }
+
+    public BigDecimal getIntegralNum() {
+        return integralNum;
+    }
+
+    public void setIntegralNum(BigDecimal integralNum) {
+        this.integralNum = integralNum;
+    }
+
+    public Integer getRentalDay() {
+        return rentalDay;
+    }
+
+    public void setRentalDay(Integer rentalDay) {
+        this.rentalDay = rentalDay;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getRentalTime() {
+        return rentalTime;
+    }
+
+    public void setRentalTime(String rentalTime) {
+        this.rentalTime = rentalTime == null ? null : rentalTime.trim();
+    }
+
+    public String getReturnTime() {
+        return returnTime;
+    }
+
+    public void setReturnTime(String returnTime) {
+        this.returnTime = returnTime == null ? null : returnTime.trim();
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime == null ? null : createTime.trim();
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime == null ? null : updateTime.trim();
+    }
+}

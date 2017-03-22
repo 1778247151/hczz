@@ -1,0 +1,113 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwApiAccountDao;
+import com.crm.pojo.GwApiAccountModel;
+
+/**
+ * 
+ * 
+ * GwApiAccountDaoImpl:用户认证数据访问层的实现
+ *
+ * @author  yumaochun
+ * @date    2016年9月19日
+ * @version jdk1.8
+ *
+ */
+@Repository("apiAccountDaoManage")
+public class GwApiAccountDaoImpl implements GwApiAccountDao{
+
+	@Resource
+	private BaseDao dao;
+	
+	@Override
+	public int insert(GwApiAccountModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.apiAccount.insert", e);
+	}
+
+	@Override
+	public int delete(GwApiAccountModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwApiAccountModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public GwApiAccountModel selectOne(GwApiAccountModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwApiAccountModel> selectList(GwApiAccountModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.apiAccount.deleteById", id);
+	}
+
+	@Override
+	public GwApiAccountModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.apiAccount.selectByPageList", "gw.apiAccount.selectcount", params);
+	}
+
+	@Override
+	public List<GwApiAccountModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.apiAccount.getAllList");
+	}
+
+	@Override
+	public GwApiAccountModel getApiAccountById(int id) {
+		return (GwApiAccountModel) dao.selectOne("gw.apiAccount.getApiAccountById", id);
+	}
+
+	@Override
+	public int updateApiAccountToken(GwApiAccountModel apiAccount) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.apiAccount.updateApiAccountToken", apiAccount);
+	}
+
+	@Override
+	public int updateApiAccount(GwApiAccountModel apiAccount) {
+		return dao.update("gw.apiAccount.updateApiAccount", apiAccount);
+	}
+
+	@Override
+	public GwApiAccountModel getApiAccountByAccount(String account) {
+		// TODO Auto-generated method stub
+		return (GwApiAccountModel) dao.selectOne("gw.apiAccount.getApiAccountByAccount", account);
+	}
+
+}

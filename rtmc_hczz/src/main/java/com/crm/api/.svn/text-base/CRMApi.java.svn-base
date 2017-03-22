@@ -1,0 +1,1012 @@
+package com.crm.api;
+
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.bean.ShopFormatsInfo;
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.ResponseCode;
+import com.crm.common.Status;
+import com.crm.enums.IntegralTypeEnum;
+import com.crm.enums.IntergralTypeEnum;
+import com.crm.enums.PaymenttenderIntegralStatusEnum;
+import com.crm.interceptor.exception.BaseException;
+import com.crm.pojo.GwApiAccountModel;
+import com.crm.pojo.GwMemberIntegralDetailModel;
+import com.crm.pojo.GwMemberIntegralRecordModel;
+import com.crm.pojo.GwMembersModel;
+import com.crm.pojo.GwPaymentTenderModel;
+import com.crm.pojo.GwSalesModel;
+import com.crm.pojo.GwSalesPaymenttenderModel;
+import com.crm.service.GwApiAccountService;
+import com.crm.service.GwMemberIntegralDetailService;
+import com.crm.service.GwMembersService;
+import com.crm.service.GwPaymentTenderService;
+import com.crm.service.GwPromotionIntegralService;
+import com.crm.service.GwSalesPaymenttenderService;
+import com.crm.service.GwSalesService;
+import com.crm.service.GwShopsLeaseService;
+import com.crm.util.DateUtil;
+import com.crm.util.JsonMapper;
+import com.crm.util.TokenUtil;
+import com.google.gson.Gson;
+
+import net.sf.json.JSONArray;
+
+/**
+ * 
+ * 
+ * CRMApi:CRM统一对外访问接口
+ *
+ * @author yumaochun
+ * @date 2016年9月19日
+ * @version jdk1.8
+ *
+ */
+@Controller
+@RequestMapping("/crmApi")
+public class CRMApi extends BaseException {
+	// 日志
+	private Logger logger = LoggerFactory.getLogger(CRMApi.class);
+
+	/**
+	 * 接口同一业务逻辑层
+	 */
+	@Resource(name = "webapiServiceManage")
+	private HandlETC webapiServiceImpl;
+
+	/**
+	 * 用户认证业务逻辑层的实现
+	 */
+	@Resource(name = "apiAccountServiceManage")
+	private GwApiAccountService apiAccountServiceImpl;
+
+	/**
+	 * 会员业务逻辑
+	 */
+	@Resource(name = "gwMembersServiceManage")
+	private GwMembersService gwMembersServiceImpl;
+
+	/**
+	 * 销售数据获取积分业务逻辑层实现
+	 */
+	@Resource(name = "gwSalesServiceManage")
+	private GwSalesService salesServiceImpl;
+	/**
+	 * 支付方式是否积分业务逻辑
+	 */
+	@Resource(name = "gwPaymentTenderServiceManage")
+	private GwPaymentTenderService gwPaymentTenderServiceImpl;
+
+	/**
+	 * 促销积分积分规则业务逻辑层的实现
+	 */
+	@Resource(name = "gwPromotionIntegralServiceManage")
+	private GwPromotionIntegralService promotionIntegralServiceImpl;
+
+	/**
+	 * 店铺业务逻辑
+	 */
+	@Resource(name = "gwShopsLeaseServiceManage")
+	private GwShopsLeaseService gwShopsLeaseServiceImpl;
+
+	/**
+	 * 销售数据支付方式业务逻辑层
+	 */
+	@Resource(name = "salesPaymenttenderServiceManage")
+	private GwSalesPaymenttenderService salesPaymenttenderServiceImpl;
+
+	/**
+	 * 会员积分明细业务逻辑层实心
+	 */
+	@Resource(name = "gwMemberIntegralDetailServiceManage")
+	private GwMemberIntegralDetailService memberIntegralDetailServiceImpl;
+	/**
+	 * 
+	 * checkApiAccount:检查认证用户的验证是否通过
+	 *
+	 * @author yumaochun
+	 * @date 2016年9月19日
+	 *
+	 * @param account
+	 *            认证账号
+	 * @param token
+	 *            令牌
+	 * @return
+	 */
+	public BaseResultVo checkApiAccount(String account, String token) {
+		BaseResultVo baseResultVo = BaseResultVo.responseSuccess("认证通过");
+		// 根据用户认证账号，获取用户认证信息
+		GwApiAccountModel apiAccount = apiAccountServiceImpl.getApiAccountByAccount(account);
+		if (apiAccount == null) {
+			return BaseResultVo.responseInfo(ResponseCode.API_ACCOUNT_NO_EXIST, "认证账号不存在");
+		}
+		// 认证账号状态
+		int status = apiAccount.getStatus();
+		// 判断认证账号是否被禁用
+		if (status == 0) {
+			return BaseResultVo.responseInfo(ResponseCode.API_ACCOUNT_FORBIDDEN, "认证账号已被禁用");
+		}
+		// 判断token是否过期
+		if (!apiAccount.getToken().equals(token)) {
+			return BaseResultVo.responseInfo(ResponseCode.API_TOKEN_EXPIRE, "token已经过期，请重新登录");
+		}
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * bindCardCode:绑定卡号
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月19日
+	 *
+	 * @param token
+	 *            令牌
+	 * @param account
+	 *            用户账号
+	 * @param vipCode
+	 *            会员编号
+	 * @param account
+	 *            卡面编号
+	 * @return 返回：绑卡是否成功
+	 */
+	@RequestMapping("/bindCardCode.do")
+	@ResponseBody
+	public BaseResultVo bindCardCode(String token, String account, String vipCode, String cardCode) {
+
+		// 验证认证账号是否通过
+		BaseResultVo baseResultVo = checkApiAccount(account, token);
+		if (!baseResultVo.getStatus().getCode().equals(ResponseCode.OPR_SUCCESS)) {
+			return baseResultVo;
+		}
+
+		GwMembersModel model = gwMembersServiceImpl.selectByVipCode(vipCode);
+		if (model != null) {
+			model.setCardCode(cardCode);
+			int number = gwMembersServiceImpl.updateByVipCode(model);
+			if (number > 0) {
+				return BaseResultVo.responseSuccess("会员绑定卡号成功");
+			} else {
+				return BaseResultVo.responseFail("会员绑定卡号失败");
+			}
+		} else {
+			return BaseResultVo.responseFail("会员vip号不存在");
+		}
+
+	}
+
+	/**
+	 * 
+	 * registerMember:注册会员
+	 *
+	 * @author yumaochun
+	 * @date 2016年9月19日
+	 *
+	 * @param token
+	 *            令牌
+	 * @param account
+	 *            用户账号
+	 * @param data
+	 *            会员信息（jsonstring数据）
+	 * @return 返回：注册是否成功状态
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping("/registerMember.do")
+	@ResponseBody
+	public BaseResultVo registerMember(String token, String account, String data) throws UnsupportedEncodingException {
+		Status status = new Status();
+		// 验证认证账号是否通过
+		BaseResultVo baseResultVo = checkApiAccount(account, token);
+		if (!baseResultVo.getStatus().getCode().equals(ResponseCode.OPR_SUCCESS)) {
+			return baseResultVo;
+		}
+		Gson gson = new Gson();
+		// 将json数据转换为
+		GwMembersModel members = gson.fromJson(data, GwMembersModel.class);
+		List<GwMembersModel> memersList = gwMembersServiceImpl.getAllList();
+		for (GwMembersModel model : memersList) {
+			if (model.getPhone() != null && !"".equals(model.getPhone())) {
+				if (model.getPhone().equals(members.getPhone())) {
+					status.setCode(ResponseCode.API_PHONE_EXIST);
+					status.setMsg("注册失败，注册会员手机号已存在");
+					baseResultVo.setStatus(status);
+					return baseResultVo;
+				}
+			}
+		}
+		GwApiAccountModel apiAccount = apiAccountServiceImpl.getApiAccountByAccount(account);
+		members.setStatus(1);
+		members.setType(apiAccount.getType());
+		members.setGrade("DJ001");
+		members.setRegisterTime(DateUtil.getCurrentDatetime("-"));
+		members.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		members.setCardCode(members.getPhone());
+		int number = gwMembersServiceImpl.insertMemberSynchronize(members);
+
+		String vipCode = "";
+		List<GwMembersModel> memberList = gwMembersServiceImpl.getAllList();
+		for (GwMembersModel gwMember : memberList) {
+			if (members.getPhone().equals(gwMember.getPhone())) {
+				vipCode = gwMember.getVipCode();
+			}
+		}
+		Map<String, Object> map = new HashMap<>();
+		if (number > 0) {
+			map.put("cardCode", members.getPhone());
+			map.put("vipCode", vipCode);
+			status.setCode(ResponseCode.OPR_SUCCESS);
+			status.setMsg("注册会员成功");
+			baseResultVo.setData(map);
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		} else {
+			return baseResultVo.responseFail("注册会员失败");
+		}
+
+	}
+
+	/**
+	 * 
+	 * updateMember:编辑会员资料
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月19日
+	 *
+	 * @param token
+	 *            令牌
+	 * @param account
+	 *            用户账号
+	 * @param data
+	 *            会员信息（jsonstring数据）
+	 * @return 返回：编辑会员资料是否成功
+	 */
+	@RequestMapping("/updateMember.do")
+	@ResponseBody
+	public BaseResultVo updateMember(String token, String account, String data) {
+
+		// 验证认证账号是否通过
+		BaseResultVo baseResultVo = checkApiAccount(account, token);
+		if (!baseResultVo.getStatus().getCode().equals(ResponseCode.OPR_SUCCESS)) {
+			return baseResultVo;
+		}
+		net.sf.json.JSONObject json = net.sf.json.JSONObject.fromObject(data);
+		if ("".equals(json.getString("income"))) {
+			json.remove("income");
+		}
+		Map<String, Object> map = new HashMap<>();
+		Status status = new Status();
+		Gson gson = new Gson();
+		// 将json字符串数据转换为
+		GwMembersModel members = gson.fromJson(json.toString(), GwMembersModel.class);
+
+		String vipCode = members.getVipCode();
+		int number = gwMembersServiceImpl.updateByVipCode(members);
+		if (number > 0) {
+			List<GwMembersModel> memersList = gwMembersServiceImpl.getAllList();
+			for (GwMembersModel model : memersList) {
+				if (model.getVipCode().equals(vipCode)) {
+					if (model.getCardCode() == null || "".equals(model.getCardCode())) {
+						map.put("cardCode", model.getPhone());// 会员卡号
+					} else {
+						map.put("cardCode", model.getCardCode());// 会员卡号
+					}
+					map.put("vipCode", model.getVipCode());// 会员vip号
+					map.put("cardType", model.getCardTypeName());// 卡类型名称
+					map.put("grade", model.getGrade());// 等级编号
+					map.put("gradeName", model.getGradeName());// 等级名称
+					map.put("credit", model.getCredit());// 当前积分
+					map.put("userName", model.getUserName());// 用户名
+					map.put("password", model.getPassword());// 密码
+					map.put("sex", model.getSex());// 性别
+					map.put("phone", model.getPhone());// 手机
+					map.put("birthTime", model.getBirthTime());// 出生日期
+					map.put("idCard", model.getIdCard());// 身份证号
+					map.put("email", model.getEmail());// 邮箱
+					map.put("address", model.getAddress());// 地址
+					map.put("postCode", model.getPostCode());// 邮政编码
+					map.put("resource", model.getResource());// 会员来源
+					map.put("type", model.getType());// 会员来源类型名称
+					map.put("registerTime", model.getCreateTime());// 注册时间
+					map.put("description", model.getDescription());// 描述
+					map.put("income", model.getIncome());// 收入
+					map.put("degress", model.getDegress());// 学历
+					map.put("carNumber", model.getCarNumber());// 车牌号
+					baseResultVo.setData(map);
+					status.setCode(ResponseCode.OPR_SUCCESS);
+					status.setMsg("获取会员信息成功");
+					baseResultVo.setStatus(status);
+				}
+			}
+
+		} else {
+			return BaseResultVo.responseFail("编辑会员资料失败");
+		}
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * getMemberByVipCode:通过vip号获取会员信息
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月19日
+	 *
+	 * @param token
+	 *            令牌
+	 * @param account
+	 *            用户账号
+	 * @param vipCode
+	 *            会员vipCode
+	 * @return 返回：获取会员信息
+	 */
+	@RequestMapping("/getMemberByVipCode.do")
+	@ResponseBody
+	public BaseResultVo getMemberByVipCode(String token, String account, String vipCode) {
+
+		// 验证认证账号是否通过
+		BaseResultVo baseResultVo = checkApiAccount(account, token);
+		if (!baseResultVo.getStatus().getCode().equals(ResponseCode.OPR_SUCCESS)) {
+			return baseResultVo;
+		}
+		Map<String, Object> map = new HashMap<>();
+		Status status = new Status();
+		boolean flag = false;
+		List<GwMembersModel> memersList = gwMembersServiceImpl.getAllList();
+		for (GwMembersModel model : memersList) {
+			if (model.getVipCode().equals(vipCode)) {
+				flag = true;
+				if (model.getCardCode() == null || "".equals(model.getCardCode())) {
+					map.put("cardCode", model.getPhone());// 会员卡号
+				} else {
+					map.put("cardCode", model.getCardCode());// 会员卡号
+				}
+				map.put("vipCode", model.getVipCode());// 会员vip号
+				map.put("cardType", model.getCardTypeName());// 卡类型名称
+				map.put("grade", model.getGrade());// 等级编号
+				map.put("gradeName", model.getGradeName());// 等级名称
+				map.put("credit", model.getCredit());// 当前积分
+				map.put("userName", model.getUserName());// 用户名
+				map.put("password", model.getPassword());// 密码
+				map.put("sex", model.getSex());// 性别
+				map.put("phone", model.getPhone());// 手机
+				map.put("birthTime", model.getBirthTime());// 出生日期
+				map.put("idCard", model.getIdCard());// 身份证号
+				map.put("email", model.getEmail());// 邮箱
+				map.put("address", model.getAddress());// 地址
+				map.put("postCode", model.getPostCode());// 邮政编码
+				map.put("resource", model.getResource());// 会员来源
+				map.put("type", model.getType());// 会员来源类型名称
+				map.put("registerTime", model.getCreateTime());// 注册时间
+				map.put("description", model.getDescription());// 描述
+				map.put("income", model.getIncome());// 收入
+				map.put("degress", model.getDegress());// 学历
+				map.put("carNumber", model.getCarNumber());// 车牌号
+				baseResultVo.setData(map);
+				status.setCode(ResponseCode.OPR_SUCCESS);
+				status.setMsg("获取会员信息成功");
+				baseResultVo.setStatus(status);
+				return baseResultVo;
+			}
+		}
+		if (flag == false) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("获取会员信息失败,不存在的vip号");
+		} else {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("获取会员信息失败");
+		}
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * getMemberByPhone:通过手机号获取会员信息
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月19日
+	 *
+	 * @param token
+	 *            令牌
+	 * @param account
+	 *            用户账号
+	 * @param phone
+	 *            手机号phone
+	 * @return 返回：获取会员信息
+	 */
+	@RequestMapping("/getMemberByPhone.do")
+	@ResponseBody
+	public BaseResultVo getMemberByPhone(String token, String account, String phone) {
+
+		// 验证认证账号是否通过
+		BaseResultVo baseResultVo = checkApiAccount(account, token);
+		if (!baseResultVo.getStatus().getCode().equals(ResponseCode.OPR_SUCCESS)) {
+			return baseResultVo;
+		}
+		Map<String, Object> map = new HashMap<>();
+		Status status = new Status();
+		boolean flag = false;
+		List<GwMembersModel> memersList = gwMembersServiceImpl.getAllList();
+		for (GwMembersModel model : memersList) {
+			if (phone.equals(model.getPhone())) {
+				flag = true;
+				if (model.getCardCode() == null || "".equals(model.getCardCode())) {
+					map.put("cardCode", model.getPhone());// 会员卡号
+				} else {
+					map.put("cardCode", model.getCardCode());// 会员卡号
+				}
+				map.put("vipCode", model.getVipCode());// 会员vip号
+				map.put("cardType", model.getCardTypeName());// 卡类型名称
+				map.put("grade", model.getGrade());// 等级编号
+				map.put("gradeName", model.getGradeName());// 等级名称
+				map.put("credit", model.getCredit());// 当前积分
+				map.put("userName", model.getUserName());// 用户名
+				map.put("password", model.getPassword());// 密码
+				map.put("sex", model.getSex());// 性别
+				map.put("phone", model.getPhone());// 手机
+				map.put("birthTime", model.getBirthTime());// 出生日期
+				map.put("idCard", model.getIdCard());// 身份证号
+				map.put("email", model.getEmail());// 邮箱
+				map.put("address", model.getAddress());// 地址
+				map.put("postCode", model.getPostCode());// 邮政编码
+				map.put("resource", model.getResource());// 会员来源
+				map.put("type", model.getType());// 会员来源类型名称
+				map.put("registerTime", model.getCreateTime());// 注册时间
+				map.put("description", model.getDescription());// 描述
+				map.put("income", model.getIncome());// 收入
+				map.put("degress", model.getDegress());// 学历
+				map.put("carNumber", model.getCarNumber());// 车牌号
+				baseResultVo.setData(map);
+				status.setCode(ResponseCode.OPR_SUCCESS);
+				status.setMsg("获取会员信息成功");
+				baseResultVo.setStatus(status);
+				return baseResultVo;
+			}
+
+		}
+		if (flag == false) {
+			status.setCode(ResponseCode.API_PHONE_NOEXIST);
+			status.setMsg("不存在的手机号");
+		} else {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("获取会员信息失败");
+		}
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * getMemberIntegral:会员积分查询
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月19日
+	 *
+	 * @param token
+	 *            令牌
+	 * @param account
+	 *            用户账号
+	 * @param code
+	 *            会员vip号
+	 * @return 返回：获取会员积分是否成功
+	 */
+	@RequestMapping("/getMemberIntegral.do")
+	@ResponseBody
+	public BaseResultVo getMemberIntegral(String token, String account, String code) {
+
+		// 验证认证账号是否通过
+		BaseResultVo baseResultVo = checkApiAccount(account, token);
+		if (!baseResultVo.getStatus().getCode().equals(ResponseCode.OPR_SUCCESS)) {
+			return baseResultVo;
+		}
+		Status status = new Status();
+		GwMembersModel model = gwMembersServiceImpl.getMembersByCode(code);
+		if (model != null) {
+			int number = model.getCredit();// 会员当前积分
+			Map<String, Object> map = new HashMap<>();
+			map.put("vipCode", code);
+			map.put("integralNum", number);
+			baseResultVo.setData(map);
+			status.setCode(ResponseCode.OPR_SUCCESS);
+			status.setMsg("获取会员积分成功");
+		} else {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("获取会员积分失败");
+		}
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * addOrReduceMemberIntegral:增减会员积分
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月19日
+	 *
+	 * @param token
+	 *            令牌
+	 * @param account
+	 *            用户账号
+	 * @param code
+	 *            会员vip号
+	 * @param integral
+	 *            增减的积分
+	 * @return 返回：增减积分是否成功
+	 */
+	@RequestMapping("/addOrReduceMemberIntegral.do")
+	@ResponseBody
+	public BaseResultVo addOrReduceMemberIntegral(String token, String account, String vipCode, int integralNum) {
+
+		// 验证认证账号是否通过
+		BaseResultVo baseResultVo = checkApiAccount(account, token);
+		if (!baseResultVo.getStatus().getCode().equals(ResponseCode.OPR_SUCCESS)) {
+			return baseResultVo;
+		}
+		GwMembersModel members = gwMembersServiceImpl.getMembersByCode(vipCode);
+
+		GwMemberIntegralDetailModel integralModel = new GwMemberIntegralDetailModel();
+		integralModel.setMemberCode(vipCode);
+		integralModel.setIntergralTime(DateUtil.getCurrentDatetime("-"));
+		integralModel.setIntergralNum(integralNum);
+		integralModel.setIntergralType(IntergralTypeEnum.WEIXININTERGRAL.getValue());
+		integralModel.setCardCode(members.getCardCode());
+		if(integralNum>0){
+			integralModel.setNote("微信积分(增加)");
+		}else{
+			integralModel.setNote("微信积分(减少)");
+		}
+		if (members != null) {
+			integralNum = integralNum + members.getCredit();
+			if(integralNum<0){
+				return BaseResultVo.responseFail("会员积分不足，当前积分:"+members.getCredit());
+			}
+			members.setCredit(integralNum);
+			int number = gwMembersServiceImpl.updateByVipCode(members);
+			memberIntegralDetailServiceImpl.insert(integralModel);
+			if (number > 0) {
+				return BaseResultVo.responseSuccess("增减会员积分成功");
+			} else {
+				return BaseResultVo.responseFail("增减会员积分失败");
+			}
+		} else {
+			return BaseResultVo.responseFail("会员vip号不存在");
+		}
+	}
+
+	/**
+	 * 
+	 * getMemberIntegralDetailList:积分明细查询
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月19日
+	 *
+	 * @param token
+	 *            令牌
+	 * @param account
+	 *            用户账号
+	 * @param vipCode
+	 *            vip号
+	 * @return 返回：会员积分明细查询是否成功状态
+	 */
+	@RequestMapping("/getMemberIntegralDetailList.do")
+	@ResponseBody
+	public BaseResultVo getMemberIntegralDetailList(String token, String account, String vipCode) {
+
+		// 验证认证账号是否通过
+		BaseResultVo baseResultVo = checkApiAccount(account, token);
+		if (!baseResultVo.getStatus().getCode().equals(ResponseCode.OPR_SUCCESS)) {
+			return baseResultVo;
+		}
+		List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
+		Status status = new Status();
+		List<GwMemberIntegralDetailModel> integralList = memberIntegralDetailServiceImpl.getAllList();
+		for (GwMemberIntegralDetailModel model : integralList) {
+			if (vipCode != null && vipCode != "") {
+				if (vipCode.equals(model.getMemberCode())) {
+					Map<String, Object> map = new HashMap<>();
+					map.put("code", model.getCardCode());// 销售单号,活动号，礼品兑换号或第三方平台号
+					map.put("integralTime", model.getIntergralTime());// 积分时间
+					map.put("integralNum", model.getIntergralNum());// 会员积分数
+					map.put("integralType", IntergralTypeEnum.getDisplayName(model.getIntergralType()));// 积分类型
+					map.put("description", model.getNote());// 积分情况描述
+					mapList.add(map);
+				}
+			}
+		}
+		if (mapList.size() > 0) {
+			baseResultVo.setData(mapList);
+			status.setCode(ResponseCode.OPR_SUCCESS);
+			status.setMsg("积分明细查询成功");
+		} else {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("无此VIP号的积分信息");
+		}
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+
+	}
+
+	/**
+	 * 
+	 * loginCRMApi:登录srm接口认证系统
+	 *
+	 * @author yumaochun
+	 * @date 2016年9月19日
+	 *
+	 * @param account
+	 *            认证账号
+	 * @return 返回：状态信息及token
+	 */
+	@RequestMapping("/loginCRMApi.do")
+	@ResponseBody
+	public BaseResultVo loginCRMApi(String account) {
+
+		// 根据用户认证账号，获取用户认证信息
+		GwApiAccountModel apiAccount = apiAccountServiceImpl.getApiAccountByAccount(account);
+		if (apiAccount == null) {
+			logger.info("认证账号【" + account + "】不存在");
+			return BaseResultVo.responseInfo(ResponseCode.API_ACCOUNT_NO_EXIST, "认证账号不存在");
+		}
+		BaseResultVo baseResultVo = BaseResultVo.responseSuccess("通过认证成功");
+		Map<String, String> data = new HashMap<>();
+		// 认证号
+		data.put("account", account);
+		String token = TokenUtil.createToken(account);// 生成新令牌
+		// 设置新的token
+		apiAccount.setToken(token);
+		// 将令牌更新到对应的认证用户上
+		int num = apiAccountServiceImpl.updateApiAccountToken(apiAccount);
+		if (num <= 0) {
+			logger.info("认证账号【" + account + "】，重新生成token失败");
+			return BaseResultVo.responseFail("网络异常，请稍后再试");
+		}
+
+		logger.info("认证账号【" + account + "】，通过认证成功");
+
+		// 令牌
+		data.put("token", token);
+		baseResultVo.setData(data);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * @author wenhao 统一公用对外接口 YHBS -用户标识 、XTLB-系统标识
+	 *         、DYLX-调用类型、DATA-jsonstring数据
+	 */
+	@RequestMapping("/crmApi.do")
+	@ResponseBody
+	public BaseResultVo getRquestAPI(String YHBS, String XTLB, String DYLX, String DATA,
+			HttpServletRequest request) {
+		BasePageResultVo remes = null;
+		if (YHBS == null || YHBS.length() < 1 || XTLB == null || XTLB.length() < 1 || DYLX == null
+				|| DYLX.length() < 1) {
+			return BaseResultVo.responseFail("API请求错误");
+		}
+		// 判断接口请求是否合法
+		if (!YHBS.equals("E84E7273764D2D77E9FC4E9C521E8C3750")) {
+			return BaseResultVo.responseFail("用户验证错误");
+		}
+		return webapiServiceImpl.verification(DATA, request);
+	}
+
+	/**
+	 * 
+	 * getMemberByCardCodeOrVipCode:通过会员卡号或vip号获取会员信息
+	 *
+	 * @author hemingjun
+	 * @date 2016年9月19日
+	 *
+	 * @param token
+	 *            令牌
+	 * @param account
+	 *            用户账号
+	 * @param data
+	 * 
+	 * @return 返回：获取会员信息
+	 */
+	@RequestMapping("/getMemberByCardCodeOrVipCode.do")
+	@ResponseBody
+	public BaseResultVo getMemberByCardCodeOrVipCode(String token, String account, String data) {
+		Status status = new Status();
+		// 验证认证账号是否通过
+		BaseResultVo baseResultVo = checkApiAccount(account, token);
+		if (!baseResultVo.getStatus().getCode().equals(ResponseCode.OPR_SUCCESS)) {
+			return baseResultVo;
+		}
+		boolean flag = false;
+		// 获取所有会员基本信息
+		JsonMapper mapper = JsonMapper.buildNonDefaultMapper();
+		Map<String, Object> params = new HashMap<>();
+		String[] map = { "vipCode", "cardCode" };
+		params = mapper.getParamsMapBy(map, data);
+		// 获取会员基本信息List
+		Map<String, Object> memberMap = new HashMap<>();
+		List<GwMembersModel> memberList = gwMembersServiceImpl.getMemberAllListApi(params);
+		if (memberList != null && memberList.size() > 0) {
+			flag = true;
+			for (GwMembersModel model : memberList) {
+				memberMap.put("vipCode", model.getVipCode());// 会员vip号
+				memberMap.put("cardType", model.getCardTypeName());// 卡类型名称
+				memberMap.put("cardCode", model.getCardCode());// 会员卡号
+				memberMap.put("grade", model.getGrade());// 等级编号
+				memberMap.put("gradeName", model.getGradeName());// 等级名称
+				memberMap.put("credit", model.getCredit());// 当前积分
+				memberMap.put("userName", model.getUserName());// 用户名
+				memberMap.put("password", model.getPassword());// 密码
+				memberMap.put("sex", model.getSex());// 性别
+				memberMap.put("phone", model.getPhone());// 手机
+				memberMap.put("birthTime", model.getBirthTime());// 出生日期
+				memberMap.put("idCard", model.getIdCard());// 身份证号
+				memberMap.put("email", model.getEmail());// 邮箱
+				memberMap.put("address", model.getAddress());// 地址
+				memberMap.put("postCode", model.getPostCode());// 邮政编码
+				memberMap.put("resource", model.getResource());// 会员来源
+				memberMap.put("type", model.getType());// 会员来源类型名称
+				memberMap.put("registerTime", model.getCreateTime());// 注册时间
+				memberMap.put("description", model.getDescription());// 描述
+				memberMap.put("income", model.getIncome());// 收入
+				memberMap.put("degress", model.getDegress());// 学历
+				memberMap.put("carNumber", model.getCarNumber());// 车牌号
+				baseResultVo.setData(memberMap);
+				status.setCode(ResponseCode.OPR_SUCCESS);
+				status.setMsg("获取会员信息成功");
+				baseResultVo.setStatus(status);
+				return baseResultVo;
+			}
+
+		}
+		if (flag == false) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("获取会员信息失败,不存在的vip号或卡号");
+		} else {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("获取会员信息失败");
+		}
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+
+	}
+
+	/**
+	 * 
+	 * verification:接口数据的校验
+	 *
+	 * @author yumaochun
+	 * @date 2016年4月27日
+	 * @param DYLX
+	 * @param DATA
+	 *            接口数据（json）
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/verification.do")
+	@ResponseBody
+	public BaseResultVo verification(String token, String account, String data, HttpServletRequest request) {
+		// 验证认证账号是否通过
+		BaseResultVo baseResultVo = checkApiAccount(account, token);
+		Status status = new Status();
+		if (!baseResultVo.getStatus().getCode().equals(ResponseCode.OPR_SUCCESS)) {
+			return baseResultVo;
+		}
+		counter = 0;
+		net.sf.json.JSONObject json = net.sf.json.JSONObject.fromObject(data);
+		// 创建json数组，用于存放支付方式信息
+		JSONArray jsonArray = new JSONArray();
+		// 计算包含的支付方式编号key值code的个数
+		counter = stringNumbers(json.toString());
+		// 创建新的字符集合，用于存放转换的json数组
+		List<String> os = new ArrayList<>();
+		if (counter > 1) {
+			jsonArray = (JSONArray) json.get("gwPaymenttenderCode");// 支付方式数组
+			// 支付方式数组转集合对象
+			os = (List<String>) JSONArray.toCollection(jsonArray);
+		} else {
+			String c = json.getString("gwPaymenttenderCode");
+			c = c.substring(1, c.length() - 1);// 单个支付方式转集合
+			String[] strs = { c };
+
+			os = Arrays.asList(strs);
+		}
+		String gwTxserial = json.getString("gwTxserial");// 流水单号
+		int gwSalesnumber = Integer.parseInt(json.getString("gwSalesnumber"));// 销售总数
+		BigDecimal gwSalesamount = new BigDecimal(json.getString("gwSalesamount"));// 销售总额
+		String saleDate = json.getString("gwTxdate");// 销售日期
+		String gwTxtime = json.getString("gwTxtime");// 销售时间
+		String gwTillid = json.getString("gwTillid");// 收银机编号
+		String membersCode = json.getString("gwMemberCode");// 会员VIP号或会员卡号
+		String shopCode = json.getString("gwStoreCode");// 店铺编号
+		int theIntegralTotal = 0;// 总销售积分
+		// 根据会员VIP编号，获取会员信息
+		GwMembersModel membersInfo = gwMembersServiceImpl.getMembersByCode(membersCode);
+		if (membersInfo == null) {
+			logger.info("该会员不存在");
+			return BaseResultVo.responseFail("会员不存在");
+		}
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("shopCode", shopCode);
+		ShopFormatsInfo shopFormatsInfo = gwShopsLeaseServiceImpl.getShopformatsInfoByShopCode(paramMap);
+		if (shopFormatsInfo == null) {
+			logger.info("根据店铺编号【" + shopCode + "】未找到对应的业态信息！");
+			return BaseResultVo.responseFail("店铺不存在");
+		}
+		// 销售对象存入值
+		GwSalesModel salesModel = new GwSalesModel();
+		salesModel.setGwTxdate(saleDate);
+		salesModel.setShopCode(shopCode);
+		// 支付方式信息是否存在标记
+		Boolean flag_paymentTender = false;
+		// 支付方式能否积分标记
+		Boolean flag_paymentTenderCode = false;
+		List<GwSalesPaymenttenderModel> salesPaymenttenderList = new ArrayList<>();// 支付方式集合
+		GwMembersModel memberIntegralInfo = new GwMembersModel();
+		memberIntegralInfo.setVipCode(membersInfo.getVipCode());// 会员号
+		memberIntegralInfo.setCardCode(membersInfo.getCardCode());// 会员卡号
+		memberIntegralInfo.setGrade(membersInfo.getGrade());// 会员等级
+		memberIntegralInfo.setGradeName(membersInfo.getGradeName());// 会员等级名称
+		memberIntegralInfo.setUserName(membersInfo.getUserName());// 会员姓名
+
+		// 插入会员积分记录
+		GwMemberIntegralRecordModel integralModel = new GwMemberIntegralRecordModel();
+		integralModel.setCode(membersInfo.getVipCode());
+		integralModel.setIntegralTime(DateUtil.getCurrentDatetime("-"));
+		integralModel.setIntegraltype(IntegralTypeEnum.SALES.getValue());
+		integralModel.setCreatetime(DateUtil.getCurrentDatetime("-"));
+		boolean insertMemeberFlag = false;
+
+		List<String> strList = new ArrayList<>();// 支付方式编号集合
+
+		for (Object o : os) {
+			int theIntegral = 0;// 本次积分
+			net.sf.json.JSONObject o2 = net.sf.json.JSONObject.fromObject(o);// 会员积分对象
+			String paymentTenderCode = o2.getString("code");// 支付方式编号
+			strList.add(paymentTenderCode);// 支付方式编号集合添加支付编号
+			String payMoney = o2.getString("payMoney");// 此支付方式的支付金额
+			// 销售对象存入此支付方式的金额
+			salesModel.setGwSalesamount(new BigDecimal(payMoney));
+			// 本次销售数据支付信息
+			GwSalesPaymenttenderModel salesPaymenttender = new GwSalesPaymenttenderModel();
+			salesPaymenttender.setGwTxserial(gwTxserial);
+			salesPaymenttender.setGwCode(paymentTenderCode);
+			salesPaymenttender.setGwPaymoney(new BigDecimal(payMoney));
+			salesPaymenttender.setGwState(PaymenttenderIntegralStatusEnum.YES.getValue());
+			salesPaymenttender.setCreateTime(DateUtil.getCurrentDatetime("-"));
+			// 根据支付方式编号查询是否存在该支付方式的对象
+			GwPaymentTenderModel paymentTender = gwPaymentTenderServiceImpl.getPaymentTenderByCode(paymentTenderCode);
+			if (paymentTender != null) {
+				flag_paymentTender = true;
+				// 支付方式是否积分：1-积分，0-不积分
+				if (paymentTender.getWhetherIntegral() == PaymenttenderIntegralStatusEnum.YES.getValue()) {
+					insertMemeberFlag = true;
+					flag_paymentTenderCode = true;
+					// 本次积分
+					theIntegral = promotionIntegralServiceImpl.addMemberIntegralInfo(salesModel, membersInfo,
+							shopFormatsInfo);
+					integralModel.setIntegralnum(theIntegral);// 积分记录对象获取增减的积分
+					salesPaymenttender.setIntegralNumber(theIntegral);// 本次销售数据插入本次积分
+				} else {
+					// 如果支付方式不能积分，本次积分设置为0
+					theIntegral = 0;
+					salesPaymenttender.setIntegralNumber(theIntegral);// 本次销售数据插入本次积分
+					salesPaymenttender.setGwState(PaymenttenderIntegralStatusEnum.NO.getValue());
+				}
+				salesPaymenttenderList.add(salesPaymenttender);
+
+			}
+			theIntegralTotal += theIntegral;
+		}
+		// 会员当前积分+销售积分
+		int memberIntegral = membersInfo.getCredit() + theIntegralTotal;
+		// 更新会员积分
+		memberIntegralInfo.setCredit(memberIntegral);
+		gwMembersServiceImpl.updateByVipCode(memberIntegralInfo);// 通过vip号更新会员信息
+		//插入积分明细表
+		if(theIntegralTotal!=0){
+			GwMemberIntegralDetailModel integralDetai=new GwMemberIntegralDetailModel();
+			integralDetai.setCardCode(membersInfo.getCardCode());
+			integralDetai.setIntergralTime(DateUtil.getCurrentDatetime("-"));
+			integralDetai.setMemberCode(membersInfo.getVipCode());
+			integralDetai.setIntergralNum(theIntegralTotal);
+			integralDetai.setIntergralType(IntergralTypeEnum.SALESINTERGRAL.getValue());
+			integralDetai.setNote("销售数据积分(增加)");
+			int detatilNumber= memberIntegralDetailServiceImpl.insert(integralDetai);
+			if(detatilNumber<=0){
+				logger.info("积分明细记录插入失败！");
+			}
+		}
+		if (salesPaymenttenderList.size() > 0) {
+			// 本次销售数据支付信息插入表中
+			int i = salesPaymenttenderServiceImpl.batchInsert(salesPaymenttenderList);
+			if (i > 0) {
+				logger.info("销售数据支付方式插入成功");
+			} else {
+				logger.info("销售数据支付方式插入失败！");
+				status.setCode(ResponseCode.OPR_FAIL);
+				status.setMsg("销售数据支付方式插入失败！");
+				baseResultVo.setStatus(status);
+				return baseResultVo;
+			}
+		}
+		if (flag_paymentTender == false) {
+			logger.info("该支付方式积分规则不存在");
+			return BaseResultVo.responseFail("该支付方式积分规则不存在");
+		}
+		if (flag_paymentTenderCode == false) {
+			logger.info("该支付方式不能积分");
+			return BaseResultVo.responseFail("该支付方式不能积分");
+		}
+		// 销售数据积分对象插入数据
+		GwSalesModel sales = new GwSalesModel();
+		sales.setGwTxserial(gwTxserial);
+		sales.setGwSalesnumber(gwSalesnumber);
+		sales.setGwSalesamount(gwSalesamount);
+		sales.setGwTxdate(saleDate);
+		sales.setGwTxtime(gwTxtime);
+		sales.setGwTillid(gwTillid);
+		sales.setShopCode(shopCode);
+		sales.setGwPaymenttendercode(String.join(";", strList));
+		sales.setGwMembercode(membersCode);
+		sales.setIntegralNumber(theIntegralTotal);
+		sales.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		int j = salesServiceImpl.insert(sales);
+		if (j > 0) {
+			logger.info("销售积分数据插入成功！");
+		} else {
+			logger.info("销售积分数据插入失败！");
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("销售积分数据插入失败！");
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("vipCode", memberIntegralInfo.getVipCode());
+		map.put("theIntegral", theIntegralTotal);// 本次销售积分
+		map.put("credit", memberIntegralInfo.getCredit());//
+		baseResultVo.setData(map);
+
+		status.setCode(ResponseCode.OPR_SUCCESS);
+		status.setMsg("计算销售积分成功");
+		baseResultVo.setStatus(status);
+		counter = 0;
+		return baseResultVo;
+	}
+
+	private static int counter = 0;
+
+	/**
+	 * 销售数据 stringNumbers: 计算字符串中存在code的数量
+	 * 
+	 * @author hemingjun
+	 * @date 2016年9月5日
+	 * @param str
+	 * @return
+	 */
+	public static int stringNumbers(String str) {
+		if (str.indexOf("code") == -1) {
+			return 0;
+		} else if (str.indexOf("code") != -1) {
+			counter++;
+			stringNumbers(str.substring(str.indexOf("code") + 4));
+			return counter;
+		}
+		return 0;
+	}
+}

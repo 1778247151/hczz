@@ -1,0 +1,177 @@
+package com.crm.util;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.apache.http.client.ClientProtocolException;
+import com.crm.common.PropertyPlaceholder;
+import com.crm.enums.SmsStatusEnum;
+import com.crm.pojo.GwSmsRecordModel;
+import com.crm.service.GwSmsRecordService;
+
+/**
+ * 
+ * WebServiceUtil:WebService工具类
+ *
+ * @author  shengjinpeng
+ * @date    2016年11月2日
+ * @version jdk1.8
+ *
+ */
+public class SendMessageUtil {
+	
+	/**
+	 * 
+	 * sendMessage:群发短信方法(内容相同)
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年11月3日
+	 *
+	 * @param mobile	手机号,必填(支持10000个手机号,建议<=5000)多个英文逗号隔开
+	 * @param content	内容,支持长短信，URLUTF8编码(单个)
+	 * @param ext		扩展码,可以为空，单个，或多个（以英文逗号隔开，个数和手机号个数一致）
+	 * @param stime		定时时间,可以为空，单个，或多个（以英文逗号隔开，个数和手机号个数一致）
+	 * @param rrid		唯一标识,最长18位,支持数字。
+	 * @param msgfmt	内容编码,0：ASCII串。3：短信写卡操作。4：二进制信息。空或15：含GB汉字
+	 * @return
+	 * @throws UnsupportedEncodingException 
+	 */
+	public static String sendSmsMessage(GwSmsRecordModel gwSmsRecordModel) throws UnsupportedEncodingException{
+		//返回的字符串
+		String msg="";
+		//生成url
+		String url1 = PropertyPlaceholder.getProperty("sendMessage.smsurl1")+"";
+		String url2 = PropertyPlaceholder.getProperty("sendMessage.smsurl2")+"";
+		String username = PropertyPlaceholder.getProperty("sendMessage.username")+"";
+		String password = PropertyPlaceholder.getProperty("sendMessage.password")+"";
+		/*url = url+"?sn=" + username + "&pwd=" + password + "&mobile=" + mobile + "&content=" + content +
+				"&ext=" + ext +"&stime=" + stime + "&rrid=" + rrid + "&msgfmt=" + msgfmt;*/
+		//设置参数
+		Map<String,Object> params = new HashMap<>();
+		params.put("sn", username);//注册的序列号
+		params.put("pwd", password);//密码,md5(sn+password) 32位大写密文
+		params.put("mobile", gwSmsRecordModel.getPhone());//手机号,必填(支持10000个手机号,建议<=5000)多个英文逗号隔开
+		params.put("content", gwSmsRecordModel.getContent());//内容,支持长短信，URLUTF8编码
+		params.put("ext", gwSmsRecordModel.getExt());//扩展码,例如：123（默认置空）
+		params.put("stime", gwSmsRecordModel.getStime());//定时时间,例如：2010-12-29 16:27:03（置空表示立即发送）
+		params.put("rrid", gwSmsRecordModel.getRrid());//唯一标识,最长18位,支持数字。
+		params.put("msgfmt", gwSmsRecordModel.getMsgfmt());//内容编码,0：ASCII串。3：短信写卡操作。4：二进制信息。空或15：含GB汉字
+		
+		//发送请求
+		try {
+			msg = HttpClientUtil.httpPost(url1, params);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(msg.trim().length()==0) {
+			gwSmsRecordModel.setStatus(SmsStatusEnum.FAIL.getValue());
+		}else {
+			String s = "";
+			Pattern p = Pattern.compile(">(-)?\\d+<");
+			Matcher m = p.matcher(msg);
+			if(m.find())
+				s = m.group();
+			s = s.substring(1, s.length()-1);
+			if(s.equals("-4")) {
+				gwSmsRecordModel.setStatus(SmsStatusEnum.FAIL.getValue());
+				gwSmsRecordModel.setNote(gwSmsRecordModel.getNote()+"。"+s+"余额不足！");
+			}else if(s.startsWith("-")) {
+				gwSmsRecordModel.setStatus(SmsStatusEnum.FAIL.getValue());
+				gwSmsRecordModel.setNote(gwSmsRecordModel.getNote()+"。"+s);
+			}else{
+				gwSmsRecordModel.setStatus(SmsStatusEnum.SUCCESS.getValue());
+			}
+			
+		}
+		
+		//解码内容
+		String content = new String(java.net.URLDecoder.decode(gwSmsRecordModel.getContent(),"utf-8").getBytes());
+		gwSmsRecordModel.setContent(content);
+		//插入短信发送记录
+		GwSmsRecordService gwSmsRecordService = (GwSmsRecordService)ToolSpring.getBean("gwSmsRecordServiceManage");
+		gwSmsRecordService.insert(gwSmsRecordModel);
+		
+		return msg;
+	}
+	
+	/**
+	 * 
+	 * sendMessage:发送个性短信方法(内容不同)
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年11月3日
+	 *
+	 * @param mobile	手机号,必填(支持10000个手机号,建议<=5000)多个英文逗号隔开
+	 * @param content	内容,若含有小逗号，整条内容URLUTF8编码编码后，以英文逗号隔开，个数和手机号个数一致
+	 * @param ext		扩展码,可以为空，单个，或多个（以英文逗号隔开，个数和手机号个数一致）
+	 * @param stime		定时时间,可以为空，单个，或多个（以英文逗号隔开，个数和手机号个数一致）
+	 * @param rrid		唯一标识,最长18位,支持数字。
+	 * @param msgfmt	内容编码,0：ASCII串。3：短信写卡操作。4：二进制信息。空或15：含GB汉字
+	 * @return
+	 * @throws UnsupportedEncodingException 
+	 */
+	public static String sendGxMessage(GwSmsRecordModel gwSmsRecordModel) throws UnsupportedEncodingException{
+		//返回的字符串
+		String msg="";
+		//生成url
+		String url1 = PropertyPlaceholder.getProperty("sendMessage.gxurl1")+"";
+		String url2 = PropertyPlaceholder.getProperty("sendMessage.gxurl2")+"";
+		String username = PropertyPlaceholder.getProperty("sendMessage.username")+"";
+		String password = PropertyPlaceholder.getProperty("sendMessage.password")+"";
+		//设置参数
+		Map<String,Object> params = new HashMap<>();
+		params.put("sn", username);//注册的序列号
+		params.put("pwd", password);//密码,md5(sn+password) 32位大写密文
+		params.put("mobile", gwSmsRecordModel.getPhone());//手机号,必填(支持10000个手机号,建议<=5000)多个英文逗号隔开
+		params.put("content", gwSmsRecordModel.getContent());//内容,若含有小逗号，整条内容URLUTF8编码编码后，以英文逗号隔开，个数和手机号个数一致
+		params.put("ext", gwSmsRecordModel.getExt());//扩展码,例如：123（默认置空）
+		params.put("stime", gwSmsRecordModel.getStime());//定时时间,例如：2010-12-29 16:27:03（置空表示立即发送）
+		params.put("rrid", gwSmsRecordModel.getRrid());//唯一标识,最长18位,支持数字。
+		params.put("msgfmt", gwSmsRecordModel.getMsgfmt());//内容编码,0：ASCII串。3：短信写卡操作。4：二进制信息。空或15：含GB汉字
+		
+		//发送请求
+		try {
+			msg = HttpClientUtil.httpPost(url1, params);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(msg.trim().length()==0) {
+			gwSmsRecordModel.setStatus(SmsStatusEnum.FAIL.getValue());
+		}else {
+			String s = "";
+			Pattern p = Pattern.compile(">(-)?\\d+<");
+			Matcher m = p.matcher(msg);
+			if(m.find())
+				s = m.group();
+			s = s.substring(1, s.length()-1);
+			if(s.equals("-4")) {
+				gwSmsRecordModel.setStatus(SmsStatusEnum.FAIL.getValue());
+				gwSmsRecordModel.setNote(gwSmsRecordModel.getNote()+"。"+s+"余额不足！");
+			}else if(s.startsWith("-")) {
+				gwSmsRecordModel.setStatus(SmsStatusEnum.FAIL.getValue());
+				gwSmsRecordModel.setNote(gwSmsRecordModel.getNote()+"。"+s);
+			}else{
+				gwSmsRecordModel.setStatus(SmsStatusEnum.SUCCESS.getValue());
+			}
+			
+		}
+		
+		//解码内容
+		String content = new String(java.net.URLDecoder.decode(gwSmsRecordModel.getContent().split(",")[0],"utf-8").getBytes());
+		gwSmsRecordModel.setContent(content);
+		//插入短信发送记录
+		GwSmsRecordService gwSmsRecordService = (GwSmsRecordService)ToolSpring.getBean("gwSmsRecordServiceManage");
+		gwSmsRecordService.insert(gwSmsRecordModel);
+		return msg;
+	}
+	
+}

@@ -1,0 +1,31 @@
+package com.crm.service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwActivityMemberModel;
+/**
+ * 
+ * GwActivityMemberService:活动业务逻辑层接口
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+public interface GwActivityMemberService extends Services<GwActivityMemberModel>{
+	/**
+	 * 根据编号获取活动
+	 * @param code
+	 * @return
+	 */
+	List<GwActivityMemberModel> getActivityMemberByCode(String code);
+	
+	/**
+	 * 根据ID修改参加活动的人数
+	 * @param id
+	 * @return
+	 */
+	public int updateJoinNumber(Map<String,Object> params);
+}

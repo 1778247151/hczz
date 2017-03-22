@@ -1,0 +1,206 @@
+package com.crm.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.interceptor.exception.BaseException;
+import com.crm.pojo.GwGroupInfoModel;
+import com.crm.pojo.GwmerchantsinfoModel;
+import com.crm.service.GwGroupInfoService;
+import com.crm.util.DateUtil;
+import com.crm.util.ValidateUtil;
+/**
+ * 
+ * GwGroupInfoController:集团管理  访问控制层
+ *
+ * @author yumaochun
+ * @date  2016年3月10日
+ * @version  jdk1.8
+ *
+ */
+@Controller
+@RequestMapping("/groupInfo")
+public class GwGroupInfoController extends BaseException{
+	
+	/**
+	 * 集团管理业务逻辑
+	 */
+	@Resource(name="gwGroupInfoServiceManage")
+	private GwGroupInfoService gwGroupInfoServiceImpl;
+	
+	/**
+	 * 
+	 * addGroupInfo:添加集团
+	 *
+	 * @date 2016年3月10日 
+	 * @param groupInfo            集团信息对象
+	 * @return
+	 */
+	@RequestMapping("/addGroupInfo.do")
+	@ResponseBody
+	public BaseResultVo addGroupInfo(GwGroupInfoModel groupInfo){
+		
+		if(!ValidateUtil.isAvailableLength(groupInfo.getBm(), 4, 10)){
+			return BaseResultVo.responseFail("集团编号为4-10位的字符字符");
+		}
+		if(!ValidateUtil.isLengthRangeStr(groupInfo.getName(),3,20)){
+			return BaseResultVo.responseFail("集团名称为3-20位的字符串");
+		}
+		GwGroupInfoModel groupInfoModel = gwGroupInfoServiceImpl.getGroupInfoByCode(groupInfo.getBm());
+		if(groupInfoModel!=null){
+			return BaseResultVo.responseFail("集团编号已存在");	
+		}
+
+		groupInfo.setTime(DateUtil.getCurrentDatetime("-"));
+		
+		int num=gwGroupInfoServiceImpl.insert(groupInfo);
+		if(num<0){
+			BaseResultVo.responseFail("添加集团失败");
+		}
+		
+		return BaseResultVo.responseSuccess("添加集团成功");
+	}
+	/**
+	 * 
+	 * getGroupInfoPageList:集团管理
+	 *
+	 * @date 2016年3月10日
+	 * @param currentPage     当前页码
+	 * @param pageSize        每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getGroupInfoPageList.do")
+	@ResponseBody
+	public LigerPageDataVo getGroupInfoPageList(int currentPage,int pageSize,HttpServletRequest request){
+		
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+				
+		BasePageResultVo baseResultVo=gwGroupInfoServiceImpl.selectPageList(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	/**
+	 * 
+	 * getGroupById:根据集团id，获取集团信息
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getGroupInfoById.do")
+	@ResponseBody
+	public BaseResultVo getGroupById(int id,HttpServletRequest request){
+		if(id==0){
+			return BaseResultVo.responseFail("数据异常");
+		}
+		//获取集团信息
+		GwGroupInfoModel gwAdminUsersModel=gwGroupInfoServiceImpl.selectById(id);
+		if(gwAdminUsersModel==null){
+			return BaseResultVo.responseFail("删除集团失败");
+		}
+		BaseResultVo baseResultVo=BaseResultVo.responseSuccess("删除集团成功");
+		baseResultVo.setData(gwAdminUsersModel);
+		return baseResultVo;
+	}
+	/**
+	 * 
+	 * deleteGroupInfoById:根据集团id，删除集团
+	 *
+	 * @date 206年3月5日
+	 * @param id                  集团id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/deleteGroupInfoById.do")
+	@ResponseBody
+	public BaseResultVo deleteGroupInfoById(int id,HttpServletRequest request){
+		if(id==0){
+			return BaseResultVo.responseFail("数据异常");
+		}
+		//新建一个集团对象
+		GwGroupInfoModel groupInfo = new GwGroupInfoModel();
+		groupInfo.setId(id);
+		groupInfo.setState(0);
+		int num=gwGroupInfoServiceImpl.update(groupInfo);
+		if(num<0){
+			return BaseResultVo.responseFail("删除失败");
+		}
+		return BaseResultVo.responseSuccess("删除成功");
+	}
+	/**
+	 * 
+	 * updateRole:更新集团信息
+	 *
+	 * @date 2016年3月5日
+	 * @param groupInfo       集团信息对象
+	 * @return
+	 */
+	@RequestMapping("/updateGroupInfo.do")
+	@ResponseBody
+	public BaseResultVo updateGroupInfo(GwGroupInfoModel groupInfo){
+		
+		//验证主键是否为空
+		if(groupInfo.getId()==0){
+			return BaseResultVo.responseFail("数据异常");
+		}
+		if(!ValidateUtil.isAvailableLength(groupInfo.getBm(), 4, 10)){
+			return BaseResultVo.responseFail("集团编号为4-10位的字符字符");
+		}
+		if(!ValidateUtil.isLengthRangeStr(groupInfo.getName(),3,20)){
+			return BaseResultVo.responseFail("集团名称为3-20位的字符串");
+		}
+		//更新时间
+		groupInfo.setTime(DateUtil.getCurrentDatetime("-"));
+		GwGroupInfoModel gwGroupInfo=gwGroupInfoServiceImpl.selectById(groupInfo.getId());
+		GwGroupInfoModel groupInfoModel = gwGroupInfoServiceImpl.getGroupInfoByCode(groupInfo.getBm());
+		if(!gwGroupInfo.getBm().equals(groupInfo.getBm())&&groupInfoModel!=null){
+			return BaseResultVo.responseFail("集团编号已存在");	
+		}
+		//更新就团信息
+		int num=gwGroupInfoServiceImpl.update(groupInfo);
+		if(num<0){
+			return BaseResultVo.responseFail("更新集团失败");
+		}
+		
+		return BaseResultVo.responseSuccess("更新集团成功");
+	}
+	/**
+	 * 
+	 * getGruopInfoList:获取所有集团集合
+	 *
+	 * @date 2016年3月7日
+	 * @return
+	 */
+	@RequestMapping("/getGruopInfoList.do")
+	@ResponseBody
+	public Object getGruopInfoList(){
+		//获取所有角色
+		List<GwGroupInfoModel> groupInfoList=gwGroupInfoServiceImpl.getAllList();
+		List<HashMap<String,Object>> list=new ArrayList<HashMap<String,Object>>();
+		for (GwGroupInfoModel groupInfo : groupInfoList) {
+			HashMap<String,Object> map=new HashMap<String,Object>();
+			map.put("id", groupInfo.getId());
+			map.put("text", groupInfo.getName());
+			list.add(map);
+		}
+		return list;
+	}
+
+}

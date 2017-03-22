@@ -1,0 +1,107 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwPromotionIntegralScopeDao;
+import com.crm.pojo.GwPromotionIntegralModel;
+import com.crm.pojo.GwPromotionIntegralScopeModel;
+
+@Repository("gwPromotionIntegralScopeDaoManage")
+public class GwPromotionIntegralScopeDaoImpl implements GwPromotionIntegralScopeDao{
+	@Resource
+	private BaseDao dao;
+	
+	@Override
+	public int insert(GwPromotionIntegralScopeModel e) {
+		return dao.insert("gw.promotion.integral.scope.insert",e);
+	}
+
+	@Override
+	public int delete(GwPromotionIntegralScopeModel e) {
+		return dao.delete("gw.promotion.integral.scope.deleteById",e.getId());
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwPromotionIntegralScopeModel e) {
+		return dao.update("gw.promotion.integral.scope.update",e);
+	}
+
+	@Override
+	public GwPromotionIntegralScopeModel selectOne(GwPromotionIntegralScopeModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwPromotionIntegralScopeModel> selectList(GwPromotionIntegralScopeModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		return dao.delete("gw.promotion.integral.scope.deleteByPrimaryKey", id);
+	}
+
+	@Override
+	public GwPromotionIntegralScopeModel selectById(int id) {
+		return (GwPromotionIntegralScopeModel) dao.selectOne("gw.promotion.integral.scope.selectByPrimaryKey",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		return null;
+	}
+
+	@Override
+	public List<GwPromotionIntegralScopeModel> getAllList() {
+		return null;
+	}
+	
+	@Override
+	public List<GwPromotionIntegralScopeModel> getListByCode(Map<String,Object> params) {
+		return dao.selectList("gw.promotion.integral.scope.selectByCode",params);
+	}
+
+	@Override
+	public int insertBatch(List<GwPromotionIntegralScopeModel> list) {
+		return dao.insert("gw.promotion.integral.scope.insertBatch",list);
+	}
+
+	@Override
+	public int deleteByCode(String code) {
+		return dao.delete("gw.promotion.integral.scope.deleteByCode",code);
+	}
+
+	@Override
+	public int deleteByCodeAndType(Map<String,Object> params) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.promotion.integral.scope.deleteByCodeAndType", params);
+	}
+
+	@Override
+	public int batchUpdate(List<GwPromotionIntegralScopeModel> list) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.promotion.integral.scope.batchUpdate", list);
+	}
+
+	@Override
+	public int updateByCode(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.promotion.integral.scope.updateByCode", params);
+	}
+	
+}

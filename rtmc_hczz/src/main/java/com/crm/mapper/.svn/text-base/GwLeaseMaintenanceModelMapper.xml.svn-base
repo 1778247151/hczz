@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.leaseMaintenance" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwLeaseMaintenanceModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="card_code" property="cardCode" jdbcType="VARCHAR" />
+    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+    <result column="tel_phone" property="telPhone" jdbcType="VARCHAR" />
+    <result column="id_card" property="idCard" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="lease_time" property="leaseTime" jdbcType="VARCHAR" />
+    <result column="lease_location" property="leaseLocation" jdbcType="VARCHAR" />
+    <result column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
+    <result column="is_borrowed" property="isBorrowed" jdbcType="INTEGER" />
+    <result column="lease_number" property="leaseNumber" jdbcType="INTEGER" />
+    <result column="borrowed_hour" property="borrowedHour" jdbcType="INTEGER" />
+    <result column="deposit" property="deposit" jdbcType="DECIMAL" />
+    <result column="cost" property="cost" jdbcType="DECIMAL" />
+    <result column="expiry_price" property="expiryPrice" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="lease_status" property="leaseStatus" jdbcType="INTEGER" />
+    <result column="give_back_time" property="giveBackTime" jdbcType="VARCHAR" />
+    <result column="give_back_money" property="giveBackMoney" jdbcType="DECIMAL" />
+    <result column="give_back_relmoney" property="giveBackRelmoney" jdbcType="DECIMAL" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="store_code" property="storeCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, code, card_code, customer_name, tel_phone, id_card, sex, lease_time, lease_location, 
+    goods_code,store_code, is_borrowed, lease_number, borrowed_hour, deposit, cost, expiry_price, 
+    status, lease_status, give_back_time, give_back_money, give_back_relmoney, create_user_id, 
+    create_time, update_user_id, update_time
+  </sql>
+  
+  <!-- 查询全部信息集合 -->
+   <select id="gw.leaseMaintenance.getAllList" resultMap="BaseResultMap">
+	   select 
+	   <include refid="Base_Column_List"></include>
+	   from gw_lease_maintenance
+   </select>
+   
+  <select id="gw.leaseMaintenance.selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+   SELECT
+	a.borrowed_hour,
+	a.card_code,
+	a.`code`,
+	a.cost,
+	a.create_time,
+	a.create_user_id,
+	(select b.`name` from gw_admin_users b where b.id = a.create_user_id)as createUserName,
+	a.customer_name,
+	a.deposit,
+	a.expiry_price,
+	a.give_back_money,
+	a.give_back_relmoney,
+	a.give_back_time,
+	a.goods_code,
+	(select c.`name` from gw_lease_goods c where c.`code` = a.goods_code)as goodsName,
+	a.id,
+	a.id_card,
+	a.is_borrowed,
+	a.lease_location,
+	a.lease_number,
+	a.lease_status,
+	a.lease_time,
+	a.sex,
+	a.`status`,
+	a.tel_phone,
+	a.update_time,
+	a.update_user_id,	
+	a.store_code,
+	(select d.`name` from gw_type_tree d where d.`code` = a.store_code)as storeName,
+	(select b.`name` from gw_admin_users b where b.id = a.update_user_id)as updateUserName
+FROM
+	gw_lease_maintenance a
+    where a.id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.leaseMaintenance.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_lease_maintenance
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.leaseMaintenance.insert" parameterType="com.crm.pojo.GwLeaseMaintenanceModel" >
+    insert into gw_lease_maintenance (id, code, card_code, 
+      customer_name, tel_phone, id_card, 
+      sex, lease_time, lease_location, 
+      goods_code, store_code,is_borrowed, lease_number, 
+      borrowed_hour, deposit, cost, 
+      expiry_price, status, lease_status, 
+      give_back_time, give_back_money, give_back_relmoney, 
+      create_user_id, create_time, update_user_id, 
+      update_time)
+    values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{cardCode,jdbcType=VARCHAR}, 
+      #{customerName,jdbcType=VARCHAR}, #{telPhone,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=INTEGER}, #{leaseTime,jdbcType=VARCHAR}, #{leaseLocation,jdbcType=VARCHAR}, 
+      #{goodsCode,jdbcType=VARCHAR}, #{storeCode,jdbcType=VARCHAR},#{isBorrowed,jdbcType=INTEGER}, #{leaseNumber,jdbcType=INTEGER}, 
+      #{borrowedHour,jdbcType=INTEGER}, #{deposit,jdbcType=DECIMAL}, #{cost,jdbcType=INTEGER}, 
+      #{expiryPrice,jdbcType=DECIMAL}, #{status,jdbcType=INTEGER}, #{leaseStatus,jdbcType=INTEGER}, 
+      #{giveBackTime,jdbcType=VARCHAR}, #{giveBackMoney,jdbcType=DECIMAL}, #{giveBackRelmoney,jdbcType=DECIMAL}, 
+      #{createUserId,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR}, #{updateUserId,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="gw.leaseMaintenance.insertSelective" parameterType="com.crm.pojo.GwLeaseMaintenanceModel" >
+    insert into gw_lease_maintenance
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="cardCode != null" >
+        card_code,
+      </if>
+      <if test="customerName != null" >
+        customer_name,
+      </if>
+      <if test="telPhone != null" >
+        tel_phone,
+      </if>
+      <if test="idCard != null" >
+        id_card,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="leaseTime != null" >
+        lease_time,
+      </if>
+      <if test="leaseLocation != null" >
+        lease_location,
+      </if>
+      <if test="goodsCode != null" >
+        goods_code,
+      </if>
+      <if test="storeCode != null" >
+        store_code,
+      </if>
+      <if test="isBorrowed != null" >
+        is_borrowed,
+      </if>
+      <if test="leaseNumber != null" >
+        lease_number,
+      </if>
+      <if test="borrowedHour != null" >
+        borrowed_hour,
+      </if>
+      <if test="deposit != null" >
+        deposit,
+      </if>
+      <if test="cost != null" >
+        cost,
+      </if>
+      <if test="expiryPrice != null" >
+        expiry_price,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="leaseStatus != null" >
+        lease_status,
+      </if>
+      <if test="giveBackTime != null" >
+        give_back_time,
+      </if>
+      <if test="giveBackMoney != null" >
+        give_back_money,
+      </if>
+      <if test="giveBackRelmoney != null" >
+        give_back_relmoney,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="cardCode != null" >
+        #{cardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null" >
+        #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="telPhone != null" >
+        #{telPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null" >
+        #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="leaseTime != null" >
+        #{leaseTime,jdbcType=VARCHAR},
+      </if>
+      <if test="leaseLocation != null" >
+        #{leaseLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsCode != null" >
+        #{goodsCode,jdbcType=VARCHAR},
+      </if>
+       <if test="storeCode != null" >
+        #{storeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isBorrowed != null" >
+        #{isBorrowed,jdbcType=INTEGER},
+      </if>
+      <if test="leaseNumber != null" >
+        #{leaseNumber,jdbcType=INTEGER},
+      </if>
+      <if test="borrowedHour != null" >
+        #{borrowedHour,jdbcType=INTEGER},
+      </if>
+      <if test="deposit != null" >
+        #{deposit,jdbcType=DECIMAL},
+      </if>
+      <if test="cost != null" >
+        #{cost,jdbcType=DECIMAL},
+      </if>
+      <if test="expiryPrice != null" >
+        #{expiryPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="leaseStatus != null" >
+        #{leaseStatus,jdbcType=INTEGER},
+      </if>
+      <if test="giveBackTime != null" >
+        #{giveBackTime,jdbcType=VARCHAR},
+      </if>
+      <if test="giveBackMoney != null" >
+        #{giveBackMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="giveBackRelmoney != null" >
+        #{giveBackRelmoney,jdbcType=DECIMAL},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.leaseMaintenance.update" parameterType="com.crm.pojo.GwLeaseMaintenanceModel" >
+    update gw_lease_maintenance
+    <set >
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="cardCode != null" >
+        card_code = #{cardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null" >
+        customer_name = #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="telPhone != null" >
+        tel_phone = #{telPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null" >
+        id_card = #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="leaseTime != null" >
+        lease_time = #{leaseTime,jdbcType=VARCHAR},
+      </if>
+      <if test="leaseLocation != null" >
+        lease_location = #{leaseLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsCode != null" >
+        goods_code = #{goodsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="storeCode != null" >
+        store_code = #{storeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isBorrowed != null" >
+        is_borrowed = #{isBorrowed,jdbcType=INTEGER},
+      </if>
+      <if test="leaseNumber != null" >
+        lease_number = #{leaseNumber,jdbcType=INTEGER},
+      </if>
+      <if test="borrowedHour != null" >
+        borrowed_hour = #{borrowedHour,jdbcType=INTEGER},
+      </if>
+      <if test="deposit != null" >
+        deposit = #{deposit,jdbcType=DECIMAL},
+      </if>
+      <if test="cost != null" >
+        cost = #{cost,jdbcType=DECIMAL},
+      </if>
+      <if test="expiryPrice != null" >
+        expiry_price = #{expiryPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="leaseStatus != null" >
+        lease_status = #{leaseStatus,jdbcType=INTEGER},
+      </if>
+      <if test="giveBackTime != null" >
+        give_back_time = #{giveBackTime,jdbcType=VARCHAR},
+      </if>
+      <if test="giveBackMoney != null" >
+        give_back_money = #{giveBackMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="giveBackRelmoney != null" >
+        give_back_relmoney = #{giveBackRelmoney,jdbcType=DECIMAL},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据条件，获取分页LIST集合 -->
+  <select id="gw.leaseMaintenance.selectByPageList" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	SELECT
+	a.borrowed_hour,
+	a.card_code,
+	a.`code`,
+	a.cost,
+	a.create_time,
+	a.create_user_id,
+	(select b.`name` from gw_admin_users b where b.id = a.create_user_id)as createUserName,
+	a.customer_name,
+	a.deposit,
+	a.expiry_price,
+	a.give_back_money,
+	a.give_back_relmoney,
+	a.give_back_time,
+	a.goods_code,
+	(select c.`name` from gw_lease_goods c where c.`code` = a.goods_code)as goodsName,
+	a.id,
+	a.id_card,
+	a.is_borrowed,
+	a.lease_location,
+	a.lease_number,
+	a.lease_status,
+	a.lease_time,
+	a.sex,
+	a.`status`,
+	a.tel_phone,
+	a.update_time,
+	a.update_user_id,	
+	a.store_code,
+	(select d.`name` from gw_type_tree d where d.`code` = a.store_code)as storeName,
+	(select b.`name` from gw_admin_users b where b.id = a.update_user_id)as updateUserName
+FROM
+	gw_lease_maintenance a
+	where a.status = 1
+		<if test="status!=null and ''!=status">
+			and a.lease_status = #{status,jdbcType=VARCHAR}
+		</if>
+		<if test="code!=null and ''!=code">
+			and a.code LIKE CONCAT(CONCAT('%', #{code,jdbcType=VARCHAR}), '%')  
+		</if>
+		<if test="goodsCode!=null and ''!=goodsCode">
+			and a.goods_code = #{goodsCode,jdbcType=VARCHAR}
+		</if>
+order by a.create_time desc
+limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER} 
+  </select>
+  
+   <!-- 根据条件，获取分页LIST总数 -->
+  <select id="gw.leaseMaintenance.selectByPageCount" resultType="java.lang.Integer"  parameterType="java.util.Map">
+ select
+  	count(a.id)	
+FROM
+	gw_lease_maintenance a
+	where a.status = 1
+	<if test="status!=null and ''!=status">
+			and a.lease_status = #{status,jdbcType=VARCHAR}
+		</if>
+		<if test="code!=null and ''!=code">
+			and a.code LIKE CONCAT(CONCAT('%', #{code,jdbcType=VARCHAR}), '%')  
+		</if>
+		<if test="goodsCode!=null and ''!=goodsCode">
+			and a.goods_code &lt;= #{goodsCode,jdbcType=VARCHAR}
+		</if>
+  </select>
+  
+  <select id="gw.leaseMaintenance.selectByLastOne" resultMap="BaseResultMap" >
+		SELECT
+			*
+		FROM
+			gw_lease_maintenance a
+		WHERE
+			a.code LIKE CONCAT(CONCAT('%', #{time,jdbcType=VARCHAR}), '%') 
+			and a.status = 1
+		ORDER BY
+			a.id DESC
+		LIMIT 1
+	</select>
+</mapper>

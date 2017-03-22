@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.mallInfo" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwMallInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="bm" property="bm" jdbcType="VARCHAR" />
+    <result column="gw_ares_id" property="gwAresId" jdbcType="INTEGER" />
+    <result column="gw_group_info_id" property="gwGroupInfoId" jdbcType="INTEGER" />
+    <result column="aresName" property="aresName" jdbcType="VARCHAR" />
+    <result column="groupInfoName" property="groupInfoName" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="area" property="area" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="fax" property="fax" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, bm, gw_ares_id, gw_group_info_id, address, area,state,name,phone,fax
+  </sql>
+  
+  <!-- 批量插入 -->
+  <insert id="gw.mallInfo.batchinsert" parameterType="com.crm.pojo.GwMallInfoModel" >
+    insert into gw_mall_info (
+    	id, bm, gw_ares_id, gw_group_info_id, address, area,state,name,phone,fax
+		)
+    values 
+    <foreach collection="list" item="mallInfoList" index="index" separator="," >
+    ( 
+      #{mallInfoList.id,jdbcType=INTEGER},
+      #{mallInfoList.bm,jdbcType=VARCHAR}, 
+      #{mallInfoList.gwAresId,jdbcType=INTEGER}, 
+      #{mallInfoList.gwGroupInfoId,jdbcType=INTEGER}, 
+      #{mallInfoList.address,jdbcType=VARCHAR}, 
+      #{mallInfoList.area,jdbcType=VARCHAR},
+      #{mallInfoList.state,jdbcType=INTEGER},
+      #{mallInfoList.name,jdbcType=VARCHAR},
+      #{mallInfoList.phone,jdbcType=VARCHAR},
+      #{mallInfoList.fax,jdbcType=VARCHAR}
+      )
+    </foreach>
+  </insert>
+  <!-- 批量更新数据 -->
+  <update id="gw.mallInfo.batchUpdate"  parameterType="java.util.List">  
+    <foreach collection="list" item="mallInfoList" index="index" separator=";">
+        update gw_mall_info
+        <set>
+	       id=#{mallInfoList.id,jdbcType=INTEGER},
+	       bm=#{mallInfoList.bm,jdbcType=VARCHAR}, 
+	       gw_ares_id=#{mallInfoList.gwAresId,jdbcType=INTEGER}, 
+	       gw_group_info_id=#{mallInfoList.gwGroupInfoId,jdbcType=INTEGER}, 
+	       address=#{mallInfoList.address,jdbcType=VARCHAR}, 
+	       area= #{mallInfoList.area,jdbcType=VARCHAR},
+	       state=#{mallInfoList.state,jdbcType=INTEGER},
+	       name=#{mallInfoList.name,jdbcType=VARCHAR},
+	       phone=#{mallInfoList.phone,jdbcType=VARCHAR},
+	       fax= #{mallInfoList.fax,jdbcType=VARCHAR}
+        </set>
+        where id = #{mallInfoList.id,jdbcType=INTEGER}
+    </foreach>      
+</update>
+
+<!-- 批量删除 -->
+<delete id="gw.mallInfo.batchDelete" parameterType="java.util.List">
+      delete from gw_mall_info where id in
+      <foreach collection="list" index="index" item="item" open="(" separator="," close=")">   
+        #{item.id}   
+      </foreach>  
+ </delete>
+  
+  <!-- 根据购物中心id,获取购物中心信息 -->
+  <select id="gw.mallInfo.selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_mall_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 根据购物中心id，删除购物中心 -->
+  <delete id="gw.mallInfo.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_mall_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <delete id="gw.mallInfo.deleteAll" parameterType="java.lang.Integer" >
+    delete from gw_mall_info
+  </delete>
+  
+  
+  <!-- 添加购物中心 -->
+  <insert id="gw.mallInfo.insert" parameterType="com.crm.pojo.GwMallInfoModel" >
+    insert into gw_mall_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="bm != null" >
+        bm,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="gwAresId != null" >
+        gw_ares_id,
+      </if>
+      <if test="gwGroupInfoId != null" >
+        gw_group_info_id,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="area != null" >
+        area,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="fax != null" >
+        fax,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="bm != null" >
+        #{bm,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="gwAresId != null" >
+        #{gwAresId,jdbcType=INTEGER},
+      </if>
+      <if test="gwGroupInfoId != null" >
+        #{gwGroupInfoId,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="fax != null" >
+        #{fax,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <!-- 更新购物中心 -->
+  <update id="gw.mallInfo.update" parameterType="com.crm.pojo.GwMallInfoModel" >
+    update gw_mall_info
+    <set >
+      <if test="bm != null" >
+        bm = #{bm,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="gwAresId != null" >
+        gw_ares_id = #{gwAresId,jdbcType=INTEGER},
+      </if>
+      <if test="gwGroupInfoId != null" >
+        gw_group_info_id = #{gwGroupInfoId,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        area = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=INTEGER},
+      </if>
+      <if test="fax != null" >
+        fax = #{fax,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 根据条件，获取分页数据list集合 -->
+  <select id="gw.mallInfo.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    m.id, m.bm, m.gw_ares_id,m.name,m.state,
+    <!-- (select a.cn_name from gw_ares a where a.id=m.gw_ares_id) as aresName, -->
+     m.gw_group_info_id, 
+     <!-- (select g.name from gw_group_info g where g.id=m.gw_group_info_id) as groupInfoName, -->
+     m.address,
+     m.area,
+     m.phone,
+     m.fax
+    from gw_mall_info m
+    where m.state = 1 
+    limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  <!-- 根据条件，总记录数 -->
+  <select id="gw.mallInfo.selectCount" resultType="java.lang.Integer"  parameterType="java.util.Map">
+    select 
+      count(id)
+    from gw_mall_info
+    where state = 1 
+    
+  </select>
+  <!-- 获取所有list集合 -->
+  <select id="gw.mallInfo.selectList" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gw_mall_info
+    
+  </select>
+  
+  <!-- 根据编号获取购物中心信息 -->
+  <select id="gw.mallInfo.selectByCode" resultMap="BaseResultMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_mall_info
+    where bm = #{code,jdbcType=VARCHAR}
+    and state = 1
+  </select>
+  
+  
+  <!-- 获取购物中心信息接口 -->
+  <select id="gw.mallInfo.selectListApi" resultMap="BaseResultMap">
+    select 
+    m.id, m.bm, m.gw_ares_id,m.name,
+    (select a.cn_name from gw_ares a where a.id=m.gw_ares_id) as aresName,
+     m.gw_group_info_id, 
+     (select g.name from gw_group_info g where g.id=m.gw_group_info_id) as groupInfoName,
+     m.address,
+     m.area,
+     m.phone,
+     m.fax
+    from gw_mall_info m
+    where m.state = 1
+  </select>
+</mapper>

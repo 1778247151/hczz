@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/gw_crm/!svn/ver/307/gdws_crm/src/main/webapp/manager/gw_role
+END
+treedbdata.html
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/gw_crm/!svn/ver/12/gdws_crm/src/main/webapp/manager/gw_role/treedbdata.html
+END
+gw_role_edit.html
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/gw_crm/!svn/ver/13/gdws_crm/src/main/webapp/manager/gw_role/gw_role_edit.html
+END
+gw_role_add.html
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/gw_crm/!svn/ver/281/gdws_crm/src/main/webapp/manager/gw_role/gw_role_add.html
+END
+gw_role_list.html
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/gw_crm/!svn/ver/261/gdws_crm/src/main/webapp/manager/gw_role/gw_role_list.html
+END
+gw_role_group.html
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/gw_crm/!svn/ver/307/gdws_crm/src/main/webapp/manager/gw_role/gw_role_group.html
+END

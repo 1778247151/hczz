@@ -1,0 +1,141 @@
+package com.crm.service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.core.Services;
+import com.crm.pojo.GwShopsInfoModel;
+
+/**
+ * GwShopsInfoService:商铺信息业务逻辑层接口定义
+ *
+ * @author yumaochun
+ * @date  2016年3月11日
+ * @version  jdk1.8
+ *
+ */
+public interface GwShopsInfoService extends Services<GwShopsInfoModel>{
+	GwShopsInfoModel getShopsByUnitId(String unId);
+	
+	/**
+	 * 根据楼宇ID获取对应的单元信息
+	 * @return
+	 */
+	BasePageResultVo getAllUnitInfoBybuildId(Map<String,Object> params);
+	
+	/**
+	 * 根据编号获取商铺信息的接口
+	 * @param code
+	 * @return
+	 */
+	public GwShopsInfoModel getShopsInfoByCode(String code);
+	
+	/**
+	 * 批量更新商铺出租状态
+	 * @param list
+	 * @return
+	 */
+	public int updateBatchShopsInfoList(List<HashMap<String,Object>> list);
+	
+	/**
+	 * 根据ID 查询多个商铺集合
+	 * @param list
+	 * @return
+	 */
+	public List<GwShopsInfoModel> getShopsInfoListById(List<HashMap<String,Object>> list);
+
+	/**
+	 * 获取所有未出租的单元信息集合分页（用户单元管理）
+	 * @param params
+	 * @return
+	 */
+	public BasePageResultVo getNotLeaseShopsList(Map<String,Object> params);
+	
+	/**
+	 * 根据店铺ID获取对应的单元信息
+	 * @param params
+	 * @return
+	 */
+	public List<GwShopsInfoModel> getShopsInfoByShopsLeaseId(Map<String,Object> params);
+	
+	/**
+	 * 根据ID数组查询单元信息
+	 * @param params
+	 * @return
+	 */
+	public BasePageResultVo getShopsInfoByIds(Map<String,Object> params);
+	
+	/**
+	 * 根据ID数组批量修改单元信息
+	 * @param params
+	 * @return
+	 */
+	public int updateByUnitNumbers(Map<String,Object> params);
+	
+	/**
+	 * 批量添加单元信息
+	 * @param shopsInfoList
+	 * @return
+	 */
+	public int batchInsertShopsInfo(List<GwShopsInfoModel> shopsInfoList);
+	
+	/**
+	 * 根据单元号修改单元信息
+	 * @param params
+	 * @return
+	 */
+	public int updateByUnitNumber(Map<String,Object> params);
+	
+	/**
+	 * 
+	 * addAreaChange:添加单元面积变更信息
+	 *
+	 * @param shopsInfo
+	 * @param newUnitNumber
+	 * @param newArea
+	 * @return
+	 */
+	int addAreaChange(GwShopsInfoModel shopsInfo, Map<String,Object> params);
+	
+	/**
+	 * 
+	 * getShopsInfoByCondition:根据条件获得单元集合
+	 *
+	 * @param params
+	 * @return
+	 */
+	public List<GwShopsInfoModel> getShopsInfoByCondition(Map params);
+	
+	/**
+	 * 
+	 * addMegerShopsInfo:合并单元
+	 *
+	 * @author   cpf
+	 * @date     2016年9月5日
+	 *
+	 * @param shopsInfo
+	 * @param unitNumbers
+	 * @param request
+	 * @return
+	 */
+	public BaseResultVo addMegerShopsInfo(GwShopsInfoModel shopsInfo,String unitNumbers[],HttpServletRequest request);
+	
+	/**
+	 * 
+	 * addSplitShopsInfo:拆分单元
+	 *
+	 * @author   cpf
+	 * @date     2016年9月5日
+	 *
+	 * @param shopsInfoList
+	 * @param unitNumber
+	 * @param request
+	 * @return
+	 */
+	public BaseResultVo addSplitShopsInfo(String shopsInfoList,String unitNumber,HttpServletRequest request);
+}

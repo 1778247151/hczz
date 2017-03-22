@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.stockCheck" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwStockCheckModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="date" property="date" jdbcType="VARCHAR" />
+    <result column="store_code" property="storeCode" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="confirm_userid" property="confirmUserid" jdbcType="INTEGER" />
+    <result column="confirm_time" property="confirmTime" jdbcType="VARCHAR" />
+    <result column="unconfirm_userid" property="unconfirmUserid" jdbcType="INTEGER" />
+    <result column="unconfirm_time" property="unconfirmTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, code, date, store_code, note, status,create_user_id,create_time, update_user_id, update_time,confirm_userid,confirm_time,unconfirm_userid,unconfirm_time
+   
+  </sql>
+  <select id="gw.stockCheck.selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_stock_check
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.stockCheck.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_stock_check
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.stockCheck.insert" parameterType="com.crm.pojo.GwStockCheckModel" >
+   		insert into gw_stock_check
+		(id, code, date,
+		store_code, note,status,create_user_id,create_time,update_user_id,update_time,confirm_userid,confirm_time,unconfirm_userid,unconfirm_time)
+		values 
+		(#{id,jdbcType=INTEGER},
+		#{code,jdbcType=VARCHAR},
+		#{date,jdbcType=VARCHAR},
+		#{storeCode,jdbcType=VARCHAR},
+		#{note,jdbcType=VARCHAR},
+		#{status,jdbcType=INTEGER},
+		#{createUserId,jdbcType=INTEGER},
+		#{createTime,jdbcType=VARCHAR},
+		#{updateUserId,jdbcType=INTEGER},
+		#{updateTime,jdbcType=VARCHAR},
+		#{confirmUserid,jdbcType=INTEGER},
+		#{confirmTime,jdbcType=VARCHAR},
+		#{unconfirmUserid,jdbcType=INTEGER},
+		#{unconfirmTime,jdbcType=VARCHAR}	
+	)
+
+</insert>
+  <update id="gw.stockCheck.update" parameterType="com.crm.pojo.GwStockCheckModel" >
+    update gw_stock_check
+    <set>
+      <if test="code != null" >
+     	code= #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null" >
+        date=#{date,jdbcType=VARCHAR},
+      </if>
+        <if test="storeCode != null" >
+       store_code= #{storeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+       note= #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+       status= #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+       create_user_id= #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+      create_time=  #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+      	update_user_id=  #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+      update_time=  #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="confirmUserid != null" >
+      confirm_userid=  #{confirmUserid ,jdbcType=INTEGER},
+      </if>
+      <if test="confirmTime != null" >
+       confirm_time= #{confirmTime,jdbcType=VARCHAR},
+      </if>
+      <if test="unconfirmUserid != null" >
+        unconfirm_userid=#{unconfirmUserid ,jdbcType=INTEGER},
+      </if>
+      <if test="unconfirmTime != null" >
+        unconfirm_time= #{unconfirmTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+ 
+   <!-- 根据条件，获取分页数据list集合 -->
+  <select id="gw.stockCheck.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    	 id, code, date, store_code, note, status,create_user_id,create_time, update_user_id, update_time,confirm_userid,confirm_time,unconfirm_userid,unconfirm_time,
+    	(select u.name from gw_admin_users u where u.id = b.create_user_id) as createUserName,
+    	(select u.name from gw_admin_users u where u.id = b.update_user_id) as updateUserName,
+    	(select u.name from gw_admin_users u where u.id = b.confirm_userid) as confirmUserName,
+    	(select u.name from gw_admin_users u where u.id = b.unconfirm_userid) as unconfirmUserName
+    from gw_stock_check  b
+    
+        <where>
+
+    	<if test="code!=null and code!=''">
+    		b.code like CONCAT('%',CONCAT(#{code,jdbcType=VARCHAR}),'%')
+    	</if>
+     	<if test="date!=null and date!=''">
+    		and b.date like CONCAT('%',CONCAT(#{date,jdbcType=VARCHAR}),'%')
+    	</if>
+	<if test="status != null and status!=''" >
+			and b.status =#{status,jdbcType=VARCHAR}
+		</if>
+		<if test="storeCode != null and '' != storeCode"> 
+			and b.store_code =#{storeCode,jdbcType=VARCHAR}
+		</if>
+
+    </where>
+    order by create_time desc
+	limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  <!-- 根据条件，获得总记录数 -->
+  <select id="gw.stockCheck.selectCount" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select 
+    	count(id)  from gw_stock_check b
+    	
+    	        <where>
+
+    	<if test="code!=null and code!=''">
+    		b.code like CONCAT('%',CONCAT(#{code,jdbcType=VARCHAR}),'%')
+    	</if>
+     	<if test="date!=null and date!=''">
+    		and b.date like CONCAT('%',CONCAT(#{date,jdbcType=VARCHAR}),'%')
+    	</if>
+ 		 <if test="status != null and status!=''" >
+       	 and status = #{status,jdbcType=INTEGER}
+      </if>
+		<if test="storeCode != null and '' != storeCode"> 
+			and b.store_code =#{storeCode,jdbcType=VARCHAR}
+		</if>
+
+    </where>
+  </select>
+  
+  <!--根据时间查询最后一条记录-->
+    <select id="gw.stockCheck.selectByLastOne" resultMap="BaseResultMap" >
+		SELECT
+			*
+		FROM
+			gw_stock_check a
+		WHERE
+			a.code LIKE CONCAT(CONCAT('%', #{createTime,jdbcType=VARCHAR}), '%') 
+		ORDER BY
+			a.id DESC
+		LIMIT 1
+	</select>
+  
+</mapper>

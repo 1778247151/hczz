@@ -1,0 +1,156 @@
+package com.crm.pojo;
+
+import java.io.Serializable;
+
+import com.crm.enums.StockCheckStatusEnum;
+
+/**GwStockCheckModel:库存盘点实体类
+ * @author meishengjun
+ * @date 2016年11月10日
+ * @version jdk1.8
+ */
+public class GwStockCheckModel implements Serializable  {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private Integer id;
+	private String code;
+	private String date;
+	private String storeCode;
+	private String note;
+	private Integer status;
+	private String statusName;
+	private Integer createUserId;
+	private String createUserName;
+	private String createTime;
+	private Integer updateUserId;
+	private String updateUserName;
+	private String updateTime;
+	private	Integer confirmUserid;
+	private String  confirmUserName;
+	private String confirmTime;
+	private Integer unconfirmUserid;
+	private String  unconfirmUserName;
+	private String unconfirmTime;
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
+	public String getStoreCode() {
+		return storeCode;
+	}
+	public void setStoreCode(String storeCode) {
+		this.storeCode = storeCode;
+	}
+	public String getNote() {
+		return note;
+	}
+	public void setNote(String note) {
+		this.note = note;
+	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+	
+	public String getStatusName() {
+		return StockCheckStatusEnum.getDisplayName(getStatus());
+	}
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
+	public Integer getCreateUserId() {
+		return createUserId;
+	}
+	public void setCreateUserId(Integer createUserId) {
+		this.createUserId = createUserId;
+	}
+	public String getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+	public Integer getUpdateUserId() {
+		return updateUserId;
+	}
+	public void setUpdateUserId(Integer updateUserId) {
+		this.updateUserId = updateUserId;
+	}
+	public String getUpdateTime() {
+		return updateTime;
+	}
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
+	public Integer getConfirmUserid() {
+		return confirmUserid;
+	}
+	public void setConfirmUserid(Integer confirmUserid) {
+		this.confirmUserid = confirmUserid;
+	}
+	public String getConfirmTime() {
+		return confirmTime;
+	}
+	public void setConfirmTime(String confirmTime) {
+		this.confirmTime = confirmTime;
+	}
+	public Integer getUnconfirmUserid() {
+		return unconfirmUserid;
+	}
+	public void setUnconfirmUserid(Integer unconfirmUserid) {
+		this.unconfirmUserid = unconfirmUserid;
+	}
+	public String getUnconfirmTime() {
+		return unconfirmTime;
+	}
+	public void setUnconfirmTime(String unconfirmTime) {
+		this.unconfirmTime = unconfirmTime;
+	}
+	public String getCreateUserName() {
+		return createUserName;
+	}
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
+	}
+	public String getUpdateUserName() {
+		return updateUserName;
+	}
+	public void setUpdateUserName(String updateUserName) {
+		this.updateUserName = updateUserName;
+	}
+	public String getConfirmUserName() {
+		return confirmUserName;
+	}
+	public void setConfirmUserName(String confirmUserName) {
+		this.confirmUserName = confirmUserName;
+	}
+	public String getUnconfirmUserName() {
+		return unconfirmUserName;
+	}
+	public void setUnconfirmUserName(String unconfirmUserName) {
+		this.unconfirmUserName = unconfirmUserName;
+	}
+	
+	
+
+}

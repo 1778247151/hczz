@@ -1,0 +1,138 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+
+import com.crm.dao.GwgoodstreeDao;
+import com.crm.pojo.GwgoodstreeModel;
+
+/**
+ * 
+ * GwgoodstreeDaoImpl:货品管理数据访问层的实现
+ *
+ * @author chengpengfei
+ * @date 2016年3月10日
+ */
+@Repository("gwgoodstreeDaoManage")
+public class GwgoodstreeDaoImpl implements GwgoodstreeDao{
+	
+	@Resource
+	private BaseDao dao;
+	@Override
+	public int insert(GwgoodstreeModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.goodstree.insert",e);
+	}
+
+	@Override
+	public int delete(GwgoodstreeModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwgoodstreeModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.goodstree.updateByPrimaryKeySelective",e);
+	}
+
+	@Override
+	public GwgoodstreeModel selectOne(GwgoodstreeModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public List<GwgoodstreeModel> selectList(GwgoodstreeModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.goodstree.deleteByPrimaryKey",id);
+	}
+
+	@Override
+	public GwgoodstreeModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwgoodstreeModel)dao.selectOne("gw.goodstree.selectByPrimaryKey",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.goodstree.selectAll", "gw.goodstree.selectCount", params);
+	}
+
+	@Override
+	public List<GwgoodstreeModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.goodstree.selectList");
+	}
+
+	@Override
+	public List<GwgoodstreeModel> getTopGoodsTree(int fid) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.goodstree.selectListByFid",fid);
+	}
+
+	@Override
+	public List<GwgoodstreeModel> getGoodsTressListApi(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.goodstree.selectListApi",params);
+	}
+
+	@Override
+	public List<GwgoodstreeModel> getLastGoodsTresListApi(Map<String,Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.goodstree.selectListByFidApi",params);
+	}
+
+	@Override
+	public GwgoodstreeModel getGoodsTreeByCode(String code) {
+		// TODO Auto-generated method stub
+		return (GwgoodstreeModel)dao.selectOne("gw.goodstree.selectByCode",code);
+	}
+
+	@Override
+	public int deleteAllForGoodsTree() {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.goodstree.deleteAll");
+	}
+
+
+	@Override
+	public int batchInsert(List<GwgoodstreeModel> goodsTreeList) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.goodstree.batchinsert", goodsTreeList);
+	}
+
+	@Override
+	public int batchUpdate(List<GwgoodstreeModel> goodsTreeList) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.goodstree.batchUpdate", goodsTreeList);
+	}
+
+	@Override
+	public int batchDelete(List<GwgoodstreeModel> goodsTreeList) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.goodstree.batchDelete", goodsTreeList);
+	}
+
+}

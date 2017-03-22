@@ -1,0 +1,265 @@
+package com.crm.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.ResponseCode;
+import com.crm.common.Status;
+import com.crm.pojo.GwBuildingTreeModel;
+import com.crm.pojo.GwMallInfoModel;
+import com.crm.pojo.GwPropertyAttributeModel;
+import com.crm.pojo.GwmerchantsinfoModel;
+import com.crm.service.GwPropertyAttributeService;
+import com.crm.util.DateUtil;
+import com.crm.util.ValidateUtil;
+
+/**
+ * 
+ * GwPropertyAttributeController:物业性质访问控制层
+ *
+ * @author chengpengfei
+ * @date  2016年3月10日
+ * @version  jdk1.8
+ *
+ */
+@Controller
+@RequestMapping("/properAttibute")
+public class GwPropertyAttributeController {
+	@Resource(name="gwPropertyAttributeService")
+	private GwPropertyAttributeService gwPropertyAttibuteServiceImpl;
+	
+	/**
+	 * 
+	 * getProperAttribute:获取物业性质集合（分页）
+	 *
+	 * @date 2016年3月10日
+	 * @param page   当前页码数
+	 * @param pagesize      每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getProperAttribute.do")
+	@ResponseBody
+	public LigerPageDataVo getProperAttribute(int currentPage,int pageSize,HttpServletRequest request){
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		
+		BasePageResultVo baseResultVo=gwPropertyAttibuteServiceImpl.selectPageList(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	/**
+	 * 
+	 * addProperAttribute:添加物业性质数据
+	 *
+	 * @date 2016年3月9日
+	 * @param GwPropertyAttributeModel
+	 * @return
+	 */
+	@RequestMapping("/addProperAttribute.do")
+	@ResponseBody
+	public BaseResultVo addProperAttribute(GwPropertyAttributeModel gwPropertyAttributeModel,HttpServletResponse response){
+		
+		if(!ValidateUtil.isAvailableLength(gwPropertyAttributeModel.getBm(), 4, 10)){
+			return BaseResultVo.responseFail("物业编号为4-10位的字符字符");
+		}
+		GwPropertyAttributeModel propertyAttribute = gwPropertyAttibuteServiceImpl.getPropertyAttributeByCode(gwPropertyAttributeModel.getBm());
+		if(propertyAttribute!=null){
+			return BaseResultVo.responseFail("物业编号已存在");
+		}
+
+		BaseResultVo baseResultVo=new BaseResultVo();
+		Status status=new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);//提示代码
+		status.setMsg("操作成功");//提示信息
+		status.setDebugMsg("");//bug信息
+		status.setUrl("");//url
+		baseResultVo.setStatus(status);
+		/*//密码加密
+		gwAdminUsersModel.setPassword(MD5.getMD5(gwAdminUsersModel.getPassword()));*/
+		
+		//更新时间
+		gwPropertyAttributeModel.setTime(DateUtil.getCurrentDatetime("-"));
+		gwPropertyAttributeModel.setState(1);
+		gwPropertyAttibuteServiceImpl.insert(gwPropertyAttributeModel);
+		return baseResultVo;
+	}
+	/**
+	 * 
+	 * delesePropertyAttribute:删除物业性质
+	 *
+	 * @date 2016年3月9日
+	 * @param GwPropertyAttributeModel       物业性质对象
+	 * @return
+	 */
+	@RequestMapping("/delesePropertyAttribute.do")
+	@ResponseBody
+	public BaseResultVo delesePropertyAttribute(int id,HttpServletRequest request){
+		BaseResultVo baseResultVo=new BaseResultVo();
+		Status status=new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);//提示代码
+		status.setMsg("删除成功");//提示信息
+		status.setDebugMsg("");//bug信息
+		status.setUrl("");//url
+		
+		if(id==0){
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");//提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+		//新建一个物业性质对象
+		GwPropertyAttributeModel proper = new GwPropertyAttributeModel();
+		proper.setId(id);
+		proper.setState(0);
+		proper.setTime(DateUtil.getCurrentDatetime("-"));
+		int num=gwPropertyAttibuteServiceImpl.update(proper);
+		if(num<0){
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("操作失败");//提示信息
+		}
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+	/**
+	 * 
+	 * getPropertyAttibuteById:根据物业性质id，获取物业性质信息
+	 *
+	 * @date 2016年3月10日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getPropertyAttibuteById.do")
+	@ResponseBody
+	public BaseResultVo getPropertyAttibuteById(int id,HttpServletRequest request){
+		BaseResultVo baseResultVo=new BaseResultVo();
+		Status status=new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);//提示代码
+		status.setMsg("操作成功");//提示信息
+		status.setDebugMsg("");//bug信息
+		status.setUrl("");//url
+		
+		if(id==0){
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");//提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+		
+		//获取物业性质信息
+		GwPropertyAttributeModel gwPropertyAttributeModel=gwPropertyAttibuteServiceImpl.selectById(id);
+		baseResultVo.setData(gwPropertyAttributeModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+	/**
+	 * 
+	 * updatePropertyAttribute:更新物业性质数据
+	 *
+	 * @date 2016年3月9日
+	 * @param GwPropertyAttributeModel       物业性质对象
+	 * @return
+	 */
+	@RequestMapping("/updatePropertyAttribute.do")
+	@ResponseBody
+	public BaseResultVo updatePropertyAttribute(GwPropertyAttributeModel gwPropertyAttributeModel){
+		BaseResultVo baseResultVo=new BaseResultVo();
+		Status status=new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);//提示代码
+		status.setMsg("操作成功");//提示信息
+		status.setDebugMsg("");//bug信息
+		status.setUrl("");//url
+		if(!ValidateUtil.isAvailableLength(gwPropertyAttributeModel.getBm(), 4, 10)){
+			return BaseResultVo.responseFail("物业编号为4-10位的字符字符");
+		}
+		//验证主键是否为空
+		if(gwPropertyAttributeModel.getId()==0){
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+		GwPropertyAttributeModel gwPropertyAttribute=gwPropertyAttibuteServiceImpl.selectById(gwPropertyAttributeModel.getId());
+		GwPropertyAttributeModel propertyAttribute = gwPropertyAttibuteServiceImpl.getPropertyAttributeByCode(gwPropertyAttributeModel.getBm());
+		if(!gwPropertyAttribute.getBm().equals(gwPropertyAttributeModel.getBm())&&propertyAttribute!=null){
+			return BaseResultVo.responseFail("物业编号已存在");
+		}
+		//更新时间
+		gwPropertyAttributeModel.setTime(DateUtil.getCurrentDatetime("-"));
+		
+		//更新物业性质数据
+		gwPropertyAttibuteServiceImpl.update(gwPropertyAttributeModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+	/**
+	 * 
+	 * getProAttibuteList:获取所有物业集合
+	 *
+	 * @date 2016年3月7日
+	 * @return
+	 */
+	@RequestMapping("/getProAttibuteList.do")
+	@ResponseBody
+	public BaseResultVo getProAttibuteList(){
+		//获取所有物业性质
+		List<GwPropertyAttributeModel> MallInfoList=gwPropertyAttibuteServiceImpl.getAllList();
+		BaseResultVo baseResultVo=BaseResultVo.responseSuccess("获取所有集体成功");
+		baseResultVo.setData(MallInfoList);
+		return baseResultVo;
+	}
+	@ResponseBody
+	@RequestMapping("/getProAttibuteListLi.do")
+	public Object getAllGroupInfos(){
+
+		//获取所有物业
+		List<GwPropertyAttributeModel> MallInfoList=gwPropertyAttibuteServiceImpl.getAllList();
+		List<HashMap<String,Object>> list=new ArrayList<HashMap<String,Object>>();
+		for (GwPropertyAttributeModel mallInfo : MallInfoList) {
+			HashMap<String,Object> map=new HashMap<String,Object>();
+			map.put("id", mallInfo.getId());
+			map.put("text", mallInfo.getName());
+			list.add(map);
+		}
+		return list;
+	}
+
+	
+	@RequestMapping("/getPropertyAttibuteList.do")
+	@ResponseBody
+	public Object getPropertyAttibuteList(){
+
+		//获取所有物业性质
+		List<GwPropertyAttributeModel> propertyAttributeList=gwPropertyAttibuteServiceImpl.getAllList();
+		
+		List<HashMap<String, Object>> list=new ArrayList<HashMap<String, Object>>();
+		
+		for (GwPropertyAttributeModel properryAttribute : propertyAttributeList) {
+			HashMap<String, Object> map=new HashMap<String, Object>();
+			map.put("id", properryAttribute.getId());
+			map.put("text", properryAttribute.getName());
+			list.add(map);
+		}
+		return list;
+	}
+
+}

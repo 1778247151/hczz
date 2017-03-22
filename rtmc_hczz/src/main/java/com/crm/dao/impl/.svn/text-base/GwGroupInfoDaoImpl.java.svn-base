@@ -1,0 +1,124 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwGroupInfoDao;
+import com.crm.pojo.GwGroupInfoModel;
+
+/**
+ * 
+ * GwGroupInfoDaoImpl:集团信息数据访问层的实现
+ *
+ * @author yumaochun
+ * @date 206年3月日 下午0:5:45
+ */
+@Repository("gwGroupInfoDaoManage")
+public class GwGroupInfoDaoImpl implements GwGroupInfoDao{
+	
+	@Resource
+	private BaseDao dao;
+
+	@Override
+	public int insert(GwGroupInfoModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.groupInfo.insert", e);
+	}
+
+	@Override
+	public int delete(GwGroupInfoModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwGroupInfoModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.groupInfo.update", e);
+	}
+
+	@Override
+	public GwGroupInfoModel selectOne(GwGroupInfoModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwGroupInfoModel> selectList(GwGroupInfoModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.groupInfo.deleteById", id);
+	}
+
+	@Override
+	public GwGroupInfoModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwGroupInfoModel) dao.selectOne("gw.groupInfo.selectById", id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		
+		return dao.selectPageList("gw.groupInfo.selectPageList", "gw.groupInfo.selectCount", params);
+	}
+
+	@Override
+	public List<GwGroupInfoModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.groupInfo.selectList");
+	}
+
+	@Override
+	public GwGroupInfoModel getGroupInfoByCode(String code) {
+		// TODO Auto-generated method stub
+		return (GwGroupInfoModel)dao.selectOne("gw.groupInfo.selectByCode",code);
+	}
+
+	@Override
+	public int deteleAll() {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.groupInfo.deleteAll");
+	}
+
+	@Override
+	public int batchInsertForGroupInfoList(List<GwGroupInfoModel> groupInfoList) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.groupInfo.batchInsert",groupInfoList);
+	}
+
+	
+	@Override
+	public int batchInsert(List<GwGroupInfoModel> list) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.groupInfo.batchInsert", list);
+	}
+
+	@Override
+	public int batchUpdate(List<GwGroupInfoModel> list) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.groupInfo.batchUpdate", list);
+	}
+
+	@Override
+	public int batchDelete(List<GwGroupInfoModel> list) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.groupInfo.batchDelete", list);
+	}
+}

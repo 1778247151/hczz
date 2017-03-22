@@ -1,0 +1,175 @@
+package com.crm.service.impl;
+
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.hamcrest.core.SubstringMatcher;
+import org.springframework.stereotype.Service;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.common.PropertyPlaceholder;
+import com.crm.core.ServersManager;
+import com.crm.dao.GwMembersDao;
+import com.crm.enums.SmsTypeEnum;
+import com.crm.pojo.GwMembersModel;
+import com.crm.pojo.GwSmsRecordModel;
+import com.crm.service.GwMembersService;
+import com.crm.util.CodeUtil;
+import com.crm.util.DateUtil;
+import com.crm.util.SendMessageUtil;
+
+/**
+ * 
+ * GwMembersServiceImpl:会员业务逻辑层实现
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwMembersServiceManage")
+public class GwMembersServiceImpl extends ServersManager<GwMembersModel, GwMembersDao> implements GwMembersService{
+	
+	@Resource(name = "gwMembersDaoManage")
+	public void setDao(GwMembersDao gwMembersDao) {
+		this.dao = gwMembersDao;
+	}
+
+	@Override
+	public GwMembersModel getMembersByCode(String code) {
+		return dao.getMembersByCode(code);
+	}
+
+	@Override
+	public List<GwMembersModel> getMemberAllListApi(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getMemberAllListApi(params);
+	}
+
+	@Override
+	public int updateByVipCode(GwMembersModel e) {
+		// TODO Auto-generated method stub
+		return dao.updateByVipCode(e);
+	}
+
+	@Override
+	public GwMembersModel getMemberByCondition(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		return dao.getMemberByCondition(param);
+	}
+
+	@Override
+	public int getCountByType(int number) {
+		// TODO Auto-generated method stub
+		return dao.getCountByType(number);
+	}
+
+	@Override
+	public List<GwMembersModel> getList() {
+		// TODO Auto-generated method stub
+		return dao.getList();
+	}
+
+	@Override
+	public GwMembersModel selectByVipCode(String vipCode) {
+		// TODO Auto-generated method stub
+		return dao.selectByVipCode(vipCode);
+	}
+
+	@Override
+	public BasePageResultVo selectPageListByCondtion(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageListByCondtion(params);
+	}
+
+	@Override
+	public List<GwMembersModel> getAllNameAndPhone() {
+		// TODO Auto-generated method stub
+		return dao.getAllNameAndPhone();
+	}
+
+	@Override
+	public List<GwMembersModel> getNumberByGrade(String[] grades) {
+		// TODO Auto-generated method stub
+		return dao.getNumberByGrade(grades);
+	}
+
+	@Override
+	public synchronized int insertMemberSynchronize(GwMembersModel e) throws UnsupportedEncodingException {
+		String vipCode = CodeUtil.createCardCodePrefix();
+		int vipMax=0;//
+		List<Integer> vipCodeList=new ArrayList<>();
+		List<GwMembersModel> memberList=dao.selectMemberVipCode();//当日注册会员的vipCode集合
+		for (GwMembersModel model : memberList) {
+			vipCodeList.add(Integer.parseInt((model.getVipCode()).substring(14)));
+		}
+		if(vipCodeList.size()==0){
+			vipCode=vipCode+"0001";
+		}else{
+			vipMax=Collections.max(vipCodeList);
+			int vipc=vipMax+1;
+			String vipstr= String.valueOf(vipc);
+			int zeir = 4 - vipstr.length();
+			String strs = "";
+			if (zeir > 0) {
+				for (int i = 0; i < zeir; i++) {
+					strs = "0" + strs;
+				}
+			}
+			vipCode = vipCode + strs + vipstr;
+		}
+		e.setVipCode(vipCode);
+		//发送短信
+		String mobile = e.getPhone();
+		String name = e.getUserName();
+		//设置编码
+		String content = new String(((String)PropertyPlaceholder.getProperty("sendMessage.content")).getBytes("ISO8859-1"),"UTF-8");
+		//替换姓名
+		content = content.replace("{#memberName}", name);
+		//进行URL编码
+		content = new String(java.net.URLEncoder.encode(content,"utf-8").getBytes());
+		
+		//设置短信记录参数
+		GwSmsRecordModel gwSmsRecordModel = new GwSmsRecordModel();
+		gwSmsRecordModel.setPhone(mobile);
+		gwSmsRecordModel.setContent(content);
+		gwSmsRecordModel.setExt("");
+		gwSmsRecordModel.setStime("");
+		gwSmsRecordModel.setRrid("");
+		gwSmsRecordModel.setMsgfmt("");
+		gwSmsRecordModel.setNote("会员注册发送短信");
+		gwSmsRecordModel.setType(SmsTypeEnum.AUTO.getValue());;
+		gwSmsRecordModel.setSendTime(DateUtil.getCurrentDatetime("-"));
+		gwSmsRecordModel.setSendUser("");
+		
+		//发送短信
+		String msg = SendMessageUtil.sendSmsMessage(gwSmsRecordModel);
+		
+		return dao.insertMemberSynchronize(e);
+	}
+
+	@Override
+	public int updateJoinActivityMemberIntergral(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.updateJoinActivityMemberIntergral(params);
+	}
+
+	@Override
+	public BasePageResultVo selectPageListByBindingMessage(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageListByBindingMessage(params);
+	}
+
+	@Override
+	public List<GwMembersModel> getAllEmail() {
+		return dao.getAllEmail();
+		
+	}
+	
+}

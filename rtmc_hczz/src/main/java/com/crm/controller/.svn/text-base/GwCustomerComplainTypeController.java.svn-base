@@ -1,0 +1,246 @@
+package com.crm.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.QueryConditon;
+import com.crm.common.ResponseCode;
+import com.crm.common.SecurityUtil;
+import com.crm.common.Status;
+import com.crm.enums.gwTypeTreeEnum;
+import com.crm.interceptor.BussAnnotation;
+import com.crm.interceptor.exception.BaseException;
+import com.crm.pojo.GwTypeTreeModel;
+import com.crm.service.GwTypeTreeService;
+import com.crm.util.DateUtil;
+import com.crm.util.QueryConditionUtil;
+
+/**
+ * 
+ * GwCustomerTypeController:会员客诉类型控制层
+ *
+ * @author xiangtao
+ * @date 2016年6月20日
+ * @version jdk.8
+ *
+ */
+@Controller
+@RequestMapping("/customertype")
+public class GwCustomerComplainTypeController extends BaseException {
+
+	// 日志
+	private Logger logger = LoggerFactory.getLogger(GwCustomerComplainTypeController.class);
+
+	/**
+	 * 类型树业务逻辑
+	 */
+	@Resource(name = "gwTypeTreeServiceManage")
+	private GwTypeTreeService gwTypeTreeServiceImpl;
+
+	/**
+	 * 
+	 * getCustomerTypeById:根据客诉类型id，获取客诉类型信息
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getCustomerTypeById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "客诉类型维护", option = "获取客诉类型信息ID")
+	public BaseResultVo getCustomerTypeById(int id, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		if (id == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");// 提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		// 获取客诉类型信息
+		GwTypeTreeModel gwTypeTreeModel = gwTypeTreeServiceImpl.selectById(id);
+		baseResultVo.setData(gwTypeTreeModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * addCustomerType 添加客诉类型
+	 * 
+	 * @date 2016年6月20日
+	 * @param
+	 * @return
+	 */
+	@RequestMapping("/addCustomerType.do")
+	@ResponseBody
+
+	public BaseResultVo addCustomerType(GwTypeTreeModel gwTypeTreeModel, HttpServletRequest request) {
+		GwTypeTreeModel t = gwTypeTreeServiceImpl.getTypeTreeByCode(gwTypeTreeModel.getCode());
+		if (t != null) {
+			return BaseResultVo.responseFail("编号已存在");
+		}
+		Map<String, Object> params = new HashMap<>();
+		params.put("name", gwTypeTreeModel.getName());
+		params.put("type", gwTypeTreeEnum.type_THREE.getStringValue());
+		GwTypeTreeModel model = gwTypeTreeServiceImpl.getTypeTreeByName(params);
+		if (model != null) {
+			return BaseResultVo.responseFail("名称已存在");
+		}
+		Integer userid = SecurityUtil.getAdminUser(request).getUserId();
+		gwTypeTreeModel.setCreateUserId(userid);
+		gwTypeTreeModel.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		gwTypeTreeModel.setUpdateUserId(userid);
+		gwTypeTreeModel.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+
+		gwTypeTreeModel.setType(gwTypeTreeEnum.type_THREE.getStringValue());
+
+		gwTypeTreeServiceImpl.insert(gwTypeTreeModel);
+
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * delCustomerType:根据客诉类型id，删除客诉类型
+	 *
+	 * @date 2016年6月20日
+	 * @param id
+	 *            客诉类型id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/delCustomerType.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "客诉类型维护", option = "删除客诉类型信息")
+	public BaseResultVo delCustomerType(int id, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		if (id == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");// 提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		int num = gwTypeTreeServiceImpl.deleteById(id);
+		if (num < 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("操作失败");// 提示信息
+		}
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * updateCustomerType:更新客诉类型
+	 *
+	 * @date 2016年6月20日
+	 * @param gwTypeTreeModel
+	 *            客诉类型信息对象
+	 * @return
+	 */
+	@RequestMapping("/updateCustomerType.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "客诉类型维护", option = "更新客诉类型信息")
+	public BaseResultVo updateCustomerType(GwTypeTreeModel gwTypeTreeModel, HttpServletRequest request) {
+		GwTypeTreeModel modelOld = gwTypeTreeServiceImpl.selectById(gwTypeTreeModel.getId());
+		if (!(modelOld.getName()).equals(gwTypeTreeModel.getName())) {
+			Map<String, Object> params = new HashMap<>();
+			params.put("name", gwTypeTreeModel.getName());
+			params.put("type", gwTypeTreeEnum.type_THREE.getStringValue());
+			GwTypeTreeModel model = gwTypeTreeServiceImpl.getTypeTreeByName(params);
+			if (model != null) {
+				return BaseResultVo.responseFail("名称已存在");
+			}
+		}
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		// 验证主键是否为空
+		if (gwTypeTreeModel.getId() == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		// 更新时间
+		gwTypeTreeModel.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		int userid = SecurityUtil.getAdminUser(request).getUserId();
+		gwTypeTreeModel.setUpdateUserId(userid);
+
+		// 更新客诉类型信息
+		gwTypeTreeServiceImpl.update(gwTypeTreeModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * getCustomerTypeList:获取客诉类型集合（分页）
+	 *
+	 * @date 2016年6月20日
+	 * @param page
+	 *            当前页码数
+	 * @param pagesize
+	 *            每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getCustomerTypeList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "客诉类型维护", option = "获取客诉类型信息集合")
+	public LigerPageDataVo getCustomerTypeList(int currentPage, int pageSize, HttpServletRequest request) {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+
+		List<GwTypeTreeModel> list = gwTypeTreeServiceImpl.getTypeTreeByType("03");
+
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(list);
+		data.setTotal(list.size());
+		return data;
+	}
+}

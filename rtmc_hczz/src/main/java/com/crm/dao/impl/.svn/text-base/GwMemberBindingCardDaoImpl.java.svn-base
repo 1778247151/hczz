@@ -1,0 +1,105 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import org.springframework.stereotype.Repository;
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwMemberBindingCardDao;
+import com.crm.pojo.GwMemberBindingCardModel;
+
+/**
+ * 
+ * 
+ * GwMemberBindingCardDaoImpl:会员卡管理数据访问层的实现
+ *
+ * @author  shengjinpeng
+ * @date    2016年11月2日
+ * @version jdk1.8
+ *
+ */
+@Repository("gwMemberBindingCardDaoManage")
+public class GwMemberBindingCardDaoImpl implements GwMemberBindingCardDao{
+	
+	@Resource
+	private BaseDao dao;
+
+	@Override
+	public int insert(GwMemberBindingCardModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.memberBindingCard.insert", e);
+	}
+
+	@Override
+	public int delete(GwMemberBindingCardModel e) {
+		// TODO Auto-generated method stub
+		return dao.delete("",e);
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwMemberBindingCardModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.memberBindingCard.update", e);
+	}
+
+	@Override
+	public GwMemberBindingCardModel selectOne(GwMemberBindingCardModel e) {
+		// TODO Auto-generated method stub
+		return (GwMemberBindingCardModel) dao.selectOne("gw.memberBindingCard.selectById", e);
+	}
+	@Override
+	public List<GwMemberBindingCardModel> selectList(GwMemberBindingCardModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.memberBindingCard.deleteById", id);
+	}
+
+	@Override
+	public GwMemberBindingCardModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwMemberBindingCardModel) dao.selectOne("gw.memberBindingCard.selectById", id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.memberBindingCard.selectPageList", "gw.memberBindingCard.selectCount", params);
+	}
+
+	@Override
+	public List<GwMemberBindingCardModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.memberBindingCard.selectAllList");
+	}
+
+	@Override
+	public List<GwMemberBindingCardModel> selectByMemberCode(String memberCode) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.memberBindingCard.selectListByMemberCode", memberCode);
+	}
+
+	@Override
+	public GwMemberBindingCardModel selectByCardCode(String cardCode) {
+		// TODO Auto-generated method stub
+		return (GwMemberBindingCardModel)dao.selectOne("gw.memberBindingCard.selectByCardCode", cardCode);
+	}
+
+	@Override
+	public List<GwMemberBindingCardModel> getAllNormalUseCardCode() {
+		
+		return dao.selectList("gw.memberBindingCard.getAllNormalUseCardCode");
+	}
+
+}

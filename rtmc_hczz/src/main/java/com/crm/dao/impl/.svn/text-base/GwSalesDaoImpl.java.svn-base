@@ -1,0 +1,91 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwSalesDao;
+import com.crm.pojo.GwSalesModel;
+@Repository("gwSalesDaoManage")
+public class GwSalesDaoImpl implements GwSalesDao {
+	@Resource
+	private BaseDao dao;
+
+	@Override
+	public int insert(GwSalesModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.sales.insert", e);
+	}
+
+	@Override
+	public int delete(GwSalesModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwSalesModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public GwSalesModel selectOne(GwSalesModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwSalesModel> selectList(GwSalesModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.sales.deleteById", id);
+	}
+
+	@Override
+	public GwSalesModel selectById(int id) {
+		return (GwSalesModel) dao.selectOne("gw.sales.selectById", id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.sales.selectPageList","gw.sales.selectcount", params);
+	}
+
+	@Override
+	public List<GwSalesModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.sales.getAllList");
+	}
+
+	@Override
+	public List<GwSalesModel> getListByMemberCode(String memberCode) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.sales.getListByMemberCode", memberCode);
+	}
+
+	@Override
+	public List<GwSalesModel> selectSalesByTxserial(String txserial) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.sales.selectSalesByTxserial", txserial);
+	}
+	
+
+}

@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/gw_crm/!svn/ver/424/gdws_crm/src/main/resources
+END
+ehcache.xml
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/gw_crm/!svn/ver/296/gdws_crm/src/main/resources/ehcache.xml
+END
+gw_base_data_config.properties
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/gw_crm/!svn/ver/173/gdws_crm/src/main/resources/gw_base_data_config.properties
+END
+logback.xml
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/gw_crm/!svn/ver/42/gdws_crm/src/main/resources/logback.xml
+END
+GDWS开发规范.txt
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/gw_crm/!svn/ver/15/gdws_crm/src/main/resources/GDWS%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83.txt
+END
+application.xml
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/gw_crm/!svn/ver/296/gdws_crm/src/main/resources/application.xml
+END
+bean-ehcache.xml
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/gw_crm/!svn/ver/296/gdws_crm/src/main/resources/bean-ehcache.xml
+END
+system-config.properties
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/gw_crm/!svn/ver/424/gdws_crm/src/main/resources/system-config.properties
+END
+spring-mvc.xml
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/gw_crm/!svn/ver/424/gdws_crm/src/main/resources/spring-mvc.xml
+END
+base_info_config.properties
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/gw_crm/!svn/ver/42/gdws_crm/src/main/resources/base_info_config.properties
+END
+spring-mybatis.xml
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/gw_crm/!svn/ver/296/gdws_crm/src/main/resources/spring-mybatis.xml
+END
+timer-confim.xml
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/gw_crm/!svn/ver/302/gdws_crm/src/main/resources/timer-confim.xml
+END
+generatorConfig.xml
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/gw_crm/!svn/ver/424/gdws_crm/src/main/resources/generatorConfig.xml
+END
+admin.serializable
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/gw_crm/!svn/ver/5/gdws_crm/src/main/resources/admin.serializable
+END
+jdbc.properties
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/gw_crm/!svn/ver/344/gdws_crm/src/main/resources/jdbc.properties
+END

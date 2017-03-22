@@ -1,0 +1,119 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwClubDao;
+import com.crm.pojo.GwGoodsInStoreModel;
+import com.crm.pojo.GwClubModel;
+
+/**
+ * 
+ * GwClubDaoImpl:数据访问层的实现
+ *
+ * @author hanzhiqiang
+ * @date 2016年11月8日
+ */
+@Repository("gwClubDaoManage")
+public class GwClubDaoImpl implements GwClubDao{
+	
+	@Resource
+	private BaseDao dao;
+	
+	@Override
+	public int insert(GwClubModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.club.insert",e);
+	}
+
+	@Override
+	public int delete(GwClubModel e) {
+		// TODO Auto-generated method stub
+		return dao.delete("",e);
+	}
+
+	@Override
+	public int update(GwClubModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.club.update",e);
+	}
+
+	@Override
+	public GwClubModel selectOne(GwClubModel e) {
+		// TODO Auto-generated method stub
+		return (GwClubModel) dao.selectOne("gw.club.selectById", e);
+	}
+
+	@Override
+	public List<GwClubModel> selectList(GwClubModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.club.deleteById", id);
+	}
+
+	@Override
+	public GwClubModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwClubModel) dao.selectOne("gw.club.selectById", id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.club.selectPageList", "gw.club.selectCount", params);
+	}
+
+	@Override
+	public List<GwClubModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.club.selectAllList");
+	}
+	
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public GwClubModel getClubById(Integer id) {
+		// TODO Auto-generated method stub
+		return (GwClubModel)dao.selectOne("gw.club.deleteById", id);
+	}
+
+	@Override
+	public List<GwClubModel> getListsApi() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.club.selectListsApi");
+	}
+
+	@Override
+	public List<GwClubModel> getClubListByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.club.selectListByCondition",params);
+	}
+
+	@Override
+	public int deleteClubById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.club.deleteById", id);
+	}
+
+	@Override
+	public GwClubModel getClubByLastOne(String time) {
+		// TODO Auto-generated method stub
+		return (GwClubModel) dao.selectOne("gw.club.selectByLastOne",time);
+	}
+
+}

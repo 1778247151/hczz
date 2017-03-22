@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/gw_crm/!svn/ver/261/gdws_crm/src/main/webapp/manager/gw_admin_users
+END
+gw_admin_users_add.html
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/gw_crm/!svn/ver/248/gdws_crm/src/main/webapp/manager/gw_admin_users/gw_admin_users_add.html
+END
+gw_admin_users_info.html
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/gw_crm/!svn/ver/218/gdws_crm/src/main/webapp/manager/gw_admin_users/gw_admin_users_info.html
+END
+gw_admin_users_list.html
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/gw_crm/!svn/ver/261/gdws_crm/src/main/webapp/manager/gw_admin_users/gw_admin_users_list.html
+END
+gw_admin_users_resetPwd.html
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/gw_crm/!svn/ver/218/gdws_crm/src/main/webapp/manager/gw_admin_users/gw_admin_users_resetPwd.html
+END
+gw_admin_users_updatePwd.html
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/gw_crm/!svn/ver/218/gdws_crm/src/main/webapp/manager/gw_admin_users/gw_admin_users_updatePwd.html
+END
+gw_admin_users_quit.html
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/gw_crm/!svn/ver/261/gdws_crm/src/main/webapp/manager/gw_admin_users/gw_admin_users_quit.html
+END
+gw_admin_users_reset.html
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/gw_crm/!svn/ver/261/gdws_crm/src/main/webapp/manager/gw_admin_users/gw_admin_users_reset.html
+END
+gw_admin_users_edit.html
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/gw_crm/!svn/ver/218/gdws_crm/src/main/webapp/manager/gw_admin_users/gw_admin_users_edit.html
+END

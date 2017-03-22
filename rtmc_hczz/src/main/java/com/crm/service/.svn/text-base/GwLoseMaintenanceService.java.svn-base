@@ -1,0 +1,31 @@
+package com.crm.service;
+
+import java.util.Map;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwLoseMaintenanceModel;
+
+/**
+ * 
+ * GwLoseMaintenanceService:报失维护业务逻辑层接口
+ *
+ * @author chengpengfei
+ * @date  2016年6月23日
+ * @version  jdk1.8
+ *
+ */
+public interface GwLoseMaintenanceService extends Services<GwLoseMaintenanceModel>{
+
+	/**
+	 * 根据编号修改报失维护信息
+	 * @return
+	 */
+	public int updateLoseMaintenanceByCode(Map<String,Object> params);
+	
+	/**
+	 * 根据当前时间模糊查询最后一条记录
+	 * @param time
+	 * @return
+	 */
+	public GwLoseMaintenanceModel getLoseMaintenanceByLastOne(String time);
+}

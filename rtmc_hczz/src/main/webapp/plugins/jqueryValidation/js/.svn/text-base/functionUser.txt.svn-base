@@ -1,0 +1,72 @@
+名称	示例	说明
+required	validate[required]	表示必填项
+groupRequired[string]	validate[groupRequired[grp]]	在验证组为 grp 的群组，中至少输入或选择一项
+condRequired[string]	validate[condRequired[ids]]	当 ids 的某个控件不为空时，那么该控件也为必填项。
+可以依赖多项，如：validate[condRequired[id1,id2]][Demo]
+minSize[int]	validate[minSize[6]]	最少输入字符数
+maxSize[int]	validate[maxSize[20]]	最多输入字符数
+min[int]	validate[min[1]]	最小值（该项为数字的最小值，注意与 minSize 的区分）
+max[int]	validate[max[9999]]	最大值（该项为数字的最大值，注意与 maxSize 的区分）
+minCheckbox[int]	validate[minCheckbox[2]]	最少选取的项目数（用于 Checkbox）
+maxCheckbox[int]	validate[maxCheckbox[2]]	最多选取的项目数（用于 Checkbox）
+date[string]	validate[custom[date]]	验证日期，格式为 YYYY/MM/DD、YYYY/M/D、YYYY-MM-DD、YYYY-M-D
+dateFormat[string]	validate[custom[dateFormat]]	验证日期格式，格式为 YYYY/MM/DD、YYYY/M/D、YYYY-MM-DD、YYYY-M-D
+dateTimeFormat[string]	validate[custom[dateTimeFormat]]	验证日期及时间格式，格式为：YYYY/MM/DD hh:mm:ss AM|PM
+dateRange[string]	validate[dateRange[grp1]]	验证 grp1 的值是否符合日期范围（开始日期与结束日期）
+根据控件的前后位置，如果当前控件在 grp1 元素之后，输入的日期不能是 grp1 日期的过去。
+如果当前控件在 grp1 控件之前，输入的日期不能是 grp1 日期的未来。[Demo]
+dateTimeRange[string]	validate[dateTimeRange[grp1]]	验证日期及时间范围，增加了时间的对比，其他的和 dateRange 一样。
+past[string]	validate[past[2012/12/20]]	日期必需是 date 或 date 的过去。date 格式可写作 YYYY/MM/DD、YYYY/M/D、YYYY-MM-DD、YYYY-M-D 或 now
+future[string]	validate[future[now]]	日期必须是 data 或 date 的未来。date 格式可写作 YYYY/MM/DD、YYYY/M/D、YYYY-MM-DD、YYYY-M-D 或 now
+equals[string]	validate[equals[id]]	当前控件的值需与控件 id 的值相同
+number	validate[custom[number]]	验证数字
+integer	validate[custom[integer]]	验证整数
+phone	validate[custom[phone]]	验证电话号码
+email	validate[custom[email]]	验证 E-mail 地址
+url	validate[custom[url]]	验证 url 地址，需以 http://、https:// 或 ftp:// 开头
+ipv4	validate[custom[ipv4]]	验证 ipv4 地址
+onlyNumberSp	validate[custom[onlyNumberSp]]	只接受填数字和空格
+onlyLetterSp	validate[custom[onlyLetterSp]]	只接受填英文字母、单引号（'）和空格
+onlyLetterNumber	validate[custom[onlyLetterNumber]]	只接受数字和英文字母
+custom[自定义规则]	validate[custom[ruleName]]	自定义规则验证
+
+
+*************************************验证*****************************
+ //初始化验证
+ $(function(){    
+       $('#editDevIpForm').validationEngine('attach', { 
+              promptPosition: 'centerRight', 
+              scroll: false ,
+              validationEventTriggers:"onChange",  
+              //校验只显示一个错误提示 
+              //maxErrorsPerField: 1,
+              //显示校验的记录数
+              showOneMessage: false,
+              //去掉提示边框和背景颜色
+              //addPromptClass: 'formError-noArrow formError-text',
+              'ruleName': { 
+                   'regex': RegExp, /* 正则表达式，如果正则能匹配内容表示通过 */ 
+                   'alertText': '验证不通过时的提示信息' 
+              },
+              custom_error_messages: {
+                '#ipAddress': {
+                    'required': {
+                         'message': '* 请填写设备IP'
+                     }
+                },
+                '#subMask': {
+                    'required': {
+                         'message': '* 请填写子网掩码'
+                     }
+                }
+             } 
+       });  
+  });
+//触发验证
+ var flag=$("#editDevIpForm").validationEngine('validate');
+  if(!flag){
+	 return;
+  }
+  
+  
+  

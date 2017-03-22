@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>#</title>
+<link href="/js/ligerui/lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <script src="/js/ligerui/lib/jquery/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/core/base.js" type="text/javascript"></script>
+    <link type="text/css" rel="stylesheet" href="/css/base.css" />
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerForm.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerTree.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerDateEditor.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerComboBox.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerCheckBox.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerButton.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerRadio.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerTextBox.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerTip.js" type="text/javascript"></script>
+     <script type="text/javascript" src="/js/action/sys.common.js"></script>
+    <!-- validate验证框架 -->
+    <script src="/js/ligerui/lib/jquery-validation/jquery.validate.min.js" type="text/javascript"></script> 
+    <script src="/js/ligerui/lib/jquery-validation/jquery.metadata.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/jquery-validation/messages_cn.js" type="text/javascript"></script>
+    <script src="/js/validate.util.js" type="text/javascript"></script>
+<style>
+	.l-form ul{ clear:both; margin-top:2px; margin-bottom:2px;padding-top:3px}
+</style>
+    <script type="text/javascript">
+    var id=$.fsh.requestParam("id");
+    var type=$.fsh.requestParam("type");
+    var form;
+         $(function ()
+         { 
+             //创建表单结构 
+             form = $("#gwMenuTreeForm").ligerForm({
+                 inputWidth: 260, labelWidth:120, space: 20,labelAlign:'right',
+                 fields: getFormFields(type)
+             }); 
+             getGwMenuTreeById(id);
+         });
+       //创建form表单字段
+         function getFormFields(type){
+        	 var fields=[];
+        	 if(type=="func"){
+        		 fields=[
+                   { display: "父级菜单", name: "fid", newline: true, type: "select",
+	                 editor:{
+                       valueField: 'id', textField: 'text',
+                       tree:{checkbox:false,idFieldName :'id',parentIDFieldName :'pid',isExpand :false,
+        	                url: '/gw_menu_tree/getAllMenuList.do',
+        	                onClick:function(item){
+        		                  liger.get("fid").setValue(item.data.id);
+        	                }
+                        }   
+                      }
+                       },
+                      { display: "菜单名称", name: "name", newline: true, type: "text",validate:{required:true}},
+                      { display: "菜单类型", name: "type", newline: true, type: "select" ,
+                    	  options: {
+                    		   valueFieldID: "type" ,
+                    		   url:"/data/menu_type.txt" 
+                    	  },
+                    	  width:260,
+                    	  validate:{required:true}
+                      },
+                      { display: "方法名称", name: "func", newline: true, type: "text" ,width:260,validate:{required:true}},
+                      { display: "图标类型", name: "style", newline: true, type: "select" ,options: { valueFieldID: "style" ,url:"/data/opr_type.txt" },width:260,validate:{required:true}},
+                      { display: "菜单说明", name: "note", newline: true, type: "textarea"},
+                      { display: "状态", name: "state", newline: true, type: "select" ,options: { valueFieldID: "state" ,url:"/data/state.txt" },validate:{required:true}},
+                      { display: "排序", name: "orderNum", newline: true, type: "text" ,validate:{required:true}}
+                     ];
+        	 }else{
+        		 fields=[
+					{ display: "父级菜单", name: "fid", newline: true, type: "select",
+					    editor:{
+					      valueField: 'id', textField: 'text',
+					      tree:{checkbox:false,idFieldName :'id',parentIDFieldName :'pid',isExpand :false,
+					           url: '/gw_menu_tree/getAllMenuList.do',
+					           onClick:function(item){
+					                 liger.get("fid").setValue(item.data.id);
+					           }
+					       }   
+					     }
+					      },
+    				     { display: "菜单名称", name: "name", newline: true, type: "text",validate:{required:true}},
+    				     { display: "菜单地址", name: "urladdress", newline: true, type: "text" ,width:260,validate:{required:true}},
+    				     { display: "菜单类型", name: "type", newline: true, type: "select" ,
+                       	  options: {
+                       		   valueFieldID: "type" ,
+                       		   url:"/data/menu_type.txt" 
+                       	  },
+                       	  width:260,
+                       	  validate:{required:true}
+                         },
+    				     { display: "菜单说明", name: "note", newline: true, type: "textarea"},
+    				     { display: "状态", name: "state", newline: true, type: "select" ,options: { valueFieldID: "state" ,url:"/data/state.txt" },validate:{required:true}},
+    				     { display: "是否同步", name: "synchronize", newline: true, type: "select" ,options: { valueFieldID: "synchronize" ,url:"/data/synchronize.txt" },validate:{required:true}},
+    				     { display: "排序", name: "orderNum", newline: true, type: "text" ,validate:{required:true}}
+                     ];
+        	 }
+        	 return fields;
+         }
+         
+        //获取菜单信息
+        function getGwMenuTreeById(id){
+        	$.ajax({
+        		url:'/gw_menu_tree/getMenuTreeById.do?id='+id,
+        		method:'POST',
+        		dataType:'json',
+        		success:function(data){
+        			if(data.status.code=="10000"){
+      				  var form2 = new liger.get("gwMenuTreeForm");
+      				form2.setData(data.data);
+      			  }else{
+      				 $.ligerDialog.alert(data.status.msg, "提示信息", "error");
+      			 }
+        		}
+        	});
+        }
+
+        //保存菜单信息
+        function saveGwMenuTree(){
+        	
+        	if(!$("#gwMenuTreeForm").valid()){
+        		return;
+        	}
+        	$.ajax({
+        		url:'/gw_menu_tree/updateMenuTree.do?id='+id,
+        		method:'POST',
+        		dataType:'json',
+        		data:$("#gwMenuTreeForm").serialize(),
+        		success:function(data){
+        			
+        			if(data.status.code=="10000"){
+        				$.ligerDialog.alert(data.status.msg, "提示信息", "success",function(){
+//         					  parent.reLoad();
+        			          parent.closeDialog();
+        			       });
+        			}else{
+        				$.ligerDialog.alert(data.status.msg, "提示信息", "error");
+        				parent.closeDialog();
+        			}
+        		}
+        	});
+        }
+        function getAllMenuList(){
+       	  $.ajax({
+    		   url:'/buildingTree/getBuildingTreeAndMallNameBymerId.do?gwMallInfoId='+mallid,
+    		   method:'POST',
+    		   dataType:'json',
+    		  	success:function(data){
+    			 if(data.data.code="10000"){
+    				 var tree = liger.get("gwBuildingTreeId");
+                	 tree.treeManager.setData(data.data);
+    			 }
+    		 }  
+     	});
+        }
+    </script>
+</head>
+<body >
+     <form id="gwMenuTreeForm" style="margin-top:10px;margin-left:90px;">
+     
+    </form>
+
+     <div class="btn" style="margin-left:285px;margin-top:10px;">
+           <a class="update" href="javascript:saveGwMenuTree()">保存</a>
+     </div>  
+</body>
+</html>

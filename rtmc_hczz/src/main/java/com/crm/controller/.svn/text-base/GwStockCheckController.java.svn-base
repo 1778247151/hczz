@@ -1,0 +1,465 @@
+package com.crm.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.AdminUser;
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.QueryConditon;
+import com.crm.common.SecurityUtil;
+import com.crm.enums.StockCheckStatusEnum;
+import com.crm.interceptor.BussAnnotation;
+import com.crm.interceptor.exception.BaseException;
+import com.crm.pojo.GwStockCheckDatailModel;
+import com.crm.pojo.GwStockCheckModel;
+import com.crm.pojo.GwStoreGoodsModel;
+import com.crm.service.GwStockCheckDatailService;
+import com.crm.service.GwStockCheckService;
+import com.crm.service.GwStoreGoodsService;
+import com.crm.util.BaseCodeUtil;
+import com.crm.util.DateUtil;
+import com.crm.util.JsonMapper;
+import com.crm.util.QueryConditionUtil;
+
+/**
+ * 
+ * 
+ * GwStockCheckController:物品盘点控制层
+ *
+ * @author meishengjun
+ * @date 2016年11月11日
+ * @version jdk1.8
+ *
+ */
+
+@Controller
+@RequestMapping("/stockCheck")
+public class GwStockCheckController extends BaseException {
+
+	// 日志
+	private Logger logger = LoggerFactory.getLogger(GwStockCheckController.class);
+
+	/**
+	 * 物品盘点管理业务逻辑
+	 */
+	@Resource(name = "gwStockCheckServiceManage")
+	private GwStockCheckService gwStockCheckServiceImpl;
+	
+	/**
+	 *物品盘点明细管理业务逻辑
+	 */
+	@Resource(name = "gwStockCheckDatailServiceManage")
+	private GwStockCheckDatailService gwStockCheckDatailServiceImpl;
+	
+	/**
+	 * 物品与仓库管理表业务逻辑
+	 */
+	@Resource(name="gwStoreGoodsServiceManage")
+	private GwStoreGoodsService gwStoreGoodsServiceImpl;
+
+	/**
+	 * 
+	 * 生成物品盘点编号
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getStockCheckCode.do")
+	@ResponseBody
+	public String getStockCheckCode() {
+		//获取编号前缀
+		String frontCode = BaseCodeUtil.getBaseCode("PD");
+		//获取当天时间
+		String time = DateUtil.getCurrentDate("");
+		String code = "";
+		//根据当天时间查询最后一条记录
+		GwStockCheckModel stockCheck=gwStockCheckServiceImpl.getStockCheckByLastOne(time);
+		if(stockCheck==null){
+			code = frontCode+"01";
+		}else{
+			String subString = stockCheck.getCode().substring(2);
+			long num = Long.parseLong(subString)+1;
+			code = "PD"+String.valueOf(num);
+		}
+		return code;
+	}
+	
+
+	/**
+	 * 
+	 * getStockCheckList:获取盘点信息（分页）
+	 *
+	 * @author   meishengjun
+	 * @date     2016年11月8日
+	 *
+	 * @param currentPage  
+	 * 					当前页
+	 * @param pageSize  
+	 * 				每页记录数
+	 * @return
+	 */
+	@RequestMapping("/getStockCheckList.do")
+	@ResponseBody
+	public LigerPageDataVo getStockCheckList(int currentPage, int pageSize,String status,String code,String date,String storeCode, HttpServletRequest request) {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("status", status);
+		params.put("code", code);
+		params.put("date", date);
+		params.put("storeCode", storeCode);
+
+		BasePageResultVo baseResultVo = gwStockCheckServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 
+	 * @param addStockCheck:添加盘点信息
+	 * @param response
+	 * @param request
+	 * @return
+	 */
+	
+	@RequestMapping("/addStockCheck.do")
+	@ResponseBody
+	public BaseResultVo addStockCheck(String stockCheck,String stockCheckDetail, HttpServletResponse response,HttpServletRequest request) {
+		
+		if(stockCheck==null){
+			return BaseResultVo.responseFail("实体类为空");
+		}
+		GwStockCheckModel gwStockCheckModel =  JsonMapper.buildNonDefaultMapper().fromJson(stockCheck, GwStockCheckModel.class);
+		//创建人
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		gwStockCheckModel.setCreateUserId(adminUser.getUserId());
+		//创建时间
+		gwStockCheckModel.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		//设置状态为待确认
+		gwStockCheckModel.setStatus(StockCheckStatusEnum.PendingConfirmation.getValue());
+		
+		int number = gwStockCheckServiceImpl.insert(gwStockCheckModel);
+		List<GwStockCheckDatailModel> stockCheckDatailList = new ArrayList<>();
+		//把字符串转换为List对象
+		List<GwStockCheckDatailModel> gwStockCheckDatailModel =JsonMapper.buildNonDefaultMapper().fromJsonToList(stockCheckDetail, GwStockCheckDatailModel.class);
+		if(gwStockCheckDatailModel!=null && gwStockCheckDatailModel.size()>0){
+			for(GwStockCheckDatailModel stockCheckDatail : gwStockCheckDatailModel){
+				if((gwStockCheckModel.getCode()==null)||("".equals(gwStockCheckModel.getCode()))){
+					return BaseResultVo.responseFail("请填写盘点单号");
+				}
+				if(stockCheckDatail.getGoodsCode()==null||"".equals(stockCheckDatail.getGoodsCode())){
+					return BaseResultVo.responseFail("请填写 物品编号");
+				}
+	
+				if(stockCheckDatail.getNumber()==null||"".equals(stockCheckDatail.getNumber())){
+					return BaseResultVo.responseFail("请填写盘点数量数量");
+				}
+				if(stockCheckDatail.getNumber()==0){
+					return BaseResultVo.responseFail("盘点数量必须大于0");
+				}
+				//物品盘点信息
+				stockCheckDatail.setCheckCode(gwStockCheckModel.getCode());
+				stockCheckDatailList.add(stockCheckDatail);
+				//gwStockCheckDatailServiceImpl.insert(stockCheckDatail);
+				
+				
+			}
+			//批量插入物品盘点明细数据
+			int batchNumber = gwStockCheckDatailServiceImpl.batchInsertStockCheckDetailList(stockCheckDatailList);
+			if(batchNumber<0){
+				return BaseResultVo.responseFail("添加物品入库清单失败");
+			}
+		}
+		if(number<0){
+			return BaseResultVo.responseFail("添加失败");
+		}
+		return BaseResultVo.responseSuccess("添加成功");
+	}
+	
+	/**
+	 * 获取下拉列表所有分页List
+	 * @param queryCondition 查询参数
+	 * @return
+	 */
+	@RequestMapping("/getStockCheckByComBoBoxList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="物品盘点",option="获取下拉列表")
+	public LigerPageDataVo getPresentInfoByComBoBoxList(QueryConditon queryCondition,Integer type,String gift){
+		//查询条件数组字符串（前端传递的字符串名称需和xml查询名称一致）
+		String[] queryParamArr=new String[]{"goodsCode"};
+		//获取分页参数信息map
+		Map<String, Object> params=QueryConditionUtil.getParamsMap(queryParamArr, queryCondition);
+		BasePageResultVo baseResultVo=gwStoreGoodsServiceImpl.selectPageList(params);
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 根据仓库编号获取下拉列表物品分页LIST
+	 * @param queryCondition 查询参数
+	 * @return
+	 */
+	@RequestMapping("/getStoreGoodsByStoreCode.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="礼品与仓库统计",option="获取下拉列表")
+	public LigerPageDataVo getStoreGoodsByStoreCode(QueryConditon queryCondition,String storeCode,String type,String relType){
+		//查询条件数组字符串（前端传递的字符串名称需和xml查询名称一致）
+		String[] queryParamArr=new String[]{"goodsCode"};
+		
+		LigerPageDataVo data=new LigerPageDataVo();
+		
+	/*	if(storeCode==null || storeCode .trim().length()==0) {
+			return data;
+		}*/
+		//获取分页参数信息map
+		Map<String, Object> params=QueryConditionUtil.getParamsMap(queryParamArr, queryCondition);
+		params.put("storeCode", storeCode);
+		params.put("type", type);
+		params.put("relType", relType);
+		BasePageResultVo baseResultVo=gwStoreGoodsServiceImpl.selectPageList(params);
+		
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 
+	 *getGwStockCheckById 根据id查询物品盘点信息
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/getGwStockCheckById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="物品盘点",option="根据ID获取入物品盘点信息")
+	public BaseResultVo getGwStockCheckById(int id){
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		GwStockCheckModel gwStockCheckModel = gwStockCheckServiceImpl.selectById(id);
+		if(gwStockCheckModel==null){
+			return BaseResultVo.responseFail("获取信息失败");
+		}
+		BaseResultVo baseResultVo = BaseResultVo.responseSuccess("获取信息成功");
+		baseResultVo.setData(gwStockCheckModel);
+		return baseResultVo;
+	}
+	/**
+	 * 审核盘点物品
+	 * @param id
+	 * @param code
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/confirmStockCheck.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="物品审核",option="确认")
+	public BaseResultVo confirmStockCheck(int id, HttpServletRequest request,String goodsCode,String number){
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		//根据id查询物品盘点信息
+		GwStockCheckModel gwStockCheck = gwStockCheckServiceImpl.selectById(id);
+		//设置状态
+		gwStockCheck.setStatus(StockCheckStatusEnum.HasCconfirmed.getValue());;
+		//审核时间
+		gwStockCheck.setConfirmTime(DateUtil.getCurrentDatetime("-"));
+		//审核人
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		gwStockCheck.setConfirmUserid(adminUser.getUserId());
+		//修改信息
+		int a = gwStockCheckServiceImpl.update(gwStockCheck);
+		if(a<0){
+			return BaseResultVo.responseFail("修改物品盘点信息失败");
+		}
+		//根据物品编号获取仓库物品
+		List<GwStoreGoodsModel> storeGoodsList = gwStoreGoodsServiceImpl.getStoreGoodsListByGoodsCode(goodsCode);
+		for(GwStoreGoodsModel store : storeGoodsList){
+			store.setNumber(Integer.parseInt(number));
+			//修改仓库数量
+			gwStoreGoodsServiceImpl.update(store);
+		}
+		
+		return BaseResultVo.responseSuccess("确认成功");
+	}	
+	/**
+	 * 取消审核盘点物品
+	 * @param id
+	 * @param code
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/unconfirmStockCheck.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="物品审核",option="取消")
+	public BaseResultVo unconfirmStockCheck(int id, HttpServletRequest request,String goodsCode,String number){
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		//根据id查询物品盘点信息
+		GwStockCheckModel gwStockCheck = gwStockCheckServiceImpl.selectById(id);
+		//设置状态
+		gwStockCheck.setStatus(StockCheckStatusEnum.ConfirmedNotThrough.getValue());;
+		//审核时间
+		gwStockCheck.setUnconfirmTime(DateUtil.getCurrentDatetime("-"));
+		//取消审核人
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		gwStockCheck.setConfirmUserid(adminUser.getUserId());
+		
+		//修改信息
+		int a = gwStockCheckServiceImpl.update(gwStockCheck);
+		if(a<0){
+			return BaseResultVo.responseFail("取消审核失败");
+		}
+/*		//根据物品编号获取仓库物品
+		List<GwStoreGoodsModel> storeGoodsList = gwStoreGoodsServiceImpl.getStoreGoodsListByGoodsCode(goodsCode);
+		for(GwStoreGoodsModel store : storeGoodsList){
+			store.setNumber(Integer.parseInt(number));
+			//修改仓库数量
+			gwStoreGoodsServiceImpl.update(store);
+		}
+		*/
+		return BaseResultVo.responseSuccess("取消审核成功");
+	}
+
+
+
+	/**
+	 * 
+	 * @param updateStockCheck:修改盘点信息
+	 * @param response
+	 * @param request
+	 * @return
+	 */
+	
+	@RequestMapping("/updateStockCheck.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="库存盘点",option="修改")
+	public BaseResultVo updateStockCheck(int id,String stockCheck,String stockCheckDetail, HttpServletResponse response,HttpServletRequest request) {
+		
+		if(stockCheck==null){
+			return BaseResultVo.responseFail("实体类为空");
+		}
+		GwStockCheckModel gwStockCheckModel =  JsonMapper.buildNonDefaultMapper().fromJson(stockCheck, GwStockCheckModel.class);
+	
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+
+		//修改人
+		gwStockCheckModel.setUpdateUserId(adminUser.getUserId());
+		//修改时间
+		gwStockCheckModel.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		//设置状态为待确认
+		gwStockCheckModel.setStatus(StockCheckStatusEnum.PendingConfirmation.getValue());
+		gwStockCheckModel.setId(id);
+		
+		int number = gwStockCheckServiceImpl.update(gwStockCheckModel);
+		List<GwStockCheckDatailModel> stockCheckDatailList = new ArrayList<>();
+		//把字符串转换为List对象
+		List<GwStockCheckDatailModel> gwStockCheckDatailModel =JsonMapper.buildNonDefaultMapper().fromJsonToList(stockCheckDetail, GwStockCheckDatailModel.class);
+		if(gwStockCheckDatailModel!=null && gwStockCheckDatailModel.size()>0){
+			for(GwStockCheckDatailModel stockCheckDatail : gwStockCheckDatailModel){
+				if((gwStockCheckModel.getCode()==null)||("".equals(gwStockCheckModel.getCode()))){
+					return BaseResultVo.responseFail("请填写盘点单号");
+				}
+				if(stockCheckDatail.getGoodsCode()==null||"".equals(stockCheckDatail.getGoodsCode())){
+					return BaseResultVo.responseFail("请填写 物品编号");
+				}
+	
+				if(stockCheckDatail.getNumber()==null||"".equals(stockCheckDatail.getNumber())){
+					return BaseResultVo.responseFail("请填写盘点数量数量");
+				}
+				if(stockCheckDatail.getNumber()==0){
+					return BaseResultVo.responseFail("盘点数量必须大于0");
+				}
+				//物品盘点信息
+	
+				stockCheckDatailList.add(stockCheckDatail);
+				stockCheckDatail.setCheckCode(gwStockCheckModel.getCode());
+				 //逐条修改明细信息
+				gwStockCheckDatailServiceImpl.update(stockCheckDatail);
+			}
+	
+			
+
+}
+		return BaseResultVo.responseSuccess("修改成功");
+	}
+	/**
+	 * 删除物品盘点信息
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/deleteStockCheckById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="库存盘点",option="删除")
+	public BaseResultVo deleteStockCheckById(int id,String checkCode,HttpServletRequest request){
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		//用户对象
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		//删除盘点信息
+		int number = gwStockCheckServiceImpl.deleteById(id);
+		//根据物品库存盘点单号删除库存盘点明细信息
+		int deleteDetail = gwStockCheckDatailServiceImpl.deleteByCheckCode(checkCode);
+		if(number<0 || deleteDetail<0){
+			return BaseResultVo.responseFail("删除失败");
+		}
+		return BaseResultVo.responseSuccess("删除成功");
+	}/**
+	 * 获取物品盘点待确认数据分页集合
+	 * @author chengpengfei
+	 * @param  currentPage
+	 * @param  pageSize
+	 * @return
+	 */
+	@RequestMapping("/getStockCheckCoufirmByPageList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="礼品入库管理",option="获取确认列表")
+	public LigerPageDataVo getStockCheckCoufirmByPageList(int currentPage,int pageSize,String code,String date,String storeCode,HttpServletRequest request){
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("status", String.valueOf(StockCheckStatusEnum.PendingConfirmation.getValue()));
+		params.put("code", code);
+		params.put("date", date);
+		params.put("storeCode", storeCode);
+
+		BasePageResultVo baseResultVo = gwStockCheckServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	
+	
+
+}
+

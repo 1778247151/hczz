@@ -1,0 +1,42 @@
+package com.crm.dao;
+
+import java.util.Map;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwLeaseGoodsModel;
+
+/**
+ * GwGoodsDao:物品维护数据访问层接口
+ *
+ * @author chengpengfei
+ * @date  2016年6月27日
+ * @version  jdk1.8
+ *
+ */
+public interface GwLeaseGoodsDao extends DaoManager<GwLeaseGoodsModel>{
+
+	/**
+	 * 根据编号查询物品信息
+	 * @param code
+	 * @return
+	 */
+	public GwLeaseGoodsModel getGoodsByCode(String code);
+	
+	/**
+	 * 根据编号查询当天最后一条数据
+	 * @param time
+	 * @return
+	 */
+	public GwLeaseGoodsModel getGoodsByLastOne(String time);
+	
+	/**
+	 * 
+	 * updateGoodsNumber:更新物品数量
+	 *
+	 * @author hemingjun
+	 * @date 2016年10月20日
+	 * @param map
+	 * @return
+	 */
+	public int updateGoodsNumber(Map<String, Object> map);
+}

@@ -1,0 +1,117 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import org.springframework.stereotype.Repository;
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwMemberCardDao;
+import com.crm.pojo.GwMemberCardModel;
+
+/**
+ * 
+ * 
+ * GwMemberCardDaoImpl:会员卡管理数据访问层的实现
+ *
+ * @author  shengjinpeng
+ * @date    2016年11月2日
+ * @version jdk1.8
+ *
+ */
+@Repository("gwMemberCardDaoManage")
+public class GwMemberCardDaoImpl implements GwMemberCardDao{
+	
+	@Resource
+	private BaseDao dao;
+
+	@Override
+	public int insert(GwMemberCardModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.memberCard.insert", e);
+	}
+
+	@Override
+	public int delete(GwMemberCardModel e) {
+		// TODO Auto-generated method stub
+		return dao.delete("",e);
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwMemberCardModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.memberCard.update", e);
+	}
+
+	@Override
+	public GwMemberCardModel selectOne(GwMemberCardModel e) {
+		// TODO Auto-generated method stub
+		return (GwMemberCardModel) dao.selectOne("gw.memberCard.selectById", e);
+	}
+	@Override
+	public List<GwMemberCardModel> selectList(GwMemberCardModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.memberCard.deleteById", id);
+	}
+
+	@Override
+	public GwMemberCardModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwMemberCardModel) dao.selectOne("gw.memberCard.selectById", id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.memberCard.selectPageList", "gw.memberCard.selectCount", params);
+	}
+
+	@Override
+	public List<GwMemberCardModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.memberCard.selectAllList");
+	}
+
+	@Override
+	public GwMemberCardModel getMemberCardByCode(String code) {
+		// TODO Auto-generated method stub
+		return (GwMemberCardModel)dao.selectOne("gw.memberCard.selectByCode", code);
+	}
+
+	@Override
+	public int insertList(List<GwMemberCardModel> list) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.memberCard.insertList", list);
+	}
+
+	@Override
+	public Integer selectListByCode(Map<String, String> params) {
+		// TODO Auto-generated method stub
+		return (Integer)dao.selectOne("gw.memberCard.selectListByCode", params);
+	}
+
+	@Override
+	public List<GwMemberCardModel> getAllNormalUseCardCode() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.memberCard.getAllNormalUseCardCode");
+	}
+
+	@Override
+	public GwMemberCardModel selectByCode(String CardCode) {
+		// TODO Auto-generated method stub
+		return (GwMemberCardModel) dao.selectOne("gw.memberCard.selectByCode", CardCode);
+	}
+	
+}

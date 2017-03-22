@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.repeat.visit.detail" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwRepeatVisitDetailModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="repeat_visit_code" property="repeatVisitCode" jdbcType="VARCHAR" />
+    <result column="card_code" property="cardCode" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, repeat_visit_code, card_code, content, create_user_id, create_time, update_user_id, 
+    update_time
+  </sql>
+  
+  
+   <select id="gw.repeat.visit.detail.getAllList" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List"></include>
+    from gw_repeat_visit_detail
+  </select>
+  <select id="gw.repeat.visit.detail.selectListByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    n.id, n.repeat_visit_code repeatVisitCode, n.card_code cardCode,
+    (select user_name from gw_members m where m.card_code=n.card_code) as userName,
+    (select phone from gw_members m where m.card_code=n.card_code) as phone,
+    (select vip_code from gw_members m where m.card_code=n.card_code) as vipCode,
+    (select sex from gw_members m where m.card_code=n.card_code) as sex,
+    n.content, (select u.name from gw_admin_users u where u.id = n.create_user_id) as createUserName, n.create_time createTime, 
+    (select u.name from gw_admin_users u where u.id = n.update_user_id) as updateUserName, n.update_time updateTime
+    from gw_repeat_visit_detail n 
+    where n.repeat_visit_code = #{code,jdbcType=VARCHAR}
+  </select>
+  
+   <!-- 根据条件，获取分页数据list集合 -->
+  <select id="gw.repeat.visit.detail.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    n.id, n.repeat_visit_code repeatVisitCode, n.card_code cardCode, n.content, (select u.name from gw_admin_users u where u.id = n.create_user_id) as createUserName, n.create_time createTime, 
+    (select u.name from gw_admin_users u where u.id = n.update_user_id) as updateUserName, n.update_time updateTime,
+    from gw_repeat_visit_detail n 
+    limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  <!-- 根据条件，总记录数 -->
+  <select id="gw.repeat.visit.detail.selectCount" resultType="java.lang.Integer">
+   	select count(id) from gw_repeat_visit_detail where status = 1
+  </select>
+  
+  <!-- 批量添加 -->
+  <insert id="gw.repeat.visit.detail.insertBatch" parameterType="com.crm.pojo.GwRepeatVisitDetailModel">
+   	insert into gw_repeat_visit_detail(
+        repeat_visit_code,
+        card_code,
+        content,
+        create_user_id,
+        create_time,
+        update_user_id,
+        update_time
+        )
+	values
+	 <foreach collection="list" item="sysDetilsList" index="index" separator="," >
+    	 (
+	        #{sysDetilsList.repeatVisitCode,jdbcType=VARCHAR},
+	        #{sysDetilsList.cardCode,jdbcType=VARCHAR},
+	        #{sysDetilsList.content,jdbcType=VARCHAR},
+	        #{sysDetilsList.createUserId,jdbcType=INTEGER},
+	        #{sysDetilsList.createTime,jdbcType=VARCHAR},
+	        #{sysDetilsList.updateUserId,jdbcType=VARCHAR},
+	        #{sysDetilsList.updateTime,jdbcType=VARCHAR}
+        )
+    </foreach>
+  </insert>
+  
+  <select id="gw.repeat.visit.detail.selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_repeat_visit_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.repeat.visit.detail.deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from gw_repeat_visit_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.repeat.visit.detail.insert" parameterType="com.crm.pojo.GwRepeatVisitDetailModel" >
+    insert into gw_repeat_visit_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="repeatVisitCode != null" >
+        repeat_visit_code,
+      </if>
+      <if test="cardCode != null" >
+        card_code,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="repeatVisitCode != null" >
+        #{repeatVisitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cardCode != null" >
+        #{cardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.repeat.visit.detail.update" parameterType="com.crm.pojo.GwRepeatVisitDetailModel" >
+    update gw_repeat_visit_detail
+    <set >
+      <if test="repeatVisitCode != null" >
+        repeat_visit_code = #{repeatVisitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cardCode != null" >
+        card_code = #{cardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

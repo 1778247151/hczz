@@ -1,0 +1,241 @@
+package com.crm.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.ResponseCode;
+import com.crm.common.SecurityUtil;
+import com.crm.common.Status;
+import com.crm.interceptor.BussAnnotation;
+import com.crm.interceptor.exception.BaseException;
+import com.crm.pojo.GwPaymentTenderModel;
+import com.crm.service.GwPaymentTenderService;
+import com.crm.util.DateUtil;
+
+/**
+ * 
+ * GwPaymentTenderController:支付方式积分访问控制层
+ *
+ * @author xiangtao
+ * @date 2016年6月20日
+ * @version jdk.8
+ *
+ */
+@Controller
+@RequestMapping("/paymentTender")
+public class GwPaymentTenderController extends BaseException {
+
+	// 日志
+	private Logger logger = LoggerFactory.getLogger(GwPaymentTenderController.class);
+
+	/**
+	 * 支付方式积分业务逻辑
+	 */
+	@Resource(name = "gwPaymentTenderServiceManage")
+	private GwPaymentTenderService gwPaymentTenderServiceImpl;
+
+	/**
+	 * 
+	 * getPaymentTenderById:根据支付方式积分id，获取支付方式积分信息
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getPaymentTenderById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "支付方式维护", option = "获取支付方式信息通过ID")
+	public BaseResultVo getPaymentTenderById(int id, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		if (id == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");// 提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		// 获取支付方式积分信息
+		GwPaymentTenderModel gwPaymentTenderModel = gwPaymentTenderServiceImpl.selectById(id);
+		baseResultVo.setData(gwPaymentTenderModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * addPaymentTender 添加支付方式积分
+	 * 
+	 * @date 2016年6月20日
+	 * @param
+	 * @return
+	 */
+	@RequestMapping("/addPaymentTender.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "支付方式维护", option = "添加")
+	public BaseResultVo addPaymentTender(GwPaymentTenderModel gwPaymentTenderModel, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		List<GwPaymentTenderModel> paymentList = gwPaymentTenderServiceImpl.getAllList();
+		for (GwPaymentTenderModel model : paymentList) {
+			if (model.getPaymentTenderCode().equals(gwPaymentTenderModel.getPaymentTenderCode())) {
+				status.setCode(ResponseCode.OPR_FAIL);
+				status.setMsg("支付方式已存在");// 提示信息
+				baseResultVo.setStatus(status);
+				return baseResultVo;
+			}
+		}
+
+		Integer userid = SecurityUtil.getAdminUser(request).getUserId();
+		gwPaymentTenderModel.setCreateUserId(userid);
+		gwPaymentTenderModel.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		gwPaymentTenderModel.setUpdateUserId(userid);
+		gwPaymentTenderModel.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		gwPaymentTenderServiceImpl.insert(gwPaymentTenderModel);
+
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * delPaymentTenderById:根据支付方式积分id，删除支付方式积分
+	 *
+	 * @date 2016年6月20日
+	 * @param id
+	 *            支付方式积分id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/delPaymentTender.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "支付方式维护", option = "删除")
+	public BaseResultVo delPaymentTenderById(int id, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		if (id == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");// 提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		int num = gwPaymentTenderServiceImpl.deleteById(id);
+
+		if (num < 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("操作失败");// 提示信息
+		}
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * updatePaymentTender:更新支付方式积分
+	 *
+	 * @date 2016年6月20日
+	 * @param gwPaymentTenderModel
+	 *            支付方式积分信息对象
+	 * @return
+	 */
+	@RequestMapping("/updatePaymentTender.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "支付方式维护", option = "更新")
+	public BaseResultVo updatePaymentTender(GwPaymentTenderModel gwPaymentTenderModel, int id,
+			HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		List<GwPaymentTenderModel> paymentList = gwPaymentTenderServiceImpl.getAllList();
+		GwPaymentTenderModel payment = gwPaymentTenderServiceImpl.selectById(id);
+		if (!payment.getPaymentTenderCode().equals(gwPaymentTenderModel.getPaymentTenderCode())) {
+			for (GwPaymentTenderModel model : paymentList) {
+				if (model.getPaymentTenderCode().equals(gwPaymentTenderModel.getPaymentTenderCode())) {
+					status.setCode(ResponseCode.OPR_FAIL);
+					status.setMsg("支付方式已存在");// 提示信息
+					baseResultVo.setStatus(status);
+					return baseResultVo;
+				}
+			}
+		}
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		// 验证主键是否为空
+		if (gwPaymentTenderModel.getId() == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		// 更新时间
+		gwPaymentTenderModel.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		int userid = SecurityUtil.getAdminUser(request).getUserId();
+		gwPaymentTenderModel.setUpdateUserId(userid);
+
+		// 更新支付方式积分信息
+		gwPaymentTenderServiceImpl.update(gwPaymentTenderModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * getPaymentTenderList:获取支付方式积分集合（分页）
+	 *
+	 * @date 2016年6月20日
+	 * @param page
+	 *            当前页码数
+	 * @param pagesize
+	 *            每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getPaymentTenderList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "支付方式维护", option = "获取支付方式列表")
+	public LigerPageDataVo getPaymentTenderList(int currentPage, int pageSize, HttpServletRequest request) {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+
+		BasePageResultVo baseResultVo = gwPaymentTenderServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+}

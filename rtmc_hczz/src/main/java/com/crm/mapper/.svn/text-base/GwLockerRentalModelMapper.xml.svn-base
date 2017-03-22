@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.lockerRental" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwLockerRentalModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="zjcode" property="zjcode" jdbcType="VARCHAR" />
+    <result column="locker_code" property="lockerCode" jdbcType="VARCHAR" />
+    <result column="vip_code" property="vipCode" jdbcType="VARCHAR" />
+    <result column="card_code" property="cardCode" jdbcType="VARCHAR" />
+    <result column="rental_method" property="rentalMethod" jdbcType="INTEGER" />
+    <result column="start_time" property="startTime" jdbcType="VARCHAR" />
+    <result column="end_time" property="endTime" jdbcType="VARCHAR" />
+    <result column="payment_method" property="paymentMethod" jdbcType="INTEGER" />
+    <result column="money" property="money" jdbcType="DECIMAL" />
+    <result column="integral_num" property="integralNum" jdbcType="DECIMAL" />
+    <result column="rental_day" property="rentalDay" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="rental_time" property="rentalTime" jdbcType="VARCHAR" />
+    <result column="return_time" property="returnTime" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="createUserName" property="createUserName" jdbcType="VARCHAR" />
+    <result column="updateUserName" property="updateUserName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, zjcode,locker_code, vip_code, card_code, rental_method, start_time, end_time, payment_method, 
+    money, integral_num, rental_day, status, rental_time, return_time, create_user_id, 
+    create_time, update_user_id, update_time
+  </sql>
+  
+  <select id="gw.lockerRental.selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+	    d.id, 
+	    d.zjcode,
+	    d.locker_code, 
+	    d.vip_code, 
+	    d.card_code, 
+	    d.rental_method, 
+	    d.start_time, 
+	    d.end_time, 
+	    d.payment_method, 
+    	d.money, 
+    	d.integral_num, 
+    	d.rental_day, 
+    	d.status, 
+    	d.rental_time, 
+    	d.return_time, 
+    	d.create_user_id, 
+    	d.create_time, 
+    	d.update_user_id, 
+    	d.update_time,
+	    (select u.name from gw_admin_users u where u.id = d.create_user_id) as createUserName,
+	    (select u.name from gw_admin_users u where u.id = d.update_user_id) as updateUserName
+	from 
+		gw_locker_rental d
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="gw.lockerRental.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+	    d.id, 
+	    d.zjcode,
+	    d.locker_code, 
+	    d.vip_code, 
+	    d.card_code, 
+	    d.rental_method, 
+	    d.start_time, 
+	    d.end_time, 
+	    d.payment_method, 
+    	d.money, 
+    	d.integral_num, 
+    	d.rental_day, 
+    	d.status, 
+    	d.rental_time, 
+    	d.return_time, 
+    	d.create_user_id, 
+    	d.create_time, 
+    	d.update_user_id, 
+    	d.update_time,
+	    (select u.name from gw_admin_users u where u.id = d.create_user_id) as createUserName,
+	    (select u.name from gw_admin_users u where u.id = d.update_user_id) as updateUserName
+	from 
+		gw_locker_rental d
+		<where>
+			<if test="lockerCode!=null and lockerCode!=''">
+	    		and d.locker_code like '%${lockerCode}%'
+	    	</if>
+			<if test="vipCode!=null and vipCode!=''">
+	    		and d.vip_code like '%${vipCode}%'
+	    	</if>
+			<if test="cardCode!=null and cardCode!=''">
+	    		and d.card_code like '%${cardCode}%'
+	    	</if>
+			<if test="status!=null and status!=''">
+	    		and d.status like '%${status}%'
+	    	</if>
+    	</where>
+    limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  
+  <select id="gw.lockerRental.selectPageLists" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+	    d.id, 
+	    d.zjcode,
+	    d.locker_code, 
+	    d.vip_code, 
+	    d.card_code, 
+	    d.rental_method, 
+	    d.start_time, 
+	    d.end_time, 
+	    d.payment_method, 
+    	d.money, 
+    	d.integral_num, 
+    	d.rental_day, 
+    	d.status, 
+    	d.rental_time, 
+    	d.return_time, 
+    	d.create_user_id, 
+    	d.create_time, 
+    	d.update_user_id, 
+    	d.update_time,
+	    (select u.name from gw_admin_users u where u.id = d.create_user_id) as createUserName,
+	    (select u.name from gw_admin_users u where u.id = d.update_user_id) as updateUserName
+	from 
+		gw_locker_rental d
+		<where>
+			<if test="lockerCode!=null and lockerCode!=''">
+	    		and d.locker_code like '%${lockerCode}%'
+	    	</if>
+			<if test="vipCode!=null and vipCode!=''">
+	    		and d.vip_code like '%${vipCode}%'
+	    	</if>
+			<if test="cardCode!=null and cardCode!=''">
+	    		and d.card_code like '%${cardCode}%'
+	    	</if>
+			<if test="status!=null and status!=''">
+	    		and d.status like '%${status}%'
+	    	</if>
+    	</where>
+  </select>
+  
+  <select id="gw.lockerRental.selectCount" resultType="java.lang.Integer">
+    select 
+    	count(d.id)
+    from 
+		gw_locker_rental d
+		<where>
+			<if test="lockerCode!=null and lockerCode!=''">
+	    		and d.locker_code like '%${lockerCode}%'
+	    	</if>
+			<if test="vipCode!=null and vipCode!=''">
+	    		and d.vip_code like '%${vipCode}%'
+	    	</if>
+			<if test="cardCode!=null and cardCode!=''">
+	    		and d.card_code like '%${cardCode}%'
+	    	</if>
+			<if test="status!=null and status!=''">
+	    		and d.status like '%${status}%'
+	    	</if>
+    	</where>
+  </select>
+  
+  <delete id="gw.lockerRental.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_locker_rental
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="gw.lockerRental.insert" parameterType="com.crm.pojo.GwLockerRentalModel" >
+    insert into gw_locker_rental
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="zjcode != null" >
+        zjcode,
+      </if>
+      <if test="lockerCode != null" >
+        locker_code,
+      </if>
+      <if test="vipCode != null" >
+        vip_code,
+      </if>
+      <if test="cardCode != null" >
+        card_code,
+      </if>
+      <if test="rentalMethod != null" >
+        rental_method,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="paymentMethod != null" >
+        payment_method,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="integralNum != null" >
+        integral_num,
+      </if>
+      <if test="rentalDay != null" >
+        rental_day,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="rentalTime != null" >
+        rental_time,
+      </if>
+      <if test="returnTime != null" >
+        return_time,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="zjcode != null" >
+        #{zjcode,jdbcType=VARCHAR},
+      </if>
+      <if test="lockerCode != null" >
+        #{lockerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cardCode != null" >
+        #{cardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="vipCode != null" >
+        #{vipCode,jdbcType=VARCHAR},
+      </if>
+      <if test="rentalMethod != null" >
+        #{rentalMethod,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentMethod != null" >
+        #{paymentMethod,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=DECIMAL},
+      </if>
+      <if test="integralNum != null" >
+        #{integralNum,jdbcType=DECIMAL},
+      </if>
+      <if test="rentalDay != null" >
+        #{rentalDay,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="rentalTime != null" >
+        #{rentalTime,jdbcType=VARCHAR},
+      </if>
+      <if test="returnTime != null" >
+        #{returnTime,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="gw.lockerRental.updateById" parameterType="com.crm.pojo.GwLockerRentalModel" >
+    update gw_locker_rental
+    <set >
+      <if test="lockerCode != null" >
+        locker_code = #{lockerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="vipCode != null" >
+        vip_code = #{vipCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cardCode != null" >
+        card_code = #{cardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="rentalMethod != null" >
+        rental_method = #{rentalMethod,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentMethod != null" >
+        payment_method = #{paymentMethod,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=DECIMAL},
+      </if>
+      <if test="integralNum != null" >
+        integral_num = #{integralNum,jdbcType=DECIMAL},
+      </if>
+      <if test="rentalDay != null" >
+        rental_day = #{rentalDay,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="rentalTime != null" >
+        rental_time = #{rentalTime,jdbcType=VARCHAR},
+      </if>
+      <if test="returnTime != null" >
+        return_time = #{returnTime,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="gw.lockerRental.selectByLastOne" resultMap="BaseResultMap" >
+		SELECT
+			*
+		FROM
+			gw_locker_rental a
+		WHERE
+			a.zjcode LIKE CONCAT(CONCAT('%', #{time,jdbcType=VARCHAR}), '%') 
+		ORDER BY
+			a.id DESC
+		LIMIT 1
+	</select>
+	
+</mapper>

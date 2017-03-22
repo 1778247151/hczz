@@ -1,0 +1,95 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwSalesPaymenttenderDao;
+import com.crm.pojo.GwSalesPaymenttenderModel;
+
+@Repository("salesPaymenttenderDaoManage")
+public class GwSalesPaymenttenderDaoImpl implements GwSalesPaymenttenderDao{
+	
+	@Autowired
+	private BaseDao dao;
+
+	@Override
+	public int insert(GwSalesPaymenttenderModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.salesPaymenttender.insert", e);
+	}
+
+	
+	@Override
+	public int batchInsert(List<GwSalesPaymenttenderModel> salesPaymenttenderList) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.salesPaymenttender.batchInsert", salesPaymenttenderList);
+	}
+
+
+	@Override
+	public int delete(GwSalesPaymenttenderModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwSalesPaymenttenderModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public GwSalesPaymenttenderModel selectOne(GwSalesPaymenttenderModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwSalesPaymenttenderModel> selectList(GwSalesPaymenttenderModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public GwSalesPaymenttenderModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwSalesPaymenttenderModel> getAllList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public int deleteByTxserial(String txserial) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.salesPaymenttender.deleteByTxserial", txserial);
+	}
+
+}

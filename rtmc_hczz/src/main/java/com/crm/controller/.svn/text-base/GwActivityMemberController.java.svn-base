@@ -1,0 +1,439 @@
+package com.crm.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.crm.bean.TMonPopManagerBean;
+import com.crm.common.AdminUser;
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.MD5;
+import com.crm.common.ResponseCode;
+import com.crm.common.SecurityUtil;
+import com.crm.common.Status;
+import com.crm.interceptor.BussAnnotation;
+import com.crm.interceptor.exception.BaseException;
+import com.crm.pojo.GwAdminUsersModel;
+import com.crm.pojo.GwCollectRecordModel;
+import com.crm.pojo.GwMembersModel;
+import com.crm.pojo.GwRepeatVisitDetailModel;
+import com.crm.pojo.GwActivityMemberModel;
+import com.crm.pojo.GwActivityModel;
+import com.crm.service.GwAdminUsersService;
+import com.crm.service.GwMembersService;
+import com.crm.service.GwActivityMemberService;
+import com.crm.service.GwActivityService;
+import com.crm.util.AdminUtil;
+import com.crm.util.Certification;
+import com.crm.util.DateUtil;
+import com.crm.util.JsonMapper;
+import com.crm.util.ValidateUtil;
+
+/**
+ * 
+ * GwActivityMemberController:活动访问控制层
+ *
+ * @author xiangtao
+ * @date 2016年6月20日
+ * @version jdk.8
+ *
+ */
+@Controller
+@RequestMapping("/activityMember")
+public class GwActivityMemberController extends BaseException {
+
+	// 日志
+	private Logger logger = LoggerFactory.getLogger(GwActivityMemberController.class);
+
+	/**
+	 * 活动报名业务逻辑
+	 */
+	@Resource(name = "gwActivityMemberServiceManage")
+	private GwActivityMemberService gwActivityMemberServiceImpl;
+
+	/**
+	 * 会员业务逻辑
+	 */
+	@Resource(name = "gwMembersServiceManage")
+	private GwMembersService gwMembersServiceImpl;
+
+	/**
+	 * 活动业务逻辑
+	 */
+	@Resource(name = "gwActivityServiceManage")
+	private GwActivityService gwActivityServiceImpl;
+
+	/**
+	 * 
+	 * getActivityMemberByCode:根据活动code，获取活动信息
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getActivityMemberByCode.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员活动管理", option = "获取会员活动通过编号")
+	public BaseResultVo getActivityMemberByCode(String code, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		// 获取活动信息
+		List<GwActivityMemberModel> list = gwActivityMemberServiceImpl.getActivityMemberByCode(code);
+		baseResultVo.setData(list);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * addActivity 添加活动
+	 * 
+	 * @date 2016年6月20日
+	 * @param
+	 * @return
+	 */
+	@RequestMapping("/addActivityMember.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员活动管理", option = "添加会员活动")
+	public BaseResultVo addActivity(GwActivityMemberModel gwActivityMemberModel, HttpServletRequest request,
+			Integer activityId) {
+		if (activityId == 0) {
+			return BaseResultVo.responseFail("参数异常");
+		}
+		List<GwActivityMemberModel> activityMemberList = gwActivityMemberServiceImpl.getAllList();
+		List<GwActivityMemberModel> list=new ArrayList<>();
+		for (GwActivityMemberModel atm : activityMemberList) {
+			if(atm.getActivityCode().equals(gwActivityMemberModel.getActivityCode())){
+				list.add(atm);
+			}
+		}
+		for (GwActivityMemberModel model : list) {
+			if (model.getMemberCode().equals(gwActivityMemberModel.getMemberCode())) {
+				return BaseResultVo.responseFail("已存在此会员");
+			}
+		}
+
+		// 根据ID查询活动信息
+		GwActivityModel activitys = gwActivityServiceImpl.selectById(activityId);
+		if (activitys.getJoinMemberNum() == activitys.getActivityMemberNum()) {
+			return BaseResultVo.responseFail("活动参加人数已满,不能添加!");
+		}
+		Integer userid = SecurityUtil.getAdminUser(request).getUserId();
+		gwActivityMemberModel.setCreateUserId(userid);
+		gwActivityMemberModel.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		// 更新时间
+		gwActivityMemberModel.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		gwActivityMemberModel.setUpdateUserId(userid);
+		gwActivityMemberServiceImpl.insert(gwActivityMemberModel);
+
+		BaseResultVo baseResultVo = new BaseResultVo();
+
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * getActivityMemberById:根据活动id，获取活动信息
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getActivityMemberById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员活动管理", option = "获取会员活动通过ID")
+	public BaseResultVo getActivityMemberById(int id, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		if (id == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");// 提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		// 获取活动信息
+		GwActivityMemberModel gwActivityMemberModel = gwActivityMemberServiceImpl.selectById(id);
+		baseResultVo.setData(gwActivityMemberModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * enrollActivityMember 报名活动
+	 * 
+	 * @date 2016年6月20日
+	 * @param
+	 * @return
+	 */
+	@RequestMapping("/enrollActivityMember.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员活动管理", option = "报名会员活动")
+	public BaseResultVo enrollActivityMember(String detilsStr, HttpServletRequest request) {
+		JSONArray array = JSONArray.parseArray(detilsStr);
+
+		List<GwActivityMemberModel> list = new ArrayList<GwActivityMemberModel>();
+
+		for (int i = 0; i < array.size(); i++) {
+			JSONObject obj = (JSONObject) array.get(i);
+			GwActivityMemberModel gwActivityMemberModel = JSON.toJavaObject(obj, GwActivityMemberModel.class);
+
+			String code = gwActivityMemberModel.getMemberCode();
+			GwMembersModel gmm = gwMembersServiceImpl.getMembersByCode(code);
+			if (gmm == null) {
+				return BaseResultVo.responseFail("会员号不存在");
+			}
+
+			Integer userid = SecurityUtil.getAdminUser(request).getUserId();
+			gwActivityMemberModel.setCreateUserId(userid);
+			gwActivityMemberModel.setCreateTime(DateUtil.getCurrentDatetime("-"));
+			list.add(gwActivityMemberModel);
+		}
+
+		for (GwActivityMemberModel mm : list) {
+			gwActivityMemberServiceImpl.update(mm);
+		}
+
+		BaseResultVo baseResultVo = new BaseResultVo();
+
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * delActivityMemberById:根据活动id，删除活动
+	 *
+	 * @date 2016年6月20日
+	 * @param id
+	 *            活动id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/delActivityMember.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员活动管理", option = "删除会员活动通过ID")
+	public BaseResultVo delActivityMemberById(int id, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		if (id == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");// 提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		int num = gwActivityMemberServiceImpl.deleteById(id);
+		if (num < 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("操作失败");// 提示信息
+		}
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * updateActivityMember:更新活动
+	 *
+	 * @date 2016年6月20日
+	 * @param gwActivityMemberModel
+	 *            活动信息对象
+	 * @return
+	 */
+	@RequestMapping("/updateActivityMember.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员活动管理", option = "更新会员活动")
+	public BaseResultVo updateActivityMember(GwActivityMemberModel gwActivityMemberModel,String code, HttpServletRequest request) {
+		List<GwActivityMemberModel> activityMemberList = gwActivityMemberServiceImpl.getAllList();
+		List<GwActivityMemberModel> list=new ArrayList<>();
+		for (GwActivityMemberModel atm : activityMemberList) {
+			if(atm.getActivityCode().equals(gwActivityMemberModel.getActivityCode())){
+				list.add(atm);
+			}
+		}
+		for (GwActivityMemberModel model : list) {
+			if (!code.equals(gwActivityMemberModel.getMemberCode())) {
+				if (model.getMemberCode().equals(gwActivityMemberModel.getMemberCode())) {
+					return BaseResultVo.responseFail("已存在此会员");
+				}
+			}
+		}
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		// 验证主键是否为空
+		if (gwActivityMemberModel.getId() == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		// 更新时间
+		gwActivityMemberModel.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		int userid = SecurityUtil.getAdminUser(request).getUserId();
+		gwActivityMemberModel.setUpdateUserId(userid);
+
+		// 更新活动信息
+		gwActivityMemberServiceImpl.update(gwActivityMemberModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * getActivityMemberList:获取活动集合（分页）
+	 *
+	 * @date 2016年6月20日
+	 * @param page
+	 *            当前页码数
+	 * @param pagesize
+	 *            每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getActivityMemberList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员活动管理", option = "获取会员活动集合")
+	public LigerPageDataVo getActivityMemberList(int currentPage, String activityCode, int pageSize,
+			HttpServletRequest request) {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("activityCode", activityCode);
+		BasePageResultVo baseResultVo = gwActivityMemberServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+
+	/**
+	 * 根据ID修改参数活动的人数
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/updateJoinNumber.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员活动管理", option = "获取会员活动报名人数通过ID")
+	public BaseResultVo updateJoinNumber(Integer id, String add, String delete, String code) {
+		if (id == 0) {
+			return BaseResultVo.responseFail("参数异常");
+		}
+		Map<String, Object> params = new HashMap<>();
+		params.put("id", id);
+		// 新建一个活动对象
+		GwActivityModel activity = new GwActivityModel();
+		// 添加活动
+		if (add != null) {
+			params.put("add", add);
+//			activity.setId(id);
+//			// 修改此活动为活动报名中状态
+//			int updateActivityStatus = gwActivityServiceImpl.update(activity);
+//			if (updateActivityStatus == 0) {
+//				return BaseResultVo.responseFail("修改活动状态失败");
+//			}
+
+		}
+		// 删除活动
+		if (delete != null) {
+			// 根据活动编号查询活动报名详细信息
+			List<GwActivityMemberModel> memberList = gwActivityMemberServiceImpl.getActivityMemberByCode(code);
+			if (memberList.size() == 0) {
+				activity.setId(id);
+//				activity.setActivityStatus(2);
+				// 如果没有会员报名则修改为已审核状态
+				gwActivityServiceImpl.update(activity);
+			}
+			params.put("delete", delete);
+		}
+		int number = gwActivityMemberServiceImpl.updateJoinNumber(params);
+		if (number < 0) {
+			return BaseResultVo.responseFail("修改参加人数失败");
+		}
+		return BaseResultVo.responseSuccess("修改参数人数成功");
+	}
+
+	/**
+	 * 会员签到
+	 * 
+	 * @param memberList
+	 * @return
+	 */
+	@RequestMapping("/signedMember.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员活动管理", option = "会员活动签到")
+	public BaseResultVo signedMember(String memberList) {
+		if (memberList == null) {
+			return BaseResultVo.responseFail("参数异常");
+		}
+		// 把JSON字符串转换成集合对象
+		List<GwActivityMemberModel> activityList = JsonMapper.buildNonDefaultMapper().fromJsonToList(memberList,
+				GwActivityMemberModel.class);
+		// 新建一个会员报名对象
+		GwActivityMemberModel member = new GwActivityMemberModel();
+
+		for (GwActivityMemberModel activity : activityList) {
+			member.setId(activity.getId());
+			member.setSignedStatus(1);
+			// 逐条修改此对象
+			int number = gwActivityMemberServiceImpl.update(member);
+			if (number < 0) {
+				return BaseResultVo.responseFail("签到失败");
+			}
+		}
+		return BaseResultVo.responseSuccess("签到成功");
+	}
+}

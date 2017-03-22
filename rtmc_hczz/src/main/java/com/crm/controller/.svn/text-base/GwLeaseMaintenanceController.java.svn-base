@@ -1,0 +1,228 @@
+package com.crm.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.codehaus.jackson.map.deser.ValueInstantiators.Base;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.AdminUser;
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.SecurityUtil;
+import com.crm.interceptor.BussAnnotation;
+import com.crm.pojo.GwLeaseGoodsModel;
+import com.crm.pojo.GwIntegralExchangeGoodsModel;
+import com.crm.pojo.GwLeaseMaintenanceModel;
+import com.crm.pojo.GwPickupMaintenanceModel;
+import com.crm.service.GwLeaseGoodsService;
+import com.crm.service.GwLeaseMaintenanceService;
+import com.crm.util.BaseCodeUtil;
+import com.crm.util.DateUtil;
+
+/**
+ * 
+ * GwLeaseMaintenanceController:租借维护控制层
+ *
+ * @author chengpengfei
+ * @date 2016年6月23日
+ * @version jdk1.8
+ *
+ */
+@Controller
+@RequestMapping("leaseMaintenance")
+public class GwLeaseMaintenanceController {
+	// 日志
+	private Logger logger = LoggerFactory.getLogger(GwLeaseMaintenanceModel.class);
+	/**
+	 * 租借维护业务逻辑
+	 */
+	@Resource(name="gwLeaseMaintenanceServiceManage")
+	private GwLeaseMaintenanceService gwLeaseMaintenanceServiceImpl;
+	
+	/**
+	 * 物品维护业务逻辑
+	 */
+	@Resource(name = "gwGoodsServiceManage")
+	private GwLeaseGoodsService gwGoodsServiceImpl;
+	/**
+	 * 获取租借维护数据分页集合
+	 * @author chengpengfei
+	 * @param  currentPage
+	 * @param  pageSize
+	 * @return
+	 */
+	@RequestMapping("/getLeaseMaintenanceByPageList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="租借维护",option="获取列表")
+	public LigerPageDataVo getLeaseMaintenanceByPageList(int currentPage,int pageSize,String status,String code,String goodsCode){
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("status", status);
+		params.put("code", code);
+		params.put("goodsCode", goodsCode);
+		BasePageResultVo baseResultVo=gwLeaseMaintenanceServiceImpl.selectPageList(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+
+	public String getLeaseMaintenance() {
+		//获取编号前缀
+		String frontCode = BaseCodeUtil.getBaseCode("ZJ");
+		//获取当天时间
+		String time = DateUtil.getCurrentDate("");
+		String code = "";
+		//根据当天时间查询最后一条记录
+		GwLeaseMaintenanceModel leaseMaintenanceModel = gwLeaseMaintenanceServiceImpl.getLeaseMaintenanceByLastOne(time);
+		if(leaseMaintenanceModel==null){
+			code = frontCode+"0001";
+		}else{
+			String subString = leaseMaintenanceModel.getCode().substring(2);
+			long num = Long.parseLong(subString)+1;
+			code = "ZJ"+String.valueOf(num);
+		}
+		return code;
+	}
+	/**
+	 * 添加租借信息
+	 * @param goods
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/addLeaseMaintenance.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="租借维护",option="添加")
+	public BaseResultVo addLeaseMaintenance(GwLeaseMaintenanceModel leaseMaintenance,HttpServletRequest request){
+		if(leaseMaintenance==null){
+			return BaseResultVo.responseFail("实体类为空");
+		}
+		//创建时间
+		leaseMaintenance.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		//修改时间
+		leaseMaintenance.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		//创建人
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		leaseMaintenance.setCreateUserId(adminUser.getUserId());
+		//修改人
+		leaseMaintenance.setUpdateUserId(adminUser.getUserId());
+		//存入数据
+		String code=getLeaseMaintenance();
+		leaseMaintenance.setCode(code);
+		int number = gwLeaseMaintenanceServiceImpl.insert(leaseMaintenance);
+		if(number<0){
+			return BaseResultVo.responseFail("添加失败");
+		}
+		Map<String, Object> map=new HashMap<>();
+		int borrowNumber=leaseMaintenance.getLeaseNumber();
+		String goodCode= leaseMaintenance.getGoodsCode();
+		map.put("borrowNumber", borrowNumber);
+		map.put("goodCode", goodCode);
+		gwGoodsServiceImpl.updateGoodsNumber(map);
+		return BaseResultVo.responseSuccess("添加成功");
+	}
+	
+	/**
+	 * 根据ID获取租金信息
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/getLeaseMaintenanceById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="租借维护",option="根据ID获取信息")
+	public BaseResultVo getLeaseMaintenanceById(int id){
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		GwLeaseMaintenanceModel leaseMaintenance = gwLeaseMaintenanceServiceImpl.selectById(id);
+		if(leaseMaintenance==null){
+			return BaseResultVo.responseFail("获取信息失败");
+		}
+		BaseResultVo baseResultVo = BaseResultVo.responseSuccess("获取信息成功");
+		baseResultVo.setData(leaseMaintenance);
+		return baseResultVo;
+	}
+	
+	/**
+	 * 修改租借信息
+	 * @param goods
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/updateLeaseMaintenance.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="租借维护",option="修改")
+	public BaseResultVo updateLeaseMaintenance(GwLeaseMaintenanceModel leaseMaintenance,HttpServletRequest request){
+		if(leaseMaintenance==null){
+			return BaseResultVo.responseFail("实体类为空");
+		}
+		//修改时间
+		leaseMaintenance.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		//修改人
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		leaseMaintenance.setUpdateUserId(adminUser.getUserId());
+		//修改数据
+		int number = gwLeaseMaintenanceServiceImpl.update(leaseMaintenance);
+		if(number<0){
+			return BaseResultVo.responseFail("修改失败");
+		}
+		return BaseResultVo.responseSuccess("修改成功");
+	}
+	
+	/**
+	 * 删除租借信息(假删除)
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/deleteLeaseMaintenanceById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="租借维护",option="删除")
+	public BaseResultVo deleteLeaseMaintenanceById(int id){
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+//		GwLeaseMaintenanceModel leaseMaintenance = new GwLeaseMaintenanceModel();
+//		leaseMaintenance.setId(id);
+//		leaseMaintenance.setStatus(0);
+//		//修改时间
+//		leaseMaintenance.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		int number = gwLeaseMaintenanceServiceImpl.deleteById(id);
+		if(number<0){
+			return BaseResultVo.responseFail("删除失败");
+		}
+		return BaseResultVo.responseSuccess("删除成功");
+	}
+	
+	/**
+	 * 归还保存
+	 * @param leaseMaintenance
+	 * @return
+	 */
+	@RequestMapping("/saveGiveBack.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="租借维护",option="归还保存")
+	public BaseResultVo saveGiveBack(GwLeaseMaintenanceModel leaseMaintenance){
+		if(leaseMaintenance==null){
+			return BaseResultVo.responseFail("实体类为空");
+		}
+		leaseMaintenance.setLeaseStatus(1);
+		int number = gwLeaseMaintenanceServiceImpl.update(leaseMaintenance);
+		if(number<0){
+			return BaseResultVo.responseFail("保存失败");
+		}
+		return BaseResultVo.responseSuccess("保存成功");
+	}
+}

@@ -1,0 +1,251 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/gw_crm/!svn/ver/519/gdws_crm/src/main/webapp/data
+END
+vipGrade.txt
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/gw_crm/!svn/ver/58/gdws_crm/src/main/webapp/data/vipGrade.txt
+END
+roleState.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/gw_crm/!svn/ver/35/gdws_crm/src/main/webapp/data/roleState.txt
+END
+clubDetailType.txt
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/gw_crm/!svn/ver/496/gdws_crm/src/main/webapp/data/clubDetailType.txt
+END
+synchronize.txt
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/gw_crm/!svn/ver/156/gdws_crm/src/main/webapp/data/synchronize.txt
+END
+menu_icon.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/gw_crm/!svn/ver/35/gdws_crm/src/main/webapp/data/menu_icon.txt
+END
+integralExchangeStatus.txt
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/124/gdws_crm/src/main/webapp/data/integralExchangeStatus.txt
+END
+signedStatus.txt
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/gw_crm/!svn/ver/69/gdws_crm/src/main/webapp/data/signedStatus.txt
+END
+type.txt
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/gw_crm/!svn/ver/35/gdws_crm/src/main/webapp/data/type.txt
+END
+mailRecordType.txt
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/gw_crm/!svn/ver/519/gdws_crm/src/main/webapp/data/mailRecordType.txt
+END
+month.txt
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/gw_crm/!svn/ver/87/gdws_crm/src/main/webapp/data/month.txt
+END
+mailRecordStatus.txt
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/gw_crm/!svn/ver/519/gdws_crm/src/main/webapp/data/mailRecordStatus.txt
+END
+shopsInfoLeaseStatus.txt
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/gw_crm/!svn/ver/57/gdws_crm/src/main/webapp/data/shopsInfoLeaseStatus.txt
+END
+rentalMethod.txt
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/gw_crm/!svn/ver/427/gdws_crm/src/main/webapp/data/rentalMethod.txt
+END
+model.txt
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/gw_crm/!svn/ver/146/gdws_crm/src/main/webapp/data/model.txt
+END
+opr_type.txt
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/gw_crm/!svn/ver/35/gdws_crm/src/main/webapp/data/opr_type.txt
+END
+smsRecordType.txt
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/gw_crm/!svn/ver/533/gdws_crm/src/main/webapp/data/smsRecordType.txt
+END
+isforever.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/gw_crm/!svn/ver/87/gdws_crm/src/main/webapp/data/isforever.txt
+END
+lockerStatus1.txt
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/gw_crm/!svn/ver/497/gdws_crm/src/main/webapp/data/lockerStatus1.txt
+END
+menu_type.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/gw_crm/!svn/ver/35/gdws_crm/src/main/webapp/data/menu_type.txt
+END
+smsRecordStatus.txt
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/gw_crm/!svn/ver/533/gdws_crm/src/main/webapp/data/smsRecordStatus.txt
+END
+scopeType.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/gw_crm/!svn/ver/307/gdws_crm/src/main/webapp/data/scopeType.txt
+END
+Ztype.txt
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/gw_crm/!svn/ver/109/gdws_crm/src/main/webapp/data/Ztype.txt
+END
+cardType.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/gw_crm/!svn/ver/292/gdws_crm/src/main/webapp/data/cardType.txt
+END
+goodsType.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/gw_crm/!svn/ver/57/gdws_crm/src/main/webapp/data/goodsType.txt
+END
+paymentMethod.txt
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/gw_crm/!svn/ver/427/gdws_crm/src/main/webapp/data/paymentMethod.txt
+END
+mainshop.txt
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/gw_crm/!svn/ver/57/gdws_crm/src/main/webapp/data/mainshop.txt
+END
+memberIntegralDetail.txt
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/gw_crm/!svn/ver/339/gdws_crm/src/main/webapp/data/memberIntegralDetail.txt
+END
+logger_type.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/gw_crm/!svn/ver/37/gdws_crm/src/main/webapp/data/logger_type.txt
+END
+state.txt
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/gw_crm/!svn/ver/35/gdws_crm/src/main/webapp/data/state.txt
+END
+goodsInStoreStatus.txt
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/gw_crm/!svn/ver/495/gdws_crm/src/main/webapp/data/goodsInStoreStatus.txt
+END
+lockerStatus.txt
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/gw_crm/!svn/ver/397/gdws_crm/src/main/webapp/data/lockerStatus.txt
+END
+stockCheckStatus.txt
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/gw_crm/!svn/ver/456/gdws_crm/src/main/webapp/data/stockCheckStatus.txt
+END
+registerType.txt
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/gw_crm/!svn/ver/292/gdws_crm/src/main/webapp/data/registerType.txt
+END
+conditionType.txt
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/gw_crm/!svn/ver/267/gdws_crm/src/main/webapp/data/conditionType.txt
+END
+week.txt
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/gw_crm/!svn/ver/87/gdws_crm/src/main/webapp/data/week.txt
+END
+sendStatus.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/gw_crm/!svn/ver/84/gdws_crm/src/main/webapp/data/sendStatus.txt
+END
+leaseStatus.txt
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/gw_crm/!svn/ver/124/gdws_crm/src/main/webapp/data/leaseStatus.txt
+END
+pickupMaintenance.txt
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/gw_crm/!svn/ver/94/gdws_crm/src/main/webapp/data/pickupMaintenance.txt
+END
+storetype.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/gw_crm/!svn/ver/109/gdws_crm/src/main/webapp/data/storetype.txt
+END
+sex.txt
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/gw_crm/!svn/ver/310/gdws_crm/src/main/webapp/data/sex.txt
+END
+activityStatus.txt
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/gw_crm/!svn/ver/317/gdws_crm/src/main/webapp/data/activityStatus.txt
+END

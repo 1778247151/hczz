@@ -1,0 +1,123 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwAresDao;
+import com.crm.pojo.GwAresModel;
+import com.crm.pojo.GwRoleModel;
+
+/**
+ * 
+ * GwAresDaoImpl:区域管理 数据访问层的实现
+ *
+ * @author yumaochun
+ * @date 2016年3月10日
+ * @version jdk1.8
+ *
+ */
+@Repository("gwAresDaoManage")
+public class GwAresDaoImpl implements GwAresDao {
+
+	@Autowired
+	BaseDao dao;
+
+	@Override
+	public int insert(GwAresModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.ares.insert", e);
+	}
+
+	@Override
+	public int delete(GwAresModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwAresModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.ares.update", e);
+	}
+
+	@Override
+	public GwAresModel selectOne(GwAresModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwAresModel> selectList(GwAresModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.ares.deleteById", id);
+	}
+
+	@Override
+	public GwAresModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwAresModel) dao.selectOne("gw.ares.selectById", id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.ares.selectPageList", "gw.ares.selectCount", params);
+	}
+
+	@Override
+	public List<GwAresModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.ares.selectList");
+	}
+
+	@Override
+	public GwAresModel getAresModelByCode(String code) {
+		// TODO Auto-generated method stub
+		return (GwAresModel) dao.selectOne("gw.ares.selectByCode", code);
+	}
+
+	@Override
+	public int deleteAll() {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.ares.deleteAll");
+	}
+
+	@Override
+	public int batchInsertForAresList(List<GwAresModel> aresList) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.ares.batchInsert", aresList);
+	}
+
+	@Override
+	public int batchInsert(List<GwAresModel> list) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.ares.batchInsert", list);
+	}
+
+	@Override
+	public int batchUpdate(List<GwAresModel> list) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.ares.batchUpdate", list);
+	}
+
+	@Override
+	public int batchDelete(List<GwAresModel> list) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.ares.batchDelete", list);
+	}
+}

@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.storeGoods" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwStoreGoodsModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="store_code" property="storeCode" jdbcType="VARCHAR" />
+    <result column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
+    <result column="number" property="number" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, store_code, goods_code, number
+  </sql>
+  <select id="gw.storeGoods.selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_store_goods
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.storeGoods.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_store_goods
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.storeGoods.batchInsert" parameterType="com.crm.pojo.GwStoreGoodsModel" >
+    insert into gw_store_goods (id, store_code, goods_code, 
+      number)
+    values (#{id,jdbcType=INTEGER}, #{storeCode,jdbcType=VARCHAR}, #{goodsCode,jdbcType=VARCHAR}, 
+      #{number,jdbcType=INTEGER})
+  </insert>
+  <insert id="gw.storeGoods.insertOne" parameterType="com.crm.pojo.GwStoreGoodsModel" >
+    insert into gw_store_goods
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="storeCode != null" >
+        store_code,
+      </if>
+      <if test="goodsCode != null" >
+        goods_code,
+      </if>
+      <if test="number != null" >
+        number,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="storeCode != null" >
+        #{storeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsCode != null" >
+        #{goodsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null" >
+        #{number,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.storeGoods.update" parameterType="com.crm.pojo.GwStoreGoodsModel" >
+    update gw_store_goods
+    <set >
+      <if test="storeCode != null" >
+        store_code = #{storeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsCode != null" >
+        goods_code = #{goodsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null" >
+        number = #{number,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+<!-- 动态修改物品入库数量 -->
+<update id="gw.storeGoods.updateNumber" parameterType="java.util.Map" >
+	update gw_store_goods 
+	<set>
+		<if test="addnumber!=null and '' != addnumber!=null">
+			number = #{addnumber,jdbcType=INTEGER}+number
+		</if>
+		<if test="subnumber!=null and '' != subnumber!=null">
+			number = number - #{subnumber,jdbcType=INTEGER}
+		</if>	
+	</set>
+	where goods_code = #{goodsCode,jdbcType=VARCHAR} and store_code = #{storeCode,jdbcType=VARCHAR}
+</update>
+
+<select id="gw.storeGoods.selectByGoodsCode" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_store_goods
+    where  goods_code = #{goodsCode,jdbcType=VARCHAR} and store_code = #{storeCode,jdbcType=VARCHAR}
+  </select>
+  
+<select id="gw.storeGoods.selectByPageList" resultMap="BaseResultMap" parameterType="java.util.Map">
+    SELECT
+	a.goods_code,
+	a.id,
+	a.number,
+	a.store_code,
+	a.number,
+	b.name as goodsName,
+	b.exchange_integral as exchangeIntegral
+FROM
+	gw_store_goods a,gw_present_info b 
+	where a.goods_code = b.code
+	<if test="name != null and '' != name">  
+          and b.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}), '%')         
+    </if>
+    <if test="relType != null and '' != relType">  
+          and b.type = #{type,jdbcType=VARCHAR}        
+    </if>
+    <if test="storeCode != null and '' != storeCode">  
+          and a.store_code = #{storeCode,jdbcType=VARCHAR}        
+    </if>
+ limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER} 
+</select>
+
+ <!-- 根据条件，获取分页LIST总数 -->
+  <select id="gw.storeGoods.selectByPageCount" resultType="java.lang.Integer"  parameterType="java.util.Map">
+ select
+          count(a.id)
+FROM
+	gw_store_goods a,gw_present_info b 
+	where a.goods_code = b.code
+	<if test="name != null and '' != name">  
+          and b.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}), '%')         
+    </if>
+    <if test="relType != null and '' != relType">  
+          and b.type = #{type,jdbcType=VARCHAR}        
+    </if>
+    <if test="storeCode != null and '' != storeCode">  
+          and a.store_code = #{storeCode,jdbcType=VARCHAR}        
+    </if>
+ </select>
+ <!-- 获取下拉框仓库物品数量通过礼品编号分组 -->
+ <select id="gw.storeGoods.getStoreGoodsCombox" resultMap="BaseResultMap" parameterType="java.util.Map">
+    SELECT
+	a.goods_code,
+	a.id,
+	a.number,
+	a.store_code,
+	<if test="type!=null and ''!=type">
+	SUM(a.number) as totalNumber,
+	</if>
+	b.`name` as goodsName,
+	b.exchange_integral
+FROM
+	gw_store_goods a,gw_present_info b where a.goods_code = b.`code`
+    <if test="type != null and '' != type">     
+          group by a.goods_code
+    </if>
+	<if test="name != null and '' != name">  
+          and b.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}), '%')         
+    </if>
+    <if test="relType != null and '' != relType">  
+          and b.type = #{type,jdbcType=VARCHAR}        
+    </if>
+ limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER} 
+</select>
+  <!-- 根据条件，获取分页LIST总数 -->
+  <select id="gw.storeGoods.getStoreGoodsComboxCount" resultType="java.lang.Integer"  parameterType="java.util.Map">
+ select
+  	<if test="type != null and '' != type">     
+          count(distinct a.goods_code)	
+    </if>	
+    <if test="type == null and ''== type">     
+          count(a.id)
+    </if>
+FROM
+	gw_store_goods a,gw_present_info b where a.goods_code = b.`code`
+	<if test="name != null and '' != name">  
+          and b.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}), '%')         
+    </if>
+    <if test="relType != null and '' != relType">  
+          and b.type = #{type,jdbcType=VARCHAR}        
+    </if>
+    
+ </select>
+ 
+ <select id="gw.storeGoods.selectListByGoodsCode" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gw_store_goods
+    where  goods_code = #{goodsCode,jdbcType=VARCHAR} 
+  </select>
+  
+  <select id="gw.storeGoods.selectListByPageCount" resultMap="BaseResultMap">
+    SELECT
+	a.goods_code,
+	(select b.`name` from gw_present_info b where b.`code` = a.goods_code)as goodsName,
+	a.id,
+	a.number,
+	a.store_code,
+	(select c.`name` from gw_type_tree c where c.`code` = a.store_code)as storeName
+FROM
+	gw_store_goods a
+	<where>
+		<if test="storeCode != null and '' != storeCode">  
+          and a.store_code = #{storeCode,jdbcType=VARCHAR}        
+    	</if>
+    	<if test="goodsCode != null and '' != goodsCode">  
+          and a.goods_code = #{goodsCode,jdbcType=VARCHAR}        
+    	</if>
+	</where>
+ORDER BY a.store_code,a.goods_code
+limit #{offset,jdbcType=INTEGER} ,#{pageSize,jdbcType=INTEGER}
+  </select>
+  
+  <select id="gw.storeGoods.selectListByCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+	select
+		count(a.id)
+	from
+		gw_store_goods a 
+	<where>
+		<if test="storeCode != null and '' != storeCode">  
+          and a.store_code = #{storeCode,jdbcType=VARCHAR}        
+    	</if>
+    	<if test="goodsCode != null and '' != goodsCode">  
+          and a.goods_code = #{goodsCode,jdbcType=VARCHAR}        
+    	</if>
+	</where>
+	</select>
+</mapper>

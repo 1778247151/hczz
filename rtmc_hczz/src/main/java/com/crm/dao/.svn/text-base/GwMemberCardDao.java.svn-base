@@ -1,0 +1,83 @@
+package com.crm.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.core.DaoManager;
+import com.crm.pojo.GwMemberBindingCardModel;
+import com.crm.pojo.GwMemberCardModel;
+
+/**
+ * 
+ * GwMemberCardDao:会员卡数据层接口
+ *
+ * @author  shengjinpeng
+ * @date    2016年11月2日
+ * @version jdk1.8
+ *
+ */
+public interface GwMemberCardDao extends DaoManager<GwMemberCardModel>{
+
+	/**
+	 * 
+	 * getMemberCardByCode:根据会员卡号获得会员卡信息
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年11月2日
+	 *
+	 * @param code
+	 * @return
+	 */
+	public GwMemberCardModel getMemberCardByCode(String code);
+
+	/**
+	 * 
+	 * insertList:批量插入会员卡信息
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年11月2日
+	 *
+	 * @param list
+	 * @return
+	 */
+	public int insertList(List<GwMemberCardModel> list);
+
+	/**
+	 * 
+	 * selectListByCode:
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年11月2日
+	 *
+	 * @param params
+	 * @return
+	 */
+	
+	
+	public Integer selectListByCode(Map<String, String> params);
+	/**
+	 * 
+	 * getAllNormalUseCardCode:获取所有正常使用的卡号
+	 *
+	 * @author   meishengjun
+	 * @date     2016年11月4日
+	 *
+	 * 
+	 * @return
+	 */
+	public List<GwMemberCardModel> getAllNormalUseCardCode();
+	
+	/**
+	 * 
+	 * selectByCode:根据卡号查询会员信息
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年11月2日
+	 *
+	 * @param gwMemberCardModel
+	 * @param startCardCode
+	 * @param endCardCode
+	 * @return
+	 */
+	public GwMemberCardModel selectByCode(String CardCode);
+}

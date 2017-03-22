@@ -1,0 +1,52 @@
+package com.crm.service.impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwStockCheckDao;
+import com.crm.dao.GwStockCheckDatailDao;
+import com.crm.pojo.GwStockCheckDatailModel;
+import com.crm.service.GwStockCheckDatailService;
+/**
+ * 
+ * 
+ * GwStockCheckDatailServiceImpl:物品盘点明细管理业务逻辑层实现
+ *
+ * @author  meishengjun
+ * @date    2016年11月3日
+ * @version jdk1.8
+ *
+ */
+@Service("gwStockCheckDatailServiceManage")
+public class GwStockCheckDatailServiceImpl extends ServersManager<GwStockCheckDatailModel, GwStockCheckDatailDao> implements GwStockCheckDatailService {
+	@Resource(name="gwStockCheckDatailDaoManage")
+	@Override
+	public void setDao(GwStockCheckDatailDao dao) {
+		this.dao=dao;
+	}
+
+	@Override
+	public int deleteByCheckCode(String checkCode) {
+		
+		return dao.deleteByCheckCode(checkCode);
+	}
+
+	@Override
+	public int batchInsertStockCheckDetailList(List<GwStockCheckDatailModel> stockCheckDetailList) {
+		return dao.batchInsertStockCheckDetailList(stockCheckDetailList);
+	}
+
+
+	
+
+
+
+	
+
+	
+
+}

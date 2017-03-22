@@ -1,0 +1,307 @@
+package com.crm.controller;
+
+import java.io.File;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.http.client.ClientProtocolException;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.pojo.GwPickupMaintenanceModel;
+import com.crm.pojo.GwPromotionIntegralModel;
+import com.crm.service.GwLeaseGoodsService;
+import com.crm.service.GwPickupMaintenanceService;
+import com.crm.common.BaseResultVo;
+import com.crm.common.ConstantUtils;
+import com.crm.common.ResponseCode;
+import com.crm.common.Status;
+import com.crm.interceptor.BussAnnotation;
+import com.crm.util.BaseCodeUtil;
+import com.crm.util.DateUtil;
+import com.crm.util.ValidateUtil;
+import com.crm.common.AdminUser;
+import com.crm.common.SecurityUtil;
+
+/**
+ * 
+ * GwPickupMaintenanceController:拾物维护控制层
+ *
+ * @author chengpengfei
+ * @date 2016年6月23日
+ * @version jdk1.8
+ *
+ */
+@Controller
+@RequestMapping("pickupMaintenance")
+public class GwPickupMaintenanceController {
+
+	/**
+	 * 拾物维护业务逻辑
+	 */
+	@Resource(name = "gwPickupMaintenanceServiceManage")
+	private GwPickupMaintenanceService gwPickupMaintenanceServiceImpl;
+	/**
+	 * 物品维护业务逻辑
+	 */
+	@Resource(name = "gwGoodsServiceManage")
+	private GwLeaseGoodsService gwGoodsServiceImpl;
+
+	/**
+	 * 
+	 * 生成拾物维护的编号
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	public String getPickupCode() {
+		// 获取编号前缀
+		String frontCode = BaseCodeUtil.getBaseCode("SW");
+		// 获取当天时间
+		String time = DateUtil.getCurrentDate("");
+		String code = "";
+		// 根据当天时间查询最后一条记录
+		GwPickupMaintenanceModel pickup = gwPickupMaintenanceServiceImpl.getPickupMaintenanceByLaseOne(time);
+		if (pickup == null) {
+			code = frontCode + "0001";
+		} else {
+			String subString = pickup.getCode().substring(2);
+			long num = Long.parseLong(subString) + 1;
+			code = "SW" + String.valueOf(num);
+		}
+		return code;
+	}
+
+	/**
+	 * 获取拾物维护分页集合
+	 * 
+	 * @author chengpengfei
+	 * @param currentPage
+	 * @param pageSize
+	 * @return
+	 */
+	@RequestMapping("/getPickupMaintenanceByPageList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "拾物维护", option = "获取列表")
+	public LigerPageDataVo getPickupMaintenanceByPageList(int currentPage, int pageSize, String status, String name,
+			String code) {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("status", status);
+		params.put("name", name);
+		params.put("code", code);
+		BasePageResultVo baseResultVo = gwPickupMaintenanceServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+
+	/**
+	 * 
+	 * addPickupMaintenance:添加拾物维护数据
+	 *
+	 * @date 2016年6月23日
+	 * @param GwCostCodeModel1
+	 * @return
+	 */
+	@RequestMapping("/addPickupMaintenance.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "拾物维护", option = "添加")
+	public BaseResultVo addPickupMaintenance(GwPickupMaintenanceModel gwPickupMaintenanceModel,
+			HttpServletResponse response, HttpServletRequest request) {
+		if (gwPickupMaintenanceModel == null) {
+			return BaseResultVo.responseFail("实体类为空");
+		}
+		if (gwPickupMaintenanceModel.getPickupImg() != null && (!gwPickupMaintenanceModel.getPickupImg().equals(""))) {
+			// 文件根目录
+			String bootPath = request.getSession().getServletContext().getRealPath("/");
+			String pathName = gwPickupMaintenanceModel.getPickupImg();
+			String fileName = pathName.substring(6);
+			String newFliePath = bootPath + ConstantUtils.UPLOAD_IMAGE_PATH + "/" + fileName;
+			// 当前时间字符串
+			String time = new Date().getTime() + "";
+			time = time.substring(time.length() - 5);
+			// 判断是否有同名文件存在，如果存在则重命名，加上当前时间戳的后五位
+			File file = new File(newFliePath);
+			String newFileName = fileName;
+			if (file.exists()) {
+				String name1 = fileName.substring(0, fileName.lastIndexOf("."));
+				String name2 = fileName.substring(fileName.lastIndexOf("."));
+				newFileName = name1 + "_" + time + name2;
+			}
+			// 添加之前先删除文件并复制文件到新的目录
+			boolean flag = gwGoodsServiceImpl.deleteAndCopyFile(fileName, newFileName, request);
+			if (flag == false) {
+				return BaseResultVo.responseFail("删除或复制文件出错");
+			}
+
+			String newPathFlie = "/" + ConstantUtils.UPLOAD_IMAGE_PATH + "/" + fileName;
+			gwPickupMaintenanceModel.setPickupImg(newPathFlie);
+		}
+		// 创建时间
+		gwPickupMaintenanceModel.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		// 创建人
+		AdminUser adminUser = SecurityUtil.getAdminUser(request);
+		// 修改时间
+		gwPickupMaintenanceModel.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		// 修改人
+		gwPickupMaintenanceModel.setUpdateUserId(adminUser.getUserId());
+		gwPickupMaintenanceModel.setCreateUserId(adminUser.getUserId());
+		String code=getPickupCode();
+		gwPickupMaintenanceModel.setCode(code);
+		int number = gwPickupMaintenanceServiceImpl.insert(gwPickupMaintenanceModel);
+		if (number < 0) {
+			return BaseResultVo.responseFail("添加失败");
+		}
+		return BaseResultVo.responseSuccess("添加成功");
+	}
+
+	/**
+	 * 根据ID获取拾物维护信息
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/getPickupMaintenanceById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "拾物维护", option = "根据ID获取信息")
+	public BaseResultVo getPickupMaintenanceById(int id) {
+		if (id == 0) {
+			return BaseResultVo.responseFail("数据异常");
+		}
+		GwPickupMaintenanceModel pickupMaintenance = gwPickupMaintenanceServiceImpl.selectById(id);
+		if (pickupMaintenance == null) {
+			return BaseResultVo.responseFail("获取信息失败");
+		}
+		BaseResultVo baseResultVo = BaseResultVo.responseSuccess("获取信息成功");
+		baseResultVo.setData(pickupMaintenance);
+		return baseResultVo;
+	}
+
+	/**
+	 * 修改拾物维护信息
+	 * 
+	 * @param gwPickupMaintenanceModel
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/updatePickupMaintenance.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "拾物维护", option = "修改")
+	public BaseResultVo updatePickupMaintenance(GwPickupMaintenanceModel gwPickupMaintenanceModel,
+			HttpServletRequest request) {
+		if (gwPickupMaintenanceModel == null) {
+			return BaseResultVo.responseFail("实体类为空");
+		}
+		String pathImage = gwPickupMaintenanceModel.getPickupImg();
+		// 截取图片路径的第二位字符
+		String path = "";
+		if (pathImage != null && !("".equals(pathImage))) {
+			path = pathImage.substring(1, 2);
+
+			// 判断是否更改了图片
+			String isEditImage = ConstantUtils.UPLOAD_IMAGE_PATH.substring(0, 1);
+			if (!(isEditImage.equals(path))) {
+				// 文件根目录
+				String bootPath = request.getSession().getServletContext().getRealPath("/");
+				String pathName = gwPickupMaintenanceModel.getPickupImg();
+				String fileName = pathName.substring(6);
+				String newFliePath = bootPath + ConstantUtils.UPLOAD_IMAGE_PATH + "/" + fileName;
+				// 当前时间字符串
+				String time = new Date().getTime() + "";
+				time = time.substring(time.length() - 5);
+				// 判断是否有同名文件存在，如果存在则重命名，加上当前时间戳的后五位
+				File file = new File(newFliePath);
+				String newFileName = fileName;
+				if (file.exists()) {
+					String name1 = fileName.substring(0, fileName.lastIndexOf("."));
+					String name2 = fileName.substring(fileName.lastIndexOf("."));
+					newFileName = name1 + "_" + time + name2;
+				}
+				// 添加之前先删除文件并复制文件到新的目录
+				boolean flag = gwGoodsServiceImpl.deleteAndCopyFile(fileName, newFileName, request);
+				if (flag == false) {
+					return BaseResultVo.responseFail("删除或复制文件出错");
+				}
+
+				String newPathFlie = "/" + ConstantUtils.UPLOAD_IMAGE_PATH + "/" + fileName;
+				gwPickupMaintenanceModel.setPickupImg(newPathFlie);
+			}
+		}
+		// 修改人
+		AdminUser adminUser = SecurityUtil.getAdminUser(request);
+		gwPickupMaintenanceModel.setUpdateUserId(adminUser.getUserId());
+		// 修改时间
+		gwPickupMaintenanceModel.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		int number = gwPickupMaintenanceServiceImpl.update(gwPickupMaintenanceModel);
+		if (number < 0) {
+			return BaseResultVo.responseFail("修改失败");
+		}
+		return BaseResultVo.responseSuccess("修改成功");
+	}
+
+	/**
+	 * 删除拾物维护信息(真删除,只有未领取的状态才能删除)
+	 * 
+	 * @param id
+	 * @param request
+	 */
+	@RequestMapping("/deletePickupMaintenance.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "拾物维护", option = "删除")
+	public BaseResultVo deletePickupMaintenance(int id, HttpServletRequest request) {
+		if (id == 0) {
+			return BaseResultVo.responseFail("参数异常");
+		}
+
+		int number = gwPickupMaintenanceServiceImpl.deleteById(id);
+		if (number < 0) {
+			return BaseResultVo.responseFail("删除失败");
+		}
+		return BaseResultVo.responseSuccess("删除成功");
+	}
+
+	/**
+	 * 获取未领取的拾物维护信息
+	 * 
+	 * @param currentPage
+	 * @param pageSize
+	 * @return
+	 */
+	@RequestMapping("/getLoseMaintenceNotReceiveByPageList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "拾物维护", option = "获取未领取的列表")
+	public LigerPageDataVo getLoseMaintenceNotReceiveByPageList(int pageSize, String name, String startTime,
+			String endTime, int currentPage) {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("receive", "0");
+		params.put("name", name);
+		params.put("startTime", startTime);
+		params.put("endTime", endTime);
+		BasePageResultVo baseResultVo = gwPickupMaintenanceServiceImpl.selectPageList(params);
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+}

@@ -1,0 +1,53 @@
+package com.crm.service.impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwPresentInfoDao;
+import com.crm.pojo.GwGoodsInStoreDetailModel;
+import com.crm.pojo.GwPresentInfoModel;
+import com.crm.service.GwPresentInfoService;
+import com.crm.util.BaseCodeUtil;
+import com.crm.util.DateUtil;
+
+/**
+ * 
+ * GwPresentInfoServiceImpl:礼品业务逻辑层实现
+ *
+ * @author chengpengfei
+ * @date  2016年7月04日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwPresentInfoServiceManage")
+public class GwPresentInfoServiceImpl extends ServersManager<GwPresentInfoModel, GwPresentInfoDao> implements GwPresentInfoService{
+
+	@Resource(name="gwPresentInfoDaoManage")
+	@Override
+	public void setDao(GwPresentInfoDao dao) {
+		// TODO Auto-generated method stub
+		this.dao = dao;
+	}
+
+	@Override
+	public synchronized  String getPresentByLastOne(String time) {
+		//获取编号前缀
+		String frontCode = BaseCodeUtil.getBaseCode("LP");
+		String code = "";
+		//根据当天时间查询最后一条记录
+		GwPresentInfoModel present= dao.getPresentByLastOne(time);
+		if(present==null){
+			code = frontCode+"0001";
+		}else{
+			String subString = present.getCode().substring(2);
+			long num = Long.parseLong(subString)+1;
+			code = "LP"+String.valueOf(num);
+		}
+		return code;
+	}
+
+}

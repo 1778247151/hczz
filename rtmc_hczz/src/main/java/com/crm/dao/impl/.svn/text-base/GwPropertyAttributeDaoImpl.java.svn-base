@@ -1,0 +1,122 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwPropertyAttributeDao;
+import com.crm.pojo.GwDepartmentPositionModel;
+import com.crm.pojo.GwPropertyAttributeModel;
+
+/**
+ * 
+ * GwPropertyAttributeDaoImpl:物业性质数据访问层的实现
+ *
+ * @author chengpengfei
+ * @date 2016年3月10日
+ */
+@Repository("gwPropertyAttributeManage")
+public class GwPropertyAttributeDaoImpl implements GwPropertyAttributeDao{
+
+	@Resource
+	private BaseDao dao;
+	@Override
+	public int insert(GwPropertyAttributeModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("Gw.PropertyAttributeModelMapper.insertSelective",e);
+	}
+
+	@Override
+	public int delete(GwPropertyAttributeModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwPropertyAttributeModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("Gw.PropertyAttributeModelMapper.updateByPrimaryKeySelective",e);
+	}
+
+	@Override
+	public GwPropertyAttributeModel selectOne(GwPropertyAttributeModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwPropertyAttributeModel> selectList(GwPropertyAttributeModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("Gw.PropertyAttributeModelMapper.deleteByPrimaryKey",id);
+	}
+
+	@Override
+	public GwPropertyAttributeModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwPropertyAttributeModel)dao.selectOne("Gw.PropertyAttributeModelMapper.selectByPrimaryKey",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("Gw.PropertyAttributeModelMapper.selectAll", "Gw.PropertyAttributeModelMapper.selectCount", params);
+	}
+
+	@Override
+	public List<GwPropertyAttributeModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("Gw.PropertyAttributeModelMapper.selectList");
+	}
+
+	@Override
+	public GwPropertyAttributeModel getPropertyAttributeByCode(String code) {
+		// TODO Auto-generated method stub
+		return (GwPropertyAttributeModel)dao.selectOne("Gw.PropertyAttributeModelMapper.selectByCode",code);
+	}
+
+	@Override
+	public int deleteAll() {
+		// TODO Auto-generated method stub
+		return dao.delete("Gw.PropertyAttributeModelMapper.deleteAll");
+	}
+
+	@Override
+	public int batchInsertForPropertyList(List<GwPropertyAttributeModel> propertyList) {
+		// TODO Auto-generated method stub
+		return dao.insert("Gw.PropertyAttributeModelMapper.batchInsert",propertyList);
+	}
+	@Override
+	public int batchInsert(List<GwPropertyAttributeModel> list) {
+		// TODO Auto-generated method stub
+		return dao.insert("Gw.PropertyAttributeModelMapper.batchInsert", list);
+	}
+
+	@Override
+	public int batchUpdate(List<GwPropertyAttributeModel> list) {
+		// TODO Auto-generated method stub
+		return dao.update("Gw.PropertyAttributeModelMapper.batchUpdate", list);
+	}
+
+	@Override
+	public int batchDelete(List<GwPropertyAttributeModel> list) {
+		// TODO Auto-generated method stub
+		return dao.delete("Gw.PropertyAttributeModelMapper.batchDelete", list);
+	}
+}

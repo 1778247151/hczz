@@ -1,0 +1,149 @@
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/gw_crm/!svn/ver/324/gdws_crm/src/main/java/com/crm/common
+END
+BaseResultVo1.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/gw_crm/!svn/ver/2/gdws_crm/src/main/java/com/crm/common/BaseResultVo1.java
+END
+QueryConditon.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/gw_crm/!svn/ver/2/gdws_crm/src/main/java/com/crm/common/QueryConditon.java
+END
+MisApiUrlUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/155/gdws_crm/src/main/java/com/crm/common/MisApiUrlUtil.java
+END
+TreeNode.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/gw_crm/!svn/ver/2/gdws_crm/src/main/java/com/crm/common/TreeNode.java
+END
+SecurityUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/gw_crm/!svn/ver/2/gdws_crm/src/main/java/com/crm/common/SecurityUtil.java
+END
+CustomBigdecimalSerializer.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/gw_crm/!svn/ver/196/gdws_crm/src/main/java/com/crm/common/CustomBigdecimalSerializer.java
+END
+CustomObjectMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/gw_crm/!svn/ver/2/gdws_crm/src/main/java/com/crm/common/CustomObjectMapper.java
+END
+ConstantUtils.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/270/gdws_crm/src/main/java/com/crm/common/ConstantUtils.java
+END
+BasePageResultVo.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/gw_crm/!svn/ver/2/gdws_crm/src/main/java/com/crm/common/BasePageResultVo.java
+END
+BaseResultVo.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/gw_crm/!svn/ver/2/gdws_crm/src/main/java/com/crm/common/BaseResultVo.java
+END
+ServiceResponse.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/2/gdws_crm/src/main/java/com/crm/common/ServiceResponse.java
+END
+Status.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/gw_crm/!svn/ver/2/gdws_crm/src/main/java/com/crm/common/Status.java
+END
+Message.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/gw_crm/!svn/ver/2/gdws_crm/src/main/java/com/crm/common/Message.java
+END
+CommonPage.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/gw_crm/!svn/ver/2/gdws_crm/src/main/java/com/crm/common/CommonPage.java
+END
+MD5.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/gw_crm/!svn/ver/324/gdws_crm/src/main/java/com/crm/common/MD5.java
+END
+Condition.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/gw_crm/!svn/ver/2/gdws_crm/src/main/java/com/crm/common/Condition.java
+END
+CommonJsonMessage.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/gw_crm/!svn/ver/2/gdws_crm/src/main/java/com/crm/common/CommonJsonMessage.java
+END
+AdminUser.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/gw_crm/!svn/ver/194/gdws_crm/src/main/java/com/crm/common/AdminUser.java
+END
+PropertyPlaceholder.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/gw_crm/!svn/ver/293/gdws_crm/src/main/java/com/crm/common/PropertyPlaceholder.java
+END
+PageInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/gw_crm/!svn/ver/2/gdws_crm/src/main/java/com/crm/common/PageInfo.java
+END
+ResponseCode.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/gw_crm/!svn/ver/291/gdws_crm/src/main/java/com/crm/common/ResponseCode.java
+END
+MonState.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/gw_crm/!svn/ver/2/gdws_crm/src/main/java/com/crm/common/MonState.java
+END
+LigerPageDataVo.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/2/gdws_crm/src/main/java/com/crm/common/LigerPageDataVo.java
+END
+StructureUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/gw_crm/!svn/ver/123/gdws_crm/src/main/java/com/crm/common/StructureUtil.java
+END

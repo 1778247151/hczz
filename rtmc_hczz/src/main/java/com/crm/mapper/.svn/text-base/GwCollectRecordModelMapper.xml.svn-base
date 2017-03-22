@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.collectRecord" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwCollectRecordModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="pickup_maintenance_code" property="pickupMaintenanceCode" jdbcType="VARCHAR" />
+    <result column="lose_maintenance_code" property="loseMaintenanceCode" jdbcType="VARCHAR" />
+    <result column="collect_time" property="collectTime" jdbcType="VARCHAR" />
+    <result column="collect_user" property="collectUser" jdbcType="VARCHAR" />
+    <result column="lostMaintenanceName" property="lostMaintenanceName" jdbcType="VARCHAR" />
+    <result column="pickupMaintenanceName" property="pickupMaintenanceName" jdbcType="VARCHAR" />
+    <result column="pickupUserName" property="pickupUserName" jdbcType="VARCHAR" />
+    <result column="pickupTime" property="pickupTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, pickup_maintenance_code, lose_maintenance_code, collect_time, collect_user
+  </sql>
+  <select id="gw.collectRecord.selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_collect_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.collectRecord.deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from gw_collect_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.collectRecord.batchInsert" parameterType="com.crm.pojo.GwCollectRecordModel" >
+    insert into gw_collect_record (
+    pickup_maintenance_code, 
+    lose_maintenance_code, 
+    collect_time, 
+    collect_user)
+    values 
+    <foreach collection="list" item="collectRecord" index="index" separator="," >
+    (
+    #{collectRecord.pickupMaintenanceCode,jdbcType=VARCHAR}, 
+    #{collectRecord.loseMaintenanceCode,jdbcType=VARCHAR}, 
+    #{collectRecord.collectTime,jdbcType=VARCHAR}, 
+    #{collectRecord.collectUser,jdbcType=VARCHAR}
+    )
+     </foreach>
+  </insert>
+  <insert id="gw.collectRecord.insertSelective" parameterType="com.crm.pojo.GwCollectRecordModel" >
+    insert into gw_collect_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="pickupMaintenanceCode != null" >
+        pickup_maintenance_code,
+      </if>
+      <if test="loseMaintenanceCode != null" >
+        lose_maintenance_code,
+      </if>
+      <if test="collectTime != null" >
+        collect_time,
+      </if>
+      <if test="collectUser != null" >
+        collect_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="pickupMaintenanceCode != null" >
+        #{pickupMaintenanceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="loseMaintenanceCode != null" >
+        #{loseMaintenanceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="collectTime != null" >
+        #{collectTime,jdbcType=VARCHAR},
+      </if>
+      <if test="collectUser != null" >
+        #{collectUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.collectRecord.updateByPrimaryKeySelective" parameterType="com.crm.pojo.GwCollectRecordModel" >
+    update gw_collect_record
+    <set >
+      <if test="pickupMaintenanceCode != null" >
+        pickup_maintenance_code = #{pickupMaintenanceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="loseMaintenanceCode != null" >
+        lose_maintenance_code = #{loseMaintenanceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="collectTime != null" >
+        collect_time = #{collectTime,jdbcType=VARCHAR},
+      </if>
+      <if test="collectUser != null" >
+        collect_user = #{collectUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据条件，获取分页LIST集合 -->
+  <select id="gw.collectRecord.selectByPageList" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	SELECT
+    a.lose_maintenance_code,
+	(select b.lose_user from gw_lose_maintenance b where b.`code` = a.lose_maintenance_code)as lostMaintenanceName,
+	a.collect_time,
+	a.collect_user,
+	a.id,
+	a.pickup_maintenance_code,
+	(select c.`name` from gw_pickup_maintenance c where c.`code` =  a.pickup_maintenance_code)as pickupMaintenanceName,
+	(select c.pickup_user from gw_pickup_maintenance c where c.`code` = a.pickup_maintenance_code )as pickupUserName
+FROM
+	gw_collect_record a
+	<where>
+		<if test="code != null and '' != code">  
+           a.lose_maintenance_code = #{code,jdbcType=VARCHAR}         
+        </if>
+        
+	</where>
+limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 根据条件，获取分页LIST集合总数 -->
+  <select id="gw.collectRecord.selectByPageCount" resultType="java.lang.Integer"  parameterType="java.util.Map">
+  	select 
+      count(a.id)
+    from gw_collect_record a 	
+    <where>
+		<if test="code != null and '' != code">  
+           a.lose_maintenance_code = #{code,jdbcType=VARCHAR}         
+        </if>
+	</where>
+  </select>
+</mapper>

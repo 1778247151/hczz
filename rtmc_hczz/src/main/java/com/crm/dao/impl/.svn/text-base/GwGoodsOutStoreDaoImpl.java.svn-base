@@ -1,0 +1,92 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import org.springframework.stereotype.Repository;
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwGoodsOutStoreDao;
+import com.crm.pojo.GwGoodsOutStoreModel;
+
+/**
+ * 
+ * GwGoodsOutStoreDaoImpl:礼品出库数据层实现
+ *
+ * @author  shengjinpeng
+ * @date    2016年11月9日
+ * @version jdk1.8
+ *
+ */
+@Repository("gwGoodsOutStoreDaoManage")
+public class GwGoodsOutStoreDaoImpl implements GwGoodsOutStoreDao{
+
+	@Resource
+	private BaseDao dao;
+	@Override
+	public int insert(GwGoodsOutStoreModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.goodsOutStore.insert",e);
+	}
+
+	@Override
+	public int delete(GwGoodsOutStoreModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwGoodsOutStoreModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.goodsOutStore.update",e);
+	}
+
+	@Override
+	public GwGoodsOutStoreModel selectOne(GwGoodsOutStoreModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwGoodsOutStoreModel> selectList(GwGoodsOutStoreModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.goodsOutStore.deleteById",id);
+	}
+
+	@Override
+	public GwGoodsOutStoreModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwGoodsOutStoreModel) dao.selectOne("gw.goodsOutStore.selectById",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.goodsOutStore.selectPageList", "gw.goodsOutStore.selectCount", params);
+	}
+
+	@Override
+	public List<GwGoodsOutStoreModel> getAllList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getMaxCode(String date) {
+		// TODO Auto-generated method stub
+		return (String)dao.selectOne("gw.goodsOutStore.selectMaxCode", date);
+	}
+
+}

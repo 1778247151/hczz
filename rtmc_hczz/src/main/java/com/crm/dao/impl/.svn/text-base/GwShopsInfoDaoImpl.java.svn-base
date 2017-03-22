@@ -1,0 +1,189 @@
+package com.crm.dao.impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.core.PagerModel;
+import com.crm.dao.GwShopsInfoDao;
+import com.crm.pojo.GwRoleModel;
+import com.crm.pojo.GwShopsInfoModel;
+/**
+ * 
+ * GwShopsInfoDaoImpl:商铺信息数据访问层的实现
+ *
+ * @author yumaochun
+ * @date  2016年3月11日
+ * @version  jdk1.8
+ *
+ */
+@Repository("gwShopsInfoDaoManage")
+public class GwShopsInfoDaoImpl implements GwShopsInfoDao{
+	
+	@Autowired
+	private BaseDao dao;
+	
+
+	@Override
+	public int insert(GwShopsInfoModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.shopsInfo.insert", e);
+	}
+
+	@Override
+	public int delete(GwShopsInfoModel e) {
+		// TODO Auto-generated method stub
+		return dao.delete("", e);
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwShopsInfoModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.shopsInfo.update", e);
+	}
+
+	@Override
+	public GwShopsInfoModel selectOne(GwShopsInfoModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwShopsInfoModel> selectList(GwShopsInfoModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.shopsInfo.deleteById", id);
+	}
+
+	@Override
+	public GwShopsInfoModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwShopsInfoModel) dao.selectOne("gw.shopsInfo.selectById", id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.shopsInfo.selectPageList", "gw.shopsInfo.selectCount", params);
+	}
+
+	
+
+	@Override
+	public GwShopsInfoModel getShopsByUnitId(String unId) {
+		// TODO Auto-generated method stub
+		return (GwShopsInfoModel) dao.selectOne("gw.shopsInfo.selectByUnitId", unId);
+	}
+
+	@Override
+	public BasePageResultVo getAllUnitInfoBybuildId(Map<String,Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.shopsInfo.selectListByBuild", "gw.shopsInfo.selectListByBuildCount", params);
+	}
+	@Override
+	public GwShopsInfoModel getShopsInfoByCode(String code) {
+		// TODO Auto-generated method stub
+		return (GwShopsInfoModel)dao.selectOne("gw.shopsInfo.selectByCode",code);
+	}
+
+	@Override
+	public int batchUpdateShopsInfoList(List<HashMap<String,Object>> list) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.shopsInfo.updateList", list);
+	}
+
+	@Override
+	public List<GwShopsInfoModel> getShopsInfoListById(List<HashMap<String, Object>> list) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.shopsInfo.selectByIds",list);
+	}
+
+	@Override
+	public BasePageResultVo getNotLeaseShopsList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.shopsInfo.selectNotLeaseShopsList", "gw.shopsInfo.selectNotLeaseShopsCount", params);
+	}
+
+	@Override
+	public List<GwShopsInfoModel> getShopsInfoByShopsLeaseId(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.shopsInfo.selectShopsInfoByMerchatnsId",params);
+	}
+
+	@Override
+	public BasePageResultVo getShopsInfoByIds(Map<String,Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.shopsInfo.selectByIDs", "gw.shopsInfo.selectCountByIds", params);
+	}
+
+	@Override
+	public int updateByUnitNumbers(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.shopsInfo.updateByUnitNumbers",params);
+	}
+
+	@Override
+	public int batchInsertShopsInfo(List<GwShopsInfoModel> shopsInfoList) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.shopsInfo.batchInsert",shopsInfoList);
+	}
+
+	@Override
+	public int updateByUnitNumber(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.shopsInfo.updateByUnitNumber",params);
+	}
+
+	@Override
+	public List<GwShopsInfoModel> getShopsInfoByCondition(Map params) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.shopsInfo.selectListByCondition",params);
+	}
+	@Override
+	public List<GwShopsInfoModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.shopsInfo.selectList");
+	}
+	
+	@Override
+	public int batchInsert(List<GwShopsInfoModel> list) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.shopsInfo.batchInsert", list);
+	}
+
+	@Override
+	public int batchUpdate(List<GwShopsInfoModel> list) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.shopsInfo.batchUpdate", list);
+	}
+
+	@Override
+	public int batchDelete(List<GwShopsInfoModel> list) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.shopsInfo.batchDelete", list);
+	}
+
+	@Override
+	public int deleteAll() {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.shopsInfo.deleteAll");
+	}
+	
+	
+}

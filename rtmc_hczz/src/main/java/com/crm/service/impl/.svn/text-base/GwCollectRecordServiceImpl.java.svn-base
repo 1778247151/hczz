@@ -1,0 +1,40 @@
+package com.crm.service.impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwCollectRecordDao;
+import com.crm.pojo.GwCollectRecordModel;
+import com.crm.service.GwCollectRecordService;
+
+/**
+ * 
+ * GwCollectRecordServiceImpl:失物领取记录业务逻辑层实现
+ *
+ * @author chengpengfei
+ * @date  2016年6月24日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwCollectRecordServiceManage")
+public class GwCollectRecordServiceImpl extends ServersManager<GwCollectRecordModel, GwCollectRecordDao> implements GwCollectRecordService{
+
+	@Resource(name="gwCollectRecordDaoManage")
+	@Override
+	public void setDao(GwCollectRecordDao dao) {
+		// TODO Auto-generated method stub
+		this.dao = dao;
+		
+	}
+
+	@Override
+	public int bacthInsertCollectRecord(List<GwCollectRecordModel> list) {
+		// TODO Auto-generated method stub
+		return dao.bacthInsertCollectRecord(list);
+	}
+
+}

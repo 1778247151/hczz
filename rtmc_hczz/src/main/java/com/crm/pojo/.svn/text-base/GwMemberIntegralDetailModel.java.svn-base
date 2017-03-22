@@ -1,0 +1,114 @@
+package com.crm.pojo;
+
+import java.io.Serializable;
+
+import com.crm.enums.IntergralTypeEnum;
+
+/**
+ * 
+ * 描述：会员信息实体类
+ * 
+ * @author hanzhiqiang
+ * @date 2016年11月2日
+ * @version jdk1.8
+ */
+public class GwMemberIntegralDetailModel implements Serializable {
+	/**
+	* 
+	*/
+	private static final long serialVersionUID = 7812847991612860252L;
+
+	private Integer id;
+
+	private String memberCode;
+
+	private String cardCode;
+
+	private String intergralTime;
+
+	private Integer credit;
+
+	private String note;
+
+	private Integer intergralNum;
+
+
+
+	private Integer intergralType;
+
+	private String userName;
+
+	private String intergralTypeName;
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getCardCode() {
+		return cardCode;
+	}
+
+	public void setCardCode(String cardCode) {
+		this.cardCode = cardCode;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getMemberCode() {
+		return memberCode;
+	}
+
+	public void setMemberCode(String memberCode) {
+		this.memberCode = memberCode;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+	public String getIntergralTime() {
+		return intergralTime;
+	}
+
+	public void setIntergralTime(String intergralTime) {
+		this.intergralTime = intergralTime;
+	}
+
+	public Integer getIntergralNum() {
+		return intergralNum;
+	}
+
+	public void setIntergralNum(Integer intergralNum) {
+		this.intergralNum = intergralNum;
+	}
+
+	public Integer getIntergralType() {
+		return intergralType;
+	}
+
+	public void setIntergralType(Integer intergralType) {
+		this.intergralType = intergralType;
+	}
+
+	public String getIntergralTypeName() {
+		return IntergralTypeEnum.getDisplayName(getIntergralType());
+	}
+
+	public void setIntergralTypeName(String intergralTypeName) {
+		this.intergralTypeName = intergralTypeName;
+	}
+
+}

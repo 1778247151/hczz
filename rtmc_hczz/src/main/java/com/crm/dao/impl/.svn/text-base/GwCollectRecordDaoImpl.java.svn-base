@@ -1,0 +1,95 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwCollectRecordDao;
+import com.crm.pojo.GwCollectRecordModel;
+
+/**
+ * 
+ * GwCollectRecordDaoImpl:失物领取记录数据访问层实现
+ *
+ * @author chengpengfei
+ * @date  2016年6月24日
+ * @version  jdk1.8
+ *
+ */
+@Repository("gwCollectRecordDaoManage")
+public class GwCollectRecordDaoImpl implements GwCollectRecordDao{
+
+	@Resource
+	private BaseDao dao;
+	@Override
+	public int insert(GwCollectRecordModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.collectRecord.insertSelective",e);
+	}
+
+	@Override
+	public int delete(GwCollectRecordModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwCollectRecordModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.collectRecord.updateByPrimaryKeySelective",e);
+	}
+
+	@Override
+	public GwCollectRecordModel selectOne(GwCollectRecordModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwCollectRecordModel> selectList(GwCollectRecordModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.collectRecord.deleteByPrimaryKey",id);
+	}
+
+	@Override
+	public GwCollectRecordModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwCollectRecordModel) dao.selectOne("gw.collectRecord.selectByPrimaryKey",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.collectRecord.selectByPageList", "gw.collectRecord.selectByPageCount", params);
+	}
+
+	@Override
+	public List<GwCollectRecordModel> getAllList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int bacthInsertCollectRecord(List<GwCollectRecordModel> list) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.collectRecord.batchInsert",list);
+	}
+
+}

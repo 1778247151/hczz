@@ -1,0 +1,57 @@
+package com.crm.service.impl;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwApiAccountDao;
+import com.crm.pojo.GwApiAccountModel;
+import com.crm.service.GwApiAccountService;
+
+/**
+ * 
+ * 
+ * GwApiAccountServiceImpl:用户认证账号业务逻辑层的实现
+ *
+ * @author  yumaochun
+ * @date    2016年9月19日
+ * @version jdk1.8
+ *
+ */
+@Service("apiAccountServiceManage")
+public class GwApiAccountServiceImpl extends ServersManager<GwApiAccountModel, GwApiAccountDao>
+		implements GwApiAccountService {
+	
+	/**
+	 * 认证用户数据访问 层接口的实现
+	 */
+	@Resource(name = "apiAccountDaoManage")
+	@Override
+	public void setDao(GwApiAccountDao dao) {
+		this.dao = dao;
+	}
+
+	@Override
+	public GwApiAccountModel getApiAccountById(int id) {
+		return dao.getApiAccountById(id);
+	}
+
+	@Override
+	public int updateApiAccount(GwApiAccountModel apiAccount) {
+		return dao.updateApiAccount(apiAccount);
+	}
+
+	@Override
+	public GwApiAccountModel getApiAccountByAccount(String account) {
+		// TODO Auto-generated method stub
+		return dao.getApiAccountByAccount(account);
+	}
+
+	@Override
+	public int updateApiAccountToken(GwApiAccountModel apiAccount) {
+		// TODO Auto-generated method stub
+		return dao.updateApiAccountToken(apiAccount);
+	}
+
+}

@@ -1,0 +1,142 @@
+package com.crm.pojo;
+
+import java.math.BigDecimal;
+
+import com.crm.enums.ActivityStatusEnum;
+
+public class GwSettlementPaymentTenderModel {
+    private Integer id;
+
+    private String code;
+
+    private Integer gwMallInfoId;
+
+    private String paymentname;
+
+    private BigDecimal exchrate;
+
+    private BigDecimal chargerate;
+
+    private String beizhu;
+
+    private Integer lastmodbyUserid;
+
+    private String lasttime;
+
+    private Integer state;
+    
+    private String stateName;
+    /**
+     * 购物中心名称
+     */
+    private String mallName;
+    /**
+     * 最后修改用户名字
+     */
+    private String lastmodbyuserName;
+
+    
+    public String getMallName() {
+		return mallName;
+	}
+
+	public void setMallName(String mallName) {
+		this.mallName = mallName;
+	}
+
+	public String getLastmodbyuserName() {
+		return lastmodbyuserName;
+	}
+
+	public void setLastmodbyuserName(String lastmodbyuserName) {
+		this.lastmodbyuserName = lastmodbyuserName;
+	}
+
+	public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code == null ? null : code.trim();
+    }
+
+    public Integer getGwMallInfoId() {
+        return gwMallInfoId;
+    }
+
+    public void setGwMallInfoId(Integer gwMallInfoId) {
+        this.gwMallInfoId = gwMallInfoId;
+    }
+
+    public String getPaymentname() {
+        return paymentname;
+    }
+
+    public void setPaymentname(String paymentname) {
+        this.paymentname = paymentname == null ? null : paymentname.trim();
+    }
+
+    public BigDecimal getExchrate() {
+        return exchrate;
+    }
+
+    public void setExchrate(BigDecimal exchrate) {
+        this.exchrate = exchrate;
+    }
+
+    public BigDecimal getChargerate() {
+        return chargerate;
+    }
+
+    public void setChargerate(BigDecimal chargerate) {
+        this.chargerate = chargerate;
+    }
+
+    public String getBeizhu() {
+        return beizhu;
+    }
+
+    public void setBeizhu(String beizhu) {
+        this.beizhu = beizhu == null ? null : beizhu.trim();
+    }
+
+    public Integer getLastmodbyUserid() {
+        return lastmodbyUserid;
+    }
+
+    public void setLastmodbyUserid(Integer lastmodbyUserid) {
+        this.lastmodbyUserid = lastmodbyUserid;
+    }
+
+    public String getLasttime() {
+        return lasttime;
+    }
+
+    public void setLasttime(String lasttime) {
+        this.lasttime = lasttime;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+	public String getStateName() {
+		return ActivityStatusEnum.getDisplayName(state);
+	}
+
+	public void setStateName(String stateName) {
+		this.stateName = stateName;
+	}
+}

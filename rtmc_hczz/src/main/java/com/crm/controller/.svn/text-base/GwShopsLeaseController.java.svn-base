@@ -1,0 +1,511 @@
+package com.crm.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.QueryConditon;
+import com.crm.common.SecurityUtil;
+import com.crm.pojo.GwMemberGradeDetailModel;
+import com.crm.pojo.GwPromotionIntegralScopeModel;
+import com.crm.pojo.GwShopsLeaseModel;
+import com.crm.service.GwMemberGradeDetailService;
+import com.crm.service.GwPromotionIntegralScopeService;
+import com.crm.service.GwShopsLeaseService;
+import com.crm.util.DateUtil;
+import com.crm.util.QueryConditionUtil;
+import com.crm.util.ValidateUtil;
+
+/**
+ * 
+ * GwBaseIntegralController:店铺访问控制层
+ *
+ * @author xiangtao
+ * @date 2016年6月20日
+ * @version jdk.8
+ *
+ */
+@Controller
+@RequestMapping("/shoplease")
+public class GwShopsLeaseController {
+	/**
+	 * 店铺业务逻辑
+	 */
+	@Resource(name = "gwShopsLeaseServiceManage")
+	private GwShopsLeaseService gwShopsLeaseServiceImpl;
+
+	//促销积分规则逻辑
+	@Resource(name="gwPromotionIntegralScopeServiceManage")
+	private GwPromotionIntegralScopeService gwPromotionIntegralScopeService;
+	
+	/**
+	 * 会员等级设置适用范围业务逻辑
+	 */
+	@Resource(name="gwMemberGradeDetailServiceManage")
+	private GwMemberGradeDetailService gwMemberGradeDetailServiceImpl;
+	
+	/**
+	 * 
+	 * getAllShopLease:获取所有店铺list
+	 * 
+	 * @date 2016年6月20日
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getAllShopLease.do")
+	@ResponseBody
+	public List<GwShopsLeaseModel> getAllShopLease(HttpServletRequest request) {
+		List<GwShopsLeaseModel> list = gwShopsLeaseServiceImpl.getAllList();
+		return list;
+	}
+	
+	/**
+	 * 
+	 * getShopLeaseTree:获取所有店铺树结构     
+	 *
+	 * @author xiangtao
+	 * @date 2016年6月20日
+	 * @return
+	 */
+	@RequestMapping("/getShopLeaseTree.do")
+	@ResponseBody
+	public List<Map<String,Object>> getShopLeaseTree(){
+		List<GwShopsLeaseModel> slList=gwShopsLeaseServiceImpl.getAllList();
+		
+		List<Map<String,Object>> list=new ArrayList<>();
+		Map<String, Object> mapTop=new HashMap<>();
+		mapTop.put("id", -1);
+		mapTop.put("pid",-2);
+		mapTop.put("text", "所有店铺");
+		mapTop.put("isExpand", false);
+		list.add(mapTop);
+		for (GwShopsLeaseModel slTree : slList) {
+			Map<String, Object> map=new HashMap<>();
+			map.put("id", slTree.getCode());
+			map.put("pid", -1);
+			map.put("text", slTree.getName());
+			map.put("isExpand", false);
+			list.add(map);
+		}
+		return list;
+	}
+	
+	/**
+	 * 
+	 * getAllShpoLease:
+	 * 获取所有店铺集合
+	 * @author hemingjun
+	 * @date 2016年8月26日
+	 * @return
+	 */
+	public List<Map<String,Object>> getAllShpoLease(){
+		List<Map<String,Object>> list=new ArrayList<>();
+//		List<GwShopsLeaseModel> slList=gwShopsLeaseServiceImpl.getAllList();
+//		Map<String, Object> map=new HashMap<>();
+//		for (GwShopsLeaseModel slTree : slList) {
+//			map.put("code", slTree.getCode());
+//			map.put("name", slTree.getName());
+//			list.add(map);
+//		}
+		return list;
+	}
+	
+	/**
+	 * 
+	 * getShopLeaseTreeRemoveScope:获取所有店铺树结构并移除促销积分规则里已有店铺
+	 *
+	 * @author xiangtao
+	 * @date 2016年6月20日
+	 * @return
+	 */
+	@RequestMapping("/getShopLeaseTreeRemoveScope.do")
+	@ResponseBody
+	public List<Map<String,Object>> getShopLeaseTreeRemoveScope(String code,HttpServletRequest request){
+		HttpSession session = request.getSession();
+		List<GwPromotionIntegralScopeModel> scopelistAdd = new ArrayList<>();
+		if("1".equals(code)){
+			@SuppressWarnings("unchecked")
+			List<GwPromotionIntegralScopeModel> promotionIntegralScopeList = (List<GwPromotionIntegralScopeModel>) session.getAttribute("integralScopeList");
+			if (promotionIntegralScopeList!=null) {
+				for (GwPromotionIntegralScopeModel model : promotionIntegralScopeList) {
+					if (model.getType() == 1) {
+						scopelistAdd.add(model);
+					}
+				}
+			}
+		}else{
+			@SuppressWarnings("unchecked")
+			List<GwPromotionIntegralScopeModel> promotionIntegralScopeList = (List<GwPromotionIntegralScopeModel>) session.getAttribute("integralScopeListUpdate");
+			if (promotionIntegralScopeList!=null) {
+				for (GwPromotionIntegralScopeModel model : promotionIntegralScopeList) {
+					if (model.getType() == 1) {
+						scopelistAdd.add(model);
+					}
+				}
+			}
+		}
+		List<GwShopsLeaseModel> slList=gwShopsLeaseServiceImpl.getAllList();
+		//获取所有所有店铺促销规则
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("Type", "1");
+		params.put("code", code);
+		List<GwPromotionIntegralScopeModel> scopelist = gwPromotionIntegralScopeService.getListByCode(params);
+		if(scopelist!=null&&scopelist.size()>0){
+			for (GwPromotionIntegralScopeModel model : scopelist) {
+				scopelistAdd.add(model);
+			}
+		}
+		
+		List<Map<String,Object>> list=new ArrayList<>();
+		for (GwShopsLeaseModel slTree : slList) {
+			boolean flag = false;
+			//过滤已经有的编号
+			for (GwPromotionIntegralScopeModel sl : scopelistAdd) {
+				if(slTree.getCode().equals(sl.getTypeCode())){
+					flag = true;
+					break;
+				}
+			}
+			if(flag){
+				flag = false;
+				continue;
+			}
+			
+			
+			Map<String, Object> map=new HashMap<>();
+			map.put("id", slTree.getCode());
+			map.put("pid", -1);
+			map.put("text", slTree.getName());
+			map.put("isExpand", false);
+			list.add(map);
+		}
+		if(list.size()!=0){
+			Map<String, Object> mapTop=new HashMap<>();
+			mapTop.put("id", -1);
+			mapTop.put("pid",-2);
+			mapTop.put("text", "所有店铺");
+			mapTop.put("isExpand", false);
+			list.add(mapTop);
+		}
+		return list;
+	}
+	
+	
+	
+	
+	/**
+	 * 
+	 * getShopLeaseTreeRemoveMember:获取所有店铺树结构并移除会员等级设置里已有店铺
+	 *
+	 * @author xiangtao
+	 * @date 2016年6月20日
+	 * @return
+	 */
+	@RequestMapping("/getShopLeaseTreeRemoveMember.do")
+	@ResponseBody
+	public List<Map<String,Object>> getShopLeaseTreeRemoveMember(String code){
+		List<GwShopsLeaseModel> slList=gwShopsLeaseServiceImpl.getAllList();
+		
+		//获取所有所有店铺促销规则
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("type", "1");
+		params.put("code", code);
+		List<GwMemberGradeDetailModel> gradeList = gwMemberGradeDetailServiceImpl.getMemberGradeDetailListByCodeAndType(params);
+		
+		List<Map<String,Object>> list=new ArrayList<>();
+		for (GwShopsLeaseModel slTree : slList) {
+			boolean flag = false;
+			//过滤已经有的编号
+			for (GwMemberGradeDetailModel sl : gradeList) {
+				if(slTree.getCode().equals(sl.getTypeCode())){
+					flag = true;
+					break;
+				}
+			}
+			if(flag){
+				flag = false;
+				continue;
+			}
+			
+			
+			Map<String, Object> map=new HashMap<>();
+			map.put("id", slTree.getCode());
+			map.put("pid", -1);
+			map.put("text", slTree.getName());
+			map.put("isExpand", false);
+			list.add(map);
+		}
+		if(list.size()!=0){
+			Map<String, Object> mapTop=new HashMap<>();
+			mapTop.put("id", -1);
+			mapTop.put("pid",-2);
+			mapTop.put("text", "所有店铺");
+			mapTop.put("isExpand", false);
+			list.add(mapTop);
+		}
+		return list;
+	}
+	
+	/**
+	 * 
+	 * getShopLeaseTree:获取所有店铺树结构
+	 *
+	 * @author chengpengfei
+	 * @date 2016年6月20日
+	 * @return
+	 */
+	@RequestMapping("/getShopLeaseTreeList.do")
+	@ResponseBody
+	public List<Map<String,Object>> getShopLeaseTreeList(){
+		List<GwShopsLeaseModel> slList=gwShopsLeaseServiceImpl.getAllList();
+		
+		List<Map<String,Object>> list=new ArrayList<>();
+		for (GwShopsLeaseModel slTree : slList) {
+			Map<String, Object> map=new HashMap<>();
+			map.put("id", slTree.getCode());
+			map.put("pid", -1);
+			map.put("text", slTree.getName());
+			map.put("isExpand", false);
+			list.add(map);
+		}
+		if(list.size()!=0){
+			Map<String, Object> mapTop=new HashMap<>();
+			mapTop.put("id", -1);
+			mapTop.put("pid",-2);
+			mapTop.put("text", "所有店铺");
+			mapTop.put("isExpand", false);
+			list.add(mapTop);
+		}
+		return list;
+	}
+	
+	/**
+	 * 
+	 * addShopsLease:添加店铺信息
+	 *
+	 * @date 2016年3月10日 
+	 * @param ShopsLease            店铺信息对象
+	 * @return
+	 */
+	@RequestMapping("/addShopsLease.do")
+	@ResponseBody
+	public BaseResultVo addShopsLease(GwShopsLeaseModel shopsLease,HttpServletRequest request){
+		Integer userid = SecurityUtil.getAdminUser(request).getUserId();
+		if(!ValidateUtil.isLengthRangeStr(shopsLease.getCode(),4,20)){
+			return BaseResultVo.responseFail("店铺编号为4-20位的字符串");
+		}
+		
+		shopsLease.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		shopsLease.setCreateUser(userid);
+		shopsLease.setState(1);
+		GwShopsLeaseModel shopsleaseMode = gwShopsLeaseServiceImpl.getShopsLeaseByCode(shopsLease.getCode()); 
+		if(shopsleaseMode!=null){
+			return BaseResultVo.responseFail("店铺编号已存在");
+		}
+		int num=gwShopsLeaseServiceImpl.insert(shopsLease);
+		if(num<=0){
+			BaseResultVo.responseFail("添加店铺信息失败");
+		}
+		
+		return BaseResultVo.responseSuccess("添加店铺信息成功");
+	}
+	
+	/**
+	 * 
+	 * getShopsLeasePageList:店铺信息管理（分页）
+	 *
+	 * @date 2016年5月16日
+	 * @param currentPage     当前页码
+	 * @param pageSize        每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getShopsLeasePageList.do")
+	@ResponseBody
+	public LigerPageDataVo getShopsLeasePageList(int currentPage,int pageSize,String shopsLeaseName,String shopsLeaseCode,Integer merchantsInfoId,Integer state,HttpServletRequest request){
+		
+		//条件参数
+		Map<String, Object> params=new HashMap<String, Object>();
+		
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("shopsLeaseName", shopsLeaseName);
+		params.put("shopsLeaseCode",shopsLeaseCode);
+		params.put("merchantsInfoId",merchantsInfoId);
+		params.put("state",state);
+		BasePageResultVo baseResultVo=gwShopsLeaseServiceImpl.selectPageList(params);
+		//liger ui 分页格式数据
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 
+	 * getShopsLeaseById:根据店铺id，获取店铺信息
+	 *
+	 * @date 2016年5月16日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getShopsLeaseById.do")
+	@ResponseBody
+	public BaseResultVo getShopsLeaseById(int id,HttpServletRequest request){
+		if(id==0){
+			return BaseResultVo.responseFail("数据异常");
+		}
+		//获取商铺信息信息
+		GwShopsLeaseModel shopslease=gwShopsLeaseServiceImpl.selectById(id);
+		if(shopslease==null){
+			return BaseResultVo.responseFail("获取店铺信息失败");
+		}
+		BaseResultVo baseResultVo=BaseResultVo.responseSuccess("获取店铺信息成功");
+		baseResultVo.setData(shopslease);
+		return baseResultVo;
+	}
+	
+	/**
+	 * 
+	 * deleteShopsLeaseById:根据店铺id，删除店铺信息(假删除)
+	 *
+	 * @date 2016年5月16日
+	 * @param id                  商铺信息id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/deleteShopsLeaseById.do")
+	@ResponseBody
+	public BaseResultVo deleteShopsLeaseById(int id,HttpServletRequest request){
+		if(id==0){
+			return BaseResultVo.responseFail("数据异常");
+		}
+		GwShopsLeaseModel shopsLease = new GwShopsLeaseModel();
+		shopsLease.setId(id);
+		shopsLease.setState(0);
+		//根据商铺信息id，删除商铺信息
+		int num=gwShopsLeaseServiceImpl.update(shopsLease);
+		if(num<=0){
+			return BaseResultVo.responseFail("删除店铺信息失败");
+		}
+		return BaseResultVo.responseSuccess("删除店铺信息成功");
+	}
+	
+	/**
+	 * 
+	 * updateShopsLease:更新店铺信息
+	 *
+	 * @date 2016年3月5日
+	 * @param ShopsLease       店铺信息对象
+	 * @return
+	 */
+	@RequestMapping("/updateShopsLease.do")
+	@ResponseBody
+	public BaseResultVo updateShopsLease(GwShopsLeaseModel shopsLease,HttpServletRequest request){
+		Integer userid = SecurityUtil.getAdminUser(request).getUserId();
+		//验证主键是否为空
+		if(shopsLease.getId()==0){
+			return BaseResultVo.responseFail("数据异常");
+		}
+		if(!ValidateUtil.isLengthRangeStr(shopsLease.getCode(),4,20)){
+			return BaseResultVo.responseFail("店铺编号为4-20位的字符串");
+		}
+		GwShopsLeaseModel shopslease=gwShopsLeaseServiceImpl.selectById(shopsLease.getId());
+		GwShopsLeaseModel shopsleaseMode = gwShopsLeaseServiceImpl.getShopsLeaseByCode(shopsLease.getCode()); 
+		if(!shopslease.getCode().equals(shopsLease.getCode())&&shopsleaseMode!=null){
+			return BaseResultVo.responseFail("店铺编号已存在");
+		}
+		//更新时间
+		shopsLease.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		shopsLease.setUpdateUser(userid);
+		//更新店铺信息
+		int num=gwShopsLeaseServiceImpl.update(shopsLease);
+		if(num<=0){
+			return BaseResultVo.responseFail("更新店铺信息失败");
+		}
+		
+		return BaseResultVo.responseSuccess("更新店铺信息成功");
+	}
+	
+	/**
+	 * 
+	 * getShopsLeaseList:获取店铺集合
+	 *
+	 * @date 2016年3月16日
+	 * @param mallid       购物中心id
+	 * @return
+	 */
+	@RequestMapping("/getShopsLeaseList.do")
+	@ResponseBody
+	public LigerPageDataVo getShopsLeaseList(QueryConditon queryCondition,Integer merchantsInfoId){
+		//查询条件数组字符串（前端传递的字符串名称需和xml查询名称一致）
+		String[] queryParamArr=new String[]{"shopsLeaseName"};
+		//获取分页参数信息map
+		Map<String, Object> params=QueryConditionUtil.getParamsMap(queryParamArr, queryCondition);
+		BasePageResultVo baseResultVo=gwShopsLeaseServiceImpl.selectPageList(params);
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	/**
+	 * 
+	 * getShopsLeaseListByCoufrim:获取已经审核的店铺集合
+	 *
+	 * @date 2016年3月16日
+	 * @param 
+	 * @return
+	 */
+	@RequestMapping("/getShopsLeaseListByCoufrim.do")
+	@ResponseBody
+	public LigerPageDataVo getShopsLeaseListByCoufrim(QueryConditon queryCondition){
+		//查询条件数组字符串（前端传递的字符串名称需和xml查询名称一致）
+		String[] queryParamArr=new String[]{"shopsLeaseName"};
+		//获取分页参数信息map
+		Map<String, Object> params=QueryConditionUtil.getParamsMap(queryParamArr, queryCondition);
+		BasePageResultVo baseResultVo=gwShopsLeaseServiceImpl.selectPageList(params);
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+	
+	/**
+	 * 
+	 * getAllListByCoufrim:获取所有店铺集合通过条件
+	 *
+	 * @date 2016年6月20日
+	 * @param 
+	 * @return
+	 */
+	@SuppressWarnings("null")
+	@RequestMapping("/getAllListByCondition.do")
+	@ResponseBody
+	public LigerPageDataVo getAllListByCoufrim(QueryConditon queryCondition,String shopsLeaseName){
+		//查询条件数组字符串（前端传递的字符串名称需和xml查询名称一致）
+		String[] queryParamArr=new String[]{"shopsLeaseName"};
+		//获取分页参数信息map
+		Map<String, Object> params=QueryConditionUtil.getParamsMap(queryParamArr, queryCondition);
+		if(shopsLeaseName!=null&&shopsLeaseName!=""){
+			params.put("shopsLeaseName", shopsLeaseName);
+		}
+		BasePageResultVo basePageResultVo=gwShopsLeaseServiceImpl.selectPageList(params);
+		LigerPageDataVo data=new LigerPageDataVo();
+		data.setRows(basePageResultVo.getRows());
+		data.setTotal(basePageResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+}

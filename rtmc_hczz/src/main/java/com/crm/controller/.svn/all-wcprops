@@ -1,0 +1,443 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/gw_crm/!svn/ver/532/gdws_crm/src/main/java/com/crm/controller
+END
+GwMembersGradeController.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/gw_crm/!svn/ver/308/gdws_crm/src/main/java/com/crm/controller/GwMembersGradeController.java
+END
+GwAddressBookController.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/gw_crm/!svn/ver/401/gdws_crm/src/main/java/com/crm/controller/GwAddressBookController.java
+END
+GwGoodsInStoreDetailController.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/gw_crm/!svn/ver/150/gdws_crm/src/main/java/com/crm/controller/GwGoodsInStoreDetailController.java
+END
+GwDepartmentController.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/gw_crm/!svn/ver/180/gdws_crm/src/main/java/com/crm/controller/GwDepartmentController.java
+END
+GwShopsLeaseController.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/gw_crm/!svn/ver/482/gdws_crm/src/main/java/com/crm/controller/GwShopsLeaseController.java
+END
+GwPromotionIntegralScopeController.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/gw_crm/!svn/ver/512/gdws_crm/src/main/java/com/crm/controller/GwPromotionIntegralScopeController.java
+END
+GwbrandtreeController.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/gw_crm/!svn/ver/201/gdws_crm/src/main/java/com/crm/controller/GwbrandtreeController.java
+END
+GwGroupInfoController.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/gw_crm/!svn/ver/107/gdws_crm/src/main/java/com/crm/controller/GwGroupInfoController.java
+END
+GwPromotionIntegralController.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/gw_crm/!svn/ver/512/gdws_crm/src/main/java/com/crm/controller/GwPromotionIntegralController.java
+END
+GwSynchronizeMisDataController.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/gw_crm/!svn/ver/512/gdws_crm/src/main/java/com/crm/controller/GwSynchronizeMisDataController.java
+END
+GwNoticeController.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/gw_crm/!svn/ver/166/gdws_crm/src/main/java/com/crm/controller/GwNoticeController.java
+END
+GwCustomerComplainViewTypeController.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/gw_crm/!svn/ver/272/gdws_crm/src/main/java/com/crm/controller/GwCustomerComplainViewTypeController.java
+END
+GwMailRecordController.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/gw_crm/!svn/ver/533/gdws_crm/src/main/java/com/crm/controller/GwMailRecordController.java
+END
+GwRepeatVisitDetailController.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/gw_crm/!svn/ver/166/gdws_crm/src/main/java/com/crm/controller/GwRepeatVisitDetailController.java
+END
+GwTranssalestotalController.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/gw_crm/!svn/ver/208/gdws_crm/src/main/java/com/crm/controller/GwTranssalestotalController.java
+END
+GwMenuTreeController.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/gw_crm/!svn/ver/451/gdws_crm/src/main/java/com/crm/controller/GwMenuTreeController.java
+END
+GwCustomerComplainController.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/gw_crm/!svn/ver/166/gdws_crm/src/main/java/com/crm/controller/GwCustomerComplainController.java
+END
+GwActivityMemberController.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/gw_crm/!svn/ver/415/gdws_crm/src/main/java/com/crm/controller/GwActivityMemberController.java
+END
+GwClubController.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/gw_crm/!svn/ver/442/gdws_crm/src/main/java/com/crm/controller/GwClubController.java
+END
+GwMarketMISBaseController.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/gw_crm/!svn/ver/280/gdws_crm/src/main/java/com/crm/controller/GwMarketMISBaseController.java
+END
+GwformatstreeController.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/gw_crm/!svn/ver/484/gdws_crm/src/main/java/com/crm/controller/GwformatstreeController.java
+END
+GwgoodstreeController.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/gw_crm/!svn/ver/107/gdws_crm/src/main/java/com/crm/controller/GwgoodstreeController.java
+END
+GwPresentInfoController.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/gw_crm/!svn/ver/346/gdws_crm/src/main/java/com/crm/controller/GwPresentInfoController.java
+END
+GwMemberBindingCardController.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/gw_crm/!svn/ver/410/gdws_crm/src/main/java/com/crm/controller/GwMemberBindingCardController.java
+END
+GwBaseIntegralController.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/gw_crm/!svn/ver/485/gdws_crm/src/main/java/com/crm/controller/GwBaseIntegralController.java
+END
+GwSmsRecordController.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/gw_crm/!svn/ver/533/gdws_crm/src/main/java/com/crm/controller/GwSmsRecordController.java
+END
+GwMallInfoController.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/gw_crm/!svn/ver/125/gdws_crm/src/main/java/com/crm/controller/GwMallInfoController.java
+END
+GwIntegralExchangeGoodsController.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/gw_crm/!svn/ver/178/gdws_crm/src/main/java/com/crm/controller/GwIntegralExchangeGoodsController.java
+END
+GwShopsInfoController.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/gw_crm/!svn/ver/224/gdws_crm/src/main/java/com/crm/controller/GwShopsInfoController.java
+END
+GwSysLoggerController.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/gw_crm/!svn/ver/274/gdws_crm/src/main/java/com/crm/controller/GwSysLoggerController.java
+END
+GwGoodsInStoreController.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/gw_crm/!svn/ver/528/gdws_crm/src/main/java/com/crm/controller/GwGoodsInStoreController.java
+END
+GwGoodsOutStoreController.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/gw_crm/!svn/ver/528/gdws_crm/src/main/java/com/crm/controller/GwGoodsOutStoreController.java
+END
+GwLockerRentalController.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/gw_crm/!svn/ver/472/gdws_crm/src/main/java/com/crm/controller/GwLockerRentalController.java
+END
+GwCustomerComplainTypeController.java
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/gw_crm/!svn/ver/284/gdws_crm/src/main/java/com/crm/controller/GwCustomerComplainTypeController.java
+END
+SystemController.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/gw_crm/!svn/ver/312/gdws_crm/src/main/java/com/crm/controller/SystemController.java
+END
+GwIntegralExchangeGoodsDetailController.java
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/gw_crm/!svn/ver/482/gdws_crm/src/main/java/com/crm/controller/GwIntegralExchangeGoodsDetailController.java
+END
+GwAresController.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/gw_crm/!svn/ver/107/gdws_crm/src/main/java/com/crm/controller/GwAresController.java
+END
+GwStoreController.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/gw_crm/!svn/ver/278/gdws_crm/src/main/java/com/crm/controller/GwStoreController.java
+END
+GwSendMessageController.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/gw_crm/!svn/ver/387/gdws_crm/src/main/java/com/crm/controller/GwSendMessageController.java
+END
+GwPickupMaintenanceController.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/gw_crm/!svn/ver/530/gdws_crm/src/main/java/com/crm/controller/GwPickupMaintenanceController.java
+END
+GwRepeatVisitController.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/gw_crm/!svn/ver/180/gdws_crm/src/main/java/com/crm/controller/GwRepeatVisitController.java
+END
+GwStockCheckDatailController.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/gw_crm/!svn/ver/448/gdws_crm/src/main/java/com/crm/controller/GwStockCheckDatailController.java
+END
+GwLoseMaintenanceController.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/gw_crm/!svn/ver/530/gdws_crm/src/main/java/com/crm/controller/GwLoseMaintenanceController.java
+END
+GwSalesController.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/gw_crm/!svn/ver/415/gdws_crm/src/main/java/com/crm/controller/GwSalesController.java
+END
+GwMemberGradeController.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/gw_crm/!svn/ver/521/gdws_crm/src/main/java/com/crm/controller/GwMemberGradeController.java
+END
+GwAdminUsersController.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/gw_crm/!svn/ver/512/gdws_crm/src/main/java/com/crm/controller/GwAdminUsersController.java
+END
+GwBuildingTreeController.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/gw_crm/!svn/ver/205/gdws_crm/src/main/java/com/crm/controller/GwBuildingTreeController.java
+END
+GwSettlementPaymentTenderController.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/gw_crm/!svn/ver/122/gdws_crm/src/main/java/com/crm/controller/GwSettlementPaymentTenderController.java
+END
+GwLeaseGoodsController.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/gw_crm/!svn/ver/274/gdws_crm/src/main/java/com/crm/controller/GwLeaseGoodsController.java
+END
+GwApiAccountController.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/gw_crm/!svn/ver/291/gdws_crm/src/main/java/com/crm/controller/GwApiAccountController.java
+END
+GwGoodsInfoController.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/gw_crm/!svn/ver/107/gdws_crm/src/main/java/com/crm/controller/GwGoodsInfoController.java
+END
+GwMembersRegTypeController.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/gw_crm/!svn/ver/308/gdws_crm/src/main/java/com/crm/controller/GwMembersRegTypeController.java
+END
+GwMembersController.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/gw_crm/!svn/ver/415/gdws_crm/src/main/java/com/crm/controller/GwMembersController.java
+END
+GwActivityController.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/gw_crm/!svn/ver/394/gdws_crm/src/main/java/com/crm/controller/GwActivityController.java
+END
+GwMisSettlementPaymentTenderController.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/gw_crm/!svn/ver/122/gdws_crm/src/main/java/com/crm/controller/GwMisSettlementPaymentTenderController.java
+END
+GwMemberGradeDetailController.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/gw_crm/!svn/ver/521/gdws_crm/src/main/java/com/crm/controller/GwMemberGradeDetailController.java
+END
+GwmerchantsinfoController.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/gw_crm/!svn/ver/280/gdws_crm/src/main/java/com/crm/controller/GwmerchantsinfoController.java
+END
+GwRoleController.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/gw_crm/!svn/ver/155/gdws_crm/src/main/java/com/crm/controller/GwRoleController.java
+END
+GwMemberCardController.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/gw_crm/!svn/ver/407/gdws_crm/src/main/java/com/crm/controller/GwMemberCardController.java
+END
+GwTypeTreeController.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/gw_crm/!svn/ver/272/gdws_crm/src/main/java/com/crm/controller/GwTypeTreeController.java
+END
+GwPropertyAttributeController.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/gw_crm/!svn/ver/107/gdws_crm/src/main/java/com/crm/controller/GwPropertyAttributeController.java
+END
+GwClubDetailController.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/gw_crm/!svn/ver/518/gdws_crm/src/main/java/com/crm/controller/GwClubDetailController.java
+END
+GwAreaController.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/gw_crm/!svn/ver/166/gdws_crm/src/main/java/com/crm/controller/GwAreaController.java
+END
+GwRoleGroupController.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/gw_crm/!svn/ver/11/gdws_crm/src/main/java/com/crm/controller/GwRoleGroupController.java
+END
+GwPaymentTenderController.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/gw_crm/!svn/ver/318/gdws_crm/src/main/java/com/crm/controller/GwPaymentTenderController.java
+END
+GwLockerController.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/gw_crm/!svn/ver/472/gdws_crm/src/main/java/com/crm/controller/GwLockerController.java
+END
+GwMemberIntegralDetailController.java
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/gw_crm/!svn/ver/390/gdws_crm/src/main/java/com/crm/controller/GwMemberIntegralDetailController.java
+END
+GwStockCheckController.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/gw_crm/!svn/ver/470/gdws_crm/src/main/java/com/crm/controller/GwStockCheckController.java
+END
+GwCollectRecordController.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/gw_crm/!svn/ver/150/gdws_crm/src/main/java/com/crm/controller/GwCollectRecordController.java
+END
+GwStoreGoodsController.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/gw_crm/!svn/ver/436/gdws_crm/src/main/java/com/crm/controller/GwStoreGoodsController.java
+END
+GwDepartmentPositionController.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/gw_crm/!svn/ver/180/gdws_crm/src/main/java/com/crm/controller/GwDepartmentPositionController.java
+END
+GwMemberGradeIntegral.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/gw_crm/!svn/ver/304/gdws_crm/src/main/java/com/crm/controller/GwMemberGradeIntegral.java
+END
+GwLeaseMaintenanceController.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/gw_crm/!svn/ver/530/gdws_crm/src/main/java/com/crm/controller/GwLeaseMaintenanceController.java
+END

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.sys.logger" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwSysLoggerModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="operate_user_id" property="operateUserId" jdbcType="INTEGER" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="operate_time" property="operateTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, operate_user_id, description, ip, type, status, operate_time
+  </sql>
+  
+   <!-- 根据条件，获取分页数据list集合 -->
+  <select id="gw.sys.logger.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    id, (select u.name from gw_admin_users u where u.id = s.operate_user_id) as operateUser, description, ip, type, status, operate_time
+    from gw_sys_logger s where 1=1
+     <if test="description != null  and ''!=description" >
+         and  description like CONCAT(CONCAT('%', #{description,jdbcType=VARCHAR}), '%')
+     </if>
+     <if test="startTime != null  and ''!=startTime" >
+         and  operate_time &gt; #{startTime,jdbcType=VARCHAR}
+     </if>
+     <if test="endTime != null  and ''!=endTime" >
+         and  operate_time &lt; #{endTime,jdbcType=VARCHAR}
+     </if>
+   	and status = 1
+   	order by operate_time desc
+    
+    limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  <!-- 根据条件，总记录数 -->
+  <select id="gw.sys.logger.selectCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+   	select count(id) from gw_sys_logger where 1=1
+   	<if test="description != null  and ''!=description" >
+         and  description like CONCAT(CONCAT('%', #{description,jdbcType=VARCHAR}), '%')
+     </if>
+     <if test="startTime != null  and ''!=startTime" >
+         and  operate_time &gt; #{startTime,jdbcType=VARCHAR}
+     </if>
+     <if test="endTime != null  and ''!=endTime" >
+         and  operate_time &lt; #{endTime,jdbcType=VARCHAR}
+     </if>
+   	and status = 1
+  </select>
+  
+  <!-- 批量删除 -->
+	<delete id="gw.sys.logger.batchDelete" parameterType="java.util.List">
+		delete from gw_sys_logger where id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+  <select id="gw.sys.logger.selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_sys_logger
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.sys.logger.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_sys_logger
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.sys.logger.insertBatch" parameterType="com.crm.pojo.GwSysLoggerModel" >
+    insert into gw_sys_logger(
+       id,
+       operate_user_id,
+       operate_time,
+       description,
+       ip,
+       type,
+       status
+      )
+     values
+    <foreach collection="list" item="sysLoggerList" index="index" separator="," >
+    	 (
+	    	#{sysLoggerList.id,jdbcType=INTEGER},
+	        #{sysLoggerList.operateUserId,jdbcType=INTEGER},
+	        #{sysLoggerList.operateTime,jdbcType=VARCHAR},
+	        #{sysLoggerList.description,jdbcType=VARCHAR},
+	        #{sysLoggerList.ip,jdbcType=VARCHAR},
+	        #{sysLoggerList.type,jdbcType=VARCHAR},
+	        #{sysLoggerList.status,jdbcType=INTEGER}
+        )
+    </foreach>
+  </insert>
+  <insert id="gw.sys.logger.insert" parameterType="com.crm.pojo.GwSysLoggerModel" >
+    insert into gw_sys_logger
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="operateUserId != null" >
+        operate_user_id,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="ip != null" >
+        ip,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="operateTime != null" >
+        operate_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="operateUserId != null" >
+        #{operateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null" >
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="operateTime != null" >
+        #{operateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.sys.logger.update" parameterType="com.crm.pojo.GwSysLoggerModel" >
+    update gw_sys_logger
+    <set >
+      <if test="operateUserId != null" >
+        operate_user_id = #{operateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null" >
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="operateTime != null" >
+        operate_time = #{operateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,49 @@
+package com.crm.service.impl;
+
+import java.util.List;
+import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
+import com.crm.core.ServersManager;
+import com.crm.dao.GwGoodsOutStoreDetailDao;
+import com.crm.pojo.GwGoodsOutStoreDetailModel;
+import com.crm.service.GwGoodsOutStoreDetailService;
+
+/**
+ * 
+ * 
+ * GwGoodsOutStoreDetailServiceImpl:礼品出库业务层实现
+ *
+ * @author  shengjinpeng
+ * @date    2016年11月9日
+ * @version jdk1.8
+ *
+ */
+@Service("gwGoodsOutStoreDetailServiceManage")
+public class GwGoodsOutStoreDetailServiceImpl extends ServersManager<GwGoodsOutStoreDetailModel, GwGoodsOutStoreDetailDao> implements GwGoodsOutStoreDetailService{
+
+	@Resource(name="gwGoodsOutStoreDetailDaoManage")
+	@Override
+	public void setDao(GwGoodsOutStoreDetailDao dao) {
+		// TODO Auto-generated method stub
+		this.dao = dao;
+	}
+
+	@Override
+	public int batchInsert(List<GwGoodsOutStoreDetailModel> list) {
+		// TODO Auto-generated method stub
+		return dao.batchInsert(list);
+	}
+
+	@Override
+	public List<GwGoodsOutStoreDetailModel> getListByCode(String code) {
+		// TODO Auto-generated method stub
+		return dao.getListByCode(code);
+	}
+
+	@Override
+	public int deleteByCode(String code) {
+		// TODO Auto-generated method stub
+		return dao.deleteBycode(code);
+	}
+
+}

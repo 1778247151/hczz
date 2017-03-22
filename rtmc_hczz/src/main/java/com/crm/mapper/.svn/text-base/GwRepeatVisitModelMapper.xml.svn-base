@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.repeat.visit" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwRepeatVisitModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, code, title, content, status, create_user_id, create_time, update_user_id, update_time
+  </sql>
+  
+  <delete id="gw.repeat.visit.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_repeat_visit
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 根据条件，获取分页数据list集合 -->
+  <select id="gw.repeat.visit.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    n.id, n.title, n.code, n.content, (select u.name from gw_admin_users u where u.id = n.create_user_id) as createUserName, n.create_time createTime, 
+    (select u.name from gw_admin_users u where u.id = n.update_user_id) as updateUserName, n.update_time updateTime,
+    n.status
+    from gw_repeat_visit n 
+    <where>
+    	 <if test="title != null and '' != title">  
+	          n.title LIKE CONCAT(CONCAT('%', #{title,jdbcType=VARCHAR}), '%')         
+	    </if>
+	    <if test="content != null and '' != content">  
+	         and n.content LIKE CONCAT(CONCAT('%', #{content,jdbcType=VARCHAR}), '%')         
+	    </if>
+	     <if test="startTime != null and '' != startTime">  
+          and str_to_date(n.create_time, '%Y-%m-%d') &gt;= str_to_date(#{startTime,jdbcType=VARCHAR}, '%Y-%m-%d')
+	    </if>
+	    <if test="endTime != null and '' != endTime">  
+	          and str_to_date(n.create_time, '%Y-%m-%d') &lt;= str_to_date(#{endTime,jdbcType=VARCHAR}, '%Y-%m-%d')
+	    </if>
+    	and n.status = 1
+    </where>
+    limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  <!-- 根据条件，总记录数 -->
+  <select id="gw.repeat.visit.selectCount" resultType="java.lang.Integer">
+   	select count(id) from gw_repeat_visit where status = 1
+  </select>
+  
+  <select id="gw.repeat.visit.selectByLastOne" resultMap="BaseResultMap">
+   		SELECT
+			*
+		FROM
+			gw_repeat_visit a
+		WHERE
+			a.code LIKE CONCAT(CONCAT('%', #{time,jdbcType=VARCHAR}), '%') 
+		ORDER BY
+			a.id DESC
+		LIMIT 1
+  </select>
+  
+  
+  <select id="gw.repeat.visit.selectVisitByCode" resultMap="BaseResultMap" parameterType="java.lang.String" resultType="com.crm.pojo.GwRepeatVisitModel" >
+    select 
+    n.id, n.code, n.title, n.content, n.status, (select u.name from gw_admin_users u where u.id = n.create_user_id) as createUserName, n.create_time createTime, 
+    (select u.name from gw_admin_users u where u.id = n.update_user_id) as updateUserName, n.update_time updateTime
+    from gw_repeat_visit n
+    where n.code = #{visitCode,jdbcType=VARCHAR}
+  </select>
+  <select id="gw.repeat.visit.selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_repeat_visit
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from gw_repeat_visit
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.repeat.visit.insert" parameterType="com.crm.pojo.GwRepeatVisitModel" >
+    insert into gw_repeat_visit
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.repeat.visit.update" parameterType="com.crm.pojo.GwRepeatVisitModel" >
+    update gw_repeat_visit
+    <set >
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

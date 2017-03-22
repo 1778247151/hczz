@@ -1,0 +1,773 @@
+package com.crm.controller;
+
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.AdminUser;
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.QueryConditon;
+import com.crm.common.ResponseCode;
+import com.crm.common.SecurityUtil;
+import com.crm.common.Status;
+import com.crm.enums.CardStateEnum;
+import com.crm.enums.IntergralTypeEnum;
+import com.crm.enums.MembersCardTypeEnum;
+import com.crm.enums.SexNameEnum;
+import com.crm.enums.StatusEnum;
+import com.crm.interceptor.BussAnnotation;
+import com.crm.interceptor.exception.BaseException;
+import com.crm.pojo.GwMemberBindingCardModel;
+import com.crm.pojo.GwMemberCardModel;
+import com.crm.pojo.GwMemberIntegralDetailModel;
+import com.crm.pojo.GwMembersModel;
+import com.crm.pojo.GwSalesModel;
+import com.crm.service.GwMemberBindingCardService;
+import com.crm.service.GwMemberCardService;
+import com.crm.service.GwMemberIntegralDetailService;
+import com.crm.service.GwMembersService;
+import com.crm.service.GwSalesService;
+import com.crm.service.GwTranssalestotalService;
+import com.crm.util.DateUtil;
+import com.crm.util.ExcelUtil;
+import com.crm.util.QueryConditionUtil;
+
+/**
+ * 
+ * GwMembersController:会员访问控制层
+ *
+ * @author xiangtao
+ * @date 2016年6月20日
+ * @version jdk.8
+ *
+ */
+
+@Controller
+@RequestMapping("/members")
+public class GwMembersController extends BaseException {
+
+	// 日志
+	private Logger logger = LoggerFactory.getLogger(GwMembersController.class);
+
+	/**
+	 * 会员业务逻辑
+	 */
+	@Resource(name = "gwMembersServiceManage")
+	private GwMembersService gwMembersServiceImpl;
+	/**
+	 * 销售数据业务逻辑
+	 */
+	@Resource(name = "transsalestotalServiceManage")
+	private GwTranssalestotalService gwTranssalestotalServiceImpl;
+	/**
+	 * 销售数据获取积分业务逻辑层实现
+	 */
+	@Resource(name = "gwSalesServiceManage")
+	private GwSalesService salesServiceImpl;
+	/**
+	 * 会员积分明细业务逻辑层实现
+	 */
+	@Resource(name = "gwMemberIntegralDetailServiceManage")
+	private GwMemberIntegralDetailService gwMemberIntegralDetailServiceImpl;
+
+	/**
+	 * 会员绑卡管理业务逻辑
+	 */
+	@Resource(name = "gwMemberBindingCardServiceManage")
+	private GwMemberBindingCardService gwMemberBindingCardServiceImpl;
+	/**
+	 * 会员卡管理业务逻辑
+	 */
+	@Resource(name = "gwMemberCardServiceManage")
+	private GwMemberCardService gwMemberCardServiceImpl;
+
+	/**
+	 * 
+	 * getAllMembers:获取所有会员列表
+	 *
+	 * @date 206年3月5日
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getAllMembers.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员维护", option = "获取所有会员集合")
+	public List<GwMembersModel> getAllMembers(HttpServletRequest request) {
+		return gwMembersServiceImpl.getAllList();
+	}
+
+	/**
+	 * 
+	 * exportExcel:批量导出EXCEL
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/exportExcel.do")
+	@BussAnnotation(moduleName = "会员维护", option = "导出Excel")
+	public void exportExcel(HttpServletRequest request, HttpServletResponse response) {
+
+		List<GwMembersModel> list = gwMembersServiceImpl.getList();
+		List<GwMembersModel> newList = new ArrayList<>();
+		for (GwMembersModel model : list) {
+			model.setSexName(SexNameEnum.getDisplayName(model.getSex()));
+			model.setCardTypeName(MembersCardTypeEnum.getDisplayName(model.getCardType()));
+			newList.add(model);
+		}
+		String[] columnArr = { "cardCode", "cardTypeName", "vipCode", "gradeName", "credit", "userName", "sexName",
+				"phone", "birthTime" };
+		String[] headerAtrr = { "卡片编号", "卡片类型", "vip编号", "会员等级", "当前积分", "用户名", "性别", "手机号", "生日" };
+		int[] colWidthArr = { 20, 20, 20, 20, 20, 20, 20, 20, 20 };
+		try {
+			boolean flag = ExcelUtil.exportExcel("会员表", newList, columnArr, headerAtrr, colWidthArr, request, response);
+			if (!flag) {
+				logger.info("导出Excel出错");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * 
+	 * updateCredits:批量修改积分
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/updateCredits.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员维护", option = "修改")
+	public BaseResultVo updateCredits(String ids, Integer credit, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		String[] idsArr = ids.split(",");
+		List<GwMembersModel> memberList = new ArrayList<>();// 存放会员集合
+		for (int i = 0; i < idsArr.length; i++) {
+			GwMembersModel gwMembersModel = new GwMembersModel();
+			gwMembersModel.setId(Integer.parseInt(idsArr[i]));
+			gwMembersModel.setCredit(credit);
+			gwMembersServiceImpl.update(gwMembersModel);
+
+			GwMembersModel member = gwMembersServiceImpl.selectById(Integer.parseInt(idsArr[i]));
+			memberList.add(member);
+
+		}
+		for (GwMembersModel member : memberList) {
+			GwMemberIntegralDetailModel integralDetai = new GwMemberIntegralDetailModel();
+			integralDetai.setCardCode(member.getCardCode());
+			integralDetai.setIntergralTime(DateUtil.getCurrentDatetime("-"));
+			integralDetai.setMemberCode(member.getVipCode());
+			integralDetai.setIntergralNum(credit);
+			integralDetai.setIntergralType(IntergralTypeEnum.ADJUST.getValue());
+			if (memberList.size() < 2&&credit>0) {
+				integralDetai.setNote("积分调整");
+			} else if (credit == 0) {
+				integralDetai.setNote("积分清零");
+			} else {
+				integralDetai.setNote("积分批量调整");
+			}
+			gwMemberIntegralDetailServiceImpl.insert(integralDetai);
+		}
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * getMembersById:根据会员id，获取会员信息
+	 *
+	 * @date 206年3月5日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getMembersById.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员维护", option = "获取会员根据ID")
+	public BaseResultVo getMembersById(int id, HttpServletRequest request) {
+		
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		if (id == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");// 提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		// 获取会员信息
+		GwMembersModel gwMembersModel = gwMembersServiceImpl.selectById(id);
+		
+		baseResultVo.setData(gwMembersModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * addMembers 添加会员
+	 * 
+	 * @date 2016年6月20日
+	 * @param
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping("/addMembers.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员维护", option = "添加")
+	public BaseResultVo addMembers(GwMembersModel gwMembersModel, HttpServletRequest request)
+			throws UnsupportedEncodingException {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		List<GwMembersModel> memersList = gwMembersServiceImpl.getAllList();
+		for (GwMembersModel model : memersList) {
+			if (model.getPhone() != null && !"".equals(model.getPhone())) {
+				if (model.getPhone().equals(gwMembersModel.getPhone())) {
+					status.setCode(ResponseCode.API_PHONE_EXIST);
+					status.setMsg("注册失败，注册会员手机号已存在");
+					baseResultVo.setStatus(status);
+					return baseResultVo;
+				}
+
+			}
+			if (model.getCardCode() != null && !"".equals(model.getCardCode())) {
+				if (model.getCardCode().equals(gwMembersModel.getCardCode())) {
+					status.setCode(ResponseCode.OPR_FAIL);
+					status.setMsg("开卡失败，卡面编号已存在");
+					baseResultVo.setStatus(status);
+					return baseResultVo;
+				}
+			}
+		}
+		//根据会员卡号查询会员信息
+		GwMemberCardModel  gwMemberCardModel=	gwMemberCardServiceImpl.selectByCode(gwMembersModel.getCardCode());
+		Integer userid = SecurityUtil.getAdminUser(request).getUserId();
+		gwMembersModel.setCreateUserId(userid);
+		gwMembersModel.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		gwMembersModel.setUpdateUserId(userid);
+		//设置类型
+		gwMembersModel.setCardType(gwMemberCardModel.getCardType());
+		//设置等级
+		gwMembersModel.setGrade(gwMemberCardModel.getGrade());
+		if (gwMembersModel.getEffectiveTime() == null || "".equals(gwMembersModel.getEffectiveTime())) {
+			gwMembersModel.setEffectiveTime(DateUtil.getCurrentDatetime("-"));
+		}
+		//更新会员卡表状态
+		gwMemberCardModel.setStatus(CardStateEnum.PASSCONFIRM.getValue());
+		gwMemberCardServiceImpl.update(gwMemberCardModel);
+		//保存会员信息
+		gwMembersServiceImpl.insertMemberSynchronize(gwMembersModel);
+		//保存绑卡信息
+		GwMemberBindingCardModel GwMemberBindingCard = new GwMemberBindingCardModel();
+		// 获取创建人信息
+		AdminUser adminUser = SecurityUtil.getAdminUser(request);
+		String username = adminUser.getUsername();
+		// 更新人
+		GwMemberBindingCard.setCreateUserId(adminUser.getUserId());
+		// 更新
+		GwMemberBindingCard.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		// 绑卡时间
+		GwMemberBindingCard.setBindingDate(DateUtil.getCurrentDatetime("-"));
+		// 绑定卡号
+		GwMemberBindingCard.setCardCode(gwMembersModel.getCardCode());
+		// vip号
+		GwMemberBindingCard.setMemberCode(gwMembersModel.getVipCode());
+		// 保存一条绑卡记录
+		int num = gwMemberBindingCardServiceImpl.insert(GwMemberBindingCard);
+		
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * delMembersById:根据会员id，删除会员
+	 *
+	 * @date 2016年6月20日
+	 * @param id
+	 *            会员id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/delMembers.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员维护", option = "删除")
+	public BaseResultVo delMembersById(int id, String vipCode, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		if (id == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");// 提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+		List<GwSalesModel> salesList = salesServiceImpl.getListByMemberCode(vipCode);
+		if (salesList.size() > 0) {
+			return BaseResultVo.responseFail("会员已生成销售数据，不能删除");
+		}
+		List<GwMemberIntegralDetailModel> IntergralDetatilList = gwMemberIntegralDetailServiceImpl.getAllList();
+		for (GwMemberIntegralDetailModel model : IntergralDetatilList) {
+			if (model.getMemberCode().equals(vipCode)) {
+				return BaseResultVo.responseFail("会员已生成积分明细，不能删除");
+			}
+		}
+		List<GwMembersModel> memberList = gwMembersServiceImpl.getAllList();
+		for (GwMembersModel model : memberList) {
+			if (model.getVipCode().equals(vipCode) && model.getCredit() != 0) {
+				return BaseResultVo.responseFail("会员积分未清零，不能删除");
+			}
+		}
+		int num = gwMembersServiceImpl.deleteById(id);
+		if (num < 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("操作失败");// 提示信息
+		}
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * updateMembers:更新会员
+	 *
+	 * @date 2016年6月20日
+	 * @param gwMembersModel
+	 *            会员信息对象
+	 * @return
+	 */
+	@RequestMapping("/updateMembers.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员维护", option = "更新")
+	public BaseResultVo updateMembers(GwMembersModel gwMembersModel, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		// 验证主键是否为空
+		if (gwMembersModel.getId() == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		// 更新时间
+		gwMembersModel.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		int userid = SecurityUtil.getAdminUser(request).getUserId();
+		gwMembersModel.setUpdateUserId(userid);
+
+		// 更新会员信息
+		gwMembersServiceImpl.update(gwMembersModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * getMembersList:获取会员集合（分页）
+	 *
+	 * @date 2016年6月20日
+	 * @param page
+	 *            当前页码数
+	 * @param pagesize
+	 *            每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getMembersList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员维护", option = "获取所有会员列表")
+	public LigerPageDataVo getMembersList(String startTime, String endTime, int currentPage, int pageSize,
+			String cardCode, String vipCode, String phone, String type, String userName, String grade,
+			HttpServletRequest request) {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+
+		params.put("cardCode", cardCode);
+		params.put("type", type);
+		params.put("userName", userName);
+		params.put("grade", grade);
+		params.put("vipCode", vipCode);
+		params.put("phone", phone);
+		params.put("startTime", startTime);
+		params.put("endTime", endTime);
+		BasePageResultVo baseResultVo = gwMembersServiceImpl.selectPageList(params);
+
+		List<GwMembersModel> list = (List<GwMembersModel>) baseResultVo.getRows();
+		List<GwMembersModel> newList = new ArrayList<GwMembersModel>();
+		for (GwMembersModel m : list) {
+			String province = m.getProvinceName();
+			String city = m.getCityName();
+			String count = m.getCountyName();
+			String address = m.getAddress();
+			String detilAddr = "";
+			if (!(province == null) && !("".equals(province))) {
+				detilAddr = province + "省" + city + "市" + count + address;
+				m.setAddress(detilAddr);
+			}
+			newList.add(m);
+		}
+
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(newList);
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+
+	/**
+	 * 
+	 * getMembersListStatusUsing:获取启用的会员集合（分页）
+	 *
+	 * @date 2016年6月20日
+	 * @param page
+	 *            当前页码数
+	 * @param pagesize
+	 *            每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getMembersListStatusUsing.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员维护", option = "获取所有会员列表")
+	public LigerPageDataVo getMembersListStatusUsing(int currentPage, int pageSize, String cardCode, String vipCode,
+			String phone, String type, String userName, String grade, HttpServletRequest request) {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+
+		params.put("cardCode", cardCode);
+		params.put("type", type);
+		params.put("userName", userName);
+		params.put("grade", grade);
+		params.put("vipCode", vipCode);
+		params.put("phone", phone);
+		BasePageResultVo baseResultVo = gwMembersServiceImpl.selectPageList(params);
+
+		List<GwMembersModel> list = (List<GwMembersModel>) baseResultVo.getRows();
+		List<GwMembersModel> newList = new ArrayList<GwMembersModel>();
+		for (GwMembersModel m : list) {
+			if (m.getStatus() == StatusEnum.USING.getValue()) {
+				String province = m.getProvinceName();
+				String city = m.getCityName();
+				String count = m.getCountyName();
+				String address = m.getAddress();
+				String detilAddr = "";
+				if (!(province == null) && !("".equals(province))) {
+					detilAddr = province + "省" + city + "市" + count + address;
+					m.setAddress(detilAddr);
+				}
+				newList.add(m);
+			}
+		}
+
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(newList);
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+
+	/**
+	 * 
+	 * bindCardCode:绑定卡号
+	 *
+	 * @author hemingjun
+	 * @date 2016年10月25日
+	 *
+	 * @param vipCode
+	 *            会员编号
+	 * @param account
+	 *            卡面编号
+	 * @return 返回：绑卡是否成功
+	 */
+	@RequestMapping("/bindCardCode.do")
+	@ResponseBody
+	public BaseResultVo bindCardCode(String vipCode, String cardCode, HttpServletRequest request) {
+		GwMembersModel model = gwMembersServiceImpl.selectByVipCode(vipCode);
+		List<GwMembersModel> list = gwMembersServiceImpl.getAllList();
+		for (GwMembersModel memberModel : list) {
+			if (cardCode.equals(memberModel.getCardCode())) {
+				return BaseResultVo.responseFail("已存在相同卡号");
+			}
+		}
+		//根据会员卡号查询会员信息
+		GwMemberCardModel  gwMemberCardModel=gwMemberCardServiceImpl.selectByCode(cardCode);
+		if (model != null) {
+			model.setCardCode(cardCode);
+			//设置卡类型
+			model.setCardType(gwMemberCardModel.getCardType());
+			//设置等级
+			model.setGrade(gwMemberCardModel.getGrade());
+			int number = gwMembersServiceImpl.updateByVipCode(model);
+		}
+		// 根据会员vip号获得会员绑定信息
+		List<GwMemberBindingCardModel> gwMemberBindingCardlist = gwMemberBindingCardServiceImpl
+				.selectByMemberCode(vipCode);
+		for (GwMemberBindingCardModel gwMemberBindingCardModel : gwMemberBindingCardlist) {
+
+			if (gwMemberBindingCardModel != null) {
+				GwMemberCardModel gwemberCardModel = gwMemberCardServiceImpl
+						.selectByCode(gwMemberBindingCardModel.getCardCode());
+				if (gwemberCardModel != null) {
+					if (!gwemberCardModel.getStatus().equals(CardStateEnum.DELETE.getValue())) {
+						gwemberCardModel.setStatus(CardStateEnum.DELETE.getValue());
+						// 更新会员卡状态
+						gwMemberCardServiceImpl.update(gwemberCardModel);
+					}
+				}
+
+			}
+
+		}
+		GwMemberBindingCardModel GwMemberBindingCard = new GwMemberBindingCardModel();
+		// 获取创建人信息
+		AdminUser adminUser = SecurityUtil.getAdminUser(request);
+		String username = adminUser.getUsername();
+		// 更新人
+		GwMemberBindingCard.setUpdateUserId(adminUser.getUserId());
+		// 更新
+		GwMemberBindingCard.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		// 绑卡时间
+		GwMemberBindingCard.setBindingDate(DateUtil.getCurrentDatetime("-"));
+		// 绑定卡号
+		GwMemberBindingCard.setCardCode(cardCode);
+		// vip号
+		GwMemberBindingCard.setMemberCode(vipCode);
+		// 保存一条绑卡记录
+		int num = gwMemberBindingCardServiceImpl.insert(GwMemberBindingCard);
+		// 将会员卡的状态设置为正常使用
+		GwMemberCardModel gwemberCardModel1 = gwMemberCardServiceImpl.selectByCode(cardCode);
+		if (gwemberCardModel1 != null) {
+			// 更新会员卡状态
+			gwemberCardModel1.setStatus(CardStateEnum.PASSCONFIRM.getValue());
+			gwMemberCardServiceImpl.update(gwemberCardModel1);
+
+			if (num > 0) {
+
+				return BaseResultVo.responseSuccess("会员绑定卡号成功");
+			}
+		}
+
+		return BaseResultVo.responseSuccess("会员绑定卡号失败");
+	}
+
+
+	/**
+	 * 获取下拉列表所有会员分页List
+	 * 
+	 * @param queryCondition
+	 *            查询参数
+	 * @return
+	 */
+	@RequestMapping("/getMemberByComBoBoxList.do")
+	@ResponseBody
+	public LigerPageDataVo getMemberByComBoBoxList(QueryConditon queryCondition, Integer type, String gift) {
+		// 查询条件数组字符串（前端传递的字符串名称需和xml查询名称一致）
+		String[] queryParamArr = new String[] {  "cardCode", "vipCode", "userName"};
+		// 获取分页参数信息map
+		Map<String, Object> params = QueryConditionUtil.getParamsMap(queryParamArr, queryCondition);
+		BasePageResultVo baseResultVo = gwMembersServiceImpl.selectPageListByCondtion(params);
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+
+	@RequestMapping("/getMembersByVipCode.do")
+	@ResponseBody
+	public BaseResultVo getMembersByVipCode(String vipCode, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		// 获取会员信息
+		List<GwMembersModel> list = gwMembersServiceImpl.getAllList();
+		for (GwMembersModel model : list) {
+			if (model.getVipCode().equals(vipCode)) {
+				baseResultVo.setData(model);
+				return baseResultVo;
+			}
+		}
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * getMemersListByQueryCondition:获取会员集合通过ligerGrid内嵌搜索
+	 *
+	 * @param queryCondition
+	 * @date 2016年6月20日
+	 * @return
+	 */
+	@RequestMapping("/getMemersListByQueryCondition.do")
+	@ResponseBody
+	public LigerPageDataVo getMemersListByQueryCondition(QueryConditon queryCondition) {
+		// 查询条件数组字符串（前端传递的字符串名称需和xml查询名称一致）
+		String[] queryParamArr = new String[] { "cardCode", "vipCode", "userName" };
+		// 获取分页参数信息map
+		Map<String, Object> params = QueryConditionUtil.getParamsMap(queryParamArr, queryCondition);
+		BasePageResultVo baseResultVo = gwMembersServiceImpl.selectPageListByCondtion(params);
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(baseResultVo.getRows());
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+
+	/**
+	 * 
+	 * updateCreditByCode:根据vipCode获取会员并修改积分
+	 *
+	 * @param queryCondition
+	 * @date 2016年6月20日
+	 * @return
+	 */
+	@RequestMapping("/updateCreditByCode.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员维护", option = "根据VIP号修改会员积分")
+	public BaseResultVo updateCreditByCode(String code, int needCredit) {
+		GwMembersModel gwMembersModel = gwMembersServiceImpl.getMembersByCode(code);
+		if (gwMembersModel != null) {
+			int credit = gwMembersModel.getCredit();
+			int isLeft = credit - needCredit;// 剩余积分
+			if (isLeft < 0) {
+				return BaseResultVo.responseFail("积分不足!");
+			} else {
+				gwMembersModel.setCredit(isLeft);
+				gwMembersServiceImpl.update(gwMembersModel);
+			}
+		}
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+	/**
+	 * 
+	 * getMembersByCardCode:根据cardCode查询
+	 *
+	 * @param queryCondition
+	 * @date 2016年6月20日
+	 * @return
+	 */
+	@RequestMapping("/getMembersByCardCode.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员卡", option = "获取会员根据ID")
+	public BaseResultVo getMembersByCardCode(String cardCode) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		if (cardCode == null) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");// 提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		// 获取会员信息
+		GwMemberBindingCardModel gwMemberBindingCardModel = gwMemberBindingCardServiceImpl.selectByCardCode(cardCode);
+		baseResultVo.setData(gwMemberBindingCardModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+	
+	/**
+	 * 
+	 * selectPageListByBindingMessage:获取会员集合（分页）
+	 *
+	 * @date 2016年6月20日
+	 * @param page
+	 *            当前页码数
+	 * @param pagesize
+	 *            每页显示记录数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/selectPageListByBindingMessage.do")
+	@ResponseBody
+	@BussAnnotation(moduleName = "会员信息", option = "获取所有会员绑卡信息列表")
+	public LigerPageDataVo selectPageListByBindingMessage(int currentPage, int pageSize, String phone, String type, String vipCode, String grade,
+			HttpServletRequest request) {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+		params.put("type", type);
+		params.put("grade", grade);
+		params.put("vipCode", vipCode);
+		params.put("phone", phone);
+		BasePageResultVo baseResultVo = gwMembersServiceImpl.selectPageListByBindingMessage(params);
+		List<GwMembersModel> list = (List<GwMembersModel>) baseResultVo.getRows();
+		List<GwMembersModel> newList = new ArrayList<GwMembersModel>();
+		for (GwMembersModel m : list) {
+			String province = m.getProvinceName();
+			String city = m.getCityName();
+			String count = m.getCountyName();
+			String address = m.getAddress();
+			String detilAddr = "";
+			if (!(province == null) && !("".equals(province))) {
+				detilAddr = province + "省" + city + "市" + count + address;
+				m.setAddress(detilAddr);
+			}
+			newList.add(m);
+		}
+
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(newList);
+		data.setTotal(baseResultVo.getPageInfo().getTotalRecord());
+		return data;
+	}
+
+	
+}

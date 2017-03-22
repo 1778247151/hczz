@@ -1,0 +1,67 @@
+package com.crm.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwMemberGradeDao;
+import com.crm.pojo.GwMemberGradeModel;
+import com.crm.service.GwMemberGradeService;
+import com.crm.util.BaseCodeUtil;
+
+/**
+ * 
+ * gwMemberGradeServiceManage:会员等级设置业务逻辑层实现
+ *
+ * @author chengpengfei
+ * @date  2016年6月23日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwMemberGradeServiceManage")
+public class GwMemberGradeServiceImpl extends ServersManager<GwMemberGradeModel, GwMemberGradeDao> implements GwMemberGradeService{
+
+	@Resource(name="gwMemberGradeDaoManage")
+	@Override
+	public void setDao(GwMemberGradeDao dao) {
+		// TODO Auto-generated method stub
+		this.dao = dao;
+	}
+
+	@Override
+	public synchronized  String getMemberGradeByLaseOne(String time) {
+		//获取编号前缀
+		String frontCode = BaseCodeUtil.getBaseCode("JF");
+		//获取当天时间
+		String code = "";
+		//根据当天时间查询最后一条记录
+		GwMemberGradeModel member=dao.getMemberGradeByLaseOne(time);
+		if(member==null){
+			code = frontCode+"0001";
+		}else{
+			String subString = member.getCode().substring(2);
+			long num = Long.parseLong(subString)+1;
+			code = "JF"+String.valueOf(num);
+		}
+		return code;
+	}
+
+	@Override
+	public List<GwMemberGradeModel> getMemberGradeByGradeCode(String code) {
+		// TODO Auto-generated method stub
+		return dao.getMemberGradeByGradeCode(code);
+	}
+
+	@Override
+	public List<GwMemberGradeModel> getMemberGradeIntegralByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getMemberGradeIntegralByCondition(params);
+	}
+
+	
+
+}

@@ -1,0 +1,358 @@
+package com.crm.controller;
+
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.AdminUser;
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.PropertyPlaceholder;
+import com.crm.common.ResponseCode;
+import com.crm.common.SecurityUtil;
+import com.crm.common.Status;
+import com.crm.enums.SmsTypeEnum;
+import com.crm.interceptor.exception.BaseException;
+import com.crm.pojo.GwDepartmentModel;
+import com.crm.pojo.GwDepartmentPositionModel;
+import com.crm.pojo.GwMembersModel;
+import com.crm.pojo.GwSmsRecordModel;
+import com.crm.service.GwDepartmentPositionService;
+import com.crm.service.GwDepartmentService;
+import com.crm.service.GwMembersService;
+import com.crm.util.DateUtil;
+import com.crm.util.SendMessageUtil;
+import com.crm.util.ValidateUtil;
+
+
+/**
+ * 
+ * 
+ * GwDepartmentController:短信发送管理控制层
+ *
+ * @author  shengjinpeng
+ * @date    2016年8月16日
+ * @version jdk1.8
+ *
+ */
+@Controller
+@RequestMapping("/sendMessage")
+public class GwSendMessageController extends BaseException {
+
+	// 日志
+	private Logger logger = LoggerFactory.getLogger(GwSendMessageController.class);
+
+	/**
+	 * 会员业务逻辑
+	 */
+	@Resource(name = "gwMembersServiceManage")
+	private GwMembersService gwMembersServiceImpl;
+	
+	/**
+	 * 
+	 * sendAllFixed:按手机号发送短信(固定内容)
+	 *
+	 * @author   shengjinpeng
+	 * @date     2016年11月3日
+	 *
+	 * @param phoneNumber
+	 * @param content
+	 * @param request
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping("/sendByNumberFixed.do")
+	@ResponseBody
+	public BaseResultVo sendByNumberFixed(String phoneNumber, String content, HttpServletRequest request) throws UnsupportedEncodingException {
+		
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("发送成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+		baseResultVo.setStatus(status);
+		//获取创建人信息
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		String username = adminUser.getUsername();
+		
+		phoneNumber = phoneNumber.replaceAll("#", ",");
+		//加后缀
+		String endStr = new String(((String)PropertyPlaceholder.getProperty("sendMessage.endstr")).getBytes("ISO8859-1"),"UTF-8");
+		
+		content = content + endStr;
+		//进行URL编码
+		content = new String(java.net.URLEncoder.encode(content,"utf-8").getBytes());
+		
+		//设置短信记录参数
+		GwSmsRecordModel gwSmsRecordModel = new GwSmsRecordModel();
+		gwSmsRecordModel.setPhone(phoneNumber);
+		gwSmsRecordModel.setContent(content);
+		gwSmsRecordModel.setExt("");
+		gwSmsRecordModel.setStime("");
+		gwSmsRecordModel.setRrid("");
+		gwSmsRecordModel.setMsgfmt("");
+		gwSmsRecordModel.setNote("按号码发送短信");
+		gwSmsRecordModel.setType(SmsTypeEnum.HAND.getValue());;
+		gwSmsRecordModel.setSendTime(DateUtil.getCurrentDatetime("-"));
+		gwSmsRecordModel.setSendUser(username);
+		//发送短信
+		String msg = SendMessageUtil.sendSmsMessage(gwSmsRecordModel);
+		
+		if(msg.length()>10) {
+			return baseResultVo;
+		}else {
+			return BaseResultVo.responseFail("发送短信失败");
+		}
+		
+	}
+	
+	@RequestMapping("/sendAllFixed.do")
+	@ResponseBody
+	public BaseResultVo sendAllFixed(String content1, HttpServletRequest request) throws UnsupportedEncodingException {
+		
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("发送成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+		baseResultVo.setStatus(status);
+		//获取创建人信息
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		String username = adminUser.getUsername();
+		//查询所有生效用户姓名和手机号
+		List<GwMembersModel> membersList = gwMembersServiceImpl.getAllNameAndPhone();
+		
+		String phoneNumber = "";
+		for(GwMembersModel member:membersList) {
+			//添加手机号
+			phoneNumber = phoneNumber + "," + member.getPhone();
+		}
+		
+		phoneNumber = phoneNumber.substring(1);
+		
+		//加后缀
+		String endStr = new String(((String)PropertyPlaceholder.getProperty("sendMessage.endstr")).getBytes("ISO8859-1"),"UTF-8");
+		
+		content1 = content1 + endStr;
+		//进行URL编码
+		content1 = new String(java.net.URLEncoder.encode(content1,"utf-8").getBytes());
+		
+		//设置短信记录参数
+		GwSmsRecordModel gwSmsRecordModel = new GwSmsRecordModel();
+		gwSmsRecordModel.setPhone(phoneNumber);
+		gwSmsRecordModel.setContent(content1);
+		gwSmsRecordModel.setExt("");
+		gwSmsRecordModel.setStime("");
+		gwSmsRecordModel.setRrid("");
+		gwSmsRecordModel.setMsgfmt("");
+		gwSmsRecordModel.setNote("给所有会员发送短信");
+		gwSmsRecordModel.setType(SmsTypeEnum.HAND.getValue());;
+		gwSmsRecordModel.setSendTime(DateUtil.getCurrentDatetime("-"));
+		gwSmsRecordModel.setSendUser(username);
+		
+		//发送短信
+		String msg = SendMessageUtil.sendSmsMessage(gwSmsRecordModel);
+		if(msg.length()>10) {
+			return baseResultVo;
+		}else {
+			return BaseResultVo.responseFail("发送短信失败");
+		}
+		
+	}
+	
+	
+	@RequestMapping("/sendAllChange.do")
+	@ResponseBody
+	public BaseResultVo sendAllChange(String content2, HttpServletRequest request) throws UnsupportedEncodingException {
+		
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("发送成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+		baseResultVo.setStatus(status);
+		//获取创建人信息
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		String username = adminUser.getUsername();
+		//查询所有生效用户
+		List<GwMembersModel> membersList = gwMembersServiceImpl.getAllNameAndPhone();
+		//生效用户手机号
+		String phoneNumber = "";
+		//内容
+		String content = "";
+		//临时字符串
+		String tempStr = "";
+		for(GwMembersModel member:membersList) {
+			//添加手机号
+			phoneNumber = phoneNumber + "," + member.getPhone();
+			//替换姓名
+			tempStr = content2.replace("{#memberName}", member.getUserName());
+			//加后缀
+			String endStr = new String(((String)PropertyPlaceholder.getProperty("sendMessage.endstr")).getBytes("ISO8859-1"),"UTF-8");
+			
+			tempStr = tempStr + endStr;
+			//进行URL编码
+			tempStr = new String(java.net.URLEncoder.encode(tempStr,"utf-8").getBytes());
+			//添加内容
+			content = content + "," + tempStr;
+		}
+		
+		phoneNumber = phoneNumber.substring(1);
+		content = content.substring(1);
+		
+		//设置短信记录参数
+		GwSmsRecordModel gwSmsRecordModel = new GwSmsRecordModel();
+		gwSmsRecordModel.setPhone(phoneNumber);
+		gwSmsRecordModel.setContent(content);
+		gwSmsRecordModel.setExt("");
+		gwSmsRecordModel.setStime("");
+		gwSmsRecordModel.setRrid("");
+		gwSmsRecordModel.setMsgfmt("");
+		gwSmsRecordModel.setNote("给所有会员发送短信");
+		gwSmsRecordModel.setType(SmsTypeEnum.HAND.getValue());;
+		gwSmsRecordModel.setSendTime(DateUtil.getCurrentDatetime("-"));
+		gwSmsRecordModel.setSendUser(username);
+		//发送短信
+		String msg = SendMessageUtil.sendGxMessage(gwSmsRecordModel);
+		if(msg.length()>10) {
+			return baseResultVo;
+		}else {
+			return BaseResultVo.responseFail("发送短信失败");
+		}
+		
+	}
+	
+	@RequestMapping("/sendByGradeFixed.do")
+	@ResponseBody
+	public BaseResultVo sendByGradeFixed(String[] grades,String content1, HttpServletRequest request) throws UnsupportedEncodingException {
+		
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("发送成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+		baseResultVo.setStatus(status);
+		//获取创建人信息
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		String username = adminUser.getUsername();
+		//查询所有生效用户姓名和手机号
+		List<GwMembersModel> membersList = gwMembersServiceImpl.getNumberByGrade(grades);
+		
+		String phoneNumber = "";
+		for(GwMembersModel member:membersList) {
+			//添加手机号
+			phoneNumber = phoneNumber + "," + member.getPhone();
+		}
+		
+		phoneNumber = phoneNumber.substring(1);
+		//加后缀
+		String endStr = new String(((String)PropertyPlaceholder.getProperty("sendMessage.endstr")).getBytes("ISO8859-1"),"UTF-8");
+				
+		content1 = content1 + endStr;
+		//进行URL编码
+		content1 = new String(java.net.URLEncoder.encode(content1,"utf-8").getBytes());
+		
+		//设置短信记录参数
+		GwSmsRecordModel gwSmsRecordModel = new GwSmsRecordModel();
+		gwSmsRecordModel.setPhone(phoneNumber);
+		gwSmsRecordModel.setContent(content1);
+		gwSmsRecordModel.setExt("");
+		gwSmsRecordModel.setStime("");
+		gwSmsRecordModel.setRrid("");
+		gwSmsRecordModel.setMsgfmt("");
+		gwSmsRecordModel.setNote("按会员等级发送短信");
+		gwSmsRecordModel.setType(SmsTypeEnum.HAND.getValue());;
+		gwSmsRecordModel.setSendTime(DateUtil.getCurrentDatetime("-"));
+		gwSmsRecordModel.setSendUser(username);
+				
+		//发送短信
+		String msg = SendMessageUtil.sendSmsMessage(gwSmsRecordModel);
+		if(msg.length()>10) {
+			return baseResultVo;
+		}else {
+			return BaseResultVo.responseFail("发送短信失败");
+		}
+		
+	}
+	
+	@RequestMapping("/sendByGradeChange.do")
+	@ResponseBody
+	public BaseResultVo sendByGradeChange(String[] grades,String content2, HttpServletRequest request) throws UnsupportedEncodingException {
+		
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("发送成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+		baseResultVo.setStatus(status);
+		//获取创建人信息
+		AdminUser adminUser=SecurityUtil.getAdminUser(request);
+		String username = adminUser.getUsername();
+		//查询所有生效用户姓名和手机号
+		List<GwMembersModel> membersList = gwMembersServiceImpl.getNumberByGrade(grades);
+		//生效用户手机号
+		String phoneNumber = "";
+		//内容
+		String content = "";
+		//临时字符串
+		String tempStr = "";
+		for(GwMembersModel member:membersList) {
+			//添加手机号
+			phoneNumber = phoneNumber + "," + member.getPhone();
+			//替换姓名
+			tempStr = content2.replace("{#memberName}", member.getUserName());
+			//加后缀
+			String endStr = new String(((String)PropertyPlaceholder.getProperty("sendMessage.endstr")).getBytes("ISO8859-1"),"UTF-8");
+			
+			tempStr = tempStr + endStr;
+			//进行URL编码
+			tempStr = new String(java.net.URLEncoder.encode(tempStr,"utf-8").getBytes());
+			//添加内容
+			content = content + "," + tempStr;
+		}
+		
+		phoneNumber = phoneNumber.substring(1);
+		content = content.substring(1);
+		
+		//设置短信记录参数
+		GwSmsRecordModel gwSmsRecordModel = new GwSmsRecordModel();
+		gwSmsRecordModel.setPhone(phoneNumber);
+		gwSmsRecordModel.setContent(content);
+		gwSmsRecordModel.setExt("");
+		gwSmsRecordModel.setStime("");
+		gwSmsRecordModel.setRrid("");
+		gwSmsRecordModel.setMsgfmt("");
+		gwSmsRecordModel.setNote("按会员等级发送短信");
+		gwSmsRecordModel.setType(SmsTypeEnum.HAND.getValue());;
+		gwSmsRecordModel.setSendTime(DateUtil.getCurrentDatetime("-"));
+		gwSmsRecordModel.setSendUser(username);
+		
+		//发送短信
+		String msg = SendMessageUtil.sendGxMessage(gwSmsRecordModel);
+		if(msg.length()>10) {
+			return baseResultVo;
+		}else {
+			return BaseResultVo.responseFail("发送短信失败");
+		}
+		
+	}
+
+}

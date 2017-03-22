@@ -1,0 +1,40 @@
+package com.crm.service;
+
+import java.util.List;
+import java.util.Map;
+import com.crm.core.Services;
+import com.crm.pojo.GwGoodsOutStoreDetailModel;
+
+/**
+ * 
+ * 
+ * GwGoodsOutStoreDetailService:礼品出库业务层接口
+ *
+ * @author  shengjinpeng
+ * @date    2016年11月9日
+ * @version jdk1.8
+ *
+ */
+public interface GwGoodsOutStoreDetailService extends Services<GwGoodsOutStoreDetailModel>{
+	/**
+	 * 批量插入物品入库单明细
+	 * @param goodsInStoreList
+	 * @return
+	 */
+	public int batchInsert(List<GwGoodsOutStoreDetailModel> list);
+	
+	/**
+	 * 根据物品入库单号获取物品入库明细集合
+	 * @param code
+	 * @return
+	 */
+	public List<GwGoodsOutStoreDetailModel> getListByCode(String code);
+	
+	/**
+	 * 根据物品入库单号删除物品入库清单信息
+	 * @param goodsCode
+	 * @return
+	 */
+	public int deleteByCode(String code);
+	
+}

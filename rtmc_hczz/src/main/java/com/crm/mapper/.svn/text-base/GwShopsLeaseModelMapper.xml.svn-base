@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.shopsLease" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwShopsLeaseModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="gw_merchants_info_id" property="gwMerchantsInfoId" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="storetype" property="storetype" jdbcType="INTEGER" />
+    <result column="mainshop" property="mainshop" jdbcType="INTEGER" />
+    <result column="posnum" property="posnum" jdbcType="INTEGER" />
+	<result column="storetypeName" property="storetypeName" jdbcType="VARCHAR" />
+    
+  </resultMap>
+  <sql id="Base_Column_List" >
+      id,name,code,gw_merchants_info_id,storetype,mainshop,posnum,state,create_time,create_user,update_time,update_user
+  </sql>
+  <select id="gw.shopsLease.selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+   a.create_user,
+	(select b.`name` from gw_admin_users b where b.id = a.create_user)as createUserName,
+	a.gw_merchants_info_id,
+  c.cn_name,
+	a.id,
+	a.mainshop,
+	a.`name`,
+	a.posnum,
+	a.state,
+	a.storetype,
+	a.update_time,
+	a.update_user,
+	a.storetype,
+	a.mainshop,
+	a.posnum,
+	a.code,
+	a.create_time,
+	a.update_time,
+	(select b.`name` from gw_admin_users b where b.id = a.update_user)as updateUserName
+FROM
+	gw_shops_lease a,gw_merchants_info c where a.gw_merchants_info_id = c.id
+    and a.id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.shopsLease.deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from gw_shops_lease
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 删除所有数据 -->
+  <delete id="gw.shopsLease.deleteAll" parameterType="java.lang.Integer" >
+    delete from gw_shops_lease
+  </delete>
+  <!-- 批量插入数据 -->
+  <insert id="gw.shopsLease.batchinsert" parameterType="com.crm.pojo.GwShopsLeaseModel" >
+    insert into gw_shops_lease (id, name, code, gw_merchants_info_id, state, 
+    create_time, create_user, update_time, 
+    update_user,storetype,mainshop,posnum
+      )    
+    values 
+     <foreach collection="list" item="shopsLeaseList" index="index" separator="," >
+      (#{shopsLeaseList.id,jdbcType=INTEGER}, 
+       #{shopsLeaseList.name,jdbcType=VARCHAR},
+       #{shopsLeaseList.code,jdbcType=VARCHAR}, 
+       #{shopsLeaseList.gwMerchantsInfoId,jdbcType=INTEGER}, 
+       #{shopsLeaseList.state,jdbcType=INTEGER}, 
+       #{shopsLeaseList.createTime,jdbcType=VARCHAR},
+       #{shopsLeaseList.createUser,jdbcType=INTEGER},
+       #{shopsLeaseList.updateTime,jdbcType=VARCHAR},
+       #{shopsLeaseList.updateUser,jdbcType=INTEGER},
+       #{shopsLeaseList.storetype,jdbcType=INTEGER},
+       #{shopsLeaseList.mainshop,jdbcType=INTEGER},
+       #{shopsLeaseList.posnum,jdbcType=INTEGER}
+      )
+      </foreach>
+  </insert>
+  <!-- 批量更新数据 -->
+  <update id="gw.shopsLease.batchUpdateShopsLease"  parameterType="java.util.List">  
+    <foreach collection="list" item="shopsLeaseList" index="index" separator=";">
+        update gw_shops_lease
+        <set>
+           code=#{shopsLeaseList.code,jdbcType=VARCHAR},
+           name=#{shopsLeaseList.name,jdbcType=VARCHAR},
+           gw_merchants_info_id=#{shopsLeaseList.gwMerchantsInfoId,jdbcType=INTEGER},
+           storetype=#{shopsLeaseList.storetype,jdbcType=INTEGER},
+           mainshop=#{shopsLeaseList.mainshop,jdbcType=INTEGER},
+           posnum=#{shopsLeaseList.posnum,jdbcType=INTEGER},
+           state=#{shopsLeaseList.state,jdbcType=INTEGER},
+           create_time=#{shopsLeaseList.createTime,jdbcType=VARCHAR},
+           create_user=#{shopsLeaseList.createUser,jdbcType=INTEGER},
+           update_time=#{shopsLeaseList.updateTime,jdbcType=VARCHAR},
+           update_user=#{shopsLeaseList.updateUser,jdbcType=INTEGER},
+        </set>
+        where id = #{shopsLeaseList.id,jdbcType=INTEGER}
+    </foreach>      
+</update>
+
+<!-- 批量删除 -->
+<delete id="gw.shopsLease.batchDeleteByCode" parameterType="java.util.List">
+      delete from gw_shops_lease where code in
+      <foreach collection="list" index="index" item="item" open="(" separator="," close=")">   
+        #{item.code}   
+      </foreach>  
+ </delete>
+
+
+  <!-- 根据条件，获取分页数据list集合 -->
+  <select id="gw.shopsLease.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+select
+   a.create_user,
+	(select b.`name` from gw_admin_users b where b.id = a.create_user)as createUserName,
+	a.gw_merchants_info_id,
+  c.cn_name as merchantsName,
+	a.id,
+	a.mainshop,
+	a.`name`,
+	a.posnum,
+	a.state,
+	a.storetype as storetypeName,
+	a.update_time,
+	a.update_user,
+	a.storetype,
+	a.mainshop,
+	a.posnum,
+	a.code,
+	a.create_time,
+	a.update_time,
+	(select b.`name` from gw_admin_users b where b.id = a.update_user)as updateUserName
+FROM
+	gw_shops_lease a,gw_merchants_info c where a.gw_merchants_info_id = c.id
+    <if test="shopsLeaseName != null and '' != shopsLeaseName">  
+          and a.name LIKE CONCAT(CONCAT('%', #{shopsLeaseName,jdbcType=VARCHAR}), '%')         
+    </if>
+    <if test="shopsLeaseCode != null and '' != shopsLeaseCode">  
+         and a.code LIKE CONCAT(CONCAT('%', #{shopsLeaseCode,jdbcType=VARCHAR}), '%')         
+    </if>
+    <if test="merchantsInfoId != null and '' != merchantsInfoId">  
+         and a.gw_merchants_info_id =#{merchantsInfoId,jdbcType=INTEGER}   
+    </if>
+    <if test="state != null and '' != state">  
+         and a.state =#{state,jdbcType=INTEGER}
+    </if>
+    and a.state !=0
+    order by a.create_time desc
+    limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+  
+  <select id="gw.shopsLease.selectCount" resultType="java.lang.Integer"  parameterType="java.util.Map">
+    select 
+      count(a.id)
+    from
+    gw_shops_lease a,gw_merchants_info c where a.gw_merchants_info_id = c.id
+    <if test="shopsLeaseName != null and '' != shopsLeaseName">  
+          and a.name LIKE CONCAT(CONCAT('%', #{shopsLeaseName,jdbcType=VARCHAR}), '%')         
+    </if>
+    <if test="shopsLeaseCode != null and '' != shopsLeaseCode">  
+         and a.code LIKE CONCAT(CONCAT('%', #{shopsLeaseCode,jdbcType=VARCHAR}), '%')         
+    </if>
+    <if test="merchantsInfoId != null and '' != merchantsInfoId">  
+         and a.gw_merchants_info_id =#{merchantsInfoId,jdbcType=INTEGER}   
+    </if>
+    <if test="state != null and '' != state">  
+         and a.state =#{state,jdbcType=INTEGER}
+    </if>
+    and a.state !=0
+  </select>
+  <!-- 获取所有list集合 -->
+  <select id="gw.shopsLease.selectList" resultMap="BaseResultMap">
+    select 
+    id,name,code,gw_merchants_info_id,storetype,storetype as storetypeName,mainshop,posnum,state,create_time,create_user,update_time,update_user
+    from gw_shops_lease
+  </select>
+
+	<!-- 根据店铺编号，获取业态信息 -->
+	<select id="gw.shopsLease.getFormatsByShopCode" resultType="com.crm.bean.ShopFormatsInfo"
+		parameterType="java.util.Map">
+		select 
+			b.gw_formats_tree_id,
+			a.code as shopCode,
+			a.name shopName,
+			c.name as
+			formatsName,
+			c.bm as formatsCode 
+	    from gw_shops_lease a,
+			gw_merchants_info b,
+			gw_formats_tree c 
+		where a.code=#{shopCode} 
+			and a.gw_merchants_info_id=b.id 
+			and c.id=b.gw_formats_tree_id
+	</select>
+</mapper>

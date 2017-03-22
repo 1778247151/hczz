@@ -1,0 +1,163 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.core.PagerModel;
+import com.crm.dao.GwbrandtreeDao;
+import com.crm.pojo.GwbrandtreeModel;
+import com.crm.pojo.GwformatstreeModel;
+import com.crm.pojo.GwmerchantsinfoModel;
+
+
+/**
+ * 
+ * GwbrandtreeDaoImpl:品牌管理数据访问层的实现
+ *
+ * @author chengpengfei
+ * @date 2016年3月13日
+ */
+@Repository("gwbrandtreeDaoManage")
+
+public class GwbrandtreeDaoImpl implements GwbrandtreeDao{
+	@Resource
+	private BaseDao dao;
+	@Override
+	public int insert(GwbrandtreeModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("Gw.brandtree.insert",e);
+	}
+
+	@Override
+	public int delete(GwbrandtreeModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwbrandtreeModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("Gw.brandtree.updateByPrimaryKeySelective",e);
+	}
+
+	@Override
+	public GwbrandtreeModel selectOne(GwbrandtreeModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public List<GwbrandtreeModel> selectList(GwbrandtreeModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("Gw.brandtree.deleteByPrimaryKey",id);
+	}
+
+	@Override
+	public GwbrandtreeModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwbrandtreeModel)dao.selectOne("Gw.brandtree.selectByPrimaryKey",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("Gw.brandtree.selectAll", "Gw.brandtree.selectCount", params);
+	}
+
+	@Override
+	public List<GwbrandtreeModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("Gw.brandtree.selectLists");
+	}
+	
+	@Override
+	public List<GwbrandtreeModel> getAllStateNotZero() {
+		// TODO Auto-generated method stub
+		return dao.selectList("Gw.brandtree.getAllStateNotZero");
+	}
+	@Override
+	public List<GwbrandtreeModel> getBrandTreeByFormatstreeId(int gwFormatsTreeId) {
+		// TODO Auto-generated method stub
+		return dao.selectList("Gw.brandtree.selectListByFormatsId", gwFormatsTreeId);
+	}
+	@Override
+	public List<GwbrandtreeModel> getBrandNameById(int id) {
+		// TODO Auto-generated method stub
+		return dao.selectList("Gw.brandtree.selectListBymerId", id);
+	}
+
+	@Override
+	public GwbrandtreeModel getBrandTreeByCode(String code) {
+		// TODO Auto-generated method stub
+		return (GwbrandtreeModel)dao.selectOne("Gw.brandtree.selectByCode",code);
+	}
+
+	@Override
+	public BasePageResultVo getBrandTreeBySionPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("Gw.brandtree.selectAllBySign", "Gw.brandtree.selectCountBySign", params);
+	}
+
+	@Override
+	public GwbrandtreeModel getBrandTreeSignByCode(String code) {
+		// TODO Auto-generated method stub
+		return (GwbrandtreeModel) dao.selectOne("Gw.brandtree.selectSignByCode",code);
+	}
+
+	@Override
+	public List<GwbrandtreeModel> getBrandByIds(String[] ids) {
+		// TODO Auto-generated method stub
+		return dao.selectList("Gw.brandtree.selectByIds",ids);
+	}
+	@Override
+	public BasePageResultVo getBrandTreeByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("Gw.brandtree.getBrandTreeByCondition", "Gw.brandtree.selectCount", params);
+	}
+
+	@Override
+	public int batchInsertBrandtree(List<GwbrandtreeModel> addList) {
+		// TODO Auto-generated method stub
+		return dao.insert("Gw.brandtree.batchinsert", addList);
+	}
+
+	@Override
+	public int batchUpdateBrandtree(List<GwbrandtreeModel> updateList) {
+		// TODO Auto-generated method stub
+		return dao.update("Gw.brandtree.batchUpdateFormatstree", updateList);
+	}
+
+	@Override
+	public int batchDeleteById(List<GwbrandtreeModel> deleteList) {
+		// TODO Auto-generated method stub
+		return dao.delete("Gw.brandtree.batchDeleteById", deleteList);
+	}
+
+	@Override
+	public int deleteAll() {
+		// TODO Auto-generated method stub
+		return dao.delete("Gw.brandtree.deleteAll");
+	}
+	
+	
+	
+}

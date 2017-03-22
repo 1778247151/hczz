@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.presentInfo" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwPresentInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="exchange_integral" property="exchangeIntegral" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="effective_time" property="effectiveTime" jdbcType="VARCHAR" />
+    <result column="expiry_time" property="expiryTime" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="picture_image" property="pictureImage" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, code, name, exchange_integral, price, effective_time, expiry_time, 
+    status, description, picture_image, create_user_id, create_time, update_user_id, 
+    update_time
+  </sql>
+  <select id="gw.presentInfo.selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_present_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.presentInfo.deleteById" parameterType="java.lang.Integer" >
+    delete from gw_present_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.presentInfo.batchInsert" parameterType="com.crm.pojo.GwPresentInfoModel" >
+    insert into gw_present_info (id, code, name, 
+      exchange_integral, price, effective_time, 
+      expiry_time, status, 
+      description, picture_image, create_user_id, 
+      create_time, update_user_id, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{exchangeIntegral,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}, #{effectiveTime,jdbcType=VARCHAR}, 
+      #{expiryTime,jdbcType=VARCHAR},  #{status,jdbcType=INTEGER}, 
+      #{description,jdbcType=VARCHAR}, #{pictureImage,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=VARCHAR}, #{updateUserId,jdbcType=INTEGER}, #{updateTime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="gw.presentInfo.insert" parameterType="com.crm.pojo.GwPresentInfoModel" >
+    insert into gw_present_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="exchangeIntegral != null" >
+        exchange_integral,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="effectiveTime != null" >
+        effective_time,
+      </if>
+      <if test="expiryTime != null" >
+        expiry_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="pictureImage != null" >
+        picture_image,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="exchangeIntegral != null" >
+        #{exchangeIntegral,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="effectiveTime != null" >
+        #{effectiveTime,jdbcType=VARCHAR},
+      </if>
+      <if test="expiryTime != null" >
+        #{expiryTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="pictureImage != null" >
+        #{pictureImage,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.presentInfo.update" parameterType="com.crm.pojo.GwPresentInfoModel" >
+    update gw_present_info
+    <set >
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="exchangeIntegral != null" >
+        exchange_integral = #{exchangeIntegral,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="effectiveTime != null" >
+        effective_time = #{effectiveTime,jdbcType=VARCHAR},
+      </if>
+      <if test="expiryTime != null" >
+        expiry_time = #{expiryTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="pictureImage != null" >
+        picture_image = #{pictureImage,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+   <!-- 根据条件，获取分页LIST集合 -->
+  <select id="gw.presentInfo.selectByPageList" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	SELECT
+	a.`code`,
+	a.create_time,
+	a.create_user_id,
+	(select b.`name` from gw_admin_users b where b.id = a.create_user_id)as createUserName,
+	a.description,
+	a.effective_time,
+	a.exchange_integral,
+	a.expiry_time,
+	a.id,
+	a.`name`,
+	a.picture_image,
+	a.price,
+	a.`status`,
+	a.update_time,
+	a.update_user_id,
+	(select b.`name` from gw_admin_users b where b.id = a.update_user_id)as updateUserName
+FROM
+	gw_present_info a
+	<where>
+	<if test="code!=null and ''!=code">
+		and a.code LIKE CONCAT(CONCAT('%', #{code,jdbcType=VARCHAR}), '%')         
+	</if>
+	<if test="name!=null and ''!=name">
+		and a.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}), '%')         
+	</if>
+	</where>
+	order by a.create_time desc
+ limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER} 
+  </select>
+  
+ <select id="gw.presentInfo.selectByPageCount" resultType="java.lang.Integer"  parameterType="java.util.Map">
+ select
+  	count(a.id)	
+FROM
+	gw_present_info a
+	<where>
+	<if test="code!=null and ''!=code">
+		and a.code LIKE CONCAT(CONCAT('%', #{code,jdbcType=VARCHAR}), '%')         
+	</if>
+	<if test="name!=null and ''!=name">
+		and a.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}), '%')         
+	</if>
+	</where>
+ </select>
+ 
+ <select id="gw.presentInfo.selectByLastOne" resultMap="BaseResultMap" >
+		SELECT
+			*
+		FROM
+			gw_present_info a
+		WHERE
+			a.code LIKE CONCAT(CONCAT('%', #{time,jdbcType=VARCHAR}), '%') 
+		ORDER BY
+			a.id DESC
+		LIMIT 1
+	</select>
+</mapper>

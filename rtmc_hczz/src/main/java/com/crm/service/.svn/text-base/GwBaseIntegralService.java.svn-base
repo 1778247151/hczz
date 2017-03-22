@@ -1,0 +1,21 @@
+package com.crm.service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crm.core.Services;
+import com.crm.pojo.GwBaseIntegralModel;
+/**
+ * 
+ * GwBaseIntegralService:基础积分规则业务逻辑层接口
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+public interface GwBaseIntegralService extends Services<GwBaseIntegralModel>{
+	
+	
+	public List<GwBaseIntegralModel> selectByConditionList(Map<String, Object> params);
+}

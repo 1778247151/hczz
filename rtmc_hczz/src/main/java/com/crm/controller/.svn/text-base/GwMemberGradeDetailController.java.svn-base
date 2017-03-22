@@ -1,0 +1,198 @@
+package com.crm.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.Status;
+import com.crm.interceptor.BussAnnotation;
+import com.crm.pojo.GwMemberGradeDetailModel;
+import com.crm.pojo.GwPromotionIntegralScopeModel;
+import com.crm.pojo.GwformatstreeModel;
+import com.crm.service.GwMemberGradeDetailService;
+import com.crm.service.GwformatstreeService;
+
+/**
+ * 
+ * GwMemberGradeDetailController:会员等级设置适用范围访问控制层
+ *
+ * @author chengpengfei
+ * @date  2016年5月18日
+ *
+ */
+@Controller
+@RequestMapping("/memberGradeDetail")
+public class GwMemberGradeDetailController {
+
+	/**
+	 * 会员等级设置适用范围业务逻辑
+	 */
+	@Resource(name="gwMemberGradeDetailServiceManage")
+	private GwMemberGradeDetailService gwMemberGradeDetailServiceImpl;
+	/**
+	 * 业态业务逻辑层
+	 */
+	@Resource(name="gwformatstreeService")
+	private GwformatstreeService gwformatstreeService;
+	
+	/**
+	 * 批量插入会员设置适用范围
+	 * @param memberGradeDetail
+	 * @param request
+	 * @return
+	 * @throws CloneNotSupportedException 
+	 */
+	@RequestMapping("/addMemberGradeDetail.do")
+	@ResponseBody
+	public BaseResultVo addMemberGradeDetail(GwMemberGradeDetailModel memberGradeDetail,HttpServletRequest request) throws CloneNotSupportedException{
+		String typeCode = memberGradeDetail.getTypeCode();
+		if(typeCode=="" || typeCode==null){
+			return BaseResultVo.responseFail("没有选择业态或商铺信息");
+		}
+		String[] array = typeCode.split(";");
+		List<GwMemberGradeDetailModel> gradeDetailList = new ArrayList<GwMemberGradeDetailModel>();
+		if(memberGradeDetail.getType()==0){
+			List<GwformatstreeModel> formatstreeList=gwformatstreeService.getAllList();
+			for (int i = 0; i < array.length; i++) {
+				GwMemberGradeDetailModel model=memberGradeDetail.clone();
+				for (GwformatstreeModel formatModel : formatstreeList) {
+					if(formatModel.getId()==Integer.parseInt(array[i])){
+						model.setTypeCode(formatModel.getBm());
+						gradeDetailList.add(model);
+						break;
+					}
+				}
+			}
+		}
+		else{
+//			List<GwMemberGradeDetailModel> gradeDetailList = new ArrayList<GwMemberGradeDetailModel>();
+			for (int i = 0; i < array.length; i++) {
+				GwMemberGradeDetailModel grade = null;
+				try {
+					grade = memberGradeDetail.clone();
+				} catch (CloneNotSupportedException e) {
+					return BaseResultVo.responseFail("克隆失败");
+				}
+				grade.setTypeCode(array[i]);
+				gradeDetailList.add(grade);
+			}
+		}
+		//批量插入会员等级适用范围
+		int number = gwMemberGradeDetailServiceImpl.batchInsertMemberGradeDetail(gradeDetailList);
+		if(number==0){
+			return BaseResultVo.responseFail("添加失败");
+		}
+		return BaseResultVo.responseSuccess("添加成功");
+	}
+	
+	/**
+	 * 获取会员等级设置适用范围数据分页集合
+	 * @author chengpengfei
+	 * @param  currentPage
+	 * @param  pageSize
+	 * @return
+	 */
+	@RequestMapping("/getMemberGradeDetailByPageList.do")
+	@ResponseBody
+	@BussAnnotation(moduleName="会员等级设置适用范围",option="获取列表")
+	public BaseResultVo getMemberGradeDetailByPageList(String code,String type){
+		BaseResultVo baseResultVo=new BaseResultVo();
+		Map<String, Object> params = new HashMap<String, Object>();
+		if("1".equals(code)){
+			String resultCode = uuidCode(type);
+			Status status=new Status();
+			status.setCode(resultCode);
+			baseResultVo.setStatus(status);
+		}else{
+			//条件参数
+			params.put("code", code);
+		    params.put("type",type);
+		    List<GwMemberGradeDetailModel> list=gwMemberGradeDetailServiceImpl.getMemberGradeDetailListByCodeAndType(params);
+		    baseResultVo.setData(list);
+		}
+		return baseResultVo;
+	}
+	// 生成临时唯一规则范围编号
+	public String uuidCode(String type) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		String uuid = UUID.randomUUID().toString();
+		String result = uuid.replace("-", "");
+		String res = result.substring(0, 14);
+		map.put("code", res);
+		map.put("type", type);
+		List<GwMemberGradeDetailModel> list = gwMemberGradeDetailServiceImpl.getMemberGradeDetailListByCodeAndType(map);
+		if (list.size() > 0) {
+			uuidCode(type);
+		}
+		return res;
+	}
+	
+	/**
+	 * 根据ID获取会员等级设置适用范围信息
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/getMemberGradeDetailById.do")
+	@ResponseBody
+	public BaseResultVo getMemberGradeDetailById(Integer id){
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		GwMemberGradeDetailModel memberGradeDetail = gwMemberGradeDetailServiceImpl.selectById(id);
+		if(memberGradeDetail==null){
+			return BaseResultVo.responseFail("获取信息失败");
+		}
+		BaseResultVo baseResultVo = BaseResultVo.responseSuccess("获取信息成功");
+		baseResultVo.setData(memberGradeDetail);
+		return baseResultVo;
+	}
+	
+	/**
+	 * 根据ID删除会员等级设置适用范围信息
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/deleteMemberGradeDetail.do")
+	@ResponseBody
+	public BaseResultVo deleteMemberGradeDetail(Integer id){
+		if(id==0){
+			return BaseResultVo.responseFail("参数异常");
+		}
+		int number = gwMemberGradeDetailServiceImpl.deleteById(id);
+		if(number==0){
+			return BaseResultVo.responseFail("删除失败");
+		}
+		return BaseResultVo.responseSuccess("删除成功");
+	}
+	
+	/**
+	 * 根据ID修改会员等级设置适用范围信息
+	 * @param memberGrade
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/updateMemberGradeDetail.do")
+	@ResponseBody
+	public BaseResultVo updateMemberGradeDetail(GwMemberGradeDetailModel memberGrade,HttpServletRequest request){
+		if(memberGrade.getId()==null){
+			return BaseResultVo.responseFail("ID为空");
+		}
+		int number = gwMemberGradeDetailServiceImpl.update(memberGrade);
+		if(number==0){
+			return BaseResultVo.responseFail("更新失败");
+		}
+		return BaseResultVo.responseSuccess("更新成功");
+	}
+}

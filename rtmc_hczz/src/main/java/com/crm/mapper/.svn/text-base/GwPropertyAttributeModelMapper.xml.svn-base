@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="Gw.PropertyAttributeModelMapper">
+	<resultMap id="BaseResultMap" type="com.crm.pojo.GwPropertyAttributeModel">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="bm" property="bm" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="time" property="time" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, bm, name, state, time
+	</sql>
+
+
+	<!-- 批量插入 -->
+	<insert id="Gw.PropertyAttributeModelMapper.batchInsert"
+		parameterType="com.crm.pojo.GwPropertyAttributeModel">
+		insert into gw_property_attribute (
+		id,
+		bm,
+		name,
+		state,
+		time)
+		values
+		<foreach collection="list" item="propertyAttributeList" index="index"
+			separator=",">
+			(
+			#{propertyAttributeList.id,jdbcType=INTEGER},
+			#{propertyAttributeList.bm,jdbcType=VARCHAR},
+			#{propertyAttributeList.name,jdbcType=VARCHAR},
+			#{propertyAttributeList.state,jdbcType=INTEGER},
+			#{propertyAttributeList.time,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
+	<!-- 批量更新数据 -->
+	<update id="Gw.PropertyAttributeModelMapper.batchUpdate"
+		parameterType="java.util.List">
+		<foreach collection="list" item="propertyAttributeList" index="index"
+			separator=";">
+			update gw_property_attribute
+			<set>
+				id=#{propertyAttributeList.id,jdbcType=INTEGER},
+				bm=#{propertyAttributeList.bm,jdbcType=VARCHAR},
+				name=#{propertyAttributeList.name,jdbcType=VARCHAR},
+				state=#{propertyAttributeList.state,jdbcType=INTEGER},
+				time=#{propertyAttributeList.time,jdbcType=VARCHAR}
+			</set>
+			where id = #{propertyAttributeList.id,jdbcType=INTEGER}
+		</foreach>
+	</update>
+
+	<!-- 批量删除 -->
+	<delete id="Gw.PropertyAttributeModelMapper.batchDelete"
+		parameterType="java.util.List">
+		delete from gw_property_attribute where id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item.id}
+		</foreach>
+	</delete>
+	<select id="Gw.PropertyAttributeModelMapper.selectByPrimaryKey"
+		resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from gw_property_attribute
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="Gw.PropertyAttributeModelMapper.deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from gw_property_attribute
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<delete id="Gw.PropertyAttributeModelMapper.deleteAll"
+		parameterType="java.lang.Integer">
+		delete from gw_property_attribute
+	</delete>
+
+	<insert id="Gw.PropertyAttributeModelMapper.insertSelective"
+		parameterType="com.crm.pojo.GwPropertyAttributeModel">
+		insert into gw_property_attribute
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="bm != null">
+				bm,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="time != null">
+				time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="bm != null">
+				#{bm,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+			<if test="time != null">
+				#{time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="Gw.PropertyAttributeModelMapper.updateByPrimaryKeySelective"
+		parameterType="com.crm.pojo.GwPropertyAttributeModel">
+		update gw_property_attribute
+		<set>
+			<if test="bm != null">
+				bm = #{bm,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=INTEGER},
+			</if>
+			<if test="time != null">
+				time = #{time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="Gw.PropertyAttributeModelMapper.updateByPrimaryKey"
+		parameterType="com.crm.pojo.GwPropertyAttributeModel">
+		update gw_property_attribute
+		set bm = #{bm,jdbcType=VARCHAR},
+		name = #{name,jdbcType=VARCHAR},
+		state = #{state,jdbcType=INTEGER},
+		time = #{time,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<!-- 根据条件，获取分页数据list集合 -->
+	<select id="Gw.PropertyAttributeModelMapper.selectAll"
+		resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		s.id, s.bm, s.name,s.state, s.time
+		from gw_property_attribute s
+		where s.state=1
+		order by s.time DESC
+		limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+
+	</select>
+	<!-- 根据条件，获取总记录数 -->
+	<select id="Gw.PropertyAttributeModelMapper.selectCount"
+		resultType="java.lang.Integer">
+		select
+		count(s.id)
+		from gw_property_attribute s
+		where s.state = 1
+	</select>
+	<!-- 获取所有list集合 -->
+	<select id="Gw.PropertyAttributeModelMapper.selectList"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gw_property_attribute
+		
+	</select>
+
+	<!-- 根据编号获取物业性质信息 -->
+	<select id="Gw.PropertyAttributeModelMapper.selectByCode"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gw_property_attribute
+		where bm = #{code,jdbcType=VARCHAR}
+		and state = 1
+	</select>
+</mapper>

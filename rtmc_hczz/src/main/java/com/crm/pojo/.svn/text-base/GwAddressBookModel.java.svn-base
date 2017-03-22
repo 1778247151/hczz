@@ -1,0 +1,194 @@
+package com.crm.pojo;
+
+import java.io.Serializable;
+
+import com.crm.enums.AdminUserStatusEnum;
+import com.crm.enums.SexEnum;
+import com.crm.enums.SexNameEnum;
+
+/**
+ * 
+ * GwAddressBookModel:通讯录信息实体类
+ *
+ * @author hanzhiqiang
+ * @date 2016年11月8日
+ * @version jdk1.8
+ *
+ */
+public class GwAddressBookModel implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5890882442829570266L;
+	 
+		private Integer id;
+
+	    private String name;
+	    
+	    private Integer phone;
+	    
+	    private String fixedPhone;
+	    
+	    private String suffixPhone;
+	    
+	    private Integer sex;
+	    
+	    private String departmentCode;
+	    
+	    private String departmentName;
+	    
+	    private String email;
+	    
+	    private String qq;
+	    
+	    private Integer createUserId;
+	    
+	    private String createTime;
+	    
+	    private String createUserName;
+	    
+	    private Integer updateUserId;
+	    
+	    private String updateTime;
+	    
+	    private String updateUserName;
+	    
+	    private String sexName;
+
+	    public String getSexName() {
+			return SexNameEnum.getDisplayName(getSex());
+		}
+
+		public void setSexName(String sexName) {
+			this.sexName = sexName;
+		}
+		
+		public Integer getId() {
+			return id;
+		}
+
+		public void setId(Integer id) {
+			this.id = id;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public Integer getPhone() {
+			return phone;
+		}
+
+		public void setPhone(Integer phone) {
+			this.phone = phone;
+		}
+
+		public String getFixedPhone() {
+			return fixedPhone;
+		}
+
+		public void setFixedPhone(String fixedPhone) {
+			this.fixedPhone = fixedPhone;
+		}
+
+		public String getSuffixPhone() {
+			return suffixPhone;
+		}
+
+		public void setSuffixPhone(String suffixPhone) {
+			this.suffixPhone = suffixPhone;
+		}
+
+		public Integer getSex() {
+			return sex;
+		}
+
+		public void setSex(Integer sex) {
+			this.sex = sex;
+		}
+
+		public String getDepartmentCode() {
+			return departmentCode;
+		}
+
+		public void setDepartmentCode(String departmentCode) {
+			this.departmentCode = departmentCode;
+		}
+
+		public String getDepartmentName() {
+			return departmentName;
+		}
+
+		public void setDepartmentName(String departmentName) {
+			this.departmentName = departmentName;
+		}
+
+		public String getEmail() {
+			return email;
+		}
+
+		public void setEmail(String email) {
+			this.email = email;
+		}
+
+		public String getQq() {
+			return qq;
+		}
+
+		public void setQq(String qq) {
+			this.qq = qq;
+		}
+
+		public Integer getCreateUserId() {
+			return createUserId;
+		}
+
+		public void setCreateUserId(Integer createUserId) {
+			this.createUserId = createUserId;
+		}
+
+		public String getCreateTime() {
+			return createTime;
+		}
+
+		public void setCreateTime(String createTime) {
+			this.createTime = createTime == null ? null : createTime.trim();
+		}
+
+		public String getCreateUserName() {
+			return createUserName;
+		}
+
+		public void setCreateUserName(String createUserName) {
+			this.createUserName = createUserName;
+		}
+
+		public Integer getUpdateUserId() {
+			return updateUserId;
+		}
+
+		public void setUpdateUserId(Integer updateUserId) {
+			this.updateUserId = updateUserId;
+		}
+
+		public String getUpdateTime() {
+			return updateTime;
+		}
+
+		public void setUpdateTime(String updateTime) {
+			this.updateTime = updateTime == null ? null : updateTime.trim();
+		}
+
+		public String getUpdateUserName() {
+			return updateUserName;
+		}
+
+		public void setUpdateUserName(String updateUserName) {
+			this.updateUserName = updateUserName;
+		}
+	    
+}

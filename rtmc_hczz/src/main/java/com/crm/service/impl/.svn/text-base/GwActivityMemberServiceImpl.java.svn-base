@@ -1,0 +1,42 @@
+package com.crm.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwActivityMemberDao;
+import com.crm.pojo.GwActivityMemberModel;
+import com.crm.service.GwActivityMemberService;
+
+/**
+ * 
+ * GwActivityMemberServiceImpl:活动业务逻辑层实现
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwActivityMemberServiceManage")
+public class GwActivityMemberServiceImpl extends ServersManager<GwActivityMemberModel, GwActivityMemberDao> implements GwActivityMemberService{
+	
+	@Resource(name = "gwActivityMemberDaoManage")
+	@Override
+	public void setDao(GwActivityMemberDao gwActivityMemberDao) {
+		this.dao = gwActivityMemberDao;
+	}
+
+	@Override
+	public List<GwActivityMemberModel> getActivityMemberByCode(String code) {
+		return dao.getActivityMemberByCode(code);
+	}
+
+	@Override
+	public int updateJoinNumber(Map<String,Object> params) {
+		// TODO Auto-generated method stub
+		return dao.updateJoinNumber(params);
+	}
+}

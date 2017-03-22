@@ -1,0 +1,130 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.bean.ShopFormatsInfo;
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+
+import com.crm.dao.GwShopsLeaseDao;
+import com.crm.pojo.GwShopsLeaseModel;
+
+/**
+ * 
+ * GwShopsLeaseDaoImpl:店铺管理数据访问层实现
+ *
+ * @author chengpengfei
+ * @date  2016年5月16日
+ * @version  jdk1.8
+ *
+ */
+@Repository("gwShopsLeaseDaoManage")
+public class GwShopsLeaseDaoImpl implements GwShopsLeaseDao{
+
+	@Resource
+	private BaseDao dao;
+	@Override
+	public int insert(GwShopsLeaseModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.shopsLease.insert",e);
+	}
+
+	@Override
+	public int delete(GwShopsLeaseModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwShopsLeaseModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.shopsLease.update",e);
+	}
+
+	@Override
+	public GwShopsLeaseModel selectOne(GwShopsLeaseModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public List<GwShopsLeaseModel> selectList(GwShopsLeaseModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.shopsLease.deleteByPrimaryKey",id);
+	}
+
+	@Override
+	public GwShopsLeaseModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwShopsLeaseModel) dao.selectOne("gw.shopsLease.selectByPrimaryKey",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.shopsLease.selectPageList", "gw.shopsLease.selectCount", params);
+	}
+
+	@Override
+	public List<GwShopsLeaseModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.shopsLease.selectList");
+	}
+
+	@Override
+	public int deleteAll() {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.shopsLease.deleteAll");
+	}
+
+	@Override
+	public int batchInsertShopsLease(List<GwShopsLeaseModel> list) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.shopsLease.batchinsert",list);
+	}
+
+	@Override
+	public GwShopsLeaseModel getShopsLeaseByCode(String code) {
+		// TODO Auto-generated method stub
+		return (GwShopsLeaseModel) dao.selectOne("gw.shopsLease.selectBycode",code);
+	}
+
+	@Override
+	public BasePageResultVo getShopsLeaseListByCoufirm(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.shopsLease.selectPageListByCoufirm", "gw.shopsLease.selectCountByCoufirm", params);
+	}
+	
+	@Override
+	public int batchUpdateShopsLease(List<GwShopsLeaseModel> list) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.shopsLease.batchUpdateShopsLease", list);
+	}
+	@Override
+	public int batchDeleteByCode(List<GwShopsLeaseModel> list) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.shopsLease.batchDeleteByCode", list);
+	}
+	 @Override
+    public ShopFormatsInfo getShopformatsInfoByShopCode(Map<String, Object> paramMap) {
+        return (ShopFormatsInfo) dao.selectOne("gw.shopsLease.getFormatsByShopCode", paramMap);
+    }
+}

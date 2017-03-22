@@ -1,0 +1,44 @@
+package com.crm.service.impl;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwStockCheckDao;
+import com.crm.pojo.GwStockCheckModel;
+import com.crm.service.GwStockCheckService;
+/**
+ * 
+ * 
+ * GwStockCheckServiceImpl:物品盘点管理业务逻辑层实现
+ *
+ * @author  meishengjun
+ * @date    2016年11月3日
+ * @version jdk1.8
+ *
+ */
+@Service("gwStockCheckServiceManage")
+public class GwStockCheckServiceImpl extends ServersManager<GwStockCheckModel, GwStockCheckDao> implements GwStockCheckService {
+	@Resource(name="gwStockCheckDaoManage")
+	@Override
+	public void setDao(GwStockCheckDao dao) {
+		this.dao=dao;
+		
+	}
+
+	@Override
+	public GwStockCheckModel getStockCheckByLastOne(String time) {
+		// TODO Auto-generated method stub
+		return dao.getStockCheckByLastOne(time);
+	}
+
+	
+
+
+
+	
+
+	
+
+}

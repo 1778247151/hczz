@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gw.loseMaintenance" >
+  <resultMap id="BaseResultMap" type="com.crm.pojo.GwLoseMaintenanceModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="card_code" property="cardCode" jdbcType="VARCHAR" />
+    <result column="lose_user" property="loseUser" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="id_card" property="idCard" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="lose_address" property="loseAddress" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, code, card_code, lose_user, phone, id_card, sex, name, lose_address, description, 
+    status, create_user_id, create_time, update_user_id, update_time
+  </sql>
+  <select id="gw.loseMaintenance.selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_lose_maintenance
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="gw.loseMaintenance.deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from gw_lose_maintenance
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="gw.loseMaintenance.insert" parameterType="com.crm.pojo.GwLoseMaintenanceModel" >
+    insert into gw_lose_maintenance (id, code, card_code, 
+      lose_user, phone, id_card, 
+      sex, name, lose_address, 
+      description, status, create_user_id, 
+      create_time, update_user_id, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{cardCode,jdbcType=VARCHAR}, 
+      #{loseUser,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{loseAddress,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=VARCHAR}, #{updateUserId,jdbcType=INTEGER}, #{updateTime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="gw.loseMaintenance.insertSelective" parameterType="com.crm.pojo.GwLoseMaintenanceModel" >
+    insert into gw_lose_maintenance
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="cardCode != null" >
+        card_code,
+      </if>
+      <if test="loseUser != null" >
+        lose_user,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="idCard != null" >
+        id_card,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="loseAddress != null" >
+        lose_address,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="cardCode != null" >
+        #{cardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="loseUser != null" >
+        #{loseUser,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null" >
+        #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="loseAddress != null" >
+        #{loseAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="gw.loseMaintenance.updateByPrimaryKeySelective" parameterType="com.crm.pojo.GwLoseMaintenanceModel" >
+    update gw_lose_maintenance
+    <set >
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="cardCode != null" >
+        card_code = #{cardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="loseUser != null" >
+        lose_user = #{loseUser,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null" >
+        id_card = #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="loseAddress != null" >
+        lose_address = #{loseAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+   <!-- 根据条件，获取分页LIST集合 -->
+  <select id="gw.loseMaintenance.selectByPageList" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	SELECT
+	a.card_code cardCode,
+	a.`code`,
+	a.create_time,
+	a.create_user_id,
+	(select b.`name` from gw_admin_users b where b.id = a.create_user_id)as createUserName,
+	a.description,
+	a.id,
+	a.id_card,
+	a.lose_address,
+	a.lose_user,
+	a.`name`,
+	a.phone,
+	a.sex,
+	a.`status`,
+	a.update_time,
+	a.update_user_id,
+	(select b.`name` from gw_admin_users b where b.id = a.update_user_id)as updateUserName
+	
+FROM
+	gw_lose_maintenance a
+	<where>
+	    <if test="status != null and '' != status">  
+	          and a.status = #{status,jdbcType=INTEGER}         
+	    </if>
+	    <if test="code != null and '' != code">  
+	          and a.code LIKE CONCAT(CONCAT('%', #{code,jdbcType=VARCHAR}), '%')        
+	    </if>
+	    <if test="name != null and '' != name">  
+	          and a.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}), '%')        
+	    </if>
+    </where>
+    order by a.create_time desc
+limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+   <!-- 根据条件，获取分页LIST总数 -->
+  <select id="gw.loseMaintenance.selectByPageCount" resultType="java.lang.Integer"  parameterType="java.util.Map">
+ select
+  	count(a.id)	
+FROM
+	gw_lose_maintenance a
+	<where>
+    	<if test="status != null and '' != status">  
+	          and a.status = #{status,jdbcType=INTEGER}         
+	    </if>
+	    <if test="code != null and '' != code">  
+	          and a.code LIKE CONCAT(CONCAT('%', #{code,jdbcType=VARCHAR}), '%')        
+	    </if>
+	    <if test="name != null and '' != name">  
+	          and a.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}), '%')        
+	    </if>
+    </where>
+  </select>
+  
+  <!-- 根据编号修改报失维护信息 -->
+   <update id="gw.loseMaintenance.updateByCode" parameterType="java.util.Map" >
+   		update gw_lose_maintenance set status = #{status,jdbcType=INTEGER}
+   		where code = #{code,jdbcType=VARCHAR}  		
+   </update>
+   
+   <select id="gw.loseMaintenance.selectByLastOne" resultMap="BaseResultMap" >
+		SELECT
+			*
+		FROM
+			gw_lose_maintenance a
+		WHERE
+			a.code LIKE CONCAT(CONCAT('%', #{time,jdbcType=VARCHAR}), '%') 
+		ORDER BY
+			a.id DESC
+		LIMIT 1
+	</select>
+</mapper>

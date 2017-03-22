@@ -1,0 +1,284 @@
+package com.crm.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crm.common.BaseResultVo;
+import com.crm.common.LigerPageDataVo;
+import com.crm.common.ResponseCode;
+import com.crm.common.SecurityUtil;
+import com.crm.common.Status;
+import com.crm.enums.gwTypeTreeEnum;
+import com.crm.enums.gwTypeTreeStatusEnum;
+import com.crm.interceptor.exception.BaseException;
+import com.crm.pojo.GwBaseIntegralModel;
+import com.crm.pojo.GwMemberGradeModel;
+import com.crm.pojo.GwMembersModel;
+import com.crm.pojo.GwTypeTreeModel;
+import com.crm.service.GwBaseIntegralService;
+import com.crm.service.GwMemberGradeService;
+import com.crm.service.GwMembersService;
+import com.crm.service.GwTypeTreeService;
+import com.crm.util.DateUtil;
+
+@Controller
+@RequestMapping("/membersIntegral")
+public class GwMemberGradeIntegral extends BaseException {
+
+	private Logger logger = LoggerFactory.getLogger(GwTypeTreeController.class);
+
+	/**
+	 * 类型树业务逻辑
+	 */
+	@Resource(name = "gwTypeTreeServiceManage")
+	private GwTypeTreeService gwTypeTreeServiceImpl;
+	/**
+	 * 会员等级积分设置业务逻辑
+	 */
+	@Resource(name = "gwMemberGradeServiceManage")
+	private GwMemberGradeService gwMemberGradeServiceImpl;
+
+	/**
+	 * 基础积分规则业务逻辑
+	 */
+	@Resource(name = "gwBaseIntegralServiceManage")
+	private GwBaseIntegralService gwBaseIntegralServiceImpl;
+
+	/**
+	 * 会员业务逻辑
+	 */
+	@Resource(name = "gwMembersServiceManage")
+	private GwMembersService gwMembersServiceImpl;
+
+	/**
+	 * 
+	 * getMembersGradeManage: 获取会员等级
+	 * 
+	 * @author hemingjun
+	 * @date 2016年9月6日
+	 * @return
+	 */
+	@RequestMapping("/getMembersGradeManage.do")
+	@ResponseBody
+	public List<Object> getMembersGradeManage() {
+		List<Object> list = new ArrayList<>();
+		List<GwTypeTreeModel> modelList = gwTypeTreeServiceImpl
+				.getTypeTreeByType(gwTypeTreeEnum.type_FIVE.getStringValue());
+		for (GwTypeTreeModel g : modelList) {
+			if (g.getStatus() == 1) {
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				map.put("id", g.getId());
+				map.put("code", g.getCode());
+				map.put("text", g.getName());
+				list.add(map);
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * addMembersManageGrade 添加会员等级
+	 * 
+	 * @author hemingjun
+	 * @date 2016年9月6日
+	 * @param
+	 * @return
+	 */
+	@RequestMapping("/addMembersManageGrade.do")
+	@ResponseBody
+	public BaseResultVo addMembersManageGrade(GwTypeTreeModel gwTypeTreeModel, HttpServletRequest request) {
+		GwTypeTreeModel t = gwTypeTreeServiceImpl.getTypeTreeByCode(gwTypeTreeModel.getCode());
+		if (t != null) {
+			return BaseResultVo.responseFail("编号已存在");
+		}
+
+		Integer userid = SecurityUtil.getAdminUser(request).getUserId();
+		gwTypeTreeModel.setCreateUserId(userid);
+		gwTypeTreeModel.setCreateTime(DateUtil.getCurrentDatetime("-"));
+		gwTypeTreeModel.setUpdateUserId(userid);
+		gwTypeTreeModel.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+
+		gwTypeTreeModel.setType(gwTypeTreeEnum.type_FIVE.getStringValue());
+
+		gwTypeTreeServiceImpl.insert(gwTypeTreeModel);
+
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * delMembersgradeManage: 删除会员等级，通过id
+	 * 
+	 * @author hemingjun
+	 * @date 2016年9月6日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/delMembersgradeManage.do")
+	@ResponseBody
+	public BaseResultVo delMembersgradeManage(int id, String code, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+		if (id == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");// 提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+		List<GwBaseIntegralModel> baseIntegralList = gwBaseIntegralServiceImpl.getAllList();
+		for (GwBaseIntegralModel gwBaseIntegralModel : baseIntegralList) {
+			if (gwBaseIntegralModel.getMemberGradeCode().equals(code)) {
+				status.setCode(ResponseCode.OPR_FAIL);
+				status.setMsg("编号已生基本积分规则，不能删除");// 提示信息
+				baseResultVo.setStatus(status);
+				return baseResultVo;
+			}
+		}
+		List<GwMembersModel> membersList = gwMembersServiceImpl.getAllList();
+		for (GwMembersModel gwMembersModel : membersList) {
+			if (gwMembersModel.getGrade() != null) {
+				if (gwMembersModel.getGrade().equals(code)) {
+					status.setCode(ResponseCode.OPR_FAIL);
+					status.setMsg("编号已生成会员信息，不能删除");// 提示信息
+					baseResultVo.setStatus(status);
+					return baseResultVo;
+				}
+			}
+		}
+		List<GwMemberGradeModel> memberGradeIntegralList = gwMemberGradeServiceImpl.getMemberGradeByGradeCode(code);
+		if (memberGradeIntegralList.size() > 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("编号已生成会员等级积分规则，不能删除");// 提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+
+		int num = gwTypeTreeServiceImpl.deleteById(id);
+		if (num < 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("操作失败");// 提示信息
+		}
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * updateMembersGradeManage: 更新会员等级
+	 * 
+	 * @author hemingjun
+	 * @date 2016年9月6日
+	 * @param gwTypeTreeModel
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/updateMembersGradeManage.do")
+	@ResponseBody
+	public BaseResultVo updateMembersGradeManage(GwTypeTreeModel gwTypeTreeModel, HttpServletRequest request) {
+		BaseResultVo baseResultVo = new BaseResultVo();
+		Status status = new Status();
+		status.setCode(ResponseCode.OPR_SUCCESS);// 提示代码
+		status.setMsg("操作成功");// 提示信息
+		status.setDebugMsg("");// bug信息
+		status.setUrl("");// url
+
+		// 验证主键是否为空
+		if (gwTypeTreeModel.getId() == 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("数据异常");
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+		//等级编号
+		String code= gwTypeTreeModel.getCode();
+		List<GwBaseIntegralModel> baseIntegralList = gwBaseIntegralServiceImpl.getAllList();
+		for (GwBaseIntegralModel gwBaseIntegralModel : baseIntegralList) {
+			if (gwBaseIntegralModel.getMemberGradeCode().equals(code)) {
+				status.setCode(ResponseCode.OPR_FAIL);
+				status.setMsg("编号已生基本积分规则信息，不能更改");// 提示信息
+				baseResultVo.setStatus(status);
+				return baseResultVo;
+			}
+		}
+		List<GwMembersModel> membersList = gwMembersServiceImpl.getAllList();
+		for (GwMembersModel gwMembersModel : membersList) {
+			if (gwMembersModel.getGrade() != null) {
+				if (gwMembersModel.getGrade().equals(code)) {
+					status.setCode(ResponseCode.OPR_FAIL);
+					status.setMsg("编号已生成会员信息，不能更改");// 提示信息
+					baseResultVo.setStatus(status);
+					return baseResultVo;
+				}
+			}
+		}
+		List<GwMemberGradeModel> memberGradeIntegralList = gwMemberGradeServiceImpl.getMemberGradeByGradeCode(code);
+		if (memberGradeIntegralList.size() > 0) {
+			status.setCode(ResponseCode.OPR_FAIL);
+			status.setMsg("编号已生成会员等级积分规则信息，不能更改");// 提示信息
+			baseResultVo.setStatus(status);
+			return baseResultVo;
+		}
+		
+		// 更新时间
+		gwTypeTreeModel.setUpdateTime(DateUtil.getCurrentDatetime("-"));
+		int userid = SecurityUtil.getAdminUser(request).getUserId();
+		gwTypeTreeModel.setUpdateUserId(userid);
+
+		// 更新级别信息
+		gwTypeTreeServiceImpl.update(gwTypeTreeModel);
+		baseResultVo.setStatus(status);
+		return baseResultVo;
+	}
+
+	/**
+	 * 
+	 * getMembersGradeManageList: 得到会员等级信息，分页
+	 * 
+	 * @author hemingjun
+	 * @date 2016年9月6日
+	 * @param currentPage
+	 * @param pageSize
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getMembersGradeManageList.do")
+	@ResponseBody
+	public LigerPageDataVo getMembersGradeManageList(int currentPage, int pageSize, HttpServletRequest request) {
+		// 条件参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("currentPage", currentPage);
+		params.put("pageSize", pageSize);
+
+		List<GwTypeTreeModel> list = gwTypeTreeServiceImpl.getTypeTreeByType(gwTypeTreeEnum.type_FIVE.getStringValue());
+
+		// liger ui 分页格式数据
+		LigerPageDataVo data = new LigerPageDataVo();
+		data.setRows(list);
+		data.setTotal(list.size());
+		return data;
+	}
+}

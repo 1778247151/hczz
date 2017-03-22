@@ -1,0 +1,76 @@
+package com.crm.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwClubDao;
+import com.crm.pojo.GwClubModel;
+import com.crm.service.GwClubService;
+
+/**
+ * 
+ * GwClubServiceImpl:业务逻辑层实现
+ *
+ * @author hanzhiqiang
+ * @date  2016年11月10日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwClubServiceManage")
+public class GwClubServiceImpl extends ServersManager<GwClubModel, GwClubDao> implements GwClubService{
+
+	@Resource(name = "gwClubDaoManage")
+	@Override
+	public void setDao(GwClubDao gwClubDao) {
+		// TODO Auto-generated method stub
+		this.dao = gwClubDao;
+	}
+
+	@Override
+	public GwClubModel getClubById(Integer id) {
+		// TODO Auto-generated method stub
+		return dao.getClubById(id);
+	}
+
+	@Override
+	public List<GwClubModel> getListsApi() {
+		// TODO Auto-generated method stub
+		return dao.getListsApi();
+	}
+
+	@Override
+	public List<GwClubModel> getClubListByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getClubListByCondition(params);
+	}
+
+	@Override
+	public int addClub(GwClubModel gwClubModel) {
+		// TODO Auto-generated method stub
+		return dao.insert(gwClubModel);
+	}
+
+	@Override
+	public int updateClub(GwClubModel gwClubModel) {
+		// TODO Auto-generated method stub
+		return dao.update(gwClubModel);
+	}
+
+	@Override
+	public int deleteClubById(int id) {
+		// TODO Auto-generated method stub
+		return dao.deleteClubById(id);
+	}
+
+	@Override
+	public GwClubModel getClubByLastOne(String time) {
+		// TODO Auto-generated method stub
+		return dao.getClubByLastOne(time);
+	}
+
+}

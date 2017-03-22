@@ -1,0 +1,7 @@
+﻿[
+    { "id": "search", "text": "搜索" },
+    { "id": "update", "text": "更新" },
+    { "id": "add", "text": "添加" },
+    { "id": "delete", "text": "删除" }
+
+]

@@ -1,0 +1,43 @@
+package com.crm.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
+
+import com.crm.core.ServersManager;
+import com.crm.dao.GwPaymentTenderDao;
+import com.crm.pojo.GwPaymentTenderModel;
+import com.crm.service.GwPaymentTenderService;
+
+/**
+ * 
+ * GwPaymentTenderServiceImpl:支付方式积分业务逻辑层实现
+ *
+ * @author xiangtao
+ * @date  2016年6月20日
+ * @version  jdk1.8
+ *
+ */
+@Service("gwPaymentTenderServiceManage")
+public class GwPaymentTenderServiceImpl extends ServersManager<GwPaymentTenderModel, GwPaymentTenderDao> implements GwPaymentTenderService{
+	
+	@Resource(name = "gwPaymentTenderDaoManage")
+	@Override
+	public void setDao(GwPaymentTenderDao gwPaymentTenderDao) {
+		this.dao = gwPaymentTenderDao;
+	}
+
+	@Override
+	public List<GwPaymentTenderModel> getPaymentTenderAllListApi(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.getPaymentTenderAllListApi(params);
+	}
+
+    @Override
+    public GwPaymentTenderModel getPaymentTenderByCode(String paymentTenderCode) {
+        // TODO Auto-generated method stub
+        return dao.getPaymentTenderByCode(paymentTenderCode);
+    }
+}

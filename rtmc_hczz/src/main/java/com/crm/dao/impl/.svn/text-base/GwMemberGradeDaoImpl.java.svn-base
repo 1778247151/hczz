@@ -1,0 +1,106 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwMemberGradeDao;
+import com.crm.pojo.GwMemberGradeModel;
+
+/**
+ * 
+ * GwMemberGradeDaoImpl:会员等级设置数据访问层实现
+ *
+ * @author chengpengfei
+ * @date  2016年6月23日
+ * @version  jdk1.8
+ *
+ */
+@Repository("gwMemberGradeDaoManage")
+public class GwMemberGradeDaoImpl implements GwMemberGradeDao{
+
+	@Resource
+	private BaseDao dao;
+	@Override
+	public int insert(GwMemberGradeModel e) {
+		// TODO Auto-generated method stub
+		return dao.insert("gw.memberGrade.insert",e);
+	}
+
+	@Override
+	public int delete(GwMemberGradeModel e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwMemberGradeModel e) {
+		// TODO Auto-generated method stub
+		return dao.update("gw.memberGrade.updateById",e);
+	}
+
+	@Override
+	public GwMemberGradeModel selectOne(GwMemberGradeModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwMemberGradeModel> selectList(GwMemberGradeModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		// TODO Auto-generated method stub
+		return dao.delete("gw.memberGrade.deleteById",id);
+	}
+
+	@Override
+	public GwMemberGradeModel selectById(int id) {
+		// TODO Auto-generated method stub
+		return (GwMemberGradeModel) dao.selectOne("gw.memberGrade.selectById",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageList("gw.memberGrade.selectByPageList", "gw.memberGrade.selectByPageCount", params);
+	}
+
+	@Override
+	public List<GwMemberGradeModel> getAllList() {
+		return dao.selectList("gw.memberGrade.selectAll");
+	}
+
+	@Override
+	public GwMemberGradeModel getMemberGradeByLaseOne(String time) {
+		// TODO Auto-generated method stub
+		return (GwMemberGradeModel) dao.selectOne("gw.memberGrade.selectByLastOne",time);
+	}
+
+	@Override
+	public List<GwMemberGradeModel> getMemberGradeByGradeCode(String code) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.memberGrade.selectByGradeCode",code);
+	}
+
+	@Override
+	public List<GwMemberGradeModel> getMemberGradeIntegralByCondition(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.memberGrade.getMemberGradeIntegralByCondition", params);
+	}
+
+}

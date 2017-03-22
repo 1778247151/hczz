@@ -1,0 +1,82 @@
+package com.crm.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import com.crm.common.BasePageResultVo;
+import com.crm.core.BaseDao;
+import com.crm.dao.GwBaseIntegralDao;
+import com.crm.pojo.GwBaseIntegralModel;
+
+@Repository("gwBaseIntegralDaoManage")
+public class GwBaseIntegralDaoImpl implements GwBaseIntegralDao{
+	@Resource
+	private BaseDao dao;
+	
+	@Override
+	public int insert(GwBaseIntegralModel e) {
+		return dao.insert("gw.base.integral.insert",e);
+	}
+
+	@Override
+	public int delete(GwBaseIntegralModel e) {
+		return dao.delete("gw.base.integral.deleteById",e.getId());
+	}
+
+	@Override
+	public int deleteByIds(int[] ids) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(GwBaseIntegralModel e) {
+		return dao.update("gw.base.integral.update",e);
+	}
+
+	@Override
+	public GwBaseIntegralModel selectOne(GwBaseIntegralModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GwBaseIntegralModel> selectList(GwBaseIntegralModel e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int deleteById(int id) {
+		return dao.delete("gw.base.integral.deleteByPrimaryKey", id);
+	}
+
+	@Override
+	public GwBaseIntegralModel selectById(int id) {
+		return (GwBaseIntegralModel) dao.selectOne("gw.base.integral.selectByPrimaryKey",id);
+	}
+
+	@Override
+	public BasePageResultVo selectPageList(Map<String, Object> params) {
+		return dao.selectPageList("gw.base.integral.selectPageList", "gw.base.integral.selectCount", params);
+	}
+	@Override
+	public List<GwBaseIntegralModel> selectByConditionList(Map<String, Object> params) {
+		return (List<GwBaseIntegralModel>) dao.selectList("gw.base.integral.selectByConditionList",params);
+	}
+	@Override
+	public List<GwBaseIntegralModel> getAllList() {
+		// TODO Auto-generated method stub
+		return dao.selectList("gw.base.integral.getAllList");
+	}
+	
+    @Override
+    public GwBaseIntegralModel getBaseIntegralByGradeCodeAndShopCode(Map<String, Object> paramsMap) {
+        // TODO Auto-generated method stub
+        return (GwBaseIntegralModel) dao.selectOne("gw.base.integral.selectBaseIntegralBy", paramsMap);
+    }
+}
