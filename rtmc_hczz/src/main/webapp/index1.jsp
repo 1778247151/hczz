@@ -32,9 +32,26 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <script type="text/javascript" src="/js/action/sys.common.js"></script>
 <script type="text/javascript" src="/js/common.js"></script>
 <link type="text/css" rel="stylesheet" href="/css/base.css" />
+<style>
+	.btn a{
+		float: left;
+	}
+</style>
 </head>
 <body>
 <div id="maingrid" style="background:#fff;"></div>
+    <div class="topInfo">
+         <div class="rbContents">
+              <div class="rbConInfo">
+                  <div class="btn">
+	                  <a href="javascript:addArchives();" id="addArchives" class="add">添加案件</a>
+	                  <a href="javascript:addArchives();" id="addArchives" class="add">添加案情</a>
+	                  <a href="javascript:editArchives();" id="updateArchives" class="update">修改</a>
+	                  <a href="javascript:lookArchives();" id="lookArchives" class="look">查看</a>
+             	  </div>
+           	  </div>
+       </div>
+       </div>
 </body>
 <script type="text/javascript">
 var grid,
@@ -45,9 +62,9 @@ query_url = baseUrl+"archives/getArchivesList.do",
 columns = [
 	{ display: '主键ID', hide:true,	name: 'id',width: 1},
 	{ display: '档案案情', name: 'caseInformation' ,width: 120},
-	{ display: '类型', name: 'type',width: 100},
 	{ display: '创建者', name: 'createUser',width: 80},
-	{ display: '创建时间', name: 'createTime',width: 120}
+	{ display: '创建时间', name: 'createTime',width: 120},
+	{ display: '详情', name: 'type',width: 100}
 ],
 
 //所有页面都要获取这两个变量
@@ -90,17 +107,17 @@ grid.loadData();
 
 /**
 * 
-* editAdminUsers:修改管理员用户
+* editArchives:修改案件
 *
-* @author   yumaochun
-* @date     2016年8月16日
+* @author   meishengjun
+* @date     2017年3月22日
 *
 */
-function editAdminUsers(){
+function editArchives(){
 var _flag = $.fsh.noteForNotSelected("请选中数据后，再操作！");
 if(_flag){
-	var url="/manager/gw_admin_users/gw_admin_users_edit.html?id="+_flag.id;
-	$.ligerDialog.open({ width:900, height: 420, url: url, isResize: false, title: "修改管理员用户"});
+	var url="/manager/rt_Archives/rt_Archives_edit.html?id="+_flag.id;
+	$.ligerDialog.open({ width:900, height: 420, url: url, isResize: false, title: "修改案件"});
 }
 
 }
@@ -108,66 +125,57 @@ if(_flag){
 
 /**
 * 
-* quit:离职操作
+* addArchives:添加案件
 *
-* @author   yumaochun
-* @date     2016年8月16日
+* @author   meishengjun
+* @date      2017年3月22日
 *
 */
-function quit(){
+function addArchives(){
+var url="/manager/rt_Archives/rt_Archives_add.html";
+$.ligerDialog.open({ width:900, height: 450, url: url, isResize: false, title: "添加案件"});
+}
+/**
+* 
+* lookArchives:查看案件详情
+*
+* @author   meishengjun
+* @date     2017年3月22日
+*
+*/
+function lookArchives(){
 var _flag = $.fsh.noteForNotSelected("请选中数据后，再操作！");
-if(_flag){
-	var flag = $.ligerDialog.confirm( "确定修改为离职吗?",function(flag){
-		if(flag){
-			$.ajax({
-				url:'/adminUsers/updateStateByid.do?id='+_flag.id,
-				method:'post',
-				type:'json',
-				success:function(data){
-					if(data.status.code=="10000"){
-						  $.ligerDialog.alert(data.status.msg, "提示信息", "success",function(){	
-							  reflushData();
-						});
-					 }else{
-						 $.ligerDialog.alert(data.status.msg, "提示信息", "error",function(){
-							
-						 });
-					 }
-				}	
-			}); 
-		}
+	//window.location.href="/demo.jsp?id="+_flag.id;;
+	window.open('/demo.jsp','_blank','')
+
+}
+
+var form;
+$(function() {
+	//创建表单结构 
+	form = $("#form2").ligerForm({
+		inputWidth : 150,
+		labelWidth : 150,
+		space : 0,
+		labelAlign : 'right',
+		fields : [  {
+			display : "案件类型",name : "title",newline : false,type : "text"},
+			{display : "状态",name : "status",newline : false,type : "text"}
+		]
 	});
-}
-}
-/**
-* 
-* addAdminUsers:添加管理员用户
-*
-* @author   yumaochun
-* @date     2016年8月16日
-*
-*/
-function addAdminUsers(){
-var url="/manager/gw_admin_users/gw_admin_users_add.html";
-$.ligerDialog.open({ width:900, height: 450, url: url, isResize: false, title: "添加管理员用户"});
-}
-/**
-* 
-* deleteAdminUsers:删除管理员用户
-*
-* @author   yumaochun
-* @date     2016年8月16日
-*
-*/
-function deleteAdminUsers(){
-var _flag = $.fsh.noteForNotSelected("请选中数据后，再操作！");
-if(_flag) {
-	var url = baseUrl + "adminUsers/deleteseGroup.do?id=" +_flag.id;
-	$.fsh.deleteSelectedRow(url, grid,_flag.id);
-}
-}
+
+});
 
 
+function getVipInfoByCondition(){
+	var form = new liger.get("form2");
+ 	var data= form.getData();
+ 	var title = data.title;
+ 	var content = data.content;
+ 	//alert(cardCode+","+cardType+","+userName+","+grade)
+ 	dataUrl = baseUrl + "notice/getNoticeList.do?title="+title+"&content="+content;
+ 	grid = $.fsh.createTable(columns, dataUrl, $.fsh.options.page(), "", true);
+}
 
  </script>
 </html>
