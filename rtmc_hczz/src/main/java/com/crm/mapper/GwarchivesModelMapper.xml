@@ -20,7 +20,7 @@
   </select>
     <!-- 根据条件，总记录数 -->
   <select id="gw.archives.selectCount" resultType="java.lang.Integer">
-     select * from gw_archives
+     select count(*) from gw_archives
     where 1=1
   </select>
 </mapper>
