@@ -115,7 +115,7 @@ $(document).ready(function(){
 	                }
 	            }
 			},
-			{ display: "职位", name: "positions", newline: false, type: "select",validate:{required:true},
+		{ display: "职位", name: "positions", newline: false, type: "select",validate:{required:true},
 				editor: {
 					valueField: 'code',
 					textField: 'text',
@@ -128,14 +128,14 @@ $(document).ready(function(){
 	             	 return true;
 	                }, 	
 					}
-			},
-		/* { display: "职位", name: "positions", newline: true, type: "select",validate:{required:true},
+			}, 
+		 { display: "职位", name: "positions", newline: true, type: "select",validate:{required:true},
 	       	 editor: {
 	                url: '/departmentPosition/getAllDepartmentPositions.do', ajaxType: 'get',
 	                type: "select",
 	                valueField: 'code', textField: 'text',
 	            }
-		}, */
+		}, 
 		{ display: "状态", name: "state", newline: true, type: "select",validate:{required:true},options: { valueFieldID: "state" ,url:"/data/roleState.txt"}},
 		{ display: "QQ", name: "qq", newline: false, type: "text"},
 		{ display: "email", name: "email", newline: true, type: "text",validate:{email:true}}, 

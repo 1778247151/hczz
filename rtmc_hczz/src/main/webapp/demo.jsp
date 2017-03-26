@@ -35,6 +35,7 @@ body{
               </style>
 </head>
 <body>
+
 <div id="dy">
 <div>
 <img src="../images/demo1.png">
@@ -51,6 +52,13 @@ body{
 </body>
 <script language="javascript"> 
 function PrintTable(Id){ 
+/* 	urlinfo=window.location.href; //获取当前页面的url 
+	len=urlinfo.length;//获取url的长度 
+	offset=urlinfo.indexOf("?");//设置参数字符串开始的位置 
+	newsidinfo=urlinfo.substr(offset,len)//取出参数字符串 这里会获得类似“id=1”这样的字符串 
+	newsids=newsidinfo.split("=");//对获得的参数字符串按照“=”进行分割 
+	newsid=newsids[1];//得到参数值 
+	alert("您要传递的参数值是"+newsid);  */
 var mStr; 
 mStr = window.document.body.innerHTML ; 
 var mWindow = window; 

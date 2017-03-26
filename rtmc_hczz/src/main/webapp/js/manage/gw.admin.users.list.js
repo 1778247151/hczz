@@ -43,7 +43,6 @@ $(function (){
 	$.fsh.createTitleAndFuncs(_title, menuId);
 	//创建数据列表
 	dataUrl = baseUrl + "adminUsers/getAdminUsersList.do";
-	alert(dataUrl);
 	grid = $.fsh.createTable(columns, dataUrl, $.fsh.options.page(), "", true);
 	//排序跳转至第一页
 	$("div.l-grid-hd-cell-inner").click(function(){

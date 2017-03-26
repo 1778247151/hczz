@@ -6,19 +6,59 @@ public class GwarchivesModel implements Serializable{
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -8088648972972733776L;
 
 	private Integer id;
-
+	private String name;
     private String createUser;
-
     private String type;
-
     private String createTime;
-
     private String caseInformation;
+    private String operation;
+    private String code;	
+    private int status;
+    private String userList;
+    public String getUserList() {
+		return userList;
+	}
 
-    public Integer getId() {
+	public void setUserList(String userList) {
+		this.userList = userList;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getOperation() {
+		return operation;
+	}
+
+	public void setOperation(String operation) {
+		this.operation = operation;
+	}
+
+	public Integer getId() {
         return id;
     }
 

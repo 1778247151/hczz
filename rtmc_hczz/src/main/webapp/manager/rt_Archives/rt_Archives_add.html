@@ -49,14 +49,14 @@ $(document).ready(function(){
             }
         },
         messages:{
-        	code:{
+        	/* code:{
                 required: "案件编号不能为空",
                 rangelength: "用户账号由3-20位字母、数字、下划线组成"
             },
             createUser:{
                 required: "创建者不能为空",
                 rangelength: "密码由3-20位字符组成"
-            },
+            }, */
         
         }
     });
@@ -74,12 +74,11 @@ $(document).ready(function(){
 			validate : true,
 
         fields: [
-                 
-                 
-             	{ display: '案件编号', newline: true ,	name: 'id',width: 180},
-            	{ display: '创建者', name: 'createUser', newline: false, width: 180},
+             	{ display: '案件编号', newline: true ,	name: 'code',width: 180},
+             	{ display: '案件名称', newline: true ,	name: 'name',width: 180},
+            	{ display: '创建者', name: 'createUser', newline: true, width: 180},
             	{ display: '案件类型', name: 'type',  newline: true ,	 width: 180},
-            	{ display: '创建时间', name: 'createTime', newline: false, width: 180}
+            	{ display: '创建时间', name: 'createTime', newline: true,  type:'date', width: 180}
             ]
      });  
  });
@@ -110,13 +109,10 @@ $(document).ready(function(){
     </script>
 </head>
 <body style="overflow-x:hidden;overflow-y:hidden;">
-案件基本信息：
-<br>
 
-   <form id="gwArchivesForm" style="margin-left:100px;margin-top:20px;margin-left:20px;">
-           
+   <form id="gwArchivesForm" style="margin-left:50px;margin-top:20px;margin-left:-5px;">
     </form>     
-    <div class="btn" style="margin-left:330px;margin-top:30px;">
+    <div class="btn" style="margin-left:180px;margin-top:30px;">
            <a class="add" href="javascript:addAcrhives()">添加</a>
      </div>  
 </body>

@@ -3,24 +3,111 @@
 <mapper namespace="gw.archives" >
   <resultMap id="BaseResultMap" type="com.crm.pojo.GwarchivesModel" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="createUser" property="create_user" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="operation" property="operation" jdbcType="VARCHAR" />
     <result column="case_information" property="caseInformation" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, type, create_user, create_time, case_information
+    id, create_user,type, create_time,name,operation,code
   </sql>
   
+    <select id="gw.archives.selectByid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gw_archives
+    where id = #{id,jdbcType=INTEGER}
+  </select>
    <!-- 根据条件，获取分页数据list集合 -->
   <select id="gw.archives.selectPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
-    select * from gw_archives
-    where 1=1
+    select * from gw_archives n 
+   <where> 
+    <if test="name != null and '' != name">  
+          n.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}), '%')         
+    </if>
+    <if test="date != null and '' != date">  
+          n.create_time LIKE CONCAT(CONCAT('%', #{date,jdbcType=VARCHAR}), '%')         
+    </if>
+<!--     <if test="userid!= null">  
+          n.create_time LIKE CONCAT(CONCAT('%', #{date,jdbcType=VARCHAR}), '%')         
+    </if> -->
+	</where> 
+	order by  n.create_time  desc
     limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
   </select>
     <!-- 根据条件，总记录数 -->
   <select id="gw.archives.selectCount" resultType="java.lang.Integer">
-     select count(*) from gw_archives
-    where 1=1
+     select count(*) from gw_archives n
+     <where> 
+    <if test="name != null and '' != name">  
+          n.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}), '%')         
+    </if>
+    <if test="date != null and '' != date">  
+          n.create_time LIKE CONCAT(CONCAT('%', #{date,jdbcType=VARCHAR}), '%')         
+    </if>
+	</where> 
   </select>
+   <!-- 根据用户，获取分页数据list集合 -->
+  <select id="gw.archives.selectPageListByAccount" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select * from gw_archives n inner join  rc_ar_user r on n.id=r.arch_id inner join gw_admin_users u on r.uiser_id=u.id
+   <where> 
+     <if test="userid!= null">  
+         u.id= #{userid,jdbcType=VARCHAR}    
+    </if>
+    <if test="name != null and '' != name">  
+      and   n.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}), '%')         
+    </if>
+    <if test="date != null and '' != date">  
+     and    n.create_time LIKE CONCAT(CONCAT('%', #{date,jdbcType=VARCHAR}), '%')         
+    </if>
+	</where> 
+	order by  n.create_time  desc
+    limit #{offset,jdbcType=INTEGER} , #{pageSize,jdbcType=INTEGER}
+  </select>
+    <!-- 根据条件，总记录数 -->
+  <select id="gw.archives.selectCountByAccount" resultType="java.lang.Integer">
+     select count(*) from gw_archives n inner join  rc_ar_user r on n.id=r.arch_id inner join gw_admin_users u on r.uiser_id=u.id
+       <where> 
+     <if test="userid!= null">  
+         u.id= #{userid,jdbcType=VARCHAR}    
+    </if>
+    <if test="name != null and '' != name">  
+      and   n.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}), '%')         
+    </if>
+    <if test="date != null and '' != date">  
+     and    n.create_time LIKE CONCAT(CONCAT('%', #{date,jdbcType=VARCHAR}), '%')         
+    </if>
+	</where> 
+  </select>
+    <insert id="gw.archives.insert" parameterType="com.crm.pojo.Rt_arUser" >
+    insert into gw_archives (id, code,name, create_user,create_time,type
+      )
+    values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR}
+      )
+  </insert>
+    <update id="gw.archives.update" parameterType="com.crm.pojo.GwarchivesModel" >
+    update gw_archives
+    <set >
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time= #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user= #{createUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
 </mapper>

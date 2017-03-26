@@ -44,8 +44,8 @@
         showTableToggleBtn: false,              //是否显示'显示隐藏Grid'按钮 
         switchPageSizeApplyComboBox: false,     //切换每页记录数是否应用ligerComboBox
         allowAdjustColWidth: true,              //是否允许调整列宽     
-        checkbox: false,                         //是否显示复选框
-        isSingleCheck: false,                  //复选框选择的时候是否单选模式
+        checkbox: true,                         //是否显示复选框
+        isSingleCheck: true,                  //复选框选择的时候是否单选模式
         allowHideColumn: true,                 //是否显示'切换列层'按钮
         enabledEdit: false,                      //是否允许编辑
         isScroll: true,                         //是否滚动 
@@ -90,7 +90,7 @@
         isSelected: null,                       //选择 初始化函数
         frozen: true,                          //是否固定列
         frozenDetail: false,                    //明细按钮是否在固定列中
-        frozenCheckbox: true,                  //复选框按钮是否在固定列中
+        frozenCheckbox: false,                  //复选框按钮是否在固定列中
         detail: null,
         detailHeight: 260,
         isShowDetailToggle: null,                  //是否显示展开/收缩明细的判断函数

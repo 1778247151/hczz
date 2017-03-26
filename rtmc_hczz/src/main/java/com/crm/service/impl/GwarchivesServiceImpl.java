@@ -10,23 +10,18 @@ import org.springframework.stereotype.Service;
 import com.crm.common.BasePageResultVo;
 import com.crm.core.DaoManager;
 import com.crm.core.ServersManager;
+import com.crm.dao.GwarchivesDao;
 import com.crm.pojo.GwarchivesModel;
 import com.crm.service.GwarchivesService;
 @Service("gwarchivesServiceDaoManage")
-public class GwarchivesServiceImpl extends ServersManager<GwarchivesModel, DaoManager<GwarchivesModel>> implements GwarchivesService{
+public class GwarchivesServiceImpl extends ServersManager<GwarchivesModel, GwarchivesDao> implements GwarchivesService{
 	@Resource(name="gwarchivesDaoManage")
 	@Override
-	public void setDao(DaoManager<GwarchivesModel> dao) {
+	public void setDao(GwarchivesDao dao) {
 		this.dao=dao;
 	}
 	@Override
 	public int delete(GwarchivesModel e) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int deleteById(int id) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -37,29 +32,6 @@ public class GwarchivesServiceImpl extends ServersManager<GwarchivesModel, DaoMa
 		return 0;
 	}
 
-	@Override
-	public int update(GwarchivesModel e) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public GwarchivesModel selectOne(GwarchivesModel e) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public GwarchivesModel selectById(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public BasePageResultVo selectPageList(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return dao.selectPageList(params);
-	}
 
 	@Override
 	public List<GwarchivesModel> selectList(GwarchivesModel e) {
@@ -82,7 +54,7 @@ public class GwarchivesServiceImpl extends ServersManager<GwarchivesModel, DaoMa
 	@Override
 	public int insert(GwarchivesModel record) {
 		// TODO Auto-generated method stub
-		return 0;
+		return dao.insert(record);
 	}
 
 	@Override
@@ -113,6 +85,11 @@ public class GwarchivesServiceImpl extends ServersManager<GwarchivesModel, DaoMa
 	public int updateByPrimaryKey(GwarchivesModel record) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	@Override
+	public BasePageResultVo selectPageListByAccount(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return dao.selectPageListByAccount(params);
 	}
 
 

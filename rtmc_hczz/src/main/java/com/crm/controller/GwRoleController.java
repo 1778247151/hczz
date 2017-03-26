@@ -265,8 +265,6 @@ public class GwRoleController extends BaseException{
 		}else{
 		    menuTreeList=gwMenuServiceImpl.getAllList();
 		}
-
-		
 		//获取角色的权限菜单
 		List<GwRoleGroupModel> roleGroupList=gwRoleGroupServiceImpl.getRoleGroupsByRoleId(roleId);
 		List<HashMap<String, Object>> treeList=new ArrayList<HashMap<String,Object>>();

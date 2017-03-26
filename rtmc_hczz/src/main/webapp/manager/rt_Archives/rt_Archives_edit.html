@@ -30,7 +30,7 @@
 
 <script>
 $(document).ready(function(){
-    $("#gwAdminUsersForm").validate({
+    $("#gwArchivesForm").validate({
         rules: {
             code:{
                 required: true,
@@ -73,27 +73,28 @@ $(document).ready(function(){
  $(function ()
  { 
      //创建表单结构 
-     form = $("#gwAdminUsersForm").ligerForm({
+     form = $("#gwArchivesForm").ligerForm({
          inputWidth: 200, labelWidth:150, space: 20,labelAlign:'right',
 			validate : true,
-         fields: [
-		{ display: "案件编号", name: "code", newline: true, type: "text",validate:{required:true}},
-		{ display: "案件类型", name: "type", newline: false, type: "text",validate:{required:true}},
-		{ display: "创建人", name: "createUser", newline: true, type: "text"},
-		{ display: "创建时间", name: "createTime", newline: false, type: "text",validate:{email:true}}, 
-         ]
+			fields: [
+		             { display: '案件编号', newline: true ,	name: 'code',width: 180},
+		             { display: '案件名称', newline: true ,	name: 'name',width: 180},
+		             { display: '创建者', name: 'createUser', newline: true, width: 180},
+		             { display: '案件类型', name: 'type',  newline: true ,	 width: 180},
+		             { display: '创建时间', name: 'createTime', newline: true,  type:'date', width: 180}
+		            ]
      }); 
-     getGwAdminUsersById(id);
+     getArchivesById(id);
  });
          //获取用户信息
-         function getGwAdminUsersById(id){
+         function getArchivesById(id){
          	$.ajax({
-         		url:'/adminUsers/getAdminUsersById.do?id='+id,
+         		url:'/archives/getArchivesById.do?id='+id,
          		method:'POST',
          		dataType:'json',
          		success:function(data){
          			if(data.status.code=="10000"){
-      				  var form2 = new liger.get("gwAdminUsersForm");
+      				  var form2 = new liger.get("gwArchivesForm");
       				  form2.setData(data.data);
       			  }else{
       				 $.ligerDialog.alert(data.status.msg, "提示信息", "error");
@@ -103,15 +104,15 @@ $(document).ready(function(){
          	});
          }
         //保存角色
-        function saveGwAdminUsers(){
-        	if(!$("#gwAdminUsersForm").valid()){
+        function saveGwArchives(){
+        	if(!$("#gwArchivesForm").valid()){
         		return;
         	}
         	$.ajax({
-        		url:'/adminUsers/updateAdminUsers.do?id='+id,
+        		url:'/archives/updateArchives.do?id='+id,
         		method:'POST',
         		dataType:'json',
-        		data:$("#gwAdminUsersForm").serialize(),
+        		data:$("#gwArchivesForm").serialize(),
         		success:function(data){
         			if(data.status.code=="10000"){
         				$.ligerDialog.alert(data.status.msg, "提示信息", "success",function(){
@@ -133,12 +134,10 @@ $(document).ready(function(){
 </head>
 <body style="overflow-x:hidden;overflow-y:hidden;">
 
-   <form id="gwAdminUsersForm" style="margin-left:90px;margin-top:30px;margin-left:20px;">
-           
+   <form id="gwArchivesForm" style="margin-left:50px;margin-top:30px;margin-left:0px;">
     </form>    
-     
-    <div class="btn" style="margin-left:330px;margin-top:30px;">
-           <a class="update" href="javascript:saveGwAdminUsers()">保存</a>
+    <div class="btn" style="margin-left:180px;margin-top:30px;">
+           <a class="update" href="javascript:saveGwArchives()">保存</a>
      </div>  
 </body>
 </html>

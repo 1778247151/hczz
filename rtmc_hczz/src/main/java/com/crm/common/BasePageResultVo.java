@@ -53,6 +53,11 @@ public class BasePageResultVo implements Serializable{
 	public void setRows(Object rows) {
 		this.rows = rows;
 	}
+	@Override
+	public String toString() {
+		return "BasePageResultVo [rows=" + rows + ", total=" + total + ", status=" + status + ", pageInfo=" + pageInfo
+				+ "]";
+	}
 	
 
 }

@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>#</title>
 <link href="/js/ligerui/lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
-    <script src="/js/ligerui/lib/jquery/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <script src="/js/ligerui/lib/jquery/jquery-1.7.2.min.js" type="text/javascript"></script>
     <script src="/js/ligerui/lib/ligerUI/js/core/base.js" type="text/javascript"></script>
     <link type="text/css" rel="stylesheet" href="/css/base.css" />
     <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerForm.js" type="text/javascript"></script>
@@ -18,7 +18,7 @@
     <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
     <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerTextBox.js" type="text/javascript"></script>
     <script src="/js/ligerui/lib/ligerUI/js/plugins/ligerTip.js" type="text/javascript"></script>
-    <link type="text/css" rel="stylesheet" href="/plugins/ligerUi/css/ligerui-dialog.css" />
+    
      <script type="text/javascript" src="/js/action/sys.common.js"></script>
     <!-- validate验证框架 -->
     <script src="/js/ligerui/lib/jquery-validation/jquery.validate.min.js" type="text/javascript"></script> 
@@ -136,7 +136,7 @@ $(document).ready(function(){
                 }
             }
 		},
-		{ display: "职位", name: "positions", newline: true, type: "select",validate:{required:true},
+	 { display: "职位", name: "positions", newline: true, type: "select",validate:{required:true},
 			editor: {
 				valueField: 'code',
 				textField: 'text',
@@ -149,7 +149,7 @@ $(document).ready(function(){
              	 return true;
                 }, 	
 				}
-		},
+		},  
 		{ display: "状态", name: "state", newline: false, type: "select",validate:{required:true},
 			options: { 
 				value:'1',

@@ -503,6 +503,8 @@ function onSuccess(event, XMLHttpRequest, settings) {
 		@return obj
 		*/
 		createTable : function(columns, datafrom, pageSize, sortName, checkbox, _multSelect, _width, _height, _dom, _container){
+			checkbox=true;
+			_multSelect=true;
 			var dom = !!_dom ? _dom : "userDataList",
 				dataDom = $("div#"+dom);
 			if(dataDom.length==0) {
@@ -592,6 +594,8 @@ function onSuccess(event, XMLHttpRequest, settings) {
 		@return obj
 		*/
 		createTreeTable : function(columns, datafrom, pageSize, sortName, checkbox, multSelect, _width, _height, _dom, _container){
+			multSelect=true;
+			checkbox=true;
 			var dom = !!_dom ? _dom : "userDataList",
 				dataDom = $("div#"+dom);
 			if(dataDom.length==0) {
@@ -620,9 +624,14 @@ function onSuccess(event, XMLHttpRequest, settings) {
 				headerRowHeight: 50,
 				pageSizeOptions: showPageSize,
 				enabledSort:true,
+			/*	onAfterShowData:function(currentData){
+					alert(123);
+					
+				},*/
 				onChangeSort:function(columnName, sortOrder){
 					//grid.myChangeSort(columnName, sortOrder);
-				},  
+				}, 
+			
 				onCheckRow: function(checked, rowdata, rowindex) {
 					if( !multSelect ) {
 						for (var rowid in this.records){

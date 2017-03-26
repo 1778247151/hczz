@@ -56,4 +56,12 @@ public class GwRoleGroupModel implements Serializable{
     public void setTime(String time) {
         this.time = time == null ? null : time.trim();
     }
+
+	@Override
+	public String toString() {
+		return "GwRoleGroupModel [id=" + id + ", gwRoleId=" + gwRoleId + ", gwMenuTreeId=" + gwMenuTreeId + ", time="
+				+ time + "]";
+	}
+    
+    
 }

@@ -156,6 +156,14 @@ public class GwMenuTreeModel implements Serializable{
     public void setSynchronize(Integer synchronize) {
         this.synchronize = synchronize;
     }
+
+	@Override
+	public String toString() {
+		return "GwMenuTreeModel [id=" + id + ", name=" + name + ", note=" + note + ", urladdress=" + urladdress
+				+ ", fid=" + fid + ", state=" + state + ", time=" + time + ", orderNum=" + orderNum + ", type=" + type
+				+ ", icon=" + icon + ", func=" + func + ", style=" + style + ", synchronize=" + synchronize
+				+ ", childList=" + childList + "]";
+	}
 	
     
 }

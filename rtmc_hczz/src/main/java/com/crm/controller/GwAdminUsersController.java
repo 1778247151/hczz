@@ -331,7 +331,6 @@ public class GwAdminUsersController extends BaseException {
 		if (!ValidateUtil.isAvailableAccountStr(pwd, 3, 20)) {
 			return BaseResultVo.responseFail("密码只能输入英文、数字、下划线");
 		}
-		
 		AdminUtil util = new AdminUtil();
 		//是否是超级管理员
 		if(util.isSuperAdmin(username))

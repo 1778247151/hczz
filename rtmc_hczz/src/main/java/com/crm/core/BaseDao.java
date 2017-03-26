@@ -121,6 +121,9 @@ public class BaseDao extends SqlSessionDaoSupport {
 		basePageResultVo.setPageInfo(pageInfo);
 		return basePageResultVo;
 	}
+	
+	
+	
 
 	/**
 	 * 查询多条记录
@@ -157,6 +160,17 @@ public class BaseDao extends SqlSessionDaoSupport {
 	public int getCount(String sqlId, Object param) {
 		SqlSession session = openSession();
 		return (Integer) session.selectOne(sqlId, param);
+	}
+	/**
+	 * 根据条件，查询记录总数
+	 * 
+	 * @param sqlId          查询记录数sqlId
+	 * @param param          查询条件参数对象
+	 * @return   返回：总记录数
+	 */
+	public int getCount(String sqlId) {
+		SqlSession session = openSession();
+		return (Integer) session.selectOne(sqlId);
 	}
 
 	/**
