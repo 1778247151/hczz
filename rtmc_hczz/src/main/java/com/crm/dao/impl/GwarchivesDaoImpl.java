@@ -89,7 +89,7 @@ public class GwarchivesDaoImpl implements GwarchivesDao{
 		params.put("offset", offset);
 		List<GwarchivesModel> list =dao.selectList(sqlid, params);
 		for (GwarchivesModel gwarchivesModel : list) {
-			gwarchivesModel.setName("<a href='/demo.jsp?id="+gwarchivesModel.getId()+"' target='_Blank'>"+gwarchivesModel.getName()+"</a>");
+			gwarchivesModel.setName("<a href='/index3.jsp?id="+gwarchivesModel.getId()+"' target='_Blank'>"+gwarchivesModel.getName()+"</a>");
 			gwarchivesModel.setOperation("<div class='btn'>"+"<a href='javascript:InvitationPeople();' id='addArchives' class='add'>"+"邀请人员"+"</a>"+" </div>");
 		}
 		//分页信息
@@ -188,7 +188,7 @@ public class GwarchivesDaoImpl implements GwarchivesDao{
 		params.put("offset", offset);
 		List<GwarchivesModel> list =dao.selectList(sqlid, params);
 		for (GwarchivesModel gwarchivesModel : list) {
-			gwarchivesModel.setName("<a href='/demo.jsp?id="+gwarchivesModel.getId()+"' target='_Blank'>"+gwarchivesModel.getName()+"</a>");
+			gwarchivesModel.setName("<a href='/index3.jsp?id="+gwarchivesModel.getId()+"' target='_Blank'>"+gwarchivesModel.getName()+"</a>");
 			gwarchivesModel.setOperation("<div class='btn'>"+"<a href='javascript:InvitationPeople();' id='addArchives' class='add'>"+"邀请人员"+"</a>"+" </div>");
 		}
 		//分页信息

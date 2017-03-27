@@ -132,6 +132,13 @@
   <listener>
     <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
   </listener>
+  <!--解决页面乱码 -->
+ <jsp-config>
+<jsp-property-group>
+<url-pattern>*.html</url-pattern>
+<page-encoding>UTF-8</page-encoding>
+</jsp-property-group>
+</jsp-config>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
