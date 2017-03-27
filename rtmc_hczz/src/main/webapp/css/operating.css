@@ -1,0 +1,35 @@
+/*content start*/
+#operating .content{
+    width: 91.592222%;
+    padding: 0  4.203889%;
+}
+
+#operating .content .frameContainer .frame{
+    float: left;
+    margin-top: 30px;
+}
+#operating .content .frameContainer .frame iframe{
+    width: 100%;
+    height: 100%;
+}
+#operating .content .frameContainer .salesAssessment,
+#operating .content .frameContainer .trafficEvaluation{
+    width: 48.863636%;
+    height: 445px;
+}
+#operating .content .frameContainer .trafficEvaluation{
+    margin-left: 2.272727%;
+}
+#operating .content .frameContainer .metaAnalysis{
+    width: 100%;
+    height: 325px;
+}
+#operating .content .frameContainer .salesTurnover,
+#operating .content .frameContainer .salesSummary{
+    width: 48.863636%;
+    height: 390px;
+}
+#operating .content .frameContainer .salesSummary{
+    margin-left: 2.272727%;
+}
+/*content end*/

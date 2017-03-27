@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>#</title>
+<link href="/js/ligerui/lib/ligerUI/skins/Aqua/css/ligerui-all.css"rel="stylesheet" type="text/css" />
+<script src="/js/ligerui/lib/jquery/jquery-1.9.0.min.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/core/base.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerGrid1.js"type="text/javascript"></script> 
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerForm.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerTree.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerDateEditor.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerComboBox.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerCheckBox.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerButton.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerDialog.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerRadio.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerSpinner.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerTextBox.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerTip.js"type="text/javascript"></script>
+<script src="/js/ligerui/lib/ligerUI/js/plugins/ligerResizable.js"type="text/javascript"></script>
+<script type="text/javascript" src="/js/action/sys.common.js"></script>
+<script type="text/javascript" src="/js/common.js"></script>
+<link type="text/css" rel="stylesheet" href="/css/base.css" />
+<script>
+var grid,	//表格
+windialog,	//查询框
+dataUrl,	//url地址
+query_url = "/adminUsers/getAdminUsersList.do",
+//table	columns
+columns = [
+	{ display: '主键ID', hide:true,	name: 'id',width: 1},
+	{ display: '账号', name: 'username' ,width: 120},
+	{ display: '姓名', name: 'name',width: 100},
+	{ display: '性别', name: 'sexName',width: 80},
+	{ display: '部门', name: 'departmentName',width: 120},
+	{ display: '职位', name: 'departmentPositionName',width: 120},
+],
+
+//所有页面都要获取这两个变量menuId = $.fsh.requestParam("menuId"),//菜单id 
+//menuId = $.fsh.requestParam("menuId"),//菜单id 
+
+//参数替换规则
+//只要涉及到跳转按钮， 都需要加此参数
+//"跳转按钮的ID": "过滤规则"
+paramReplace = {
+	showDevice: "&userId=$userId$"
+};
+
+//$(document).ready();
+$(function (){	
+//$.fsh.isLogin(); 	
+//设置路径
+//创建数据列表
+dataUrl ="/adminUsers/getAdminUsersList.do";
+grid = $.fsh.createTable(columns, dataUrl, $.fsh.options.page(), "", true);
+//排序跳转至第一页
+$("div.l-grid-hd-cell-inner").click(function(){
+	if(grid.options.page!=1) grid.changePage("first");
+});
+});
+/**
+* 
+* reflushData:刷新数据
+*
+* @author   yumaochun
+* @date     2016年8月16日
+*
+*/
+function reflushData(){
+grid.loadData();
+}
+
+/*
+ * getUserByCondition:输入用户名进行插叙
+ * @author meishengjun 
+ */
+function getUserByCondition(){
+ 	var name= $("#uname").val();
+ 	//alert(cardCode+","+cardType+","+userName+","+grade)
+ 	dataUrl = "/" + "adminUsers/getAdminUsersByCondition.do?name="+name;
+ 	grid = $.fsh.createTable(columns, dataUrl, $.fsh.options.page(), "", true);
+}
+/*
+ * getUserByCondition:输入用户名进行插叙
+ * @author meishengjun 
+ */
+function addUsers(){
+	 var arid=$.fsh.requestParam("id")||"";
+	var _flag = $.fsh.noteForNotSelected("请选中数据后，再操作！");
+	var  ids= $.fsh.getMuiltySelected();
+	$.ajax({
+		url:'/rt_User/saveArUser.do?ids='+ids+"&arid="+arid,
+		method:'post',
+		type:'json',
+		success:function(data){
+			if(data.status.code=="10000"){
+				  $.ligerDialog.alert(data.status.msg, "提示信息", "success",function(){	
+					  parent.reflushData();
+			          parent.closeDialog();
+					  reflushData();
+				});
+			 }else{
+				 $.ligerDialog.alert(data.status.msg, "提示信息", "error",function(){
+					
+				 });
+			 }
+		}	
+	}); 
+}
+/*
+ * deleteUsers
+ * 踢出用户
+ */
+function deleteUsers(){
+	var arid=$.fsh.requestParam("id")||"";
+	var _flag = $.fsh.noteForNotSelected("请选中数据后，再操作！");
+	var  ids= $.fsh.getMuiltySelected();
+	$.ajax({
+		url:'/rt_User/deleteUsers.do?ids='+ids+"&arid="+arid,
+		method:'post',
+		type:'json',
+		success:function(data){
+			if(data.status.code=="10000"){
+				  $.ligerDialog.alert(data.status.msg, "提示信息", "success",function(){	
+					  parent.reflushData();
+			          parent.closeDialog();
+					  reflushData();
+				});
+			 }else{
+				 $.ligerDialog.alert(data.status.msg, "提示信息", "error",function(){
+					
+				 });
+			 }
+		}	
+	}); 
+	
+}
+</script>
+<style type="text/css">
+
+.search1{
+	margin-top:25px;
+    width: 100px;
+    height: 25px;
+    border-radius: 2px;
+}
+	.btn a{
+		float: left;
+	}
+</style>
+
+</head>
+<body style="background:#fff;">
+姓名：<input  id="uname" name="uname" value="" class="search1"/>
+<div>
+<div class="btn" style="margin-left: 150px; margin-top: -45px;">
+		<a class="search" href="javascript:getUserByCondition()">搜索</a>
+		 <a href="javascript:addUsers();" id="addUsers" class="add">加入</a>
+		 <a href="javascript:deleteUsers();" id="deleteUsers" class="delete">踢出</a>
+	</div>
+	</div>
+</body>
+</html>
